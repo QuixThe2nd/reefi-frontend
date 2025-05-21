@@ -321,12 +321,12 @@ const App = () => {
                       <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2">M</div>
                       <p className="font-bold text-lg">$MGP</p>
                     </div>
-                    <h2 className="text-2xl font-bold mt-2">${Math.round(prices.MGP*100_000)/100_000}</h2>
+                    <h2 className="text-2xl font-bold mt-2">${prices.MGP.toFixed(6)}</h2>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 col-span-2 gap-2">
                   <div className="bg-gray-700/50 rounded-lg p-2">
-                    <p className="text-gray-400 text-xs">Total Supply</p>
+                    <p className="text-gray-400 text-xs">Supply</p>
                     <p className="font-medium">{formatNumber(formatEther(supplYMGP, decimals.MGP))}</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
@@ -354,7 +354,7 @@ const App = () => {
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-2">R</div>
                       <p className="font-bold text-lg">$RMGP</p>
                     </div>
-                    <h2 className="text-2xl font-bold mt-2">${Math.round(prices.MGP*mgpRmgpRatio*100_000)/100_000}</h2>
+                    <h2 className="text-2xl font-bold mt-2">${(prices.MGP*mgpRmgpRatio).toFixed(6)}</h2>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 col-span-2 gap-2">
@@ -364,7 +364,7 @@ const App = () => {
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">TVL</p>
-                    <p className="font-medium">{formatNumber(formatEther(reefiLockedMGP, decimals.MGP), 4)} MGP</p>
+                    <p className="font-medium">{formatNumber(formatEther(reefiLockedMGP, decimals.MGP), 3)} MGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">1 RMGP</p>
@@ -389,7 +389,7 @@ const App = () => {
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-2">Y</div>
                       <p className="font-bold text-lg">$YMGP</p>
                     </div>
-                    <h2 className="text-2xl font-bold mt-2">${Math.round(prices.MGP*mgpRmgpRatio*ymgpRmgpRatio*100_000)/100_000}</h2>
+                    <h2 className="text-2xl font-bold mt-2">${(prices.MGP*mgpRmgpRatio*ymgpRmgpRatio).toFixed(6)}</h2>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 col-span-2">

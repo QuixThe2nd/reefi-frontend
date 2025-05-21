@@ -27,6 +27,8 @@ type Contracts = {
   VLSTREAMREWARDER: `0x${string}`
 }
 
+type Coins = 'MGP' | 'RMGP' | 'YMGP' | 'CKP' | 'PNP' | 'EGP' | 'LTP' | 'ETH' | 'BNB'
+
 const parseEther = (value: number, decimals = 18): bigint => BigInt(Math.round((value * Number(10n ** BigInt(decimals))) / Number(1n)))
 function formatEther(value: bigint, decimals = 18): number {
   const divisor = 10n ** BigInt(decimals)
@@ -41,8 +43,8 @@ const aprToApy = (apr: number) => (1 + apr / 365) ** 365 - 1
 
 const contractABIs = {
   MGP: erc20Abi,
-  rMGP: [{"inputs":[{"internalType":"address","name":"_mgpToken","type":"address"},{"internalType":"address","name":"_ymgpToken","type":"address"},{"internalType":"address","name":"_masterMagpie","type":"address"},{"internalType":"address","name":"_vlMGP","type":"address"},{"internalType":"address","name":"_weth","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"CannotUnlockZero","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"allowance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientAllowance","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"approver","type":"address"}],"name":"ERC20InvalidApprover","type":"error"},{"inputs":[{"internalType":"address","name":"receiver","type":"address"}],"name":"ERC20InvalidReceiver","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"}],"name":"ERC20InvalidSender","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"}],"name":"ERC20InvalidSpender","type":"error"},{"inputs":[],"name":"InsufficientBalance","type":"error"},{"inputs":[],"name":"NoLockedTokens","type":"error"},{"inputs":[],"name":"NoSlotsToUnlock","type":"error"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"OwnableInvalidOwner","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"OwnableUnauthorizedAccount","type":"error"},{"inputs":[],"name":"SwapRouterNotSet","type":"error"},{"inputs":[],"name":"TransferFailed","type":"error"},{"inputs":[{"internalType":"string","name":"name","type":"string"}],"name":"ZeroAddress","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"mgpAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rmgpAmount","type":"uint256"}],"name":"Deposited","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"name":"RewardsClaimed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"rmgpAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"name":"UnlockStarted","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"slot","type":"uint256"}],"name":"Unlocked","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Withdrawn","type":"event"},{"inputs":[],"name":"MASTER_MAGPIE","outputs":[{"internalType":"contract IMasterMagpie","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MGP_TOKEN","outputs":[{"internalType":"contract ERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"VL_MGP","outputs":[{"internalType":"contract IVL_MGP","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"WETH","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"addRewardsToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claim","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"name":"deposit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getUserPendingWithdraws","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getUserWithdrawable","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"pendingWithdraws","outputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"removeRewardsToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"rescueTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"rewardTokens","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"swapRouter","type":"address"}],"name":"setSwapRouter","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"setYMGP","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"rmgpAmount","type":"uint256"}],"name":"startUnlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"swapRouters","outputs":[{"internalType":"contract ISwapRouter","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unsubmittedWithdraws","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"ymgpToken","outputs":[{"internalType":"contract ERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"}],
-  yMGP: [{"inputs":[{"internalType":"address","name":"_rmgpToken","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"CannotLockZero","type":"error"},{"inputs":[],"name":"CannotUnlockZero","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"allowance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientAllowance","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"approver","type":"address"}],"name":"ERC20InvalidApprover","type":"error"},{"inputs":[{"internalType":"address","name":"receiver","type":"address"}],"name":"ERC20InvalidReceiver","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"}],"name":"ERC20InvalidSender","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"}],"name":"ERC20InvalidSpender","type":"error"},{"inputs":[],"name":"InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"OwnableInvalidOwner","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"OwnableUnauthorizedAccount","type":"error"},{"inputs":[],"name":"TransferFailed","type":"error"},{"inputs":[{"internalType":"string","name":"name","type":"string"}],"name":"ZeroAddress","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Deposited","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Locked","type":"event"},{"anonymous":false,"inputs":[],"name":"NoYieldToClaim","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"YieldClaimed","type":"event"},{"inputs":[],"name":"RMGP_TOKEN","outputs":[{"internalType":"contract ERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claim","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"deposit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"lock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lockedBalances","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"rescueTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalLocked","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unclaimedUserYield","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"unlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"userClaimedYield","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],
+  RMGP: [{"inputs":[{"internalType":"address","name":"_mgpToken","type":"address"},{"internalType":"address","name":"_ymgpToken","type":"address"},{"internalType":"address","name":"_masterMagpie","type":"address"},{"internalType":"address","name":"_vlMGP","type":"address"},{"internalType":"address","name":"_weth","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"CannotUnlockZero","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"allowance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientAllowance","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"approver","type":"address"}],"name":"ERC20InvalidApprover","type":"error"},{"inputs":[{"internalType":"address","name":"receiver","type":"address"}],"name":"ERC20InvalidReceiver","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"}],"name":"ERC20InvalidSender","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"}],"name":"ERC20InvalidSpender","type":"error"},{"inputs":[],"name":"InsufficientBalance","type":"error"},{"inputs":[],"name":"NoLockedTokens","type":"error"},{"inputs":[],"name":"NoSlotsToUnlock","type":"error"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"OwnableInvalidOwner","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"OwnableUnauthorizedAccount","type":"error"},{"inputs":[],"name":"SwapRouterNotSet","type":"error"},{"inputs":[],"name":"TransferFailed","type":"error"},{"inputs":[{"internalType":"string","name":"name","type":"string"}],"name":"ZeroAddress","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"mgpAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rmgpAmount","type":"uint256"}],"name":"Deposited","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"name":"RewardsClaimed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"rmgpAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"name":"UnlockStarted","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"slot","type":"uint256"}],"name":"Unlocked","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Withdrawn","type":"event"},{"inputs":[],"name":"MASTER_MAGPIE","outputs":[{"internalType":"contract IMasterMagpie","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MGP_TOKEN","outputs":[{"internalType":"contract ERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"VL_MGP","outputs":[{"internalType":"contract IVL_MGP","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"WETH","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"addRewardsToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claim","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"name":"deposit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getUserPendingWithdraws","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getUserWithdrawable","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"pendingWithdraws","outputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"removeRewardsToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"rescueTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"rewardTokens","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"swapRouter","type":"address"}],"name":"setSwapRouter","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"setYMGP","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"rmgpAmount","type":"uint256"}],"name":"startUnlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"swapRouters","outputs":[{"internalType":"contract ISwapRouter","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unsubmittedWithdraws","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"ymgpToken","outputs":[{"internalType":"contract ERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"}],
+  YMGP: [{"inputs":[{"internalType":"address","name":"_rmgpToken","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"CannotLockZero","type":"error"},{"inputs":[],"name":"CannotUnlockZero","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"allowance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientAllowance","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"approver","type":"address"}],"name":"ERC20InvalidApprover","type":"error"},{"inputs":[{"internalType":"address","name":"receiver","type":"address"}],"name":"ERC20InvalidReceiver","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"}],"name":"ERC20InvalidSender","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"}],"name":"ERC20InvalidSpender","type":"error"},{"inputs":[],"name":"InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"OwnableInvalidOwner","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"OwnableUnauthorizedAccount","type":"error"},{"inputs":[],"name":"TransferFailed","type":"error"},{"inputs":[{"internalType":"string","name":"name","type":"string"}],"name":"ZeroAddress","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Deposited","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Locked","type":"event"},{"anonymous":false,"inputs":[],"name":"NoYieldToClaim","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"YieldClaimed","type":"event"},{"inputs":[],"name":"RMGP_TOKEN","outputs":[{"internalType":"contract ERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claim","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"deposit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"lock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lockedBalances","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"rescueTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalLocked","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unclaimedUserYield","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"unlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"userClaimedYield","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],
   vlMGP: [{"inputs":[],"name":"AllUnlockSlotOccupied","type":"error"},{"inputs":[],"name":"AlreadyMigrated","type":"error"},{"inputs":[],"name":"BeyondUnlockLength","type":"error"},{"inputs":[],"name":"BeyondUnlockSlotLimit","type":"error"},{"inputs":[],"name":"BurnEventManagerNotSet","type":"error"},{"inputs":[],"name":"BurnEvnentManagerPaused","type":"error"},{"inputs":[],"name":"InvalidAddress","type":"error"},{"inputs":[],"name":"InvalidCoolDownPeriod","type":"error"},{"inputs":[],"name":"IsZeroAddress","type":"error"},{"inputs":[],"name":"MaxSlotCantLowered","type":"error"},{"inputs":[],"name":"MaxSlotShouldNotZero","type":"error"},{"inputs":[],"name":"NotEnoughLockedMPG","type":"error"},{"inputs":[],"name":"NotInCoolDown","type":"error"},{"inputs":[],"name":"PenaltyToNotSet","type":"error"},{"inputs":[],"name":"StillInCoolDown","type":"error"},{"inputs":[],"name":"TransferNotWhiteListed","type":"error"},{"inputs":[],"name":"UnlockSlotOccupied","type":"error"},{"inputs":[],"name":"UnlockedAlready","type":"error"},{"inputs":[],"name":"coolDownInSecCanCauseOverflow","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"_coolDownSecs","type":"uint256"}],"name":"CoolDownInSecsUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"slotIdx","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"mgpamount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"penaltyAmount","type":"uint256"}],"name":"ForceUnLock","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint8","name":"version","type":"uint8"}],"name":"Initialized","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"_maxSlot","type":"uint256"}],"name":"MaxSlotUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"timestamp","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"NewLock","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_oldMaster","type":"address"},{"indexed":false,"internalType":"address","name":"_newMaster","type":"address"}],"name":"NewMasterChiefUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Paused","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"penaltyDestination","type":"address"}],"name":"PenaltyDestinationUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"penaltyDestination","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"PenaltySentTo","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"slotIdx","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"ReLock","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"timestamp","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Unlock","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_user","type":"address"},{"indexed":true,"internalType":"uint256","name":"_timestamp","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"UnlockStarts","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Unpaused","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"timestamp","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_eventId","type":"uint256"}],"name":"VlMgpBurn","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_for","type":"address"},{"indexed":false,"internalType":"bool","name":"_status","type":"bool"}],"name":"WhitelistSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"burnEventManager","type":"address"}],"name":"burnEventManagerSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"referralStorage","type":"address"}],"name":"referralStorageSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"wombatBribeManager","type":"address"}],"name":"wombatBribeManagerSet","type":"event"},{"inputs":[],"name":"DENOMINATOR","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MGP","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_masterMagpie","type":"address"},{"internalType":"uint256","name":"_maxSlots","type":"uint256"},{"internalType":"address","name":"_mgp","type":"address"},{"internalType":"uint256","name":"_coolDownInSecs","type":"uint256"}],"name":"__vlMGP_init_","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"burnEventManager","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_vlmgpAmountToBurn","type":"uint256"},{"internalType":"uint256","name":"_vlmgpBurnEventId","type":"uint256"}],"name":"burnVlmgp","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_slotIndex","type":"uint256"}],"name":"cancelUnlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"coolDownInSecs","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_slotIndex","type":"uint256"}],"name":"expectedPenaltyAmount","outputs":[{"internalType":"uint256","name":"penaltyAmount","type":"uint256"},{"internalType":"uint256","name":"amontToUser","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_slotIndex","type":"uint256"}],"name":"forceUnLock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getFullyUnlock","outputs":[{"internalType":"uint256","name":"unlockedAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getNextAvailableUnlockSlot","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getRewardablePercentWAD","outputs":[{"internalType":"uint256","name":"percent","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserAmountInCoolDown","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint256","name":"n","type":"uint256"}],"name":"getUserNthUnlockSlot","outputs":[{"internalType":"uint256","name":"startTime","type":"uint256"},{"internalType":"uint256","name":"endTime","type":"uint256"},{"internalType":"uint256","name":"amountInCoolDown","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserTotalLocked","outputs":[{"internalType":"uint256","name":"_lockAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserUnlockSlotLength","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserUnlockingSchedule","outputs":[{"components":[{"internalType":"uint256","name":"startTime","type":"uint256"},{"internalType":"uint256","name":"endTime","type":"uint256"},{"internalType":"uint256","name":"amountInCoolDown","type":"uint256"}],"internalType":"struct ILocker.UserUnlocking[]","name":"slots","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"lock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"},{"internalType":"address","name":"_for","type":"address"}],"name":"lockFor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"masterMagpie","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"maxSlot","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"penaltyDestination","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"referralStorage","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_coolDownSecs","type":"uint256"}],"name":"setCoolDownInSecs","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_masterMagpie","type":"address"}],"name":"setMasterChief","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_maxSlots","type":"uint256"}],"name":"setMaxSlots","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_burnEventMAnager","type":"address"}],"name":"setMgpBurnEventManager","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_penaltyDestination","type":"address"}],"name":"setPenaltyDestination","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_referralStorage","type":"address"}],"name":"setReferralStorage","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_for","type":"address"},{"internalType":"bool","name":"_status","type":"bool"}],"name":"setWhitelistForTransfer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_bribeManager","type":"address"}],"name":"setWombatBribeManager","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amountToCoolDown","type":"uint256"}],"name":"startUnlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalAmountInCoolDown","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalLocked","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalPenalty","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"transferPenalty","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"transferWhitelist","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_slotIndex","type":"uint256"}],"name":"unlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"userUnlockings","outputs":[{"internalType":"uint256","name":"startTime","type":"uint256"},{"internalType":"uint256","name":"endTime","type":"uint256"},{"internalType":"uint256","name":"amountInCoolDown","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"wombatBribeManager","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}],
   masterMagpie: [{"inputs":[],"name":"IndexOutOfBound","type":"error"},{"inputs":[],"name":"InvalidStakingToken","type":"error"},{"inputs":[],"name":"LengthMismatch","type":"error"},{"inputs":[],"name":"MGPsetAlready","type":"error"},{"inputs":[],"name":"MustBeContract","type":"error"},{"inputs":[],"name":"MustBeContractOrZero","type":"error"},{"inputs":[],"name":"MustNotBeZero","type":"error"},{"inputs":[],"name":"OnlyActivePool","type":"error"},{"inputs":[],"name":"OnlyCompounder","type":"error"},{"inputs":[],"name":"OnlyLocker","type":"error"},{"inputs":[],"name":"OnlyPoolHelper","type":"error"},{"inputs":[],"name":"OnlyPoolManager","type":"error"},{"inputs":[],"name":"OnlyWhiteListedAllocUpdator","type":"error"},{"inputs":[],"name":"PoolExsisted","type":"error"},{"inputs":[],"name":"UnlockAmountExceedsLocked","type":"error"},{"inputs":[],"name":"WithdrawAmountExceedsStaked","type":"error"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_oldARBRewarder","type":"address"},{"indexed":false,"internalType":"address","name":"_newARBRewarder","type":"address"}],"name":"ARBRewarderSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"rewarder","type":"address"}],"name":"ARBRewarderSetAsQueuer","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"_allocPoint","type":"uint256"},{"indexed":true,"internalType":"address","name":"_stakingToken","type":"address"},{"indexed":true,"internalType":"contract IBaseRewardPool","name":"_rewarder","type":"address"}],"name":"Add","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_newCompounder","type":"address"},{"indexed":false,"internalType":"address","name":"_oldCompounder","type":"address"}],"name":"CompounderUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_user","type":"address"},{"indexed":true,"internalType":"address","name":"_stakingToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"Deposit","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_user","type":"address"},{"indexed":true,"internalType":"address","name":"_stakingToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"DepositNotAvailable","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_user","type":"address"},{"indexed":true,"internalType":"address","name":"_stakingToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"EmergencyWithdraw","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_account","type":"address"},{"indexed":true,"internalType":"address","name":"_receiver","type":"address"},{"indexed":false,"internalType":"uint256","name":"_amount","type":"uint256"},{"indexed":false,"internalType":"bool","name":"isLock","type":"bool"}],"name":"HarvestMGP","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint8","name":"version","type":"uint8"}],"name":"Initialized","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_stakingToken","type":"address"},{"indexed":false,"internalType":"address[]","name":"_legacyRewarder","type":"address[]"}],"name":"LegacyRewardersSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_stakingToken","type":"address"},{"indexed":false,"internalType":"bool","name":"_isRewardMGP","type":"bool"}],"name":"LockFreePoolUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_mgp","type":"address"}],"name":"MGPSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_mWomSV","type":"address"},{"indexed":false,"internalType":"address","name":"_oldMWomSV","type":"address"}],"name":"MWomSVpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Paused","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_account","type":"address"},{"indexed":false,"internalType":"bool","name":"_status","type":"bool"}],"name":"PoolManagerStatus","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_stakingToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"_allocPoint","type":"uint256"},{"indexed":true,"internalType":"contract IBaseRewardPool","name":"_rewarder","type":"address"}],"name":"Set","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Unpaused","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_user","type":"address"},{"indexed":false,"internalType":"uint256","name":"_oldMgpPerSec","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_newMgpPerSec","type":"uint256"}],"name":"UpdateEmissionRate","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_stakingToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"_lastRewardTimestamp","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_lpSupply","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_accMGPPerShare","type":"uint256"}],"name":"UpdatePool","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_stakingToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"_oldAllocPoint","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_newAllocPoint","type":"uint256"}],"name":"UpdatePoolAlloc","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_newVlmgp","type":"address"},{"indexed":false,"internalType":"address","name":"_oldVlmgp","type":"address"}],"name":"VLMGPUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_user","type":"address"},{"indexed":true,"internalType":"address","name":"_stakingToken","type":"address"},{"indexed":false,"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"Withdraw","type":"event"},{"inputs":[],"name":"ARBRewarder","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"AllocationManagers","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"MPGRewardPool","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"PoolManagers","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_mgp","type":"address"},{"internalType":"uint256","name":"_mgpPerSec","type":"uint256"},{"internalType":"uint256","name":"_startTimestamp","type":"uint256"}],"name":"__MasterMagpie_init","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_allocPoint","type":"uint256"},{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"address","name":"_rewarder","type":"address"},{"internalType":"address","name":"_helper","type":"address"},{"internalType":"bool","name":"_helperNeedsHarvest","type":"bool"}],"name":"add","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newAllocationManager","type":"address"}],"name":"addWhitelistedAllocManager","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"address","name":"_user","type":"address"}],"name":"allPendingLegacyTokens","outputs":[{"internalType":"address[][]","name":"bonusTokenAddresses","type":"address[][]"},{"internalType":"string[][]","name":"bonusTokenSymbols","type":"string[][]"},{"internalType":"uint256[][]","name":"pendingBonusRewards","type":"uint256[][]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"address","name":"_user","type":"address"}],"name":"allPendingTokens","outputs":[{"internalType":"uint256","name":"pendingMGP","type":"uint256"},{"internalType":"address[]","name":"bonusTokenAddresses","type":"address[]"},{"internalType":"string[]","name":"bonusTokenSymbols","type":"string[]"},{"internalType":"uint256[]","name":"pendingBonusRewards","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"compounder","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"address","name":"mainRewardToken","type":"address"}],"name":"createRewarder","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"deposit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"},{"internalType":"address","name":"_for","type":"address"}],"name":"depositFor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"},{"internalType":"address","name":"_for","type":"address"}],"name":"depositMWomSVFor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"},{"internalType":"address","name":"_for","type":"address"}],"name":"depositVlMGPFor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"}],"name":"getPoolInfo","outputs":[{"internalType":"uint256","name":"emission","type":"uint256"},{"internalType":"uint256","name":"allocpoint","type":"uint256"},{"internalType":"uint256","name":"sizeOfPool","type":"uint256"},{"internalType":"uint256","name":"totalPoint","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"stakingToken","type":"address"}],"name":"getRewarder","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"legacyRewarder_deprecated","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"legacyRewarders","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"mWomSV","outputs":[{"internalType":"contract ILocker","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"massUpdatePools","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"mgp","outputs":[{"internalType":"contract MGP","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"mgpPerSec","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address[]","name":"_stakingTokens","type":"address[]"}],"name":"multiclaim","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"_stakingTokens","type":"address[]"},{"internalType":"address[][]","name":"_rewardTokens","type":"address[][]"},{"internalType":"address","name":"_account","type":"address"}],"name":"multiclaimFor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"_stakingTokens","type":"address[]"},{"internalType":"address[][]","name":"_rewardTokens","type":"address[][]"},{"internalType":"address","name":"_account","type":"address"}],"name":"multiclaimOnBehalf","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"_stakingTokens","type":"address[]"},{"internalType":"address[][]","name":"_rewardTokens","type":"address[][]"}],"name":"multiclaimSpec","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"address","name":"_user","type":"address"},{"internalType":"address","name":"_rewardToken","type":"address"}],"name":"pendingTokens","outputs":[{"internalType":"uint256","name":"pendingMGP","type":"uint256"},{"internalType":"address","name":"bonusTokenAddress","type":"address"},{"internalType":"string","name":"bonusTokenSymbol","type":"string"},{"internalType":"uint256","name":"pendingBonusToken","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"poolLength","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"referral","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"registeredToken","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"index","type":"uint256"}],"name":"removeWhitelistedAllocManager","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"}],"name":"rewarderBonusTokenInfo","outputs":[{"internalType":"address[]","name":"bonusTokenAddresses","type":"address[]"},{"internalType":"string[]","name":"bonusTokenSymbols","type":"string[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"uint256","name":"_allocPoint","type":"uint256"},{"internalType":"address","name":"_helper","type":"address"},{"internalType":"address","name":"_rewarder","type":"address"},{"internalType":"bool","name":"_helperNeedsHarvest","type":"bool"}],"name":"set","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_ARBRewarder","type":"address"}],"name":"setARBRewarder","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"_pools","type":"address[]"}],"name":"setARBRewarderAsQueuer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_compounder","type":"address"}],"name":"setCompounder","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"_stakingTokens","type":"address[]"},{"internalType":"address[][]","name":"_legacyRewarder","type":"address[][]"}],"name":"setLegacyRewarder","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"bool","name":"_isLockFree","type":"bool"}],"name":"setMGPRewardPools","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_mWomSV","type":"address"}],"name":"setMWomSV","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_account","type":"address"},{"internalType":"bool","name":"_allowedManager","type":"bool"}],"name":"setPoolManagerStatus","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_referral","type":"address"}],"name":"setReferral","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_vlmgp","type":"address"}],"name":"setVlmgp","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"address","name":"_user","type":"address"}],"name":"stakingInfo","outputs":[{"internalType":"uint256","name":"stakedAmount","type":"uint256"},{"internalType":"uint256","name":"availableAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"startTimestamp","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"tokenToPoolInfo","outputs":[{"internalType":"address","name":"stakingToken","type":"address"},{"internalType":"uint256","name":"allocPoint","type":"uint256"},{"internalType":"uint256","name":"lastRewardTimestamp","type":"uint256"},{"internalType":"uint256","name":"accMGPPerShare","type":"uint256"},{"internalType":"address","name":"rewarder","type":"address"},{"internalType":"address","name":"helper","type":"address"},{"internalType":"bool","name":"helperNeedsHarvest","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalAllocPoint","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"unClaimedMgp","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_mgpPerSec","type":"uint256"}],"name":"updateEmissionRate","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"}],"name":"updatePool","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address[]","name":"_stakingTokens","type":"address[]"},{"internalType":"uint256[]","name":"_allocPoints","type":"uint256[]"}],"name":"updatePoolsAlloc","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_rewarder","type":"address"},{"internalType":"address","name":"_manager","type":"address"},{"internalType":"bool","name":"_allowed","type":"bool"}],"name":"updateRewarderManager","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"vlmgp","outputs":[{"internalType":"contract ILocker","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_stakingToken","type":"address"},{"internalType":"uint256","name":"_amount","type":"uint256"},{"internalType":"address","name":"_for","type":"address"}],"name":"withdrawFor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"},{"internalType":"address","name":"_for","type":"address"}],"name":"withdrawMWomSVFor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"},{"internalType":"address","name":"_for","type":"address"}],"name":"withdrawVlMGPFor","outputs":[],"stateMutability":"nonpayable","type":"function"}],
 } as const
@@ -55,7 +57,7 @@ const publicClients = {
   56: createPublicClient({ chain: bsc, transport: http() }),
   42161: createPublicClient({ chain: arbitrum, transport: http() })
 }
-const decimals = { MGP: 18, rMGP: 18, yMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 }
+const decimals: Record< number> = { MGP: 18, RMGP: 18, YMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 }
 
 const App = () => {
   const [mode, setMode] = useState<'deploy' | 'deposit' | 'convert' | 'lock' | 'unlock' | 'redeem'>('deposit')
@@ -64,11 +66,11 @@ const App = () => {
   const [account, setAccount] = useState<`0x${string}` | undefined>()
   const [walletClient, setWalletClient] = useState<WalletClient<CustomTransport> | undefined>()
   const [approveInfinity, setApproveInfinity] = useState(false)
-  const [chain, setChain] = useState<56 | 42161>(42161)
-  const [pendingRewards, setPendingRewards] = useState<Record<string, { address: `0x${string}`, rewards: bigint }>>({})
+  const [chain, setChain] = useState<42161>(42161)
+  const [pendingRewards, setPendingRewards] = useState<Record<Coins, { address: `0x${string}`, rewards: bigint }> | undefined>()
 
   const [sendAmount, setSendAmount] = useState(parseEther(100));
-  const [prices, setPrices] = useState<{ MGP: number, CKP: number, PNP: number, EGP: number, LTP: number, ETH: number, BNB: number }>({ MGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 })
+  const [prices, setPrices] = useState<Record<Coins, number>>({ MGP: 0, RMGP: 0, YMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 })
   const [mgpAPR, setMGPAPR] = useState(0)
   const [mgpRmgpRatio, setMgpRmgpRatio] = useState(1)
   const [unclaimedUserYield, setUnclaimedUserYield] = useState(0n)
@@ -76,12 +78,15 @@ const App = () => {
   const [abi, setABI] = useState<string>()
   const [constructorArgs, setConstructorArgs] = useState<{ internalType: string, name: string, type: string, value?: string }[]>([])
   const [bytecode, setBytecode] = useState<`0x${string}`>()
-  const [ens, setENS] = useState<string>('')
+  const [ens, setENS] = useState<string | null>(null)
   const [userPendingWithdraws, setUserPendingWithdraws] = useState(0n)
   const [unsubmittedWithdraws, setUnsubmittedWithdraws] = useState(0n)
   const [userWithdrawable, setUserWithdrawable] = useState(0n)
   const [unlockSchedule, setUnlockSchedule] = useState<readonly { startTime: bigint; endTime: bigint; amountInCoolDown: bigint; }[]>([])
-  const uncompoundedMGPYield = useMemo(() => Object.keys(pendingRewards).map(symbol => prices[symbol]*Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0)/prices.MGP, [pendingRewards, prices])
+  const uncompoundedMGPYield = useMemo(() => {
+    if (pendingRewards) return (Object.keys(pendingRewards) as Coins[]).map(symbol => prices[symbol]*Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0)/prices.MGP
+    return 0
+  }, [pendingRewards, prices])
   const estimatedCompoundGasFee = useMemo(() => formatEther(compoundRMGPGas, decimals[publicClients[chain].chain.nativeCurrency.symbol])*prices[publicClients[chain].chain.nativeCurrency.symbol], [chain, compoundRMGPGas, prices])
 
   // Allowances
@@ -89,7 +94,7 @@ const App = () => {
   const [rmgpAllowance, setRMGPAllowance] = useState(0n)
 
   // Balances
-  const [balances, setBalances] = useState<{ MGP: bigint, rMGP: bigint, yMGP: bigint }>({ MGP: 0n, rMGP: 0n, yMGP: 0n })
+  const [balances, setBalances] = useState<{ MGP: bigint, RMGP: bigint, YMGP: bigint }>({ MGP: 0n, RMGP: 0n, YMGP: 0n })
   const [ymgpHoldings, setYMGPHoldings] = useState(0n)
 
   // Locked
@@ -99,22 +104,22 @@ const App = () => {
   const [userLockedYMGP, setUserLockedYMGP] = useState(0n)
 
   // Supply
-  const [supplyMGP, setSupplyMGP] = useState(0n)
+  const [supplYMGP, setSupplYMGP] = useState(0n)
   const [supplyRMGP, setSupplyRMGP] = useState(0n)
   const [supplyYMGP, setSupplyYMGP] = useState(0n)
   
   const ymgpRmgpRatio = 1
 
   const updateBalances = () => {
-    Promise.all([publicClients[chain].readContract({ abi: contractABIs.MGP, address: contracts[chain].MGP, functionName: 'balanceOf', args: [account] }), publicClients[chain].readContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'balanceOf', args: [account] }), publicClients[chain].readContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'balanceOf', args: [account] })]).then(balances => setBalances({ MGP: balances[0], rMGP: balances[1], yMGP: balances[2] }))
+    if (account) Promise.all([publicClients[chain].readContract({ abi: contractABIs.MGP, address: contracts[chain].MGP, functionName: 'balanceOf', args: [account] }), publicClients[chain].readContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'balanceOf', args: [account] }), publicClients[chain].readContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'balanceOf', args: [account] })]).then(balances => setBalances({ MGP: balances[0], RMGP: balances[1], YMGP: balances[2] }))
   }
-  const updateChain = async (id: 56 | 42161) => {
-    await walletClient.switchChain({ id })
+  const updateChain = async (id: 42161) => {
+    await walletClient?.switchChain({ id })
     setChain(id)
   }
 
   useEffect(() => {
-    fetch('https://api.magpiexyz.io/getalltokenprice').then(res => res.json().then((body: { data: { AllPrice: { MGP: number, CKP: number, PNP: number, EGP: number, LTP: number, ETH: number, BNB: number } }}) => setPrices(body.data.AllPrice)))
+    fetch('https://api.magpiexyz.io/getalltokenprice').then(res => res.json().then((body: { data: { AllPrice: typeof prices }}) => setPrices(body.data.AllPrice)))
   }, [])
 
   useEffect(() => {
@@ -123,13 +128,13 @@ const App = () => {
         if (accounts) connectWallet()
       })
     }
-    publicClients[chain].readContract({ abi: contractABIs.MGP, address: contracts[chain].MGP, functionName: 'totalSupply' }).then(setSupplyMGP)
-    publicClients[chain].readContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'totalSupply' }).then(setSupplyRMGP)
-    publicClients[chain].readContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'balanceOf', args: [contracts[chain].YMGP] }).then(setYMGPHoldings)
-    publicClients[chain].readContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'unsubmittedWithdraws' }).then(setUnsubmittedWithdraws)
-    publicClients[chain].readContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'totalSupply' }).then(setSupplyYMGP)
-    publicClients[chain].readContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'totalLocked' }).then(setTotalLockedYMGP)
-    publicClients[chain].readContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'unclaimedUserYield' }).then(setUnclaimedUserYield)
+    publicClients[chain].readContract({ abi: contractABIs.MGP, address: contracts[chain].MGP, functionName: 'totalSupply' }).then(setSupplYMGP)
+    publicClients[chain].readContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'totalSupply' }).then(setSupplyRMGP)
+    publicClients[chain].readContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'balanceOf', args: [contracts[chain].YMGP] }).then(setYMGPHoldings)
+    publicClients[chain].readContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'unsubmittedWithdraws' }).then(setUnsubmittedWithdraws)
+    publicClients[chain].readContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'totalSupply' }).then(setSupplyYMGP)
+    publicClients[chain].readContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'totalLocked' }).then(setTotalLockedYMGP)
+    publicClients[chain].readContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'unclaimedUserYield' }).then(setUnclaimedUserYield)
     publicClients[chain].readContract({ abi: contractABIs.vlMGP, address: contracts[chain].VLMGP, functionName: 'getUserTotalLocked', args: [contracts[chain].RMGP] }).then(setReefiLockedMGP)
     publicClients[chain].readContract({ abi: contractABIs.vlMGP, address: contracts[chain].VLMGP, functionName: 'totalLocked' }).then(setTotalLockedMGP)
     publicClients[chain].readContract({ abi: contractABIs.vlMGP, address: contracts[chain].VLMGP, functionName: 'getUserUnlockingSchedule', args: [contracts[chain].RMGP] }).then(setUnlockSchedule)
@@ -148,11 +153,11 @@ const App = () => {
     if (!account) return
     publicClients[1].getEnsName({ address: account }).then(setENS)
     publicClients[chain].readContract({ abi: contractABIs.MGP, address: contracts[chain].MGP, functionName: 'allowance', args: [account, contracts[chain].RMGP] }).then(setMGPAllowance)
-    publicClients[chain].readContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'allowance', args: [account, contracts[chain].YMGP] }).then(setRMGPAllowance)
-    publicClients[chain].readContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'getUserPendingWithdraws', args: [account] }).then(setUserPendingWithdraws)
-    publicClients[chain].readContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'getUserWithdrawable', account }).then(setUserWithdrawable)
-    publicClients[chain].readContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'lockedBalances', args: [account] }).then(setUserLockedYMGP)
-    publicClients[chain].readContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'unclaimedUserYield', account }).then(setUnclaimedUserYield)
+    publicClients[chain].readContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'allowance', args: [account, contracts[chain].YMGP] }).then(setRMGPAllowance)
+    publicClients[chain].readContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'getUserPendingWithdraws', args: [account] }).then(setUserPendingWithdraws)
+    publicClients[chain].readContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'getUserWithdrawable', account }).then(setUserWithdrawable)
+    publicClients[chain].readContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'lockedBalances', args: [account] }).then(setUserLockedYMGP)
+    publicClients[chain].readContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'unclaimedUserYield', account }).then(setUnclaimedUserYield)
     estimateCompoundRMGPGas().then(setCompoundRMGPGas)
     updateBalances()
   }, [chain, account])
@@ -161,7 +166,7 @@ const App = () => {
     for (const item of JSON.parse(abi ?? '[]')) {
       if (item.type === 'constructor') {
         setConstructorArgs((item.inputs as { internalType: string, name: string, type: string, value?: string }[]).map(arg => {
-          const contract = arg.name.toUpperCase().replace('_', '').replace('TOKEN', '')
+          const contract = arg.name.toUpperCase().replace('_', '').replace('TOKEN', '') as keyof Contracts
           if (Object.keys(contracts[chain]).includes(contract)) arg.value = contracts[chain][contract]
           return arg
         }))
@@ -176,7 +181,7 @@ const App = () => {
     setWalletClient(client)
     setAccount((await client.requestAddresses())[0]);
     setIsConnecting(false);
-    return () => window.ethereum.removeListener('accountsChanged', handleAccountsChanged)
+    return () => window.ethereum?.removeListener('accountsChanged', handleAccountsChanged)
   }
 
   const disconnectWallet = () => {
@@ -190,56 +195,69 @@ const App = () => {
   };
 
   const approve = async () => {
+    if (!walletClient) return alert('Wallet not connected')
+    if (!account) return alert('No address found')
     if (mode === 'deposit') {
       const amount = approveInfinity ? 2n ** 256n - 1n : sendAmount;
       await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.MGP, address: contracts[chain].MGP, account, functionName: 'approve', args: [contracts[chain].RMGP, amount] })).request)
       setMGPAllowance(await publicClients[chain].readContract({ abi: contractABIs.MGP, address: contracts[chain].MGP, account, functionName: 'allowance', args: [account, contracts[chain].RMGP] }))
     } else if (mode === 'convert') {
       const amount = approveInfinity ? 2n ** 256n - 1n : sendAmount;
-      await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, account, functionName: 'approve', args: [contracts[chain].YMGP, amount] })).request)
-      setRMGPAllowance(await publicClients[chain].readContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, account, functionName: 'allowance', args: [account, contracts[chain].YMGP] }))
+      await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, account, functionName: 'approve', args: [contracts[chain].YMGP, amount] })).request)
+      setRMGPAllowance(await publicClients[chain].readContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, account, functionName: 'allowance', args: [account, contracts[chain].YMGP] }))
     }
   }
 
   const depositMGP = async () => {
+    if (!walletClient) return alert('Wallet not connected')
     if (mgpAllowance < sendAmount) return alert('Allowance too low')
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'deposit', account, args: [sendAmount] })).request)
+    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'deposit', account, args: [sendAmount] })).request)
     updateBalances()
   }
 
   const depositRMGP = async () => {
+    if (!walletClient) return alert('Wallet not connected')
     if (rmgpAllowance < sendAmount) return alert('Allowance too low')
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'deposit', account, args: [sendAmount] })).request)
+    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'deposit', account, args: [sendAmount] })).request)
     updateBalances()
   }
 
   const lockYMGP = async () => {
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'lock', account, args: [sendAmount] })).request)
+    if (!walletClient) return alert('Wallet not connected')
+    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'lock', account, args: [sendAmount] })).request)
     updateBalances()
-    publicClients[chain].readContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'totalSupply' }).then(setSupplyYMGP)
-    publicClients[chain].readContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'totalLocked' }).then(setTotalLockedYMGP)
+    publicClients[chain].readContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'totalSupply' }).then(setSupplyYMGP)
+    publicClients[chain].readContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'totalLocked' }).then(setTotalLockedYMGP)
   }
 
   const unlockYMGP = async () => {
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'unlock', account, args: [sendAmount] })).request)
+    if (!walletClient) return alert('Wallet not connected')
+    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'unlock', account, args: [sendAmount] })).request)
     updateBalances()
   }
 
   const redeemRMGP = async () => {
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'startUnlock', account, args: [sendAmount] })).request)
+    if (!walletClient) return alert('Wallet not connected')
+    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'startUnlock', account, args: [sendAmount] })).request)
     updateBalances()
   }
 
   const withdrawMGP = async () => {
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'unlock', account })).request)
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'withdraw', account })).request)
+    if (!walletClient) return alert('Wallet not connected')
+    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'unlock', account })).request)
+    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'withdraw', account })).request)
   }
 
-  // const compoundRMGP = async () => walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'claim', account })).request)
-  const compoundRMGP = async () => walletClient.writeContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'claim', account, chain: walletClient.chain })
+  // const compoundRMGP = async () => walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'claim', account })).request)
+  const compoundRMGP = async () => {
+    if (!walletClient) return alert('Wallet not connected')
+    if (!account) return alert('No address found')
+    await walletClient.writeContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'claim', account, chain: walletClient.chain })
+  }
 
   const claimYMGPRewards = async () => {
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.yMGP, address: contracts[chain].YMGP, functionName: 'claim', account })).request)
+    if (!walletClient) return alert('Wallet not connected')
+    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'claim', account })).request)
     updateBalances()
   }
 
@@ -247,7 +265,7 @@ const App = () => {
     const gasPrice: bigint = await publicClients[chain].getGasPrice()
     let gas: bigint
     try {
-      gas = await publicClients[chain].estimateContractGas({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, functionName: 'deposit', account, args: [sendAmount] })
+      gas = await publicClients[chain].estimateContractGas({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'deposit', account, args: [sendAmount] })
     } catch(e) {
       gas = 0n
     }
@@ -255,9 +273,13 @@ const App = () => {
   }
 
   const deployContract = async () => {
+    if (!walletClient) return alert('Wallet not connected')
+    if (!account) return alert('No address found')
+    if (!abi) return alert('ABI not set')
+    if (!bytecode) return alert('Bytecode not set')
     const args = []
     for (const arg of constructorArgs) {
-      if (!('value' in arg) || arg.value.length === 0) return alert(`Constructor argument ${arg.name} is missing`)
+      if (!('value' in arg) || arg.value?.length === 0) return alert(`Constructor argument ${arg.name} is missing`)
       args.push(arg.value)
     }
     alert(`Contract Deployed: ${await walletClient.deployContract({ abi: JSON.parse(abi), account, bytecode, args, chain: walletClient.chain })}`)
@@ -270,16 +292,16 @@ const App = () => {
           <div className="bg-gray-800 p-4 rounded-xl border border-gray-700 mb-6 flex justify-between items-center">
             <div className="flex items-center gap-4">
               <h1 className="text-xl font-bold">REEFI</h1>
-              <p>Refinance Magpie yield{/* and governance*/}</p>
+              <p>Refinance Magpie Yield{/* and governance*/}</p>
             </div>
             {account ? <div className="flex items-center space-x-4">
               <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">MGP: {!balances ? 'Loading...' : (formatEther(balances.MGP, decimals.MGP).toFixed(4))}</div>
-              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">rMGP: {!balances ? 'Loading...' : (formatEther(balances.rMGP, decimals.rMGP).toFixed(4))}</div>
-              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">yMGP: {!balances ? 'Loading...' : (formatEther(balances.yMGP, decimals.yMGP).toFixed(4))}</div>
-              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">Locked yMGP: {!balances ? 'Loading...' : (formatEther(userLockedYMGP, decimals.yMGP).toFixed(4))}</div>
-              <div className="bg-green-600/20 text-green-400 rounded-lg px-3 py-2 text-sm">{ens.length > 0 ? ens : `${account.slice(0, 6)}...${account.slice(-4)}`}</div>
-              <select className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white" value={chain} onChange={e => updateChain(Number(e.target.value) as 56 | 42161)}>
-                <option value="56">BSC</option>
+              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">RMGP: {!balances ? 'Loading...' : (formatEther(balances.RMGP, decimals.RMGP).toFixed(4))}</div>
+              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">YMGP: {!balances ? 'Loading...' : (formatEther(balances.YMGP, decimals.YMGP).toFixed(4))}</div>
+              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">Locked YMGP: {!balances ? 'Loading...' : (formatEther(userLockedYMGP, decimals.YMGP).toFixed(4))}</div>
+              <div className="bg-green-600/20 text-green-400 rounded-lg px-3 py-2 text-sm">{ens ?? `${account.slice(0, 6)}...${account.slice(-4)}`}</div>
+              <select className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white" value={chain} onChange={e => updateChain(Number(e.target.value) as 42161)}>
+                <option value="56" disabled>BSC</option>
                 <option value="42161">Arbitrum</option>
               </select>
               <button type="button" className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors text-sm" onClick={() => disconnectWallet()}>Disconnect</button>
@@ -301,8 +323,8 @@ const App = () => {
                 </div>
                 <div className="grid grid-cols-2 col-span-2 gap-2">
                   <div className="bg-gray-700/50 rounded-lg p-2">
-                    <p className="text-gray-400 text-xs">Max Supply</p>
-                    <p className="font-medium">{formatNumber(formatEther(supplyMGP, decimals.MGP))}</p>
+                    <p className="text-gray-400 text-xs">Total Supply</p>
+                    <p className="font-medium">{formatNumber(formatEther(supplYMGP, decimals.MGP))}</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Locked</p>
@@ -310,11 +332,11 @@ const App = () => {
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Lock Rate</p>
-                    <p className="font-medium">{Math.round(10_000*Number(totalLockedMGP)/Number(supplyMGP))/100}%</p>
+                    <p className="font-medium">{Math.round(10_000*Number(totalLockedMGP)/Number(supplYMGP))/100}%</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">FDV</p>
-                    <p className="font-medium">${formatNumber((prices.MGP*formatEther(supplyMGP, decimals.MGP)))}</p>
+                    <p className="font-medium">${formatNumber((prices.MGP*formatEther(supplYMGP, decimals.MGP)))}</p>
                   </div>
                 </div>
               </div>
@@ -327,28 +349,32 @@ const App = () => {
                   <div>
                     <div className="flex items-center">
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-2">R</div>
-                      <p className="font-bold text-lg">$rMGP</p>
+                      <p className="font-bold text-lg">$RMGP</p>
                     </div>
                     <h2 className="text-2xl font-bold mt-2">${Math.round(prices.MGP*mgpRmgpRatio*100_000)/100_000}</h2>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 col-span-2 gap-2">
+                <div className="grid grid-cols-3 col-span-2 gap-2">
                   <div className="bg-gray-700/50 rounded-lg p-2">
-                    <p className="text-gray-400 text-xs">Underlying</p>
-                    <p className="font-medium">{formatNumber(formatEther(reefiLockedMGP, decimals.MGP), 6)} MGP</p>
+                    <p className="text-gray-400 text-xs">Supply</p>
+                    <p className="font-medium">{formatNumber(formatEther(supplyRMGP, decimals.MGP))} MGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
-                    <p className="text-gray-400 text-xs">1 rMGP</p>
+                    <p className="text-gray-400 text-xs">TVL</p>
+                    <p className="font-medium">{formatNumber(formatEther(reefiLockedMGP, decimals.MGP), 4)} MGP</p>
+                  </div>
+                  <div className="bg-gray-700/50 rounded-lg p-2">
+                    <p className="text-gray-400 text-xs">1 RMGP</p>
                     <p className="font-medium">{mgpRmgpRatio.toFixed(8)} MGP</p>
                   </div>
                 </div>
               </div>
-              <p className="text-gray-400 text-xs mt-2">$rMGP earns auto compounding yield from locked $MGP, while remaining liquid. $rMGP can be converted back to $MGP.</p>
+              <p className="text-gray-400 text-xs mt-2">$RMGP earns auto compounding yield from locked $MGP, while remaining liquid. $RMGP can be converted back to $MGP.</p>
               <ul className="list-disc list-inside text-gray-300 text-xs mt-2">
                 <li><strong>Liquid</strong>: Tradable token representing locked $MGP</li>
                 <li><strong>Auto Compounding</strong>: Yield is automatically reinvested</li>
-                <li><strong>Pegged</strong>: $rMGP is pegged to $MGP with a 10% depeg limit</li>
-                <li><strong>Redeemable</strong>: $rMGP can be redeemed for $MGP natively</li>
+                <li><strong>Pegged</strong>: $RMGP is pegged to $MGP with a 10% depeg limit</li>
+                <li><strong>Redeemable</strong>: $RMGP can be redeemed for $MGP natively</li>
               </ul>
             </div>
             
@@ -358,27 +384,27 @@ const App = () => {
                   <div>
                     <div className="flex items-center">
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-2">Y</div>
-                      <p className="font-bold text-lg">$yMGP</p>
+                      <p className="font-bold text-lg">$YMGP</p>
                     </div>
                     <h2 className="text-2xl font-bold mt-2">${Math.round(prices.MGP*mgpRmgpRatio*ymgpRmgpRatio*100_000)/100_000}</h2>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 col-span-2">
                   <div className="bg-gray-700/50 rounded-lg p-2">
-                    <p className="text-gray-400 text-xs">Underlying</p>
-                    <p className="font-medium">{formatNumber(formatEther(supplyYMGP+totalLockedYMGP, decimals.yMGP))} rMGP</p>
+                    <p className="text-gray-400 text-xs">Supply</p>
+                    <p className="font-medium">{formatNumber(formatEther(supplyYMGP+totalLockedYMGP, decimals.YMGP))} YMGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Peg</p>
                     <p className="font-medium">{Math.round(ymgpRmgpRatio*100)}%</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
-                    <p className="text-gray-400 text-xs">Locked</p>
+                    <p className="text-gray-400 text-xs">Lock Rate</p>
                     <p className="font-medium">{Math.round(10_000*Number(totalLockedYMGP)/Number(supplyYMGP+totalLockedYMGP))/100}%</p>
                   </div>
                 </div>
               </div>
-              <p className="text-gray-400 text-xs mt-2">$yMGP is backed 1:1 by $rMGP but cannot be converted back to $rMGP. 5% of protocol yield and withdrawals {/*and 100% of $rMGP from $vMGP deposits */}are distributed to locked $yMGP paid in $rMGP.</p>
+              <p className="text-gray-400 text-xs mt-2">$YMGP is backed 1:1 by $RMGP but cannot be converted back to $RMGP. 5% of protocol yield and withdrawals {/*and 100% of $RMGP from $vMGP deposits */}are distributed to locked $YMGP paid in $RMGP.</p>
             </div>
 
             {/* <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
@@ -394,14 +420,14 @@ const App = () => {
               <div className="grid grid-cols-2 gap-2 mt-4">
                 <div className="bg-gray-700/50 rounded-lg p-2">
                   <p className="text-gray-400 text-xs">Supply</p>
-                  <p className="font-medium">{Math.round(coins.vMGP.supply/100)/10}K yMGP</p>
+                  <p className="font-medium">{Math.round(coins.vMGP.supply/100)/10}K YMGP</p>
                 </div>
                 <div className="bg-gray-700/50 rounded-lg p-2">
                   <p className="text-gray-400 text-xs">Peg</p>
                   <p className="font-medium">{Math.round(coins.vMGP.peg*100)}%</p>
                 </div>
               </div>
-              <p className="text-gray-400 text-xs mt-2">$vMGP is minted 1:1 for $rMGP but cannot be converted back to $yMGP. $vMGP controls all of REEFI's voting power for Magpie governance proposals but earns no yield.</p>
+              <p className="text-gray-400 text-xs mt-2">$vMGP is minted 1:1 for $RMGP but cannot be converted back to $YMGP. $vMGP controls all of REEFI's voting power for Magpie governance proposals but earns no yield.</p>
             </div> */}
           </div>
 
@@ -427,11 +453,11 @@ const App = () => {
                 </div>
                 <div className="text-sm bg-gray-700 rounded-lg px-3 py-1 flex items-center">
                   <div className="w-2 h-2 rounded-full bg-green-400 mr-2" />
-                  <span>rMGP APY: {Math.round(10_000*aprToApy(mgpAPR)*0.9)/100}%</span>
+                  <span>RMGP APY: {Math.round(10_000*aprToApy(mgpAPR)*0.9)/100}%</span>
                 </div>
                 <div className="text-sm bg-gray-700 rounded-lg px-3 py-1 flex items-center">
                   <div className="w-2 h-2 rounded-full bg-green-400 mr-2" />
-                  <span>Locked yMGP APY: {Math.round(10_000*(((Number(reefiLockedMGP)*aprToApy(mgpAPR)*0.05)/Number(totalLockedYMGP))+(aprToApy(mgpAPR)*0.9)))/100}%+</span>
+                  <span>Locked YMGP APY: {Math.round(10_000*(((Number(reefiLockedMGP)*aprToApy(mgpAPR)*0.05)/Number(totalLockedYMGP))+(aprToApy(mgpAPR)*0.9)))/100}%+</span>
                 </div>
               </div>
             </div>
@@ -440,10 +466,10 @@ const App = () => {
               <div className="bg-gray-700 p-1 rounded-lg flex">
                 <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'deploy' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('deploy')}>Deploy Contract</button>
                 <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'deposit' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('deposit')}>Deposit MGP</button>
-                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'convert' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('convert')}>Convert rMGP</button>
-                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'lock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('lock')}>Lock yMGP</button>
-                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'unlock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('unlock')}>Unlock yMGP</button>
-                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'redeem' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('redeem')}>Withdraw rMGP</button>
+                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'convert' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('convert')}>Convert RMGP</button>
+                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'lock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('lock')}>Lock YMGP</button>
+                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'unlock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('unlock')}>Unlock YMGP</button>
+                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'redeem' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('redeem')}>Withdraw RMGP</button>
               </div>
             </div>
 
@@ -468,8 +494,8 @@ const App = () => {
                 </div>
                 <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={deployContract}>Deploy Contract</button>
                 <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4" onClick={async () => {
-                  const { request } = await publicClients[chain].simulateContract({ abi: contractABIs.rMGP, address: contracts[chain].RMGP, account, functionName: 'setYMGP', args: [contracts[chain].YMGP] })
-                  await walletClient.writeContract(request)
+                  const { request } = await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, account, functionName: 'setYMGP', args: [contracts[chain].YMGP] })
+                  await walletClient?.writeContract(request)
                 }}>Set YMGP</button>
               </div>}
 
@@ -494,15 +520,15 @@ const App = () => {
                   <div className="text-center my-2"><div className="inline-block p-1 bg-gray-700 rounded-full"><ArrowDown size={20} className="text-gray-400" /></div></div>
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
-                      <h3 className="text-md font-medium">Receive rMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {formatEther(balances.rMGP, decimals.rMGP)} rMGP</div>
+                      <h3 className="text-md font-medium">Receive RMGP</h3>
+                      <div className="text-sm text-gray-400">Balance: {formatEther(balances.RMGP, decimals.RMGP)} RMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount) / mgpRmgpRatio} readOnly/>
                       <div className="flex items-center">
                         <div className="bg-green-600 rounded-md px-3 py-1 flex items-center">
                           <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2">R</div>
-                          <span>rMGP</span>
+                          <span>RMGP</span>
                         </div>
                       </div>
                     </div>
@@ -523,14 +549,14 @@ const App = () => {
                       <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
                       <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
                     </div>
-                  </> : <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositMGP}>Get rMGP</button>}
+                  </> : <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositMGP}>Get RMGP</button>}
                 </div>
                 <div className="mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm">
                   <div className="flex items-start">
                     <div className="p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-400"><title>Info</title><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
                     <div>
                       <span className="font-medium text-indigo-300">About</span>
-                      <p className="text-gray-300 mt-1">$MGP can be converted to $rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards and half the withdrawal fees.</p>
+                      <p className="text-gray-300 mt-1">$MGP can be converted to $RMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards and half the withdrawal fees.</p>
                     </div>
                   </div>
                 </div>
@@ -540,16 +566,16 @@ const App = () => {
                 <div className="bg-gray-700/50 p-5 rounded-lg">
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
-                      <h3 className="text-md font-medium">Convert rMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {formatEther(balances.rMGP, decimals.rMGP)} rMGP</div>
+                      <h3 className="text-md font-medium">Convert RMGP</h3>
+                      <div className="text-sm text-gray-400">Balance: {formatEther(balances.RMGP, decimals.RMGP)} RMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))}/>
                       <div className="flex items-center space-x-2">
-                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(balances.rMGP)}>MAX</button>
+                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(balances.RMGP)}>MAX</button>
                         <div className="rounded-md px-3 py-1 flex items-center bg-green-600">
                           <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-green-500">R</div>
-                          <span>rMGP</span>
+                          <span>RMGP</span>
                         </div>
                       </div>
                     </div>
@@ -558,25 +584,25 @@ const App = () => {
                   <div className="grid grid-cols-1 gap-2 mb-4">
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <h3 className="text-md font-medium">Receive yMGP</h3>
-                        <div className="text-sm text-gray-400">Balance: {formatEther(balances.yMGP, decimals.yMGP)} yMGP</div>
+                        <h3 className="text-md font-medium">Receive YMGP</h3>
+                        <div className="text-sm text-gray-400">Balance: {formatEther(balances.YMGP, decimals.YMGP)} YMGP</div>
                       </div>
                       <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between mb-8">
                         <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)/ymgpRmgpRatio} readOnly/>
                         <div className="flex items-center">
                           <div className="bg-green-600 rounded-md px-3 py-1 flex items-center">
                             <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2">Y</div>
-                            <span>yMGP</span>
+                            <span>YMGP</span>
                           </div>
                         </div>
                       </div>
                       {rmgpAllowance < sendAmount ? <>
-                        <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={approve}>Approve rMGP</button>
+                        <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={approve}>Approve RMGP</button>
                         <div className="flex items-center mt-2">
                           <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
                           <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
                         </div>
-                      </> : <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositRMGP}>Get yMGP</button>}
+                      </> : <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositRMGP}>Get YMGP</button>}
                     </div>
                     {/* <div>
                       <div className="flex justify-between items-center mb-1">
@@ -607,7 +633,7 @@ const App = () => {
                     <div className="p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-400"><title>Info</title><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
                     <div>
                       <span className="font-medium text-indigo-300">About</span>
-                      <p className="text-gray-300 mt-1">$yMGP is backed 1:1 by $rMGP. This process can not be undone.</p>
+                      <p className="text-gray-300 mt-1">$YMGP is backed 1:1 by $RMGP. This process can not be undone.</p>
                     </div>
                   </div>
                 </div>
@@ -617,16 +643,16 @@ const App = () => {
                 <div className="bg-gray-700/50 p-5 rounded-lg">
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
-                      <h3 className="text-md font-medium">Redeem rMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {formatEther(balances.rMGP, decimals.rMGP)} rMGP</div>
+                      <h3 className="text-md font-medium">Redeem RMGP</h3>
+                      <div className="text-sm text-gray-400">Balance: {formatEther(balances.RMGP, decimals.RMGP)} RMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))} />
                       <div className="flex items-center space-x-2">
-                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(balances.rMGP)}>MAX</button>
+                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(balances.RMGP)}>MAX</button>
                         <div className="bg-green-600 rounded-md px-3 py-1 flex items-center">
                           <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2">R</div>
-                          <span>rMGP</span>
+                          <span>RMGP</span>
                         </div>
                       </div>
                     </div>
@@ -650,10 +676,10 @@ const App = () => {
                   <div className="mb-4 text-sm text-gray-400">
                     <div className="flex justify-between mb-1">
                       <span>Rate</span>
-                      <span>{mgpRmgpRatio*0.9} MGP to rMGP</span>
+                      <span>{mgpRmgpRatio*0.9} MGP to RMGP</span>
                     </div>
                   </div>
-                  <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}" onClick={redeemRMGP}>Redeem rMGP</button>
+                  <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}" onClick={redeemRMGP}>Redeem RMGP</button>
                   {userPendingWithdraws > 0n ? <>
                     <h3 className="text-md font-medium mt-4">Pending Withdraws</h3>
                     <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
@@ -672,11 +698,11 @@ const App = () => {
                     </div>
                     <div>
                       <span className="font-medium text-indigo-300">About</span>
-                      <p className="text-gray-300 mt-1">$rMGP can be redeemed for the underlying $MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate.</p>
+                      <p className="text-gray-300 mt-1">$RMGP can be redeemed for the underlying $MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate.</p>
                       <p className="text-gray-300 mt-1">The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.</p>
                       <p className="text-gray-300 mt-1">Only 6 withdrawals can be processed through Magpie at once. If all slots are used, withdrawals will be added to the queue once a new slot is made available making worst case withdrawal time 120 days.</p>
-                      <p className="text-gray-300 mt-1">With the 10% withdrawal fee, $rMGP depegs under 90% of the underlying value always recover as they can be arbitraged by people willing to wait for withdrawals to be processed.</p>
-                      <p className="text-gray-300 mt-1">Half of the withdrawal fee (5% of withdrawal) is redistributed to $yMGP holders as yield, with the other half sent to the Reefi treasury.</p>
+                      <p className="text-gray-300 mt-1">With the 10% withdrawal fee, $RMGP depegs under 90% of the underlying value always recover as they can be arbitraged by people willing to wait for withdrawals to be processed.</p>
+                      <p className="text-gray-300 mt-1">Half of the withdrawal fee (5% of withdrawal) is redistributed to $YMGP holders as yield, with the other half sent to the Reefi treasury.</p>
                     </div>
                   </div>
                 </div>
@@ -687,16 +713,16 @@ const App = () => {
                   {mode === 'lock' ? <>
                     <div className="mb-4">
                       <div className="flex justify-between items-center mb-1">
-                        <h3 className="text-md font-medium">Lock yMGP</h3>
-                        <div className="text-sm text-gray-400">Balance: {formatEther(balances.yMGP, decimals.yMGP)} yMGP</div>
+                        <h3 className="text-md font-medium">Lock YMGP</h3>
+                        <div className="text-sm text-gray-400">Balance: {formatEther(balances.YMGP, decimals.YMGP)} YMGP</div>
                       </div>
                       <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                         <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))} />
                         <div className="flex items-center space-x-2">
-                          <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(balances.yMGP)}>MAX</button>
+                          <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(balances.YMGP)}>MAX</button>
                           <div className="rounded-md px-3 py-1 flex items-center bg-green-600">
                             <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-green-500">Y</div>
-                            <span>yMGP</span>
+                            <span>YMGP</span>
                           </div>
                         </div>
                       </div>
@@ -715,23 +741,23 @@ const App = () => {
                         <span>{Math.round(10_000*(((Number(reefiLockedMGP)*aprToApy(mgpAPR)*0.05)/Number(totalLockedYMGP))+(aprToApy(mgpAPR)*0.9)))/100}%+</span>
                       </div>
                     </div>
-                    <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={lockYMGP}>Lock yMGP</button>
+                    <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={lockYMGP}>Lock YMGP</button>
                   </> : <>
                     <div className="flex justify-between items-center mb-1">
-                      <h3 className="text-md font-medium">Unlock yMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {formatEther(balances.yMGP, decimals.yMGP)} yMGP</div>
+                      <h3 className="text-md font-medium">Unlock YMGP</h3>
+                      <div className="text-sm text-gray-400">Balance: {formatEther(balances.YMGP, decimals.YMGP)} YMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between mb-4">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))} />
                       <div className="flex items-center space-x-2">
-                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(balances.yMGP)}>MAX</button>
+                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(balances.YMGP)}>MAX</button>
                         <div className="rounded-md px-3 py-1 flex items-center bg-green-600">
                           <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-green-500">Y</div>
-                          <span>yMGP</span>
+                          <span>YMGP</span>
                         </div>
                       </div>
                     </div>
-                    <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={unlockYMGP}>Unlock yMGP</button>
+                    <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={unlockYMGP}>Unlock YMGP</button>
                   </>}
                 </div>
                 <div className="mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm">
@@ -741,7 +767,7 @@ const App = () => {
                     </div>
                     <div>
                       <span className="font-medium text-indigo-300">About</span>
-                      <p className="text-gray-300 mt-1">$yMGP can be locked to earn additional yield paid in $rMGP. 5% of protocol yield and half of $rMGP withdrawal fees are paid to $yMGP lockers.</p>
+                      <p className="text-gray-300 mt-1">$YMGP can be locked to earn additional yield paid in $RMGP. 5% of protocol yield and half of $RMGP withdrawal fees are paid to $YMGP lockers.</p>
                     </div>
                   </div>
                 </div>
@@ -760,26 +786,26 @@ const App = () => {
                     <p className="font-medium text-lg">${formatNumber(uncompoundedMGPYield*prices.MGP, 6)}</p>
                   </div>
                   <div className="bg-green-600 bg-opacity-75 w-full h-[0.5px] my-2" />
-                  {Object.keys(pendingRewards).map(symbol => <div key={symbol} className="flex justify-between">
+                  {pendingRewards ? (Object.keys(pendingRewards) as Coins[]).map(symbol => <div key={symbol} className="flex justify-between">
                     <p className="font-small text-xs">{formatNumber(formatEther(pendingRewards[symbol].rewards, decimals[symbol]), 6)} {symbol}</p>
                     <p className="font-small text-xs">${formatNumber(prices[symbol]*Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol])), 6)}</p>
-                  </div>)}
+                  </div>) : ''}
                 </div>
-                <p className="text-gray-400 text-xs mt-2">Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of rMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as rMGP, 4% sent to the treasury, and 5% to locked yMGP. By clicking the button below, you will receive 1% of the pending yield.</p>
+                <p className="text-gray-400 text-xs mt-2">Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of RMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as RMGP, 4% sent to the treasury, and 5% to locked YMGP. By clicking the button below, you will receive 1% of the pending yield.</p>
                 <p className="text-xs text-gray-400 mt-4">Estimated Payout: <span className="text-green-400">${formatNumber(uncompoundedMGPYield*prices.MGP*0.01, 6)}</span></p>
                 <p className="text-xs text-gray-400">Estimated Gas Fee: <span className="text-red-400">${formatNumber(estimatedCompoundGasFee, 6)}</span></p>
                 <p className="text-gray-400 mt-2">Estimated Profit: <span className={`text-${uncompoundedMGPYield*prices.MGP*0.01 > estimatedCompoundGasFee ? 'green' : 'red'}-400`}>{uncompoundedMGPYield*prices.MGP*0.01 > estimatedCompoundGasFee ? '' : '-'}${String(formatNumber(uncompoundedMGPYield*prices.MGP*0.01-estimatedCompoundGasFee, 6)).replace('-', '')}</span></p>
                 {uncompoundedMGPYield*prices.MGP*0.01 < estimatedCompoundGasFee ? <p className="text-gray-400 text-xs">ETA Till Profitable: {formatTime((estimatedCompoundGasFee/prices.MGP) / (formatEther(BigInt(mgpAPR*Number(reefiLockedMGP)), decimals.MGP) / (365 * 24 * 60 * 60)))}</p> : ''}
-                <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={compoundRMGP}>Compound rMGP Yield (Get ~{formatNumber(0.01*uncompoundedMGPYield*(1/mgpRmgpRatio), 6)} rMGP)</button>
+                <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={compoundRMGP}>Compound RMGP Yield (Get ~{formatNumber(0.01*uncompoundedMGPYield*(1/mgpRmgpRatio), 6)} RMGP)</button>
               </div>
               <div>
                 <div className="bg-gray-700/50 rounded-lg p-4">
                   <p className="text-gray-400 text-sm">Unclaimed Rewards</p>
-                  <p className="font-medium text-lg">{formatEther(unclaimedUserYield, decimals.yMGP)} rMGP</p>
-                  <p className="font-small text-xs">Total: {formatEther(ymgpHoldings-supplyYMGP-totalLockedYMGP, decimals.yMGP)} rMGP</p>
+                  <p className="font-medium text-lg">{formatEther(unclaimedUserYield, decimals.YMGP)} RMGP</p>
+                  <p className="font-small text-xs">Total: {formatEther(ymgpHoldings-supplyYMGP-totalLockedYMGP, decimals.YMGP)} RMGP</p>
                 </div>
-                <p className="text-gray-400 text-xs mt-2">Locked $yMGP earns additional yield from the underlying $vlMGP and from 5% of $rMGP withdrawal.</p>
-                <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={claimYMGPRewards}>Claim yMGP Rewards</button>
+                <p className="text-gray-400 text-xs mt-2">Locked $YMGP earns additional yield from the underlying $vlMGP and from 5% of $RMGP withdrawal.</p>
+                <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={claimYMGPRewards}>Claim YMGP Rewards</button>
               </div>
             </div>
           </div>
@@ -787,7 +813,7 @@ const App = () => {
           <div className="bg-gray-800 p-4 rounded-xl border border-gray-700 mb-6">
             <h2 className="text-lg font-bold mb-2">Contract Addresses</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
-              {Object.keys(contracts[chain]).map(contract => <div key={contract}>
+              {(Object.keys(contracts[chain]) as (keyof Contracts)[]).map(contract => <div key={contract}>
                 <span className="font-semibold">{contract}:</span>
                 <a href={`${publicClients[chain].chain.blockExplorers.default.url}/address/${contracts[chain][contract]}`} className="ml-2 break-all text-green-300">{contracts[chain][contract]}</a>
               </div>)}

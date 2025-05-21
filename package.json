@@ -2,7 +2,8 @@
   "name": "reefi-frontend",
   "private": true,
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/react": "^19.1.4"
   },
   "peerDependencies": {
     "typescript": "^5"

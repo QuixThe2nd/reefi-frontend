@@ -117,6 +117,14 @@ const App = () => {
     await walletClient?.switchChain({ id })
     setChain(id)
   }
+  const updatePendingRewards = async () => {
+    publicClients[chain].readContract({ abi: contractABIs.masterMagpie, address: contracts[chain].MASTERMAGPIE, functionName: 'allPendingTokens', args: [contracts[chain].VLMGP, contracts[chain].RMGP] }).then(data => {
+      const [pendingMGP, bonusTokenAddresses, bonusTokenSymbols, pendingBonusRewards] = data
+      const newPendingRewards: Record<string, { address: `0x${string}`, rewards: bigint }> = { MGP: { address: contracts[chain].MGP, rewards: pendingMGP } }
+      for (const i in bonusTokenSymbols) newPendingRewards[bonusTokenSymbols[i].replace('Bridged ', '').toUpperCase()] = { rewards: pendingBonusRewards[i], address: bonusTokenAddresses[i] };
+      setPendingRewards(newPendingRewards)
+    })
+  }
 
   useEffect(() => {
     fetch('https://api.magpiexyz.io/getalltokenprice').then(res => res.json().then((body: { data: { AllPrice: typeof prices }}) => setPrices(body.data.AllPrice)))
@@ -139,12 +147,7 @@ const App = () => {
     publicClients[chain].readContract({ abi: contractABIs.vlMGP, address: contracts[chain].VLMGP, functionName: 'totalLocked' }).then(setTotalLockedMGP)
     publicClients[chain].readContract({ abi: contractABIs.vlMGP, address: contracts[chain].VLMGP, functionName: 'getUserUnlockingSchedule', args: [contracts[chain].RMGP] }).then(setUnlockSchedule)
     fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${chain}&rewarder=${contracts[chain].VLSTREAMREWARDER}`).then(res => res.json()).then(body => {setMGPAPR((body as { data: { rewardTokenInfo: { apr: number }[] }}).data.rewardTokenInfo.reduce((acc, token) => {return { ...token, apr: acc.apr+token.apr }}).apr)})
-    publicClients[chain].readContract({ abi: contractABIs.masterMagpie, address: contracts[chain].MASTERMAGPIE, functionName: 'allPendingTokens', args: [contracts[chain].VLMGP, contracts[chain].RMGP] }).then(data => {
-      const [pendingMGP, bonusTokenAddresses, bonusTokenSymbols, pendingBonusRewards] = data
-      const newPendingRewards: Record<string, { address: `0x${string}`, rewards: bigint }> = { MGP: { address: contracts[chain].MGP, rewards: pendingMGP } }
-      for (const i in bonusTokenSymbols) newPendingRewards[bonusTokenSymbols[i].replace('Bridged ', '').toUpperCase()] = { rewards: pendingBonusRewards[i], address: bonusTokenAddresses[i] };
-      setPendingRewards(newPendingRewards)
-    })
+    updatePendingRewards()
   }, [chain])
 
   useEffect(() => setMgpRmgpRatio(supplyRMGP === 0n ? 1 : (Number(reefiLockedMGP) / Number(supplyRMGP))), [supplyRMGP, reefiLockedMGP])
@@ -248,11 +251,11 @@ const App = () => {
     await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'withdraw', account })).request)
   }
 
-  // const compoundRMGP = async () => walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'claim', account })).request)
   const compoundRMGP = async () => {
     if (!walletClient) return alert('Wallet not connected')
     if (!account) return alert('No address found')
-    await walletClient.writeContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'claim', account, chain: walletClient.chain })
+    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'claim', account })).request)
+    updatePendingRewards()
   }
 
   const claimYMGPRewards = async () => {
@@ -365,7 +368,7 @@ const App = () => {
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">1 RMGP</p>
-                    <p className="font-medium">{mgpRmgpRatio.toFixed(8)} MGP</p>
+                    <p className="font-medium">{mgpRmgpRatio.toFixed(6)} MGP</p>
                   </div>
                 </div>
               </div>
@@ -395,12 +398,12 @@ const App = () => {
                     <p className="font-medium">{formatNumber(formatEther(supplyYMGP+totalLockedYMGP, decimals.YMGP))} YMGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
-                    <p className="text-gray-400 text-xs">Peg</p>
-                    <p className="font-medium">{Math.round(ymgpRmgpRatio*100)}%</p>
-                  </div>
-                  <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Lock Rate</p>
                     <p className="font-medium">{Math.round(10_000*Number(totalLockedYMGP)/Number(supplyYMGP+totalLockedYMGP))/100}%</p>
+                  </div>
+                  <div className="bg-gray-700/50 rounded-lg p-2">
+                    <p className="text-gray-400 text-xs">Peg</p>
+                    <p className="font-medium">{Math.round(ymgpRmgpRatio*100)}%</p>
                   </div>
                 </div>
               </div>

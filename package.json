@@ -8,11 +8,9 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "bun-plugin-tailwind": "^0.0.15",
     "lucide-react": "^0.511.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "tailwindcss": "^4.1.7",
     "viem": "^2.30.0"
   }
 }

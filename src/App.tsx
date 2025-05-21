@@ -360,7 +360,7 @@ const App = () => {
                 <div className="grid grid-cols-3 col-span-2 gap-2">
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Supply</p>
-                    <p className="font-medium">{formatNumber(formatEther(supplyRMGP, decimals.MGP))} MGP</p>
+                    <p className="font-medium">{formatNumber(formatEther(supplyRMGP, decimals.rMGP))} rMGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">TVL</p>

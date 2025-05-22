@@ -299,9 +299,9 @@ const App = (): ReactElement => {
             </div>
             {account ? <div className="flex items-center space-x-4">
               <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">MGP: {mgpBalance !== null ? formatEther(mgpBalance, decimals.MGP).toFixed(4) : 'Loading...'}</div>
-              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">RMGP: {rmgpBalance !== null ? formatEther(rmgpBalance, decimals.RMGP).toFixed(4) : 'Loading...'}</div>
-              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">YMGP: {ymgpBalance !== null ? formatEther(ymgpBalance, decimals.YMGP).toFixed(4) : 'Loading...'}</div>
-              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">Locked YMGP: {userLockedYMGP !== null ? formatEther(userLockedYMGP, decimals.YMGP).toFixed(4) : 'Loading...'}</div>
+              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">rMGP: {rmgpBalance !== null ? formatEther(rmgpBalance, decimals.RMGP).toFixed(4) : 'Loading...'}</div>
+              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">yMGP: {ymgpBalance !== null ? formatEther(ymgpBalance, decimals.YMGP).toFixed(4) : 'Loading...'}</div>
+              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">Locked yMGP: {userLockedYMGP !== null ? formatEther(userLockedYMGP, decimals.YMGP).toFixed(4) : 'Loading...'}</div>
               <div className="bg-green-600/20 text-green-400 rounded-lg px-3 py-2 text-sm">{ens ?? `${account.slice(0, 6)}...${account.slice(-4)}`}</div>
               <select className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white" value={chain} onChange={e => setChain(Number(e.target.value) as 56 | 42161)}>
                 <option value="56">BSC</option>
@@ -318,7 +318,7 @@ const App = (): ReactElement => {
                   <div>
                     <div className="flex items-center">
                       <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2">M</div>
-                      <p className="font-bold text-lg">$MGP</p>
+                      <p className="font-bold text-lg">MGP</p>
                     </div>
                     <h2 className="text-2xl font-bold mt-2">${prices.MGP.toFixed(5)}</h2>
                   </div>
@@ -342,7 +342,7 @@ const App = (): ReactElement => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-400 text-xs mt-2">$MGP is the underlying asset all derivatives rely on.</p>
+              <p className="text-gray-400 text-xs mt-2">MGP is the underlying asset all derivatives rely on.</p>
             </div>
             
             <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
@@ -351,7 +351,7 @@ const App = (): ReactElement => {
                   <div>
                     <div className="flex items-center">
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-2">R</div>
-                      <p className="font-bold text-lg">$RMGP</p>
+                      <p className="font-bold text-lg">rMGP</p>
                     </div>
                     <h2 className="text-2xl font-bold mt-2">${(prices.MGP*mgpRmgpRatio).toFixed(5)}</h2>
                   </div>
@@ -371,12 +371,12 @@ const App = (): ReactElement => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-400 text-xs mt-2">$RMGP earns auto compounding yield from locked $MGP, while remaining liquid. $RMGP can be converted back to $MGP.</p>
+              <p className="text-gray-400 text-xs mt-2">rMGP earns auto compounding yield from locked MGP, while remaining liquid. rMGP can be converted back to MGP.</p>
               <ul className="list-disc list-inside text-gray-300 text-xs mt-2">
-                <li><strong>Liquid</strong>: Tradable token representing locked $MGP</li>
+                <li><strong>Liquid</strong>: Tradable token representing locked MGP</li>
                 <li><strong>Auto Compounding</strong>: Yield is automatically reinvested</li>
-                <li><strong>Pegged</strong>: $RMGP is pegged to $MGP with a 10% depeg limit</li>
-                <li><strong>Redeemable</strong>: $RMGP can be redeemed for $MGP natively</li>
+                <li><strong>Pegged</strong>: rMGP is pegged to MGP with a 10% depeg limit</li>
+                <li><strong>Redeemable</strong>: rMGP can be redeemed for MGP natively</li>
               </ul>
             </div>
             
@@ -386,7 +386,7 @@ const App = (): ReactElement => {
                   <div>
                     <div className="flex items-center">
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-2">Y</div>
-                      <p className="font-bold text-lg">$YMGP</p>
+                      <p className="font-bold text-lg">yMGP</p>
                     </div>
                     <h2 className="text-2xl font-bold mt-2">${(prices.MGP*mgpRmgpRatio*ymgpRmgpRatio).toFixed(5)}</h2>
                   </div>
@@ -394,7 +394,7 @@ const App = (): ReactElement => {
                 <div className="grid grid-cols-3 gap-2 col-span-2">
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Supply</p>
-                    <p className="font-medium">{ymgpSupply === null || totalLockedYMGP === null ? 'Loading...' : formatNumber(formatEther(ymgpSupply+totalLockedYMGP, decimals.YMGP))} YMGP</p>
+                    <p className="font-medium">{ymgpSupply === null || totalLockedYMGP === null ? 'Loading...' : formatNumber(formatEther(ymgpSupply+totalLockedYMGP, decimals.YMGP))} yMGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Lock Rate</p>
@@ -406,9 +406,9 @@ const App = (): ReactElement => {
                   </div>
                 </div>
               </div>
-              <p className="text-gray-400 text-xs mt-2">$YMGP is backed 1:1 by $RMGP but cannot be converted back to $RMGP. 5% of protocol yield and withdrawals {/*and 100% of $RMGP from $vMGP deposits */}are distributed to locked $YMGP paid in $RMGP.</p>
+              <p className="text-gray-400 text-xs mt-2">yMGP is backed 1:1 by rMGP but cannot be converted back to rMGP. 5% of protocol yield and withdrawals {/*and 100% of rMGP from $vMGP deposits */}are distributed to locked yMGP paid in rMGP.</p>
               <ul className="list-disc list-inside text-gray-300 text-xs mt-2">
-                <li><strong>Liquid</strong>: Tradable token representing locked $rMGP</li>
+                <li><strong>Liquid</strong>: Tradable token representing locked rMGP</li>
                 <li><strong>Extra Yield</strong>: 5% of protocol yield and withdrawals</li>
               </ul>
             </div>
@@ -433,7 +433,7 @@ const App = (): ReactElement => {
                   <p className="font-medium">{Math.round(coins.vMGP.peg*100)}%</p>
                 </div>
               </div>
-              <p className="text-gray-400 text-xs mt-2">$vMGP is minted 1:1 for $RMGP but cannot be converted back to $YMGP. $vMGP controls all of REEFI's voting power for Magpie governance proposals but earns no yield.</p>
+              <p className="text-gray-400 text-xs mt-2">$vMGP is minted 1:1 for rMGP but cannot be converted back to yMGP. $vMGP controls all of REEFI's voting power for Magpie governance proposals but earns no yield.</p>
             </div> */}
           </div>
 
@@ -527,7 +527,7 @@ const App = (): ReactElement => {
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
                       <h3 className="text-md font-medium">Receive RMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {rmgpBalance !== null ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} RMGP</div>
+                      <div className="text-sm text-gray-400">Balance: {rmgpBalance !== null ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} rMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount) / mgpRmgpRatio} readOnly/>
@@ -562,7 +562,7 @@ const App = (): ReactElement => {
                     <div className="p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-400"><title>Info</title><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
                     <div>
                       <span className="font-medium text-indigo-300">About</span>
-                      <p className="text-gray-300 mt-1">$MGP can be converted to $RMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards and half the withdrawal fees.</p>
+                      <p className="text-gray-300 mt-1">MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards and half the withdrawal fees.</p>
                     </div>
                   </div>
                 </div>
@@ -573,7 +573,7 @@ const App = (): ReactElement => {
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
                       <h3 className="text-md font-medium">Convert RMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {rmgpBalance !== null ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} RMGP</div>
+                      <div className="text-sm text-gray-400">Balance: {rmgpBalance !== null ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} rMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))}/>
@@ -591,7 +591,7 @@ const App = (): ReactElement => {
                     <div>
                       <div className="flex justify-between items-center mb-1">
                         <h3 className="text-md font-medium">Receive YMGP</h3>
-                        <div className="text-sm text-gray-400">Balance: {ymgpBalance !== null ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} YMGP</div>
+                        <div className="text-sm text-gray-400">Balance: {ymgpBalance !== null ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} yMGP</div>
                       </div>
                       <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between mb-8">
                         <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)/ymgpRmgpRatio} readOnly/>
@@ -639,7 +639,7 @@ const App = (): ReactElement => {
                     <div className="p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-400"><title>Info</title><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div>
                     <div>
                       <span className="font-medium text-indigo-300">About</span>
-                      <p className="text-gray-300 mt-1">$YMGP is backed 1:1 by $RMGP. This process can not be undone.</p>
+                      <p className="text-gray-300 mt-1">yMGP is backed 1:1 by rMGP. This process can not be undone.</p>
                     </div>
                   </div>
                 </div>
@@ -650,7 +650,7 @@ const App = (): ReactElement => {
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
                       <h3 className="text-md font-medium">Redeem RMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {rmgpBalance !== null ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} RMGP</div>
+                      <div className="text-sm text-gray-400">Balance: {rmgpBalance !== null ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} rMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))} />
@@ -704,11 +704,11 @@ const App = (): ReactElement => {
                     </div>
                     <div>
                       <span className="font-medium text-indigo-300">About</span>
-                      <p className="text-gray-300 mt-1">$RMGP can be redeemed for the underlying $MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate.</p>
+                      <p className="text-gray-300 mt-1">rMGP can be redeemed for the underlying MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate.</p>
                       <p className="text-gray-300 mt-1">The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.</p>
                       <p className="text-gray-300 mt-1">Only 6 withdrawals can be processed through Magpie at once. If all slots are used, withdrawals will be added to the queue once a new slot is made available making worst case withdrawal time 120 days.</p>
-                      <p className="text-gray-300 mt-1">With the 10% withdrawal fee, $RMGP depegs under 90% of the underlying value always recover as they can be arbitraged by people willing to wait for withdrawals to be processed.</p>
-                      <p className="text-gray-300 mt-1">Half of the withdrawal fee (5% of withdrawal) is redistributed to $YMGP holders as yield, with the other half sent to the Reefi treasury.</p>
+                      <p className="text-gray-300 mt-1">With the 10% withdrawal fee, rMGP depegs under 90% of the underlying value always recover as they can be arbitraged by people willing to wait for withdrawals to be processed.</p>
+                      <p className="text-gray-300 mt-1">Half of the withdrawal fee (5% of withdrawal) is redistributed to yMGP holders as yield, with the other half sent to the Reefi treasury.</p>
                     </div>
                   </div>
                 </div>
@@ -720,7 +720,7 @@ const App = (): ReactElement => {
                     <div className="mb-4">
                       <div className="flex justify-between items-center mb-1">
                         <h3 className="text-md font-medium">Lock YMGP</h3>
-                        <div className="text-sm text-gray-400">Balance: {ymgpBalance !== null ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} YMGP</div>
+                        <div className="text-sm text-gray-400">Balance: {ymgpBalance !== null ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} yMGP</div>
                       </div>
                       <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                         <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))} />
@@ -751,7 +751,7 @@ const App = (): ReactElement => {
                   </> : <>
                     <div className="flex justify-between items-center mb-1">
                       <h3 className="text-md font-medium">Unlock YMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {ymgpBalance !== null ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} YMGP</div>
+                      <div className="text-sm text-gray-400">Balance: {ymgpBalance !== null ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} yMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between mb-4">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))} />
@@ -773,7 +773,7 @@ const App = (): ReactElement => {
                     </div>
                     <div>
                       <span className="font-medium text-indigo-300">About</span>
-                      <p className="text-gray-300 mt-1">$YMGP can be locked to earn additional yield paid in $RMGP. 5% of protocol yield and half of $RMGP withdrawal fees are paid to $YMGP lockers.</p>
+                      <p className="text-gray-300 mt-1">yMGP can be locked to earn additional yield paid in rMGP. 5% of protocol yield and half of rMGP withdrawal fees are paid to yMGP lockers.</p>
                     </div>
                   </div>
                 </div>
@@ -802,15 +802,15 @@ const App = (): ReactElement => {
                 <p className="text-xs text-gray-400">Estimated Gas Fee: <span className="text-red-400">${formatNumber(estimatedCompoundGasFee, 6)}</span></p>
                 <p className="text-gray-400 mt-2">Estimated Profit: <span className={`text-${uncompoundedMGPYield*prices.MGP*0.01 > estimatedCompoundGasFee ? 'green' : 'red'}-400`}>{uncompoundedMGPYield*prices.MGP*0.01 > estimatedCompoundGasFee ? '' : '-'}${String(formatNumber(uncompoundedMGPYield*prices.MGP*0.01-estimatedCompoundGasFee, 6)).replace('-', '')}</span></p>
                 {uncompoundedMGPYield*prices.MGP*0.01 < estimatedCompoundGasFee ? <p className="text-gray-400 text-xs">ETA Till Profitable: {formatTime((estimatedCompoundGasFee/prices.MGP) / (formatEther(BigInt(mgpAPR*Number(reefiLockedMGP)), decimals.MGP) / (365 * 24 * 60 * 60)))}</p> : ''}
-                <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={compoundRMGP}>Compound RMGP Yield (Get ~{formatNumber(0.01*uncompoundedMGPYield*(1/mgpRmgpRatio), 6)} RMGP)</button>
+                <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={compoundRMGP}>Compound RMGP Yield (Get ~{formatNumber(0.01*uncompoundedMGPYield*(1/mgpRmgpRatio), 6)} rMGP)</button>
               </div>
               <div>
                 <div className="bg-gray-700/50 rounded-lg p-4">
                   <p className="text-gray-400 text-sm">Unclaimed Rewards</p>
-                  <p className="font-medium text-lg">{unclaimedUserYield !== null ? formatNumber(formatEther(unclaimedUserYield, decimals.YMGP), 4) : 'Loading...'} RMGP</p>
-                  <p className="font-small text-xs">Total: {ymgpHoldings === null || ymgpSupply === null || totalLockedYMGP === null ? 'Loading...' : formatNumber(formatEther(ymgpHoldings-ymgpSupply-totalLockedYMGP, decimals.YMGP), 4)} RMGP</p>
+                  <p className="font-medium text-lg">{unclaimedUserYield !== null ? formatNumber(formatEther(unclaimedUserYield, decimals.YMGP), 4) : 'Loading...'} rMGP</p>
+                  <p className="font-small text-xs">Total: {ymgpHoldings === null || ymgpSupply === null || totalLockedYMGP === null ? 'Loading...' : formatNumber(formatEther(ymgpHoldings-ymgpSupply-totalLockedYMGP, decimals.YMGP), 4)} rMGP</p>
                 </div>
-                <p className="text-gray-400 text-xs mt-2">Locked $YMGP earns additional yield from the underlying $vlMGP and from 5% of $RMGP withdrawal.</p>
+                <p className="text-gray-400 text-xs mt-2">Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.</p>
                 <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={claimYMGPRewards}>Claim YMGP Rewards</button>
               </div>
             </div>

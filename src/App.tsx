@@ -265,6 +265,7 @@ const App = () => {
     updatePendingRewards()
     updateUnclaimedUserYield()
     updateRMGPSupply()
+    updateRMGPBalance()
     updateTotalLockedMGP()
   }
 
@@ -330,7 +331,7 @@ const App = () => {
                       <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2">M</div>
                       <p className="font-bold text-lg">$MGP</p>
                     </div>
-                    <h2 className="text-2xl font-bold mt-2">${prices.MGP.toFixed(6)}</h2>
+                    <h2 className="text-2xl font-bold mt-2">${prices.MGP.toFixed(5)}</h2>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 col-span-2 gap-2">
@@ -363,13 +364,13 @@ const App = () => {
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-2">R</div>
                       <p className="font-bold text-lg">$RMGP</p>
                     </div>
-                    <h2 className="text-2xl font-bold mt-2">${(prices.MGP*mgpRmgpRatio).toFixed(6)}</h2>
+                    <h2 className="text-2xl font-bold mt-2">${(prices.MGP*mgpRmgpRatio).toFixed(5)}</h2>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 col-span-2 gap-2">
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Supply</p>
-                    <p className="font-medium">{formatNumber(formatEther(rmgpSupply, decimals.RMGP))} rMGP</p>
+                    <p className="font-medium">{formatNumber(formatEther(rmgpSupply, decimals.RMGP), 4)} rMGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">TVL</p>
@@ -377,7 +378,7 @@ const App = () => {
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">1 RMGP</p>
-                    <p className="font-medium">{mgpRmgpRatio.toFixed(6)} MGP</p>
+                    <p className="font-medium">{mgpRmgpRatio.toFixed(5)} MGP</p>
                   </div>
                 </div>
               </div>
@@ -398,7 +399,7 @@ const App = () => {
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-2">Y</div>
                       <p className="font-bold text-lg">$YMGP</p>
                     </div>
-                    <h2 className="text-2xl font-bold mt-2">${(prices.MGP*mgpRmgpRatio*ymgpRmgpRatio).toFixed(6)}</h2>
+                    <h2 className="text-2xl font-bold mt-2">${(prices.MGP*mgpRmgpRatio*ymgpRmgpRatio).toFixed(5)}</h2>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-2 col-span-2">
@@ -813,8 +814,8 @@ const App = () => {
               <div>
                 <div className="bg-gray-700/50 rounded-lg p-4">
                   <p className="text-gray-400 text-sm">Unclaimed Rewards</p>
-                  <p className="font-medium text-lg">{formatEther(unclaimedUserYield, decimals.YMGP)} RMGP</p>
-                  <p className="font-small text-xs">Total: {formatEther(ymgpHoldings-ymgpSupply-totalLockedYMGP, decimals.YMGP)} RMGP</p>
+                  <p className="font-medium text-lg">{formatNumber(formatEther(unclaimedUserYield, decimals.YMGP), 4)} RMGP</p>
+                  <p className="font-small text-xs">Total: {formatNumber(formatEther(ymgpHoldings-ymgpSupply-totalLockedYMGP, decimals.YMGP), 4)} RMGP</p>
                 </div>
                 <p className="text-gray-400 text-xs mt-2">Locked $YMGP earns additional yield from the underlying $vlMGP and from 5% of $RMGP withdrawal.</p>
                 <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={claimYMGPRewards}>Claim YMGP Rewards</button>

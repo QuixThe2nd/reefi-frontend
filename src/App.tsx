@@ -453,6 +453,9 @@ const App = (): ReactElement => {
             {showDiagram && <div className="flex justify-center mt-4"><img src={Diagram} alt="Diagram" className="h-120" /></div>}
           </div>
 
+          <h2 className="text-xxl color-red">VERY EARLY BETA</h2>
+          <p>Reefi is in a very early beta. Please deposit very small amounts that you are okay losing as Reefi has many known and unknown bugs that need to be fixed.</p>
+
           <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6">
             <div className="flex flex-row-reverse mb-6">
               <div className="flex gap-1">

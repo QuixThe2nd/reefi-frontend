@@ -61,12 +61,9 @@ const decimals: Record<Coins, number> = { MGP: 18, RMGP: 18, YMGP: 18, CKP: 18, 
 function useContractState<
   const abi extends Abi | readonly unknown[],
   functionName extends ContractFunctionName<abi, 'pure' | 'view'>,
-  const args extends ContractFunctionArgs<abi, 'pure' | 'view', functionName>,
-  T extends ReadContractReturnType<abi, functionName, args> | null
->(defaultValue: T, client: (typeof publicClients)[keyof typeof publicClients], args: ReadContractParameters<abi, functionName, args>, deps: unknown[]) {
-  // @ts-expect-error:
-  const [state, setState] = useState<T extends null ? ReadContractReturnType<abi, functionName, args> | null : ReadContractReturnType<abi, functionName, args>>(defaultValue)
-  // @ts-expect-error:
+  const args extends ContractFunctionArgs<abi, 'pure' | 'view', functionName>
+>(client: (typeof publicClients)[keyof typeof publicClients], args: ReadContractParameters<abi, functionName, args>, deps: unknown[]) {
+  const [state, setState] = useState<ReadContractReturnType<abi, functionName, args> | null>(null)
   const update = () => client.readContract(args).then(setState)
   useEffect(() => { update() }, [client, ...deps])
   return [state, update] as const
@@ -93,31 +90,31 @@ const App = () => {
   const [bytecode, setBytecode] = useState<`0x${string}`>()
 
   // Allowances
-  const [mgpAllowance, updateMGPAllowance] = useContractState(0n, publicClients[chain], { abi: contractABIs.MGP, address: contracts[chain].MGP, functionName: 'allowance', args: [account, contracts[chain].RMGP] }, [account])
-  const [rmgpAllowance, updateRMGPAllowance] = useContractState(0n, publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'allowance', args: [account, contracts[chain].YMGP] }, [account])
+  const [mgpAllowance, updateMGPAllowance] = useContractState(publicClients[chain], { abi: contractABIs.MGP, address: contracts[chain].MGP, functionName: 'allowance', args: [account, contracts[chain].RMGP] }, [account])
+  const [rmgpAllowance, updateRMGPAllowance] = useContractState(publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'allowance', args: [account, contracts[chain].YMGP] }, [account])
 
   // Balances
-  const [mgpBalance, updateMGPBalance] = useContractState(0n, publicClients[chain], { abi: contractABIs.MGP, address: contracts[chain].MGP, functionName: 'balanceOf', args: [account] }, [account])
-  const [rmgpBalance, updateRMGPBalance] = useContractState(0n, publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'balanceOf', args: [account] }, [account])
-  const [ymgpBalance, updateYMGPBalance] = useContractState(0n, publicClients[chain], { abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'balanceOf', args: [account] }, [account])
-  const [ymgpHoldings, updateYMGPHoldings] = useContractState(0n, publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'balanceOf', args: [contracts[chain].YMGP] }, [])
+  const [mgpBalance, updateMGPBalance] = useContractState(publicClients[chain], { abi: contractABIs.MGP, address: contracts[chain].MGP, functionName: 'balanceOf', args: [account] }, [account])
+  const [rmgpBalance, updateRMGPBalance] = useContractState(publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'balanceOf', args: [account] }, [account])
+  const [ymgpBalance, updateYMGPBalance] = useContractState(publicClients[chain], { abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'balanceOf', args: [account] }, [account])
+  const [ymgpHoldings, updateYMGPHoldings] = useContractState(publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'balanceOf', args: [contracts[chain].YMGP] }, [])
 
   // Locked
-  const [reefiLockedMGP, updateReefiLockedMGP] = useContractState(0n, publicClients[chain], { abi: contractABIs.vlMGP, address: contracts[chain].VLMGP, functionName: 'getUserTotalLocked', args: [contracts[chain].RMGP] }, [])
-  const [totalLockedMGP, updateTotalLockedMGP] = useContractState(0n, publicClients[chain], { abi: contractABIs.vlMGP, address: contracts[chain].VLMGP, functionName: 'totalLocked' }, [])
-  const [totalLockedYMGP, updateTotalLockedYMGP] = useContractState(0n, publicClients[chain], { abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'totalLocked' }, [])
-  const [userLockedYMGP, updateUserLockedYMGP] = useContractState(0n, publicClients[chain], { abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'lockedBalances', args: [account] }, [account])
+  const [reefiLockedMGP, updateReefiLockedMGP] = useContractState(publicClients[chain], { abi: contractABIs.vlMGP, address: contracts[chain].VLMGP, functionName: 'getUserTotalLocked', args: [contracts[chain].RMGP] }, [])
+  const [totalLockedMGP, updateTotalLockedMGP] = useContractState(publicClients[chain], { abi: contractABIs.vlMGP, address: contracts[chain].VLMGP, functionName: 'totalLocked' }, [])
+  const [totalLockedYMGP, updateTotalLockedYMGP] = useContractState(publicClients[chain], { abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'totalLocked' }, [])
+  const [userLockedYMGP, updateUserLockedYMGP] = useContractState(publicClients[chain], { abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'lockedBalances', args: [account] }, [account])
 
   // Supply
-  const [mgpSupply, updateMGPSupply] = useContractState(0n, publicClients[chain], { abi: contractABIs.MGP, address: contracts[chain].MGP, functionName: 'totalSupply' }, [])
-  const [ymgpSupply, updateYMGPSupply] = useContractState(0n, publicClients[chain], { abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'totalSupply' }, [])
-  const [rmgpSupply, updateRMGPSupply] = useContractState(0n, publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'totalSupply' }, [])
+  const [mgpSupply, updateMGPSupply] = useContractState(publicClients[chain], { abi: contractABIs.MGP, address: contracts[chain].MGP, functionName: 'totalSupply' }, [])
+  const [ymgpSupply, updateYMGPSupply] = useContractState(publicClients[chain], { abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'totalSupply' }, [])
+  const [rmgpSupply, updateRMGPSupply] = useContractState(publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'totalSupply' }, [])
   
   // Withdraws
-  const [userPendingWithdraws, updateUserPendingWithdraws] = useContractState(0n, publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'getUserPendingWithdraws', args: [account] }, [account])
-  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useContractState(0n, publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'unsubmittedWithdraws' }, [])
-  const [userWithdrawable, updateUserWithdrawable] = useContractState(0n, publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'getUserWithdrawable', account }, [account])
-  const [unlockSchedule, updateUnlockSchedule] = useContractState(null, publicClients[chain], { abi: contractABIs.vlMGP, address: contracts[chain].VLMGP, functionName: 'getUserUnlockingSchedule', args: [contracts[chain].RMGP] }, [])
+  const [userPendingWithdraws, updateUserPendingWithdraws] = useContractState(publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'getUserPendingWithdraws', args: [account] }, [account])
+  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useContractState(publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'unsubmittedWithdraws' }, [])
+  const [userWithdrawable, updateUserWithdrawable] = useContractState(publicClients[chain], { abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'getUserWithdrawable', account }, [account])
+  const [unlockSchedule, updateUnlockSchedule] = useContractState(publicClients[chain], { abi: contractABIs.vlMGP, address: contracts[chain].VLMGP, functionName: 'getUserUnlockingSchedule', args: [contracts[chain].RMGP] }, [])
 
   // Pegs
   const mgpRmgpRatio = useMemo(() => { return rmgpSupply === 0n ? 1 : (Number(reefiLockedMGP) / Number(rmgpSupply)) }, [rmgpSupply, reefiLockedMGP])
@@ -126,7 +123,7 @@ const App = () => {
   // Yield
   const [mgpAPR, setMGPAPR] = useState(0)
   const [pendingRewards, setPendingRewards] = useState<Record<Coins, { address: `0x${string}`, rewards: bigint }> | undefined>()
-  const [unclaimedUserYield, updateUnclaimedUserYield] = useContractState(0n, publicClients[chain], { abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'unclaimedUserYield', account }, [account])
+  const [unclaimedUserYield, updateUnclaimedUserYield] = useContractState(publicClients[chain], { abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'unclaimedUserYield', account }, [account])
   const [compoundRMGPGas, setCompoundRMGPGas] = useState(0n)
   const uncompoundedMGPYield = useMemo(() => {
     return pendingRewards ? (Object.keys(pendingRewards) as Coins[]).map(symbol => prices[symbol]*Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0)/prices.MGP : 0
@@ -197,7 +194,7 @@ const App = () => {
 
   const depositMGP = async () => {
     if (!walletClient) return alert('Wallet not connected')
-    if (mgpAllowance < sendAmount) return alert('Allowance too low')
+    if (!mgpAllowance || mgpAllowance < sendAmount) return alert('Allowance too low')
     await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'deposit', account, args: [sendAmount] })).request)
     updateMGPBalance()
     updateRMGPBalance()
@@ -209,7 +206,7 @@ const App = () => {
 
   const depositRMGP = async () => {
     if (!walletClient) return alert('Wallet not connected')
-    if (rmgpAllowance < sendAmount) return alert('Allowance too low')
+    if (!rmgpAllowance || rmgpAllowance < sendAmount) return alert('Allowance too low')
     await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'deposit', account, args: [sendAmount] })).request)
     updateRMGPBalance()
     updateYMGPBalance()
@@ -309,10 +306,10 @@ const App = () => {
               <p>Refinance Magpie Yield{/* and governance*/}</p>
             </div>
             {account ? <div className="flex items-center space-x-4">
-              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">MGP: {formatEther(mgpBalance, decimals.MGP).toFixed(4)}</div>
-              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">RMGP: {formatEther(rmgpBalance, decimals.RMGP).toFixed(4)}</div>
-              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">YMGP: {formatEther(ymgpBalance, decimals.YMGP).toFixed(4)}</div>
-              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">Locked YMGP: {formatEther(userLockedYMGP, decimals.YMGP).toFixed(4)}</div>
+              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">MGP: {mgpBalance ? formatEther(mgpBalance, decimals.MGP).toFixed(4) : 'Loading...'}</div>
+              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">RMGP: {rmgpBalance ? formatEther(rmgpBalance, decimals.RMGP).toFixed(4) : 'Loading...'}</div>
+              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">YMGP: {ymgpBalance ? formatEther(ymgpBalance, decimals.YMGP).toFixed(4) : 'Loading...'}</div>
+              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">Locked YMGP: {userLockedYMGP ? formatEther(userLockedYMGP, decimals.YMGP).toFixed(4) : 'Loading...'}</div>
               <div className="bg-green-600/20 text-green-400 rounded-lg px-3 py-2 text-sm">{ens ?? `${account.slice(0, 6)}...${account.slice(-4)}`}</div>
               <select className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white" value={chain} onChange={e => setChain(Number(e.target.value) as 42161)}>
                 <option value="56" disabled>BSC</option>
@@ -337,11 +334,11 @@ const App = () => {
                 <div className="grid grid-cols-2 col-span-2 gap-2">
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Supply</p>
-                    <p className="font-medium">{formatNumber(formatEther(mgpSupply, decimals.MGP))}</p>
+                    <p className="font-medium">{mgpSupply ? formatNumber(formatEther(mgpSupply, decimals.MGP)) : 'Loading...'}</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Locked</p>
-                    <p className="font-medium">{formatNumber(Math.round(formatEther(totalLockedMGP, decimals.MGP)))} MGP</p>
+                    <p className="font-medium">{totalLockedMGP ? formatNumber(Math.round(formatEther(totalLockedMGP, decimals.MGP))) : 'Loading...'} MGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Lock Rate</p>
@@ -349,7 +346,7 @@ const App = () => {
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">FDV</p>
-                    <p className="font-medium">${formatNumber((prices.MGP*formatEther(mgpSupply, decimals.MGP)))}</p>
+                    <p className="font-medium">${mgpSupply ? formatNumber((prices.MGP*formatEther(mgpSupply, decimals.MGP))) : 'Loading...'}</p>
                   </div>
                 </div>
               </div>
@@ -370,11 +367,11 @@ const App = () => {
                 <div className="grid grid-cols-3 col-span-2 gap-2">
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Supply</p>
-                    <p className="font-medium">{formatNumber(formatEther(rmgpSupply, decimals.RMGP), 4)} rMGP</p>
+                    <p className="font-medium">{rmgpSupply ? formatNumber(formatEther(rmgpSupply, decimals.RMGP), 4) : 'Loading...'} rMGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">TVL</p>
-                    <p className="font-medium">{formatNumber(formatEther(reefiLockedMGP, decimals.MGP), 3)} MGP</p>
+                    <p className="font-medium">{reefiLockedMGP ? formatNumber(formatEther(reefiLockedMGP, decimals.MGP), 3) : 'Loading...'} MGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">1 RMGP</p>
@@ -405,11 +402,11 @@ const App = () => {
                 <div className="grid grid-cols-3 gap-2 col-span-2">
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Supply</p>
-                    <p className="font-medium">{formatNumber(formatEther(ymgpSupply+totalLockedYMGP, decimals.YMGP))} YMGP</p>
+                    <p className="font-medium">{!ymgpSupply || !totalLockedYMGP ? 'Loading...' : formatNumber(formatEther(ymgpSupply+totalLockedYMGP, decimals.YMGP))} YMGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Lock Rate</p>
-                    <p className="font-medium">{Math.round(10_000*Number(totalLockedYMGP)/Number(ymgpSupply+totalLockedYMGP))/100}%</p>
+                    <p className="font-medium">{!ymgpSupply || !totalLockedYMGP ? 'Loading...' : Math.round(10_000*Number(totalLockedYMGP)/Number(ymgpSupply+totalLockedYMGP))/100}%</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Peg</p>
@@ -517,12 +514,12 @@ const App = () => {
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
                       <h3 className="text-md font-medium">Deposit MGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {formatEther(mgpBalance, decimals.MGP)} MGP</div>
+                      <div className="text-sm text-gray-400">Balance: {mgpBalance ? formatEther(mgpBalance, decimals.MGP) : 'Loading...'} MGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))} />
                       <div className="flex items-center space-x-2">
-                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(mgpBalance)}>MAX</button>
+                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(mgpBalance ?? 0n)}>MAX</button>
                         <div className="rounded-md px-3 py-1 flex items-center bg-blue-600">
                           <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-blue-400">M</div>
                           <span>MGP</span>
@@ -534,7 +531,7 @@ const App = () => {
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
                       <h3 className="text-md font-medium">Receive RMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {formatEther(rmgpBalance, decimals.RMGP)} RMGP</div>
+                      <div className="text-sm text-gray-400">Balance: {rmgpBalance ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} RMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount) / mgpRmgpRatio} readOnly/>
@@ -556,7 +553,7 @@ const App = () => {
                       <span>{Math.round(10_000*aprToApy(mgpAPR)*0.9)/100}%</span>
                     </div>
                   </div>
-                  {mgpAllowance < sendAmount ? <>
+                  {!mgpAllowance ? <p>Loading...</p> : mgpAllowance < sendAmount ? <>
                     <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={approve}>Approve MGP</button>
                     <div className="flex items-center mt-2">
                       <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
@@ -580,12 +577,12 @@ const App = () => {
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
                       <h3 className="text-md font-medium">Convert RMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {formatEther(rmgpBalance, decimals.RMGP)} RMGP</div>
+                      <div className="text-sm text-gray-400">Balance: {rmgpBalance ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} RMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))}/>
                       <div className="flex items-center space-x-2">
-                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(rmgpBalance)}>MAX</button>
+                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(rmgpBalance ?? 0n)}>MAX</button>
                         <div className="rounded-md px-3 py-1 flex items-center bg-green-600">
                           <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-green-500">R</div>
                           <span>RMGP</span>
@@ -598,7 +595,7 @@ const App = () => {
                     <div>
                       <div className="flex justify-between items-center mb-1">
                         <h3 className="text-md font-medium">Receive YMGP</h3>
-                        <div className="text-sm text-gray-400">Balance: {formatEther(ymgpBalance, decimals.YMGP)} YMGP</div>
+                        <div className="text-sm text-gray-400">Balance: {ymgpBalance ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} YMGP</div>
                       </div>
                       <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between mb-8">
                         <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)/ymgpRmgpRatio} readOnly/>
@@ -609,7 +606,7 @@ const App = () => {
                           </div>
                         </div>
                       </div>
-                      {rmgpAllowance < sendAmount ? <>
+                      {!rmgpAllowance ? <p>Loading...</p> : rmgpAllowance < sendAmount ? <>
                         <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={approve}>Approve RMGP</button>
                         <div className="flex items-center mt-2">
                           <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
@@ -657,12 +654,12 @@ const App = () => {
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
                       <h3 className="text-md font-medium">Redeem RMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {formatEther(rmgpBalance, decimals.RMGP)} RMGP</div>
+                      <div className="text-sm text-gray-400">Balance: {rmgpBalance ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} RMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))} />
                       <div className="flex items-center space-x-2">
-                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(rmgpBalance)}>MAX</button>
+                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(rmgpBalance ?? 0n)}>MAX</button>
                         <div className="bg-green-600 rounded-md px-3 py-1 flex items-center">
                           <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2">R</div>
                           <span>RMGP</span>
@@ -674,7 +671,7 @@ const App = () => {
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
                       <h3 className="text-md font-medium">Receive MGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {formatEther(mgpBalance, decimals.MGP)} MGP</div>
+                      <div className="text-sm text-gray-400">Balance: {mgpBalance ? formatEther(mgpBalance, decimals.MGP) : 'Loading...'} MGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={mgpRmgpRatio*formatEther(sendAmount)*0.9} readOnly />
@@ -693,12 +690,12 @@ const App = () => {
                     </div>
                   </div>
                   <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}" onClick={redeemRMGP}>Redeem RMGP</button>
-                  {userPendingWithdraws > 0n ? <>
+                  {userPendingWithdraws === null ? <p>Loading...</p> : userPendingWithdraws > 0n ? <>
                     <h3 className="text-md font-medium mt-4">Pending Withdraws</h3>
                     <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
                     {unlockSchedule ? <p>Unlock available in: {formatTime(Number(unlockSchedule[0].endTime)-(+new Date()/1000))} to {formatTime((unsubmittedWithdraws ? Number(unlockSchedule[unlockSchedule.length-1].endTime) + 60*60*24*60 : Number(unlockSchedule[unlockSchedule.length-1].endTime))-(+new Date()/1000))}</p> : <p>N/A</p>}
                   </> : ''}
-                  {userWithdrawable > 0n ? <>
+                  {userWithdrawable === null ? <p>Loading...</p> : userWithdrawable > 0n ? <>
                     <h3 className="text-md font-medium mt-4">Available To Withdraw</h3>
                     <p>{formatEther(userWithdrawable, decimals.MGP)} MGP</p>
                     <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}" onClick={withdrawMGP}>Withdraw MGP</button>
@@ -727,12 +724,12 @@ const App = () => {
                     <div className="mb-4">
                       <div className="flex justify-between items-center mb-1">
                         <h3 className="text-md font-medium">Lock YMGP</h3>
-                        <div className="text-sm text-gray-400">Balance: {formatEther(ymgpBalance, decimals.YMGP)} YMGP</div>
+                        <div className="text-sm text-gray-400">Balance: {ymgpBalance ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} YMGP</div>
                       </div>
                       <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                         <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))} />
                         <div className="flex items-center space-x-2">
-                          <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(ymgpBalance)}>MAX</button>
+                          <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(ymgpBalance ?? 0n)}>MAX</button>
                           <div className="rounded-md px-3 py-1 flex items-center bg-green-600">
                             <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-green-500">Y</div>
                             <span>YMGP</span>
@@ -758,12 +755,12 @@ const App = () => {
                   </> : <>
                     <div className="flex justify-between items-center mb-1">
                       <h3 className="text-md font-medium">Unlock YMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {formatEther(ymgpBalance, decimals.YMGP)} YMGP</div>
+                      <div className="text-sm text-gray-400">Balance: {ymgpBalance ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} YMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between mb-4">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} onChange={e => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))} />
                       <div className="flex items-center space-x-2">
-                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(ymgpBalance)}>MAX</button>
+                        <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(ymgpBalance ?? 0n)}>MAX</button>
                         <div className="rounded-md px-3 py-1 flex items-center bg-green-600">
                           <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-green-500">Y</div>
                           <span>YMGP</span>
@@ -814,8 +811,8 @@ const App = () => {
               <div>
                 <div className="bg-gray-700/50 rounded-lg p-4">
                   <p className="text-gray-400 text-sm">Unclaimed Rewards</p>
-                  <p className="font-medium text-lg">{formatNumber(formatEther(unclaimedUserYield, decimals.YMGP), 4)} RMGP</p>
-                  <p className="font-small text-xs">Total: {formatNumber(formatEther(ymgpHoldings-ymgpSupply-totalLockedYMGP, decimals.YMGP), 4)} RMGP</p>
+                  <p className="font-medium text-lg">{unclaimedUserYield ? formatNumber(formatEther(unclaimedUserYield, decimals.YMGP), 4) : 'Loading...'} RMGP</p>
+                  <p className="font-small text-xs">Total: {!ymgpHoldings || !ymgpSupply || !totalLockedYMGP ? 'Loading...' : formatNumber(formatEther(ymgpHoldings-ymgpSupply-totalLockedYMGP, decimals.YMGP), 4)} RMGP</p>
                 </div>
                 <p className="text-gray-400 text-xs mt-2">Locked $YMGP earns additional yield from the underlying $vlMGP and from 5% of $RMGP withdrawal.</p>
                 <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={claimYMGPRewards}>Claim YMGP Rewards</button>

@@ -415,6 +415,10 @@ const App = () => {
                 </div>
               </div>
               <p className="text-gray-400 text-xs mt-2">$YMGP is backed 1:1 by $RMGP but cannot be converted back to $RMGP. 5% of protocol yield and withdrawals {/*and 100% of $RMGP from $vMGP deposits */}are distributed to locked $YMGP paid in $RMGP.</p>
+              <ul className="list-disc list-inside text-gray-300 text-xs mt-2">
+                <li><strong>Liquid</strong>: Tradable token representing locked $rMGP</li>
+                <li><strong>Extra Yield</strong>: 5% of protocol yield and withdrawals</li>
+              </ul>
             </div>
 
             {/* <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">

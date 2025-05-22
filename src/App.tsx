@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, ReactElement } from 'react';
 import { ArrowDown } from 'lucide-react';
 import Diagram from '../public/diagram.svg'
-import { createPublicClient, createWalletClient, custom, erc20Abi, http, type WalletClient, type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods, type CustomTransport, Abi, ReadContractParameters, ContractFunctionArgs, ContractFunctionName, ReadContractReturnType } from 'viem';
+import { createPublicClient, createWalletClient, custom, erc20Abi, webSocket, type WalletClient, type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods, type CustomTransport, Abi, ReadContractParameters, ContractFunctionArgs, ContractFunctionName, ReadContractReturnType } from 'viem';
 import { arbitrum, bsc, mainnet } from 'viem/chains';
 
 mainnet.rpcUrls.default.http = ['https://eth.drpc.org']
@@ -53,9 +53,9 @@ const contracts: { 56: Contracts, 42161: Contracts } = {
   42161: { MGP: '0xa61F74247455A40b01b0559ff6274441FAfa22A3', RMGP: '0xAa4dEb3d1aa7a04627e83Ccf1d59fCB2BD18AC62', YMGP: '0x578AC88A7A9245CE4F86702Bb7857Da7F568369c', VLMGP: '0x536599497Ce6a35FC65C7503232Fec71A84786b9', MASTERMAGPIE: '0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7', VLSTREAMREWARDER: '0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45', WETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1' }
 } as const
 const publicClients = {
-  1: createPublicClient({ chain: mainnet, transport: http() }),
-  56: createPublicClient({ chain: bsc, transport: http() }),
-  42161: createPublicClient({ chain: arbitrum, transport: http() })
+  1: createPublicClient({ chain: mainnet, transport: webSocket('wss://eth.drpc.org') }),
+  56: createPublicClient({ chain: bsc, transport: webSocket('wss://binance.llamarpc.com') }),
+  42161: createPublicClient({ chain: arbitrum, transport: webSocket('wss://arbitrum.drpc.org') })
 }
 const decimals: Record<Coins, number> = { MGP: 18, RMGP: 18, YMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 }
 function useContractState<abi extends Abi | readonly unknown[], functionName extends ContractFunctionName<abi, 'pure' | 'view'>, args extends ContractFunctionArgs<abi, 'pure' | 'view', functionName>>
@@ -271,7 +271,7 @@ const App = (): ReactElement => {
 
   const estimateCompoundRMGPGas = async (): Promise<bigint> => {
     const gasPrice: bigint = await publicClients[chain].getGasPrice()
-    const gas = await publicClients[chain].estimateContractGas({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'deposit', account, args: [sendAmount] })
+    const gas = await publicClients[chain].estimateContractGas({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'claim', account })
     return gas*gasPrice
   }
 

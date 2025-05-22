@@ -75,7 +75,7 @@ const App = (): ReactElement => {
   const [prices, setPrices] = useState<Record<Coins, number>>({ MGP: 0, RMGP: 0, YMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 })
 
   // Wallet
-  const [walletClient, setWalletClient] = useState<WalletClient<CustomTransport> | undefined>()
+  const [walletClients, setWalletClients] = useState<{ 56: WalletClient<CustomTransport>, 42161: WalletClient<CustomTransport> } | undefined>()
   const [chain, setChain] = useState<56 | 42161>(56)
   const [account, setAccount] = useState<`0x${string}`>('0x0000000000000000000000000000000000000000')
   const [ens, setENS] = useState<string | null>(null)
@@ -141,7 +141,7 @@ const App = (): ReactElement => {
   }, [])
 
   useEffect(() => {
-    walletClient?.switchChain({ id: chain })
+    if (walletClients) walletClients[chain].switchChain({ id: chain })
     window.ethereum?.request({ method: 'eth_accounts' }).then(accounts => { if (accounts !== null) connectWallet() })
     updatePendingRewards()
     fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${chain}&rewarder=${contracts[chain].VLSTREAMREWARDER}`).then(res => res.json()).then(body => {setMGPAPR((body as { data: { rewardTokenInfo: { apr: number }[] }}).data.rewardTokenInfo.reduce((acc, token) => {return { ...token, apr: acc.apr+token.apr }}).apr)})
@@ -166,9 +166,12 @@ const App = (): ReactElement => {
   const connectWallet = async (): Promise<void | (() => void)> => {
     if (!window.ethereum) return alert('MetaMask not found. Please install MetaMask to use this application.');
     setIsConnecting(true);
-    const client = createWalletClient({ chain: bsc, transport: custom(window.ethereum)})
-    setWalletClient(client)
-    setAccount((await client.requestAddresses())[0] ?? '0x0000000000000000000000000000000000000000');
+    const clients = {
+      56: createWalletClient({ chain: bsc, transport: custom(window.ethereum)}),
+      42161: createWalletClient({ chain: arbitrum, transport: custom(window.ethereum)})
+    } as const
+    setWalletClients(clients)
+    setAccount((await clients[chain].requestAddresses())[0] ?? '0x0000000000000000000000000000000000000000');
     setIsConnecting(false);
     return () => window.ethereum?.removeListener('accountsChanged', handleAccountsChanged)
   }
@@ -176,23 +179,23 @@ const App = (): ReactElement => {
   const handleAccountsChanged = (accounts: `0x${string}`[]): void => setAccount(accounts[0] ?? '0x0000000000000000000000000000000000000000');
 
   const approve = async (): Promise<void> => {
-    if (!walletClient) return alert('Wallet not connected')
+    if (!walletClients) return alert('Wallet not connected')
     if (!account) return alert('No address found')
     if (mode === 'deposit') {
       const amount = approveInfinity ? 2n ** 256n - 1n : sendAmount;
-      await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.MGP, address: contracts[chain].MGP, account, functionName: 'approve', args: [contracts[chain].RMGP, amount] })).request)
+      await walletClients[chain].writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.MGP, address: contracts[chain].MGP, account, functionName: 'approve', args: [contracts[chain].RMGP, amount] })).request)
       updateMGPAllowance()
     } else if (mode === 'convert') {
       const amount = approveInfinity ? 2n ** 256n - 1n : sendAmount;
-      await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, account, functionName: 'approve', args: [contracts[chain].YMGP, amount] })).request)
+      await walletClients[chain].writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, account, functionName: 'approve', args: [contracts[chain].YMGP, amount] })).request)
       updateRMGPAllowance()
     }
   }
 
   const depositMGP = async (): Promise<void> => {
-    if (!walletClient) return alert('Wallet not connected')
+    if (!walletClients) return alert('Wallet not connected')
     if (mgpAllowance === null || mgpAllowance < sendAmount) return alert('Allowance too low')
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'deposit', account, args: [sendAmount] })).request)
+    await walletClients[chain].writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'deposit', account, args: [sendAmount] })).request)
     updateMGPBalance()
     updateRMGPBalance()
     updateMGPSupply()
@@ -202,9 +205,9 @@ const App = (): ReactElement => {
   }
 
   const depositRMGP = async (): Promise<void> => {
-    if (!walletClient) return alert('Wallet not connected')
+    if (!walletClients) return alert('Wallet not connected')
     if (rmgpAllowance === null || rmgpAllowance < sendAmount) return alert('Allowance too low')
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'deposit', account, args: [sendAmount] })).request)
+    await walletClients[chain].writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'deposit', account, args: [sendAmount] })).request)
     updateRMGPBalance()
     updateYMGPBalance()
     updateRMGPSupply()
@@ -213,24 +216,24 @@ const App = (): ReactElement => {
   }
 
   const lockYMGP = async (): Promise<void> => {
-    if (!walletClient) return alert('Wallet not connected')
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'lock', account, args: [sendAmount] })).request)
+    if (!walletClients) return alert('Wallet not connected')
+    await walletClients[chain].writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'lock', account, args: [sendAmount] })).request)
     updateYMGPSupply()
     updateTotalLockedYMGP()
     updateUserLockedYMGP()
   }
 
   const unlockYMGP = async (): Promise<void> => {
-    if (!walletClient) return alert('Wallet not connected')
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'unlock', account, args: [sendAmount] })).request)
+    if (!walletClients) return alert('Wallet not connected')
+    await walletClients[chain].writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'unlock', account, args: [sendAmount] })).request)
     updateYMGPSupply()
     updateTotalLockedYMGP()
     updateUserLockedYMGP()
   }
 
   const redeemRMGP = async (): Promise<void> => {
-    if (!walletClient) return alert('Wallet not connected')
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'startUnlock', account, args: [sendAmount] })).request)
+    if (!walletClients) return alert('Wallet not connected')
+    await walletClients[chain].writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'startUnlock', account, args: [sendAmount] })).request)
     updateUnlockSchedule()
     updateRMGPSupply()
     updateRMGPBalance()
@@ -243,9 +246,9 @@ const App = (): ReactElement => {
   }
 
   const withdrawMGP = async (): Promise<void> => {
-    if (!walletClient) return alert('Wallet not connected')
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'unlock', account })).request)
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'withdraw', account })).request)
+    if (!walletClients) return alert('Wallet not connected')
+    await walletClients[chain].writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'unlock', account })).request)
+    await walletClients[chain].writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'withdraw', account })).request)
     updateMGPBalance()
     updateUserPendingWithdraws()
     updateUnsubmittedWithdraws()
@@ -253,9 +256,9 @@ const App = (): ReactElement => {
   }
 
   const compoundRMGP = async (): Promise<void> => {
-    if (!walletClient) return alert('Wallet not connected')
+    if (!walletClients) return alert('Wallet not connected')
     if (!account) return alert('No address found')
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'claim', account })).request)
+    await walletClients[chain].writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, functionName: 'claim', account })).request)
     updatePendingRewards()
     updateUnclaimedUserYield()
     updateRMGPSupply()
@@ -264,8 +267,8 @@ const App = (): ReactElement => {
   }
 
   const claimYMGPRewards = async (): Promise<void> => {
-    if (!walletClient) return alert('Wallet not connected')
-    await walletClient.writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'claim', account })).request)
+    if (!walletClients) return alert('Wallet not connected')
+    await walletClients[chain].writeContract((await publicClients[chain].simulateContract({ abi: contractABIs.YMGP, address: contracts[chain].YMGP, functionName: 'claim', account })).request)
     updateUnclaimedUserYield()
   }
 
@@ -276,7 +279,7 @@ const App = (): ReactElement => {
   }
 
   const deployContract = async (): Promise<void> => {
-    if (!walletClient) return alert('Wallet not connected')
+    if (!walletClients) return alert('Wallet not connected')
     if (!account) return alert('No address found')
     if (abi === undefined) return alert('ABI not set')
     if (bytecode === undefined) return alert('Bytecode not set')
@@ -285,7 +288,7 @@ const App = (): ReactElement => {
       if (!('value' in arg) || arg.value?.length === 0) return alert(`Constructor argument ${arg.name} is missing`)
       args.push(arg.value)
     }
-    alert(`Contract Deployed: ${await walletClient.deployContract({ abi: JSON.parse(abi), account, bytecode, args, chain: walletClient.chain })}`)
+    alert(`Contract Deployed: ${await walletClients[chain].deployContract({ abi: JSON.parse(abi), account, bytecode, args, chain: walletClients[chain].chain })}`)
   }
 
   return (
@@ -318,7 +321,7 @@ const App = (): ReactElement => {
                   <div>
                     <div className="flex items-center">
                       <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2">M</div>
-                      <p className="font-bold text-lg">MGP</p>
+                      <p className="font-bold text-lg">$MGP</p>
                     </div>
                     <h2 className="text-2xl font-bold mt-2">${prices.MGP.toFixed(5)}</h2>
                   </div>
@@ -351,7 +354,7 @@ const App = (): ReactElement => {
                   <div>
                     <div className="flex items-center">
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-2">R</div>
-                      <p className="font-bold text-lg">rMGP</p>
+                      <p className="font-bold text-lg">$rMGP</p>
                     </div>
                     <h2 className="text-2xl font-bold mt-2">${(prices.MGP*mgpRmgpRatio).toFixed(5)}</h2>
                   </div>
@@ -366,7 +369,7 @@ const App = (): ReactElement => {
                     <p className="font-medium">{reefiLockedMGP !== null ? formatNumber(formatEther(reefiLockedMGP, decimals.MGP), 3) : 'Loading...'} MGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
-                    <p className="text-gray-400 text-xs">1 RMGP</p>
+                    <p className="text-gray-400 text-xs">1 rMGP</p>
                     <p className="font-medium">{mgpRmgpRatio.toFixed(5)} MGP</p>
                   </div>
                 </div>
@@ -386,7 +389,7 @@ const App = (): ReactElement => {
                   <div>
                     <div className="flex items-center">
                       <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center mr-2">Y</div>
-                      <p className="font-bold text-lg">yMGP</p>
+                      <p className="font-bold text-lg">$yMGP</p>
                     </div>
                     <h2 className="text-2xl font-bold mt-2">${(prices.MGP*mgpRmgpRatio*ymgpRmgpRatio).toFixed(5)}</h2>
                   </div>
@@ -426,7 +429,7 @@ const App = (): ReactElement => {
               <div className="grid grid-cols-2 gap-2 mt-4">
                 <div className="bg-gray-700/50 rounded-lg p-2">
                   <p className="text-gray-400 text-xs">Supply</p>
-                  <p className="font-medium">{Math.round(coins.vMGP.supply/100)/10}K YMGP</p>
+                  <p className="font-medium">{Math.round(coins.vMGP.supply/100)/10}K yMGP</p>
                 </div>
                 <div className="bg-gray-700/50 rounded-lg p-2">
                   <p className="text-gray-400 text-xs">Peg</p>
@@ -472,10 +475,10 @@ const App = (): ReactElement => {
               <div className="bg-gray-700 p-1 rounded-lg flex">
                 <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'deploy' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('deploy')}>Deploy Contract</button>
                 <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'deposit' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('deposit')}>Deposit MGP</button>
-                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'convert' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('convert')}>Convert RMGP</button>
-                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'lock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('lock')}>Lock YMGP</button>
-                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'unlock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('unlock')}>Unlock YMGP</button>
-                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'redeem' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('redeem')}>Withdraw RMGP</button>
+                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'convert' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('convert')}>Convert rMGP</button>
+                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'lock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('lock')}>Lock yMGP</button>
+                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'unlock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('unlock')}>Unlock yMGP</button>
+                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'redeem' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('redeem')}>Withdraw rMGP</button>
               </div>
             </div>
 
@@ -501,8 +504,9 @@ const App = (): ReactElement => {
                 <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={deployContract}>Deploy Contract</button>
                 <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4" onClick={async () => {
                   const { request } = await publicClients[chain].simulateContract({ abi: contractABIs.RMGP, address: contracts[chain].RMGP, account, functionName: 'setYMGP', args: [contracts[chain].YMGP] })
-                  await walletClient?.writeContract(request)
-                }}>Set YMGP</button>
+                  if (!walletClients) return alert('Wallet not connected')
+                  await walletClients[chain].writeContract(request)
+                }}>Set yMGP</button>
               </div>}
 
               {mode === 'deposit' && <>
@@ -526,7 +530,7 @@ const App = (): ReactElement => {
                   <div className="text-center my-2"><div className="inline-block p-1 bg-gray-700 rounded-full"><ArrowDown size={20} className="text-gray-400" /></div></div>
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
-                      <h3 className="text-md font-medium">Receive RMGP</h3>
+                      <h3 className="text-md font-medium">Receive rMGP</h3>
                       <div className="text-sm text-gray-400">Balance: {rmgpBalance !== null ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} rMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
@@ -534,7 +538,7 @@ const App = (): ReactElement => {
                       <div className="flex items-center">
                         <div className="bg-green-600 rounded-md px-3 py-1 flex items-center">
                           <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2">R</div>
-                          <span>RMGP</span>
+                          <span>rMGP</span>
                         </div>
                       </div>
                     </div>
@@ -555,7 +559,7 @@ const App = (): ReactElement => {
                       <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
                       <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
                     </div>
-                  </> : <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositMGP}>Get RMGP</button>}
+                  </> : <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositMGP}>Get rMGP</button>}
                 </div>
                 <div className="mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm">
                   <div className="flex items-start">
@@ -572,7 +576,7 @@ const App = (): ReactElement => {
                 <div className="bg-gray-700/50 p-5 rounded-lg">
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
-                      <h3 className="text-md font-medium">Convert RMGP</h3>
+                      <h3 className="text-md font-medium">Convert rMGP</h3>
                       <div className="text-sm text-gray-400">Balance: {rmgpBalance !== null ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} rMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
@@ -581,7 +585,7 @@ const App = (): ReactElement => {
                         <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(rmgpBalance ?? 0n)}>MAX</button>
                         <div className="rounded-md px-3 py-1 flex items-center bg-green-600">
                           <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-green-500">R</div>
-                          <span>RMGP</span>
+                          <span>rMGP</span>
                         </div>
                       </div>
                     </div>
@@ -590,7 +594,7 @@ const App = (): ReactElement => {
                   <div className="grid grid-cols-1 gap-2 mb-4">
                     <div>
                       <div className="flex justify-between items-center mb-1">
-                        <h3 className="text-md font-medium">Receive YMGP</h3>
+                        <h3 className="text-md font-medium">Receive yMGP</h3>
                         <div className="text-sm text-gray-400">Balance: {ymgpBalance !== null ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} yMGP</div>
                       </div>
                       <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between mb-8">
@@ -598,17 +602,17 @@ const App = (): ReactElement => {
                         <div className="flex items-center">
                           <div className="bg-green-600 rounded-md px-3 py-1 flex items-center">
                             <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2">Y</div>
-                            <span>YMGP</span>
+                            <span>yMGP</span>
                           </div>
                         </div>
                       </div>
                       {rmgpAllowance === null ? <p>Loading...</p> : rmgpAllowance < sendAmount ? <>
-                        <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={approve}>Approve RMGP</button>
+                        <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={approve}>Approve rMGP</button>
                         <div className="flex items-center mt-2">
                           <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
                           <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
                         </div>
-                      </> : <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositRMGP}>Get YMGP</button>}
+                      </> : <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositRMGP}>Get yMGP</button>}
                     </div>
                     {/* <div>
                       <div className="flex justify-between items-center mb-1">
@@ -649,7 +653,7 @@ const App = (): ReactElement => {
                 <div className="bg-gray-700/50 p-5 rounded-lg">
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
-                      <h3 className="text-md font-medium">Redeem RMGP</h3>
+                      <h3 className="text-md font-medium">Redeem rMGP</h3>
                       <div className="text-sm text-gray-400">Balance: {rmgpBalance !== null ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} rMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
@@ -658,7 +662,7 @@ const App = (): ReactElement => {
                         <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(rmgpBalance ?? 0n)}>MAX</button>
                         <div className="bg-green-600 rounded-md px-3 py-1 flex items-center">
                           <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2">R</div>
-                          <span>RMGP</span>
+                          <span>rMGP</span>
                         </div>
                       </div>
                     </div>
@@ -682,10 +686,10 @@ const App = (): ReactElement => {
                   <div className="mb-4 text-sm text-gray-400">
                     <div className="flex justify-between mb-1">
                       <span>Rate</span>
-                      <span>{mgpRmgpRatio*0.9} MGP to RMGP</span>
+                      <span>{mgpRmgpRatio*0.9} MGP to rMGP</span>
                     </div>
                   </div>
-                  <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}" onClick={redeemRMGP}>Redeem RMGP</button>
+                  <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}" onClick={redeemRMGP}>Redeem rMGP</button>
                   {userPendingWithdraws === null ? <p>Loading...</p> : userPendingWithdraws > 0n ? <>
                     <h3 className="text-md font-medium mt-4">Pending Withdraws</h3>
                     <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
@@ -719,7 +723,7 @@ const App = (): ReactElement => {
                   {mode === 'lock' ? <>
                     <div className="mb-4">
                       <div className="flex justify-between items-center mb-1">
-                        <h3 className="text-md font-medium">Lock YMGP</h3>
+                        <h3 className="text-md font-medium">Lock yMGP</h3>
                         <div className="text-sm text-gray-400">Balance: {ymgpBalance !== null ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} yMGP</div>
                       </div>
                       <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
@@ -728,7 +732,7 @@ const App = (): ReactElement => {
                           <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(ymgpBalance ?? 0n)}>MAX</button>
                           <div className="rounded-md px-3 py-1 flex items-center bg-green-600">
                             <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-green-500">Y</div>
-                            <span>YMGP</span>
+                            <span>yMGP</span>
                           </div>
                         </div>
                       </div>
@@ -747,10 +751,10 @@ const App = (): ReactElement => {
                         <span>{Math.round(10_000*(((Number(reefiLockedMGP)*aprToApy(mgpAPR)*0.05)/Number(totalLockedYMGP))+(aprToApy(mgpAPR)*0.9)))/100}%+</span>
                       </div>
                     </div>
-                    <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={lockYMGP}>Lock YMGP</button>
+                    <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={lockYMGP}>Lock yMGP</button>
                   </> : <>
                     <div className="flex justify-between items-center mb-1">
-                      <h3 className="text-md font-medium">Unlock YMGP</h3>
+                      <h3 className="text-md font-medium">Unlock yMGP</h3>
                       <div className="text-sm text-gray-400">Balance: {ymgpBalance !== null ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} yMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between mb-4">
@@ -759,11 +763,11 @@ const App = (): ReactElement => {
                         <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => setSendAmount(ymgpBalance ?? 0n)}>MAX</button>
                         <div className="rounded-md px-3 py-1 flex items-center bg-green-600">
                           <div className="w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-green-500">Y</div>
-                          <span>YMGP</span>
+                          <span>yMGP</span>
                         </div>
                       </div>
                     </div>
-                    <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={unlockYMGP}>Unlock YMGP</button>
+                    <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={unlockYMGP}>Unlock yMGP</button>
                   </>}
                 </div>
                 <div className="mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm">

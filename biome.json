@@ -1,0 +1,6 @@
+{
+  "files": {
+    "ignore": ["src/*.tsx"]
+  }
+}
+

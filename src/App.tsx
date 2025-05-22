@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { ArrowDown } from 'lucide-react';
 import Diagram from '../public/diagram.svg'
 import { createPublicClient, createWalletClient, custom, erc20Abi, http, type WalletClient, type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods, type CustomTransport, Abi, ReadContractParameters, ContractFunctionArgs, ContractFunctionName, ReadContractReturnType } from 'viem';
@@ -86,7 +86,7 @@ const App = () => {
 
   // Deploy Contract
   const [abi, setABI] = useState<string>()
-  const [constructorArgs, setConstructorArgs] = useState<{ internalType: string, name: string, type: string, value?: string }[]>([])
+  const [constructorArgs, setConstructorArgs] = useState<{ internalType: string, name: string, type: string, value: string | undefined }[]>([])
   const [bytecode, setBytecode] = useState<`0x${string}`>()
 
   // Allowances
@@ -133,7 +133,7 @@ const App = () => {
     publicClients[chain].readContract({ abi: contractABIs.masterMagpie, address: contracts[chain].MASTERMAGPIE, functionName: 'allPendingTokens', args: [contracts[chain].VLMGP, contracts[chain].RMGP] }).then(data => {
       const [pendingMGP, bonusTokenAddresses, bonusTokenSymbols, pendingBonusRewards] = data
       const newPendingRewards: Record<string, { address: `0x${string}`, rewards: bigint }> = { MGP: { address: contracts[chain].MGP, rewards: pendingMGP } }
-      for (const i in bonusTokenSymbols) newPendingRewards[bonusTokenSymbols[i].replace('Bridged ', '').toUpperCase()] = { rewards: pendingBonusRewards[i], address: bonusTokenAddresses[i] };
+      for (const i in bonusTokenSymbols) if (bonusTokenSymbols[i] && pendingBonusRewards[i] && bonusTokenAddresses[i]) newPendingRewards[bonusTokenSymbols[i].replace('Bridged ', '').toUpperCase()] = { rewards: pendingBonusRewards[i], address: bonusTokenAddresses[i] };
       setPendingRewards(newPendingRewards)
     })
   }
@@ -171,12 +171,12 @@ const App = () => {
     setIsConnecting(true);
     const client = createWalletClient({ chain: arbitrum, transport: custom(window.ethereum)})
     setWalletClient(client)
-    setAccount((await client.requestAddresses())[0]);
+    setAccount((await client.requestAddresses())[0] ?? '0x0000000000000000000000000000000000000000');
     setIsConnecting(false);
     return () => window.ethereum?.removeListener('accountsChanged', handleAccountsChanged)
   }
 
-  const handleAccountsChanged = async (accounts: `0x${string}`[]) => setAccount(accounts[0]);
+  const handleAccountsChanged = async (accounts: `0x${string}`[]) => setAccount(accounts[0] ?? '0x0000000000000000000000000000000000000000');
 
   const approve = async () => {
     if (!walletClient) return alert('Wallet not connected')
@@ -501,7 +501,7 @@ const App = () => {
                     <h4 className="text-xs font-medium my-2">{arg.name}</h4>
                     <input type="text" placeholder={arg.type} value={arg.value} className="bg-gray-900 rounded-lg p-3 outline-none text-xs w-full" onChange={e => {
                       const newArgs = [...constructorArgs]
-                      newArgs[i].value = e.target.value
+                      if (newArgs[i]) newArgs[i].value = e.target.value
                       setConstructorArgs(newArgs)
                     }} />
                   </div>)}
@@ -697,7 +697,7 @@ const App = () => {
                   {userPendingWithdraws === null ? <p>Loading...</p> : userPendingWithdraws > 0n ? <>
                     <h3 className="text-md font-medium mt-4">Pending Withdraws</h3>
                     <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
-                    {unlockSchedule ? <p>Unlock available in: {formatTime(Number(unlockSchedule[0].endTime)-(+new Date()/1000))} to {formatTime((unsubmittedWithdraws ? Number(unlockSchedule[unlockSchedule.length-1].endTime) + 60*60*24*60 : Number(unlockSchedule[unlockSchedule.length-1].endTime))-(+new Date()/1000))}</p> : <p>N/A</p>}
+                    {unlockSchedule && unlockSchedule[0] ? <p>Unlock available in: {formatTime(Number(unlockSchedule[0].endTime)-(+new Date()/1000))} to {formatTime((unsubmittedWithdraws ? Number(unlockSchedule[unlockSchedule.length-1]?.endTime) + 60*60*24*60 : Number(unlockSchedule[unlockSchedule.length-1]?.endTime))-(+new Date()/1000))}</p> : <p>N/A</p>}
                   </> : ''}
                   {userWithdrawable === null ? <p>Loading...</p> : userWithdrawable > 0n ? <>
                     <h3 className="text-md font-medium mt-4">Available To Withdraw</h3>

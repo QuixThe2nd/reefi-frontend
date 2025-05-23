@@ -1,4 +1,5 @@
-import { useEffect, useState, useMemo, useCallback, ReactElement } from 'react';
+// TODO: add pause function on smart contract to prevent withdrawing unlocked tokens
+import { useEffect, useState, useMemo, ReactElement } from 'react';
 import { ArrowDown } from 'lucide-react';
 import Diagram from '../public/diagram.svg'
 import { createPublicClient, createWalletClient, custom, erc20Abi, webSocket, type WalletClient, type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods, type CustomTransport, Abi, ReadContractParameters, ContractFunctionArgs, ContractFunctionName, ReadContractReturnType, getContract, Account, Address, Chain, Client, GetContractReturnType, Transport } from 'viem';
@@ -50,7 +51,7 @@ const contractABIs = {
 } as const
 const contractAddresses: { 56: Contracts, 42161: Contracts } = {
   56: { MGP: '0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa', RMGP: '0x0277517658a1dd3899bf926fCf6A633e549eB769', YMGP: '0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb', VLMGP: '0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6', MASTERMAGPIE: '0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46', VLSTREAMREWARDER: '0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9', WETH: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c' },
-  42161: { MGP: '0xa61F74247455A40b01b0559ff6274441FAfa22A3', RMGP: '0xAa4dEb3d1aa7a04627e83Ccf1d59fCB2BD18AC62', YMGP: '0x578AC88A7A9245CE4F86702Bb7857Da7F568369c', VLMGP: '0x536599497Ce6a35FC65C7503232Fec71A84786b9', MASTERMAGPIE: '0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7', VLSTREAMREWARDER: '0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45', WETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1' }
+  42161: { MGP: '0xa61F74247455A40b01b0559ff6274441FAfa22A3', RMGP: '0x3788c8791d826254bAbd49b602C93008468D5695', YMGP: '0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9', VLMGP: '0x536599497Ce6a35FC65C7503232Fec71A84786b9', MASTERMAGPIE: '0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7', VLSTREAMREWARDER: '0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45', WETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1' }
 } as const
 
 const publicClients = {
@@ -94,7 +95,7 @@ const App = (): ReactElement => {
     const VLMGP = getContract({ address: contractAddresses[chain].VLMGP, abi: contractABIs.vlMGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] })
     const masterMagpie = getContract({ address: contractAddresses[chain].MASTERMAGPIE, abi: contractABIs.masterMagpie, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] })
     return { MGP, RMGP, YMGP, VLMGP, masterMagpie }
-  }, [chain])
+  }, [chain, walletClients])
 
   // Deploy Contract
   const [abi, setABI] = useState<string>()
@@ -287,8 +288,8 @@ const App = (): ReactElement => {
   }
 
   const estimateCompoundRMGPGas = async (): Promise<bigint> => {
-    const gasPrice: bigint = await publicClients[chain].getGasPrice()
-    const gas = account !== '0x0000000000000000000000000000000000000000' ? await publicClients[chain].estimateContractGas({ abi: contractABIs.RMGP, address: contractAddresses[chain].RMGP, functionName: 'claim', account }) : 0n
+    const gasPrice = await publicClients[chain].getGasPrice()
+    const gas = account === '0x0000000000000000000000000000000000000000' ? 0n : await contracts.RMGP.estimateGas.claim({ account })
     return gas*gasPrice
   }
 

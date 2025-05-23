@@ -52,13 +52,13 @@ const publicClients = {
 }
 const decimals: Record<Coins, number> = { MGP: 18, RMGP: 18, YMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 }
 
-function useUpdateable<T>(factory: () => Promise<T>): [T | undefined, () => void] {
+function useUpdateable<T>(factory: () => Promise<T>, deps: unknown[]): [T | undefined, () => void] {
   const [updateCount, setUpdateCount] = useState(0);
   const [value, setValue] = useState<T>();
   
   useEffect(() => {
     factory().then(setValue);
-  }, [factory, updateCount]);
+  }, [...deps, updateCount]);
   
   const update = (): void => setUpdateCount(c => c + 1);
   return [value, update];
@@ -101,31 +101,31 @@ const App = (): ReactElement => {
   const [bytecode, setBytecode] = useState<`0x${string}`>()
 
   // Allowances
-  const [mgpAllowance, updateMGPAllowance] = useUpdateable(() => contracts.MGP.read.allowance([account, contracts.RMGP.address]))
-  const [rmgpAllowance, updateRMGPAllowance] = useUpdateable(() => contracts.RMGP.read.allowance([account, contracts.YMGP.address]))
+  const [mgpAllowance, updateMGPAllowance] = useUpdateable(() => contracts.MGP.read.allowance([account, contracts.RMGP.address]), [contracts, account])
+  const [rmgpAllowance, updateRMGPAllowance] = useUpdateable(() => contracts.RMGP.read.allowance([account, contracts.YMGP.address]), [contracts, account])
 
   // Balances
-  const [mgpBalance, updateMGPBalance] = useUpdateable(() => contracts.MGP.read.balanceOf([account]))
-  const [rmgpBalance, updateRMGPBalance] = useUpdateable(() => contracts.RMGP.read.balanceOf([account]))
-  const [ymgpBalance, updateYMGPBalance] = useUpdateable(() => contracts.YMGP.read.balanceOf([account]))
-  const [ymgpHoldings, updateYMGPHoldings] = useUpdateable(() => contracts.RMGP.read.balanceOf([contracts.YMGP.address]))
+  const [mgpBalance, updateMGPBalance] = useUpdateable(() => contracts.MGP.read.balanceOf([account]), [contracts, account])
+  const [rmgpBalance, updateRMGPBalance] = useUpdateable(() => contracts.RMGP.read.balanceOf([account]), [contracts, account])
+  const [ymgpBalance, updateYMGPBalance] = useUpdateable(() => contracts.YMGP.read.balanceOf([account]), [contracts, account])
+  const [ymgpHoldings, updateYMGPHoldings] = useUpdateable(() => contracts.RMGP.read.balanceOf([contracts.YMGP.address]), [contracts, account])
 
   // Locked
-  const [reefiLockedMGP, updateReefiLockedMGP] = useUpdateable(() => contracts.VLMGP.read.getUserTotalLocked([contracts.RMGP.address]))
-  const [totalLockedMGP, updateTotalLockedMGP] = useUpdateable(() => contracts.VLMGP.read.totalLocked())
-  const [totalLockedYMGP, updateTotalLockedYMGP] = useUpdateable(() => contracts.YMGP.read.totalLocked())
-  const [userLockedYMGP, updateUserLockedYMGP] = useUpdateable(() => contracts.YMGP.read.lockedBalances([account]))
+  const [reefiLockedMGP, updateReefiLockedMGP] = useUpdateable(() => contracts.VLMGP.read.getUserTotalLocked([contracts.RMGP.address]), [contracts, account])
+  const [totalLockedMGP, updateTotalLockedMGP] = useUpdateable(() => contracts.VLMGP.read.totalLocked(), [contracts, account])
+  const [totalLockedYMGP, updateTotalLockedYMGP] = useUpdateable(() => contracts.YMGP.read.totalLocked(), [contracts, account])
+  const [userLockedYMGP, updateUserLockedYMGP] = useUpdateable(() => contracts.YMGP.read.lockedBalances([account]), [contracts, account])
 
   // Supply
-  const [mgpSupply, updateMGPSupply] = useUpdateable(() => contracts.MGP.read.totalSupply())
-  const [ymgpSupply, updateYMGPSupply] = useUpdateable(() => contracts.YMGP.read.totalSupply())
-  const [rmgpSupply, updateRMGPSupply] = useUpdateable(() => contracts.RMGP.read.totalSupply())
+  const [mgpSupply, updateMGPSupply] = useUpdateable(() => contracts.MGP.read.totalSupply(), [contracts])
+  const [ymgpSupply, updateYMGPSupply] = useUpdateable(() => contracts.YMGP.read.totalSupply(), [contracts])
+  const [rmgpSupply, updateRMGPSupply] = useUpdateable(() => contracts.RMGP.read.totalSupply(), [contracts])
   
   // Withdraws
-  const [userPendingWithdraws, updateUserPendingWithdraws] = useUpdateable(() => contracts.RMGP.read.getUserPendingWithdraws([account]))
-  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useUpdateable(() => contracts.RMGP.read.unsubmittedWithdraws())
-  const [userWithdrawable, updateUserWithdrawable] = useUpdateable(() => contracts.RMGP.read.getUserWithdrawable())
-  const [unlockSchedule, updateUnlockSchedule] = useUpdateable(() => contracts.VLMGP.read.getUserUnlockingSchedule([contracts.RMGP.address]))
+  const [userPendingWithdraws, updateUserPendingWithdraws] = useUpdateable(() => contracts.RMGP.read.getUserPendingWithdraws([account]), [contracts, account])
+  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useUpdateable(() => contracts.RMGP.read.unsubmittedWithdraws(), [contracts])
+  const [userWithdrawable, updateUserWithdrawable] = useUpdateable(() => contracts.RMGP.read.getUserWithdrawable(), [contracts])
+  const [unlockSchedule, updateUnlockSchedule] = useUpdateable(() => contracts.VLMGP.read.getUserUnlockingSchedule([contracts.RMGP.address]), [contracts])
 
   // Pegs
   const mgpRmgpRatio = useMemo(() => { return rmgpSupply === 0n ? 1 : (Number(reefiLockedMGP) / Number(rmgpSupply)) }, [rmgpSupply, reefiLockedMGP])
@@ -134,7 +134,7 @@ const App = (): ReactElement => {
   // Yield
   const [mgpAPR, setMGPAPR] = useState(0)
   const [pendingRewards, setPendingRewards] = useState<Record<Coins, { address: `0x${string}`, rewards: bigint }> | undefined>()
-  const [unclaimedUserYield, updateUnclaimedUserYield] = useUpdateable(() => contracts.YMGP.read.unclaimedUserYield())
+  const [unclaimedUserYield, updateUnclaimedUserYield] = useUpdateable(() => contracts.YMGP.read.unclaimedUserYield(), [contracts])
   const [compoundRMGPGas, setCompoundRMGPGas] = useState(0n)
   const uncompoundedMGPYield = useMemo(() => {
     return pendingRewards ? (Object.keys(pendingRewards) as Coins[]).map(symbol => prices[symbol]*Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0)/prices.MGP : 0
@@ -150,6 +150,8 @@ const App = (): ReactElement => {
 
   useEffect(() => {
     if (window.ethereum) connectWallet();
+    const savedChain = window.localStorage.getItem('chain')
+    if (savedChain !== null) setChain(Number(savedChain) as 56 | 42161)
     fetch('https://api.magpiexyz.io/getalltokenprice').then(res => res.json().then((body: { data: { AllPrice: typeof prices }}) => setPrices(body.data.AllPrice)))
     const interval = setInterval(updatePendingRewards, 5_000)
     return (): void => clearInterval(interval)
@@ -321,7 +323,10 @@ const App = (): ReactElement => {
               <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">yMGP: {ymgpBalance !== undefined ? formatEther(ymgpBalance, decimals.YMGP).toFixed(4) : 'Loading...'}</div>
               <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">Locked yMGP: {userLockedYMGP !== undefined ? formatEther(userLockedYMGP, decimals.YMGP).toFixed(4) : 'Loading...'}</div>
               <div className="bg-green-600/20 text-green-400 rounded-lg px-3 py-2 text-sm">{ens ?? `${account.slice(0, 6)}...${account.slice(-4)}`}</div>
-              <select className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white" value={chain} onChange={e => setChain(Number(e.target.value) as 56 | 42161)}>
+              <select className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white" value={chain} onChange={e => {
+                setChain(Number(e.target.value) as 56 | 42161)
+                window.localStorage.setItem('chain', String(e.target.value))
+              }}>
                 <option value="56">BSC</option>
                 <option value="42161">Arbitrum</option>
               </select>

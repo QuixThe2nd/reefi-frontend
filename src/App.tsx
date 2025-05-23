@@ -68,6 +68,7 @@ const contractAddresses: { 56: Contracts, 42161: Contracts } = {
   56: { VLSTREAMREWARDER: '0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9', WETH: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c' },
   42161: { VLSTREAMREWARDER: '0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45', WETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1' }
 } as const
+
 const App = (): ReactElement => {
   const [mode, setMode] = useState<'deploy' | 'addDEX' | 'deposit' | 'convert' | 'lock' | 'unlock' | 'redeem'>('deposit')
   const [showDiagram, setShowDiagram] = useState(false)
@@ -85,13 +86,32 @@ const App = (): ReactElement => {
   const [account, setAccount] = useState<`0x${string}`>('0x0000000000000000000000000000000000000000')
   const [ens] = useUpdateable(() => publicClients[1].getEnsName({ address: account }), [account])
 
+  const chainContracts = useMemo(() => {
+    return {
+      56: {
+        MGP: getContract({ address: '0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa' as `0x${string}`, abi: contractABIs.MGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
+        RMGP: getContract({ address: '0x0277517658a1dd3899bf926fCf6A633e549eB769' as `0x${string}`, abi: contractABIs.RMGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
+        YMGP: getContract({ address: '0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb' as `0x${string}`, abi: contractABIs.YMGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
+        VLMGP: getContract({ address: '0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6' as `0x${string}`, abi: contractABIs.vlMGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
+        masterMagpie: getContract({ address: '0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46' as `0x${string}`, abi: contractABIs.masterMagpie, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] })
+      },
+      42161: {
+        MGP: getContract({ address: '0xa61F74247455A40b01b0559ff6274441FAfa22A3' as `0x${string}`, abi: contractABIs.MGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
+        RMGP: getContract({ address: '0x3788c8791d826254bAbd49b602C93008468D5695' as `0x${string}`, abi: contractABIs.RMGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
+        YMGP: getContract({ address: '0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9' as `0x${string}`, abi: contractABIs.YMGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
+        VLMGP: getContract({ address: '0x536599497Ce6a35FC65C7503232Fec71A84786b9' as `0x${string}`, abi: contractABIs.vlMGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
+        masterMagpie: getContract({ address: '0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7' as `0x${string}`, abi: contractABIs.masterMagpie, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] })
+      }
+    }
+  }, [walletClients])
+
   const contracts = useMemo(() => {
     return {
-      MGP: getContract({ address: { 56: '0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa', 42161: '0xa61F74247455A40b01b0559ff6274441FAfa22A3' }[chain] as `0x${string}`, abi: contractABIs.MGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
-      RMGP: getContract({ address: { 56: '0x0277517658a1dd3899bf926fCf6A633e549eB769', 42161: '0x3788c8791d826254bAbd49b602C93008468D5695' }[chain] as `0x${string}`, abi: contractABIs.RMGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
-      YMGP: getContract({ address: { 56: '0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb', 42161: '0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9' }[chain] as `0x${string}`, abi: contractABIs.YMGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
-      VLMGP: getContract({ address: { 56: '0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6', 42161: '0x536599497Ce6a35FC65C7503232Fec71A84786b9' }[chain] as `0x${string}`, abi: contractABIs.vlMGP, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] }),
-      masterMagpie: getContract({ address: { 56: '0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46', 42161: '0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7' }[chain] as `0x${string}`, abi: contractABIs.masterMagpie, client: walletClients ? { public: publicClients[chain], wallet: walletClients[chain] } : publicClients[chain] })
+      MGP: chainContracts[chain].MGP,
+      RMGP: chainContracts[chain].RMGP,
+      YMGP: chainContracts[chain].YMGP,
+      VLMGP: chainContracts[chain].VLMGP,
+      masterMagpie: chainContracts[chain].masterMagpie
     }
   }, [chain, walletClients])
 
@@ -112,12 +132,18 @@ const App = (): ReactElement => {
 
   // Locked
   const [reefiLockedMGP, updateReefiLockedMGP] = useUpdateable(() => contracts.VLMGP.read.getUserTotalLocked([contracts.RMGP.address]), [contracts, account])
-  const [totalLockedMGP, updateTotalLockedMGP] = useUpdateable(() => contracts.VLMGP.read.totalLocked(), [contracts, account])
+  const [totalLockedMGPBSC, updateTotalLockedMGPBSC] = useUpdateable(() => chainContracts[56].VLMGP.read.totalLocked(), [chainContracts, account])
+  const [totalLockedMGPARB, updateTotalLockedMGPARB] = useUpdateable(() => chainContracts[42161].VLMGP.read.totalLocked(), [chainContracts, account])
+  const totalLockedMGP = useMemo(() => { return (totalLockedMGPBSC ?? 0n) + (totalLockedMGPARB ?? 0n) }, [totalLockedMGPBSC, totalLockedMGPARB])
+  const updateTotalLockedMGP = (): void => {
+    updateTotalLockedMGPBSC()
+    updateTotalLockedMGPARB()
+  }
   const [totalLockedYMGP, updateTotalLockedYMGP] = useUpdateable(() => contracts.YMGP.read.totalLocked(), [contracts, account])
   const [userLockedYMGP, updateUserLockedYMGP] = useUpdateable(() => contracts.YMGP.read.lockedBalances([account]), [contracts, account])
 
   // Supply
-  const [mgpSupply, updateMGPSupply] = useUpdateable(() => contracts.MGP.read.totalSupply(), [contracts])
+  const [mgpSupply, updateMGPSupply] = useUpdateable(() => chainContracts[56].MGP.read.totalSupply(), [chainContracts])
   const [ymgpSupply, updateYMGPSupply] = useUpdateable(() => contracts.YMGP.read.totalSupply(), [contracts])
   const [rmgpSupply, updateRMGPSupply] = useUpdateable(() => contracts.RMGP.read.totalSupply(), [contracts])
   

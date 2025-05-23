@@ -2,7 +2,7 @@
 import { useEffect, useState, useMemo, ReactElement } from 'react';
 import { ArrowDown } from 'lucide-react';
 import Diagram from '../public/diagram.svg'
-import { createPublicClient, createWalletClient, custom, erc20Abi, webSocket, type WalletClient, type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods, type CustomTransport, Abi, ReadContractParameters, ContractFunctionArgs, ContractFunctionName, ReadContractReturnType, getContract, Account, Address, Chain, Client, GetContractReturnType, Transport } from 'viem';
+import { createPublicClient, createWalletClient, custom, erc20Abi, webSocket, type WalletClient, type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods, type CustomTransport, Abi, getContract } from 'viem';
 import { arbitrum, bsc, mainnet } from 'viem/chains';
 
 mainnet.rpcUrls.default.http = ['https://eth.drpc.org']
@@ -52,13 +52,13 @@ const publicClients = {
 }
 const decimals: Record<Coins, number> = { MGP: 18, RMGP: 18, YMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 }
 
-function useUpdateable<T>(factory: () => Promise<T>, deps?: unknown[]): [T | undefined, () => void] {
+function useUpdateable<T>(factory: () => Promise<T>): [T | undefined, () => void] {
   const [updateCount, setUpdateCount] = useState(0);
   const [value, setValue] = useState<T>();
   
   useEffect(() => {
     factory().then(setValue);
-  }, deps ?? [factory, updateCount]);
+  }, [factory, updateCount]);
   
   const update = (): void => setUpdateCount(c => c + 1);
   return [value, update];
@@ -69,12 +69,15 @@ const contractAddresses: { 56: Contracts, 42161: Contracts } = {
   42161: { VLSTREAMREWARDER: '0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45', WETH: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1' }
 } as const
 const App = (): ReactElement => {
-  const [mode, setMode] = useState<'deploy' | 'deposit' | 'convert' | 'lock' | 'unlock' | 'redeem'>('deposit')
+  const [mode, setMode] = useState<'deploy' | 'addDEX' | 'deposit' | 'convert' | 'lock' | 'unlock' | 'redeem'>('deposit')
   const [showDiagram, setShowDiagram] = useState(false)
   const [isConnecting, setIsConnecting] = useState(false)
   const [approveInfinity, setApproveInfinity] = useState(false)
   const [sendAmount, setSendAmount] = useState(parseEther(100));
   const [prices, setPrices] = useState<Record<Coins, number>>({ MGP: 0, RMGP: 0, YMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 })
+  const [dexToken, setDEXToken] = useState<Coins>()
+  const [router, setRouter] = useState('')
+  const [camelot, setCamelot] = useState(false)
 
   // Wallet
   const [walletClients, setWalletClients] = useState<{ 56: WalletClient<CustomTransport>, 42161: WalletClient<CustomTransport> } | undefined>()
@@ -489,6 +492,7 @@ const App = (): ReactElement => {
             <div className="flex justify-center mb-6">
               <div className="bg-gray-700 p-1 rounded-lg flex">
                 <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'deploy' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('deploy')}>Deploy Contract</button>
+                <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'addDEX' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('addDEX')}>Add DEX</button>
                 <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'deposit' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('deposit')}>Deposit MGP</button>
                 <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'convert' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('convert')}>Convert rMGP</button>
                 <button type="button" className={`px-4 py-2 rounded-md transition-colors ${mode === 'lock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setMode('lock')}>Lock yMGP</button>
@@ -520,6 +524,30 @@ const App = (): ReactElement => {
                 <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4" onClick={async () => {
                   await contracts.RMGP.write.setYMGP([contracts.YMGP.address], { account })
                 }}>Set yMGP</button>
+              </div>}
+
+              {mode === 'addDEX' && <div className="bg-gray-700/50 p-5 rounded-lg">
+                <h4 className="text-xs font-medium my-2">Token Symbol</h4>
+                <input type="text" placeholder="MGP" className="bg-gray-900 rounded-lg p-3 outline-none text-xs w-full" onChange={e => setDEXToken(e.target.value as Coins)} />
+                <h4 className="text-xs font-medium my-2">Token Contract</h4>
+                <input type="text" placeholder="0x..." className="bg-gray-900 rounded-lg p-3 outline-none text-xs w-full" value={dexToken !== undefined && dexToken in contracts ? contracts[dexToken].address : ''} disabled />
+                <h4 className="text-xs font-medium my-2">Router</h4>
+                <input type="text" placeholder="0x..." className="bg-gray-900 rounded-lg p-3 outline-none text-xs w-full" value={router} onChange={e => setRouter(e.target.value)} />
+                <div className="flex items-center mt-2">
+                  <input id="camelot" type="checkbox" className="mr-2" checked={camelot} onChange={e => setCamelot(e.target.checked)} />
+                  <label htmlFor="camelot" className="text-sm text-gray-300 select-none cursor-pointer">Camelot</label>
+                </div>
+                <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4" onClick={() => {
+                  if (!dexToken) return alert("No token defined")
+                  if (!(dexToken in contracts)) return alert("Token contract not defined")
+                  contracts.RMGP.write.addRewardsToken([contracts[dexToken].address], { account })
+                }}>Add Rewards Token</button>
+                <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4" onClick={() => {
+                  if (!dexToken) return alert("No token defined")
+                  if (!(dexToken in contracts)) return alert("Token contract not defined")
+                  if (!router) return alert("Swap router not defined")
+                  contracts.RMGP.write.setSwapRouter([contracts[dexToken].address, router, camelot], { account })
+                }}>Set Swap Router</button>
               </div>}
 
               {mode === 'deposit' && <>

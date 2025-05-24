@@ -66,31 +66,28 @@ const App = (): ReactElement => {
   const chainContracts = useMemo(() => {
     return {
       56: {
-        MGP: getContract({ address: '0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa' as `0x${string}`, abi: erc20Abi, client: walletClients ? { public: publicClients[56], wallet: walletClients[56] } : publicClients[56] }),
-        RMGP: getContract({ address: '0x0277517658a1dd3899bf926fCf6A633e549eB769' as `0x${string}`, abi: contractABIs.RMGP, client: walletClients ? { public: publicClients[56], wallet: walletClients[56] } : publicClients[56] }),
-        YMGP: getContract({ address: '0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb' as `0x${string}`, abi: contractABIs.YMGP, client: walletClients ? { public: publicClients[56], wallet: walletClients[56] } : publicClients[56] }),
-        VLMGP: getContract({ address: '0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6' as `0x${string}`, abi: contractABIs.vlMGP, client: walletClients ? { public: publicClients[56], wallet: walletClients[56] } : publicClients[56] }),
-        masterMagpie: getContract({ address: '0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46' as `0x${string}`, abi: contractABIs.masterMagpie, client: walletClients ? { public: publicClients[56], wallet: walletClients[56] } : publicClients[56] }),
-        VLSTREAMREWARDER: getContract({ address: '0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9' as `0x${string}`, abi: contractABIs.vlStreamRewarder, client: walletClients ? { public: publicClients[56], wallet: walletClients[56] } : publicClients[56] }),
-        WETH: getContract({ address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c' as `0x${string}`, abi: erc20Abi, client: walletClients ? { public: publicClients[56], wallet: walletClients[56] } : publicClients[56] }),
-        balancerRouter: getContract({ address: '0x0000000000000000000000000000000000000000' as `0x${string}`, abi: contractABIs.balancerRouter, client: walletClients ? { public: publicClients[56], wallet: walletClients[56] } : publicClients[56] }),
+        MGP: getContract({ address: '0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa' as `0x${string}`, abi: erc20Abi, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
+        RMGP: getContract({ address: '0x0277517658a1dd3899bf926fCf6A633e549eB769' as `0x${string}`, abi: contractABIs.RMGP, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
+        YMGP: getContract({ address: '0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb' as `0x${string}`, abi: contractABIs.YMGP, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
+        VLMGP: getContract({ address: '0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6' as `0x${string}`, abi: contractABIs.vlMGP, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
+        masterMagpie: getContract({ address: '0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46' as `0x${string}`, abi: contractABIs.masterMagpie, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
+        VLSTREAMREWARDER: getContract({ address: '0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9' as `0x${string}`, abi: contractABIs.vlStreamRewarder, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
+        WETH: getContract({ address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c' as `0x${string}`, abi: erc20Abi, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
+        balancerRouter: getContract({ address: '0x0000000000000000000000000000000000000000' as `0x${string}`, abi: contractABIs.balancerRouter, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
       },
       42161: {
-        MGP: getContract({ address: '0xa61F74247455A40b01b0559ff6274441FAfa22A3' as `0x${string}`, abi: erc20Abi, client: walletClients ? { public: publicClients[42161], wallet: walletClients[42161] } : publicClients[42161] }),
-        RMGP: getContract({ address: '0x3788c8791d826254bAbd49b602C93008468D5695' as `0x${string}`, abi: contractABIs.RMGP, client: walletClients ? { public: publicClients[42161], wallet: walletClients[42161] } : publicClients[42161] }),
-        YMGP: getContract({ address: '0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9' as `0x${string}`, abi: contractABIs.YMGP, client: walletClients ? { public: publicClients[42161], wallet: walletClients[42161] } : publicClients[42161] }),
-        VLMGP: getContract({ address: '0x536599497Ce6a35FC65C7503232Fec71A84786b9' as `0x${string}`, abi: contractABIs.vlMGP, client: walletClients ? { public: publicClients[42161], wallet: walletClients[42161] } : publicClients[42161] }),
-        masterMagpie: getContract({ address: '0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7' as `0x${string}`, abi: contractABIs.masterMagpie, client: walletClients ? { public: publicClients[42161], wallet: walletClients[42161] } : publicClients[42161] }),
-        VLSTREAMREWARDER: getContract({ address: '0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45' as `0x${string}`, abi: contractABIs.vlStreamRewarder, client: walletClients ? { public: publicClients[42161], wallet: walletClients[42161] } : publicClients[42161] }),
-        WETH: getContract({ address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1' as `0x${string}`, abi: erc20Abi, client: walletClients ? { public: publicClients[42161], wallet: walletClients[42161] } : publicClients[42161] }),
-        balancerRouter: getContract({ address: '0xEAedc32a51c510d35ebC11088fD5fF2b47aACF2E' as `0x${string}`, abi: contractABIs.balancerRouter, client: walletClients ? { public: publicClients[42161], wallet: walletClients[42161] } : publicClients[42161] }),
+        MGP: getContract({ address: '0xa61F74247455A40b01b0559ff6274441FAfa22A3' as `0x${string}`, abi: erc20Abi, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
+        RMGP: getContract({ address: '0x3788c8791d826254bAbd49b602C93008468D5695' as `0x${string}`, abi: contractABIs.RMGP, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
+        YMGP: getContract({ address: '0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9' as `0x${string}`, abi: contractABIs.YMGP, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
+        VLMGP: getContract({ address: '0x536599497Ce6a35FC65C7503232Fec71A84786b9' as `0x${string}`, abi: contractABIs.vlMGP, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
+        masterMagpie: getContract({ address: '0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7' as `0x${string}`, abi: contractABIs.masterMagpie, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
+        VLSTREAMREWARDER: getContract({ address: '0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45' as `0x${string}`, abi: contractABIs.vlStreamRewarder, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
+        WETH: getContract({ address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1' as `0x${string}`, abi: erc20Abi, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
+        balancerRouter: getContract({ address: '0xEAedc32a51c510d35ebC11088fD5fF2b47aACF2E' as `0x${string}`, abi: contractABIs.balancerRouter, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
       }
     }
   }, [walletClients])
-
-  const contracts = useMemo(() => {
-    return chainContracts[chain]
-  }, [chain, walletClients])
+  const contracts = useMemo(() => chainContracts[chain], [chain, walletClients])
 
   // Deploy Contract
   const [abi, setABI] = useState<string>()
@@ -177,7 +174,7 @@ const App = (): ReactElement => {
       if (item.type === 'constructor') {
         const args = (item.inputs as { internalType: string, name: string, type: string, value?: string }[]).map(arg => {
           const contract = arg.name.toUpperCase().replace('_', '').replace('TOKEN', '') as keyof typeof contracts
-          return { ...arg, value: Object.keys(contracts).includes(contract) ? contracts[contract] : arg.value }
+          return { ...arg, value: Object.keys(contracts).includes(contract) ? contracts[contract].address : arg.value }
         })
         setConstructorArgs(args)
       }
@@ -185,19 +182,16 @@ const App = (): ReactElement => {
   }, [contracts, abi])
 
   const connectWallet = async (): Promise<void | (() => void)> => {
-    if (!window.ethereum) return alert('MetaMask not found. Please install MetaMask to use this application.');
+    if (!window.ethereum) return alert('MetaMask not found. Please install MetaMask to use this application.')
     setIsConnecting(true);
     const clients = {
       56: createWalletClient({ chain: bsc, transport: custom(window.ethereum)}).extend(publicActions),
       42161: createWalletClient({ chain: arbitrum, transport: custom(window.ethereum)}).extend(publicActions)
     } as const
     setWalletClients(clients)
-    setAccount((await clients[chain].requestAddresses())[0] ?? '0x0000000000000000000000000000000000000000');
-    setIsConnecting(false);
-    return () => window.ethereum?.removeListener('accountsChanged', handleAccountsChanged)
+    setAccount((await clients[chain].requestAddresses())[0] ?? '0x0000000000000000000000000000000000000000')
+    setIsConnecting(false)
   }
-
-  const handleAccountsChanged = (accounts: `0x${string}`[]): void => setAccount(accounts[0] ?? '0x0000000000000000000000000000000000000000');
 
   const approve = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
@@ -285,6 +279,7 @@ const App = (): ReactElement => {
     updateRMGPSupply()
     updateRMGPBalance()
     updateTotalLockedMGP()
+    updateReefiLockedMGP()
   }
 
   const claimYMGPRewards = async (): Promise<void> => {
@@ -390,7 +385,7 @@ const App = (): ReactElement => {
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">TVL</p>
-                    <p className="font-medium">{reefiLockedMGP !== undefined ? formatNumber(formatEther(reefiLockedMGP, decimals.MGP), 3) : 'Loading...'} MGP</p>
+                    <p className="font-medium">{reefiLockedMGP !== undefined ? formatNumber(formatEther(reefiLockedMGP, decimals.MGP), 4) : 'Loading...'} MGP</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">1 rMGP</p>

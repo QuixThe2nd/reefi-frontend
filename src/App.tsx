@@ -1,10 +1,9 @@
 // TODO: add pause function on smart contract to prevent withdrawing unlocked tokens
-import { useEffect, useState, useMemo, ReactElement, JSX } from 'react';
-import { ArrowDown } from 'lucide-react';
+import { useEffect, useState, useMemo, ReactElement, JSX } from 'react'
 import Diagram from '../public/diagram.svg'
-import { createPublicClient, createWalletClient, custom, erc20Abi, webSocket, type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods, Abi, getContract, type WalletClient, type PublicActions, publicActions } from 'viem';
-import { arbitrum, bsc, mainnet } from 'viem/chains';
-import { parseEther, formatEther, formatNumber, formatTime, aprToApy } from './utils';
+import { createPublicClient, createWalletClient, custom, erc20Abi, webSocket, type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods, Abi, getContract, type WalletClient, type PublicActions, publicActions } from 'viem'
+import { arbitrum, bsc, mainnet } from 'viem/chains'
+import { parseEther, formatEther, formatNumber, formatTime, aprToApy, useUpdateable } from './utils'
 
 declare global {
   interface Window {
@@ -19,7 +18,9 @@ declare global {
 type Chains = 56 | 42161
 type Coins = 'MGP' | 'RMGP' | 'YMGP' | 'CMGP' | 'CKP' | 'PNP' | 'EGP' | 'LTP' | 'ETH' | 'BNB'
 
-const contractABIs = {
+const decimals: Record<Coins, number> = { MGP: 18, RMGP: 18, YMGP: 18, CMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 }
+
+const ABIs = {
   RMGP: [{"inputs":[{"internalType":"address","name":"_mgpToken","type":"address"},{"internalType":"address","name":"_ymgpToken","type":"address"},{"internalType":"address","name":"_masterMagpie","type":"address"},{"internalType":"address","name":"_vlMGP","type":"address"},{"internalType":"address","name":"_weth","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"CannotUnlockZero","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"allowance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientAllowance","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"approver","type":"address"}],"name":"ERC20InvalidApprover","type":"error"},{"inputs":[{"internalType":"address","name":"receiver","type":"address"}],"name":"ERC20InvalidReceiver","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"}],"name":"ERC20InvalidSender","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"}],"name":"ERC20InvalidSpender","type":"error"},{"inputs":[],"name":"InsufficientBalance","type":"error"},{"inputs":[],"name":"NoLockedTokens","type":"error"},{"inputs":[],"name":"NoSlotsToUnlock","type":"error"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"OwnableInvalidOwner","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"OwnableUnauthorizedAccount","type":"error"},{"inputs":[],"name":"SwapRouterNotSet","type":"error"},{"inputs":[],"name":"TransferFailed","type":"error"},{"inputs":[{"internalType":"string","name":"name","type":"string"}],"name":"ZeroAddress","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"mgpAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"rmgpAmount","type":"uint256"}],"name":"Deposited","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"name":"RewardsClaimed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"rmgpAmount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"name":"UnlockStarted","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"slot","type":"uint256"}],"name":"Unlocked","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Withdrawn","type":"event"},{"inputs":[],"name":"MASTER_MAGPIE","outputs":[{"internalType":"contract IMasterMagpie","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MGP_TOKEN","outputs":[{"internalType":"contract ERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"VL_MGP","outputs":[{"internalType":"contract IVL_MGP","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"WETH","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"addRewardsToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claim","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"name":"deposit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"}],"name":"getUserPendingWithdraws","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getUserWithdrawable","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"pendingWithdraws","outputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"mgpAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"removeRewardsToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"rescueTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"rewardTokens","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"swapRouter","type":"address"}],"name":"setSwapRouter","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"}],"name":"setYMGP","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"rmgpAmount","type":"uint256"}],"name":"startUnlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"swapRouters","outputs":[{"internalType":"contract ISwapRouter","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unsubmittedWithdraws","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"ymgpToken","outputs":[{"internalType":"contract ERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"}],
   YMGP: [{"inputs":[{"internalType":"address","name":"_rmgpToken","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"CannotLockZero","type":"error"},{"inputs":[],"name":"CannotUnlockZero","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"allowance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientAllowance","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"uint256","name":"balance","type":"uint256"},{"internalType":"uint256","name":"needed","type":"uint256"}],"name":"ERC20InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"approver","type":"address"}],"name":"ERC20InvalidApprover","type":"error"},{"inputs":[{"internalType":"address","name":"receiver","type":"address"}],"name":"ERC20InvalidReceiver","type":"error"},{"inputs":[{"internalType":"address","name":"sender","type":"address"}],"name":"ERC20InvalidSender","type":"error"},{"inputs":[{"internalType":"address","name":"spender","type":"address"}],"name":"ERC20InvalidSpender","type":"error"},{"inputs":[],"name":"InsufficientBalance","type":"error"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"OwnableInvalidOwner","type":"error"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"OwnableUnauthorizedAccount","type":"error"},{"inputs":[],"name":"TransferFailed","type":"error"},{"inputs":[{"internalType":"string","name":"name","type":"string"}],"name":"ZeroAddress","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Deposited","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Locked","type":"event"},{"anonymous":false,"inputs":[],"name":"NoYieldToClaim","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"YieldClaimed","type":"event"},{"inputs":[],"name":"RMGP_TOKEN","outputs":[{"internalType":"contract ERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"claim","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"deposit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"lock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"lockedBalances","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"rescueTokens","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalLocked","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unclaimedUserYield","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"unlock","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"userClaimedYield","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}],
   vlMGP: [{"inputs":[],"name":"AllUnlockSlotOccupied","type":"error"},{"inputs":[],"name":"AlreadyMigrated","type":"error"},{"inputs":[],"name":"BeyondUnlockLength","type":"error"},{"inputs":[],"name":"BeyondUnlockSlotLimit","type":"error"},{"inputs":[],"name":"BurnEventManagerNotSet","type":"error"},{"inputs":[],"name":"BurnEvnentManagerPaused","type":"error"},{"inputs":[],"name":"InvalidAddress","type":"error"},{"inputs":[],"name":"InvalidCoolDownPeriod","type":"error"},{"inputs":[],"name":"IsZeroAddress","type":"error"},{"inputs":[],"name":"MaxSlotCantLowered","type":"error"},{"inputs":[],"name":"MaxSlotShouldNotZero","type":"error"},{"inputs":[],"name":"NotEnoughLockedMPG","type":"error"},{"inputs":[],"name":"NotInCoolDown","type":"error"},{"inputs":[],"name":"PenaltyToNotSet","type":"error"},{"inputs":[],"name":"StillInCoolDown","type":"error"},{"inputs":[],"name":"TransferNotWhiteListed","type":"error"},{"inputs":[],"name":"UnlockSlotOccupied","type":"error"},{"inputs":[],"name":"UnlockedAlready","type":"error"},{"inputs":[],"name":"coolDownInSecCanCauseOverflow","type":"error"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"_coolDownSecs","type":"uint256"}],"name":"CoolDownInSecsUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"slotIdx","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"mgpamount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"penaltyAmount","type":"uint256"}],"name":"ForceUnLock","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint8","name":"version","type":"uint8"}],"name":"Initialized","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"_maxSlot","type":"uint256"}],"name":"MaxSlotUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"timestamp","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"NewLock","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_oldMaster","type":"address"},{"indexed":false,"internalType":"address","name":"_newMaster","type":"address"}],"name":"NewMasterChiefUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Paused","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"penaltyDestination","type":"address"}],"name":"PenaltyDestinationUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"penaltyDestination","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"PenaltySentTo","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":false,"internalType":"uint256","name":"slotIdx","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"ReLock","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"timestamp","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"Unlock","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"_user","type":"address"},{"indexed":true,"internalType":"uint256","name":"_timestamp","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"UnlockStarts","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"account","type":"address"}],"name":"Unpaused","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"uint256","name":"timestamp","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"_eventId","type":"uint256"}],"name":"VlMgpBurn","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"_for","type":"address"},{"indexed":false,"internalType":"bool","name":"_status","type":"bool"}],"name":"WhitelistSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"burnEventManager","type":"address"}],"name":"burnEventManagerSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"referralStorage","type":"address"}],"name":"referralStorageSet","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"wombatBribeManager","type":"address"}],"name":"wombatBribeManagerSet","type":"event"},{"inputs":[],"name":"DENOMINATOR","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"MGP","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_masterMagpie","type":"address"},{"internalType":"uint256","name":"_maxSlots","type":"uint256"},{"internalType":"address","name":"_mgp","type":"address"},{"internalType":"uint256","name":"_coolDownInSecs","type":"uint256"}],"name":"__vlMGP_init_","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"burnEventManager","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_vlmgpAmountToBurn","type":"uint256"},{"internalType":"uint256","name":"_vlmgpBurnEventId","type":"uint256"}],"name":"burnVlmgp","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_slotIndex","type":"uint256"}],"name":"cancelUnlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"coolDownInSecs","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_slotIndex","type":"uint256"}],"name":"expectedPenaltyAmount","outputs":[{"internalType":"uint256","name":"penaltyAmount","type":"uint256"},{"internalType":"uint256","name":"amontToUser","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_slotIndex","type":"uint256"}],"name":"forceUnLock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getFullyUnlock","outputs":[{"internalType":"uint256","name":"unlockedAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getNextAvailableUnlockSlot","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getRewardablePercentWAD","outputs":[{"internalType":"uint256","name":"percent","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserAmountInCoolDown","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"},{"internalType":"uint256","name":"n","type":"uint256"}],"name":"getUserNthUnlockSlot","outputs":[{"internalType":"uint256","name":"startTime","type":"uint256"},{"internalType":"uint256","name":"endTime","type":"uint256"},{"internalType":"uint256","name":"amountInCoolDown","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserTotalLocked","outputs":[{"internalType":"uint256","name":"_lockAmount","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserUnlockSlotLength","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"_user","type":"address"}],"name":"getUserUnlockingSchedule","outputs":[{"components":[{"internalType":"uint256","name":"startTime","type":"uint256"},{"internalType":"uint256","name":"endTime","type":"uint256"},{"internalType":"uint256","name":"amountInCoolDown","type":"uint256"}],"internalType":"struct ILocker.UserUnlocking[]","name":"slots","type":"tuple[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"}],"name":"lock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amount","type":"uint256"},{"internalType":"address","name":"_for","type":"address"}],"name":"lockFor","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"masterMagpie","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"maxSlot","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"pause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"paused","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"penaltyDestination","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"referralStorage","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_coolDownSecs","type":"uint256"}],"name":"setCoolDownInSecs","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_masterMagpie","type":"address"}],"name":"setMasterChief","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_maxSlots","type":"uint256"}],"name":"setMaxSlots","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_burnEventMAnager","type":"address"}],"name":"setMgpBurnEventManager","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_penaltyDestination","type":"address"}],"name":"setPenaltyDestination","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_referralStorage","type":"address"}],"name":"setReferralStorage","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_for","type":"address"},{"internalType":"bool","name":"_status","type":"bool"}],"name":"setWhitelistForTransfer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_bribeManager","type":"address"}],"name":"setWombatBribeManager","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_amountToCoolDown","type":"uint256"}],"name":"startUnlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalAmountInCoolDown","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalLocked","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalPenalty","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"transferPenalty","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"transferWhitelist","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_slotIndex","type":"uint256"}],"name":"unlock","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"unpause","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"userUnlockings","outputs":[{"internalType":"uint256","name":"startTime","type":"uint256"},{"internalType":"uint256","name":"endTime","type":"uint256"},{"internalType":"uint256","name":"amountInCoolDown","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"wombatBribeManager","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"}],
@@ -27,7 +28,6 @@ const contractABIs = {
   vlStreamRewarder: [{"inputs":[{"internalType":"address","name":"_logic","type":"address"},{"internalType":"address","name":"admin_","type":"address"},{"internalType":"bytes","name":"_data","type":"bytes"}],"stateMutability":"payable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"previousAdmin","type":"address"},{"indexed":false,"internalType":"address","name":"newAdmin","type":"address"}],"name":"AdminChanged","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"beacon","type":"address"}],"name":"BeaconUpgraded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"implementation","type":"address"}],"name":"Upgraded","type":"event"},{"stateMutability":"payable","type":"fallback"},{"inputs":[],"name":"admin","outputs":[{"internalType":"address","name":"admin_","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newAdmin","type":"address"}],"name":"changeAdmin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"implementation","outputs":[{"internalType":"address","name":"implementation_","type":"address"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newImplementation","type":"address"}],"name":"upgradeTo","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newImplementation","type":"address"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"upgradeToAndCall","outputs":[],"stateMutability":"payable","type":"function"},{"stateMutability":"payable","type":"receive"}],
   CMGP: [{"name":"Transfer","inputs":[{"name":"sender","type":"address","indexed":true},{"name":"receiver","type":"address","indexed":true},{"name":"value","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"name":"Approval","inputs":[{"name":"owner","type":"address","indexed":true},{"name":"spender","type":"address","indexed":true},{"name":"value","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"name":"TokenExchange","inputs":[{"name":"buyer","type":"address","indexed":true},{"name":"sold_id","type":"int128","indexed":false},{"name":"tokens_sold","type":"uint256","indexed":false},{"name":"bought_id","type":"int128","indexed":false},{"name":"tokens_bought","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"name":"TokenExchangeUnderlying","inputs":[{"name":"buyer","type":"address","indexed":true},{"name":"sold_id","type":"int128","indexed":false},{"name":"tokens_sold","type":"uint256","indexed":false},{"name":"bought_id","type":"int128","indexed":false},{"name":"tokens_bought","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"name":"AddLiquidity","inputs":[{"name":"provider","type":"address","indexed":true},{"name":"token_amounts","type":"uint256[]","indexed":false},{"name":"fees","type":"uint256[]","indexed":false},{"name":"invariant","type":"uint256","indexed":false},{"name":"token_supply","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"name":"RemoveLiquidity","inputs":[{"name":"provider","type":"address","indexed":true},{"name":"token_amounts","type":"uint256[]","indexed":false},{"name":"fees","type":"uint256[]","indexed":false},{"name":"token_supply","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"name":"RemoveLiquidityOne","inputs":[{"name":"provider","type":"address","indexed":true},{"name":"token_id","type":"int128","indexed":false},{"name":"token_amount","type":"uint256","indexed":false},{"name":"coin_amount","type":"uint256","indexed":false},{"name":"token_supply","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"name":"RemoveLiquidityImbalance","inputs":[{"name":"provider","type":"address","indexed":true},{"name":"token_amounts","type":"uint256[]","indexed":false},{"name":"fees","type":"uint256[]","indexed":false},{"name":"invariant","type":"uint256","indexed":false},{"name":"token_supply","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"name":"RampA","inputs":[{"name":"old_A","type":"uint256","indexed":false},{"name":"new_A","type":"uint256","indexed":false},{"name":"initial_time","type":"uint256","indexed":false},{"name":"future_time","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"name":"StopRampA","inputs":[{"name":"A","type":"uint256","indexed":false},{"name":"t","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"name":"ApplyNewFee","inputs":[{"name":"fee","type":"uint256","indexed":false},{"name":"offpeg_fee_multiplier","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"name":"SetNewMATime","inputs":[{"name":"ma_exp_time","type":"uint256","indexed":false},{"name":"D_ma_time","type":"uint256","indexed":false}],"anonymous":false,"type":"event"},{"stateMutability":"nonpayable","type":"constructor","inputs":[{"name":"_name","type":"string"},{"name":"_symbol","type":"string"},{"name":"_A","type":"uint256"},{"name":"_fee","type":"uint256"},{"name":"_offpeg_fee_multiplier","type":"uint256"},{"name":"_ma_exp_time","type":"uint256"},{"name":"_coins","type":"address[]"},{"name":"_rate_multipliers","type":"uint256[]"},{"name":"_asset_types","type":"uint8[]"},{"name":"_method_ids","type":"bytes4[]"},{"name":"_oracles","type":"address[]"}],"outputs":[]},{"stateMutability":"nonpayable","type":"function","name":"exchange","inputs":[{"name":"i","type":"int128"},{"name":"j","type":"int128"},{"name":"_dx","type":"uint256"},{"name":"_min_dy","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"exchange","inputs":[{"name":"i","type":"int128"},{"name":"j","type":"int128"},{"name":"_dx","type":"uint256"},{"name":"_min_dy","type":"uint256"},{"name":"_receiver","type":"address"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"exchange_received","inputs":[{"name":"i","type":"int128"},{"name":"j","type":"int128"},{"name":"_dx","type":"uint256"},{"name":"_min_dy","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"exchange_received","inputs":[{"name":"i","type":"int128"},{"name":"j","type":"int128"},{"name":"_dx","type":"uint256"},{"name":"_min_dy","type":"uint256"},{"name":"_receiver","type":"address"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"add_liquidity","inputs":[{"name":"_amounts","type":"uint256[]"},{"name":"_min_mint_amount","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"add_liquidity","inputs":[{"name":"_amounts","type":"uint256[]"},{"name":"_min_mint_amount","type":"uint256"},{"name":"_receiver","type":"address"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"remove_liquidity_one_coin","inputs":[{"name":"_burn_amount","type":"uint256"},{"name":"i","type":"int128"},{"name":"_min_received","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"remove_liquidity_one_coin","inputs":[{"name":"_burn_amount","type":"uint256"},{"name":"i","type":"int128"},{"name":"_min_received","type":"uint256"},{"name":"_receiver","type":"address"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"remove_liquidity_imbalance","inputs":[{"name":"_amounts","type":"uint256[]"},{"name":"_max_burn_amount","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"remove_liquidity_imbalance","inputs":[{"name":"_amounts","type":"uint256[]"},{"name":"_max_burn_amount","type":"uint256"},{"name":"_receiver","type":"address"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"remove_liquidity","inputs":[{"name":"_burn_amount","type":"uint256"},{"name":"_min_amounts","type":"uint256[]"}],"outputs":[{"name":"","type":"uint256[]"}]},{"stateMutability":"nonpayable","type":"function","name":"remove_liquidity","inputs":[{"name":"_burn_amount","type":"uint256"},{"name":"_min_amounts","type":"uint256[]"},{"name":"_receiver","type":"address"}],"outputs":[{"name":"","type":"uint256[]"}]},{"stateMutability":"nonpayable","type":"function","name":"remove_liquidity","inputs":[{"name":"_burn_amount","type":"uint256"},{"name":"_min_amounts","type":"uint256[]"},{"name":"_receiver","type":"address"},{"name":"_claim_admin_fees","type":"bool"}],"outputs":[{"name":"","type":"uint256[]"}]},{"stateMutability":"nonpayable","type":"function","name":"withdraw_admin_fees","inputs":[],"outputs":[]},{"stateMutability":"view","type":"function","name":"last_price","inputs":[{"name":"i","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"ema_price","inputs":[{"name":"i","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"get_p","inputs":[{"name":"i","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"price_oracle","inputs":[{"name":"i","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"D_oracle","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"transfer","inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"outputs":[{"name":"","type":"bool"}]},{"stateMutability":"nonpayable","type":"function","name":"transferFrom","inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"outputs":[{"name":"","type":"bool"}]},{"stateMutability":"nonpayable","type":"function","name":"approve","inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"outputs":[{"name":"","type":"bool"}]},{"stateMutability":"nonpayable","type":"function","name":"permit","inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"},{"name":"_deadline","type":"uint256"},{"name":"_v","type":"uint8"},{"name":"_r","type":"bytes32"},{"name":"_s","type":"bytes32"}],"outputs":[{"name":"","type":"bool"}]},{"stateMutability":"view","type":"function","name":"DOMAIN_SEPARATOR","inputs":[],"outputs":[{"name":"","type":"bytes32"}]},{"stateMutability":"view","type":"function","name":"get_dx","inputs":[{"name":"i","type":"int128"},{"name":"j","type":"int128"},{"name":"dy","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"get_dy","inputs":[{"name":"i","type":"int128"},{"name":"j","type":"int128"},{"name":"dx","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"calc_withdraw_one_coin","inputs":[{"name":"_burn_amount","type":"uint256"},{"name":"i","type":"int128"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"totalSupply","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"get_virtual_price","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"calc_token_amount","inputs":[{"name":"_amounts","type":"uint256[]"},{"name":"_is_deposit","type":"bool"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"A","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"A_precise","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"balances","inputs":[{"name":"i","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"get_balances","inputs":[],"outputs":[{"name":"","type":"uint256[]"}]},{"stateMutability":"view","type":"function","name":"stored_rates","inputs":[],"outputs":[{"name":"","type":"uint256[]"}]},{"stateMutability":"view","type":"function","name":"dynamic_fee","inputs":[{"name":"i","type":"int128"},{"name":"j","type":"int128"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"nonpayable","type":"function","name":"ramp_A","inputs":[{"name":"_future_A","type":"uint256"},{"name":"_future_time","type":"uint256"}],"outputs":[]},{"stateMutability":"nonpayable","type":"function","name":"stop_ramp_A","inputs":[],"outputs":[]},{"stateMutability":"nonpayable","type":"function","name":"set_new_fee","inputs":[{"name":"_new_fee","type":"uint256"},{"name":"_new_offpeg_fee_multiplier","type":"uint256"}],"outputs":[]},{"stateMutability":"nonpayable","type":"function","name":"set_ma_exp_time","inputs":[{"name":"_ma_exp_time","type":"uint256"},{"name":"_D_ma_time","type":"uint256"}],"outputs":[]},{"stateMutability":"view","type":"function","name":"N_COINS","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"coins","inputs":[{"name":"arg0","type":"uint256"}],"outputs":[{"name":"","type":"address"}]},{"stateMutability":"view","type":"function","name":"fee","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"offpeg_fee_multiplier","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"admin_fee","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"initial_A","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"future_A","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"initial_A_time","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"future_A_time","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"admin_balances","inputs":[{"name":"arg0","type":"uint256"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"ma_exp_time","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"D_ma_time","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"ma_last_time","inputs":[],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"name","inputs":[],"outputs":[{"name":"","type":"string"}]},{"stateMutability":"view","type":"function","name":"symbol","inputs":[],"outputs":[{"name":"","type":"string"}]},{"stateMutability":"view","type":"function","name":"decimals","inputs":[],"outputs":[{"name":"","type":"uint8"}]},{"stateMutability":"view","type":"function","name":"version","inputs":[],"outputs":[{"name":"","type":"string"}]},{"stateMutability":"view","type":"function","name":"balanceOf","inputs":[{"name":"arg0","type":"address"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"allowance","inputs":[{"name":"arg0","type":"address"},{"name":"arg1","type":"address"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"nonces","inputs":[{"name":"arg0","type":"address"}],"outputs":[{"name":"","type":"uint256"}]},{"stateMutability":"view","type":"function","name":"salt","inputs":[],"outputs":[{"name":"","type":"bytes32"}]}],
 } as const
-const decimals: Record<Coins, number> = { MGP: 18, RMGP: 18, YMGP: 18, CMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 }
 
 const publicClients = {
   1: createPublicClient({ chain: mainnet, transport: webSocket('wss://eth.drpc.org') }),
@@ -35,26 +35,36 @@ const publicClients = {
   42161: createPublicClient({ chain: arbitrum, transport: webSocket('wss://arbitrum.drpc.org') })
 }
 
-function useUpdateable<T>(factory: () => Promise<T>, deps: unknown[]): [T | undefined, () => void] {
-  const [updateCount, setUpdateCount] = useState(0);
-  const [value, setValue] = useState<T>();
-  useEffect(() => {
-    factory().then(setValue)
-  }, [...deps, updateCount]);
-  const update = (): void => setUpdateCount(c => c + 1);
-  return [value, update];
+const contracts = {
+  56: {
+    MGP: getContract({ address: '0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa' as `0x${string}`, abi: erc20Abi, client: publicClients[56] }),
+    RMGP: getContract({ address: '0x0277517658a1dd3899bf926fCf6A633e549eB769' as `0x${string}`, abi: ABIs.RMGP, client: publicClients[56] }),
+    YMGP: getContract({ address: '0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb' as `0x${string}`, abi: ABIs.YMGP, client: publicClients[56] }),
+    CMGP: getContract({ address: '0x0000000000000000000000000000000000000000' as `0x${string}`, abi: ABIs.CMGP, client: publicClients[56] }),
+    VLMGP: getContract({ address: '0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6' as `0x${string}`, abi: ABIs.vlMGP, client: publicClients[56] }),
+    masterMGP: getContract({ address: '0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46' as `0x${string}`, abi: ABIs.masterMagpie, client: publicClients[56] }),
+    VLREWARDER: getContract({ address: '0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9' as `0x${string}`, abi: ABIs.vlStreamRewarder, client: publicClients[56] }),
+    WETH: getContract({ address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c' as `0x${string}`, abi: erc20Abi, client: publicClients[56] }),
+  },
+  42161: {
+    MGP: getContract({ address: '0xa61F74247455A40b01b0559ff6274441FAfa22A3' as `0x${string}`, abi: erc20Abi, client: publicClients[42161] }),
+    RMGP: getContract({ address: '0x3788c8791d826254bAbd49b602C93008468D5695' as `0x${string}`, abi: ABIs.RMGP, client: publicClients[42161] }),
+    YMGP: getContract({ address: '0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9' as `0x${string}`, abi: ABIs.YMGP, client: publicClients[42161] }),
+    CMGP: getContract({ address: '0xc370A85bB555A7c519bF675895E545873BDb1359' as `0x${string}`, abi: ABIs.CMGP, client: publicClients[42161] }),
+    VLMGP: getContract({ address: '0x536599497Ce6a35FC65C7503232Fec71A84786b9' as `0x${string}`, abi: ABIs.vlMGP, client: publicClients[42161] }),
+    masterMGP: getContract({ address: '0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7' as `0x${string}`, abi: ABIs.masterMagpie, client: publicClients[42161] }),
+    VLREWARDER: getContract({ address: '0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45' as `0x${string}`, abi: ABIs.vlStreamRewarder, client: publicClients[42161] }),
+    WETH: getContract({ address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1' as `0x${string}`, abi: erc20Abi, client: publicClients[42161] }),
+  }
 }
 
 const App = (): ReactElement => {
-  const [mode, setMode] = useState<'deploy' | 'addDEX' | 'deposit' | 'convert' | 'lock' | 'supplyLiquidity' | 'unlock' | 'redeem'>('deposit')
+  const [mode, setMode] = useState<'deploy' | 'deposit' | 'convert' | 'lock' | 'supplyLiquidity' | 'unlock' | 'redeem'>('deposit')
   const [showDiagram, setShowDiagram] = useState(false)
   const [isConnecting, setIsConnecting] = useState(false)
   const [approveInfinity, setApproveInfinity] = useState(false)
   const [sendAmount, setSendAmount] = useState(parseEther(100));
-  const [prices, setPrices] = useState<Record<Coins, number>>({ MGP: 0, RMGP: 0, YMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 })
-  const [dexToken, setDEXToken] = useState<Coins>()
-  const [router, setRouter] = useState('')
-  const [camelot, setCamelot] = useState(false)
+  const [prices, setPrices] = useState<Record<Coins, number>>({ MGP: 0, RMGP: 0, YMGP: 0, CMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 })
 
   // Wallet
   const [walletClients, setWalletClients] = useState<Record<Chains, WalletClient & PublicActions> | undefined>()
@@ -62,31 +72,31 @@ const App = (): ReactElement => {
   const [account, setAccount] = useState<`0x${string}`>('0x0000000000000000000000000000000000000000')
   const [ens] = useUpdateable(() => publicClients[1].getEnsName({ address: account }), [account])
 
-  const chainContracts = useMemo(() => {
+  const writeContracts = useMemo(() => {
+    if (!walletClients) return undefined
     return {
       56: {
-        MGP: getContract({ address: '0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa' as `0x${string}`, abi: erc20Abi, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        RMGP: getContract({ address: '0x0277517658a1dd3899bf926fCf6A633e549eB769' as `0x${string}`, abi: contractABIs.RMGP, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        YMGP: getContract({ address: '0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb' as `0x${string}`, abi: contractABIs.YMGP, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        VLMGP: getContract({ address: '0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6' as `0x${string}`, abi: contractABIs.vlMGP, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        masterMagpie: getContract({ address: '0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46' as `0x${string}`, abi: contractABIs.masterMagpie, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        VLSTREAMREWARDER: getContract({ address: '0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9' as `0x${string}`, abi: contractABIs.vlStreamRewarder, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        WETH: getContract({ address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c' as `0x${string}`, abi: erc20Abi, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        CMGP: getContract({ address: '0x0000000000000000000000000000000000000000' as `0x${string}`, abi: contractABIs.CMGP, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
+        MGP: getContract({ address: '0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa' as `0x${string}`, abi: contracts[56].MGP.abi, client: walletClients[56] }),
+        RMGP: getContract({ address: '0x0277517658a1dd3899bf926fCf6A633e549eB769' as `0x${string}`, abi: contracts[56].RMGP.abi, client: walletClients[56] }),
+        YMGP: getContract({ address: '0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb' as `0x${string}`, abi: contracts[56].YMGP.abi, client: walletClients[56] }),
+        CMGP: getContract({ address: '0x0000000000000000000000000000000000000000' as `0x${string}`, abi: contracts[56].CMGP.abi, client: walletClients[56] }),
+        VLMGP: getContract({ address: '0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6' as `0x${string}`, abi: contracts[56].VLMGP.abi, client: walletClients[56] }),
+        masterMGP: getContract({ address: '0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46' as `0x${string}`, abi: contracts[56].masterMGP.abi, client: walletClients[56] }),
+        VLREWARDER: getContract({ address: '0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9' as `0x${string}`, abi: contracts[56].VLREWARDER.abi, client: walletClients[56] }),
+        WETH: getContract({ address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c' as `0x${string}`, abi: contracts[56].WETH.abi, client: walletClients[56] }),
       },
       42161: {
-        MGP: getContract({ address: '0xa61F74247455A40b01b0559ff6274441FAfa22A3' as `0x${string}`, abi: erc20Abi, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        RMGP: getContract({ address: '0x3788c8791d826254bAbd49b602C93008468D5695' as `0x${string}`, abi: contractABIs.RMGP, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        YMGP: getContract({ address: '0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9' as `0x${string}`, abi: contractABIs.YMGP, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        VLMGP: getContract({ address: '0x536599497Ce6a35FC65C7503232Fec71A84786b9' as `0x${string}`, abi: contractABIs.vlMGP, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        masterMagpie: getContract({ address: '0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7' as `0x${string}`, abi: contractABIs.masterMagpie, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        VLSTREAMREWARDER: getContract({ address: '0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45' as `0x${string}`, abi: contractABIs.vlStreamRewarder, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        WETH: getContract({ address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1' as `0x${string}`, abi: erc20Abi, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        CMGP: getContract({ address: '0xc370A85bB555A7c519bF675895E545873BDb1359' as `0x${string}`, abi: contractABIs.CMGP, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
+        MGP: getContract({ address: '0xa61F74247455A40b01b0559ff6274441FAfa22A3' as `0x${string}`, abi: contracts[42161].MGP.abi, client: walletClients[42161] }),
+        RMGP: getContract({ address: '0x3788c8791d826254bAbd49b602C93008468D5695' as `0x${string}`, abi: contracts[42161].RMGP.abi, client: walletClients[42161] }),
+        YMGP: getContract({ address: '0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9' as `0x${string}`, abi: contracts[42161].YMGP.abi, client: walletClients[42161] }),
+        CMGP: getContract({ address: '0xc370A85bB555A7c519bF675895E545873BDb1359' as `0x${string}`, abi: contracts[42161].CMGP.abi, client: walletClients[42161] }),
+        VLMGP: getContract({ address: '0x536599497Ce6a35FC65C7503232Fec71A84786b9' as `0x${string}`, abi: contracts[42161].VLMGP.abi, client: walletClients[42161] }),
+        masterMGP: getContract({ address: '0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7' as `0x${string}`, abi: contracts[42161].masterMGP.abi, client: walletClients[42161] }),
+        VLREWARDER: getContract({ address: '0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45' as `0x${string}`, abi: contracts[42161].VLREWARDER.abi, client: walletClients[42161] }),
+        WETH: getContract({ address: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1' as `0x${string}`, abi: contracts[42161].WETH.abi, client: walletClients[42161] }),
       }
     }
   }, [walletClients])
-  const contracts = useMemo(() => chainContracts[chain], [chain, walletClients])
 
   // Deploy Contract
   const [abi, setABI] = useState<string>()
@@ -94,58 +104,63 @@ const App = (): ReactElement => {
   const [bytecode, setBytecode] = useState<`0x${string}`>()
 
   // Allowances
-  const [mgpAllowance, updateMGPAllowance] = useUpdateable(() => contracts.MGP.read.allowance([account, contracts.RMGP.address]), [contracts, account])
-  const [rmgpAllowance, updateRMGPAllowance] = useUpdateable(() => contracts.RMGP.read.allowance([account, contracts.YMGP.address]), [contracts, account])
-  const [mgpAllowanceCurve, updateMGPAllowanceCurve] = useUpdateable(() => contracts.MGP.read.allowance([account, contracts.CMGP.address]), [contracts, account])
-  const [rmgpAllowanceCurve, updateRMGPAllowanceCurve] = useUpdateable(() => contracts.RMGP.read.allowance([account, contracts.CMGP.address]), [contracts, account])
-  // const [ymgpAllowanceCurve, updateYMGPAllowanceCurve] = useUpdateable(() => contracts.YMGP.read.allowance([account, contracts.CMGP.address]), [contracts, account])
+  const [mgpAllowance, updateMGPAllowance] = useUpdateable(() => contracts[chain].MGP.read.allowance([account, contracts[chain].RMGP.address]), [contracts, chain, account])
+  const [rmgpAllowance, updateRMGPAllowance] = useUpdateable(() => contracts[chain].RMGP.read.allowance([account, contracts[chain].YMGP.address]), [contracts, chain, account])
+  const [mgpAllowanceCurve, updateMGPAllowanceCurve] = useUpdateable(() => contracts[chain].MGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account])
+  const [rmgpAllowanceCurve, updateRMGPAllowanceCurve] = useUpdateable(() => contracts[chain].RMGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account])
+  // const [ymgpAllowanceCurve, updateYMGPAllowanceCurve] = useUpdateable(() => readContracts[chain].YMGP.read.allowance([account, readContracts[chain].CMGP.address]), [contracts, account])
 
   // Balances
-  const [mgpBalance, updateMGPBalance] = useUpdateable(() => contracts.MGP.read.balanceOf([account]), [contracts, account])
-  const [rmgpBalance, updateRMGPBalance] = useUpdateable(() => contracts.RMGP.read.balanceOf([account]), [contracts, account])
-  const [ymgpBalance, updateYMGPBalance] = useUpdateable(() => contracts.YMGP.read.balanceOf([account]), [contracts, account])
-  const [cmgpBalance, updateCMGPBalance] = useUpdateable(() => contracts.CMGP.read.balanceOf([account]), [contracts, account])
-  const [ymgpHoldings, updateYMGPHoldings] = useUpdateable(() => contracts.RMGP.read.balanceOf([contracts.YMGP.address]), [contracts, account])
-  const [mgpCurveBalance, updateMGPCurveBalance] = useUpdateable(() => contracts.MGP.read.balanceOf([contracts.CMGP.address]), [contracts, account])
-  const [rmgpCurveBalance, updateRMGPCurveBalance] = useUpdateable(() => contracts.RMGP.read.balanceOf([contracts.CMGP.address]), [contracts, account])
-  const [ymgpCurveBalance, updateYMGPCurveBalance] = useUpdateable(() => contracts.YMGP.read.balanceOf([contracts.CMGP.address]), [contracts, account])
+  const [mgpBalance, updateMGPBalance] = useUpdateable(() => contracts[chain].MGP.read.balanceOf([account]), [contracts, account])
+  const [rmgpBalance, updateRMGPBalance] = useUpdateable(() => contracts[chain].RMGP.read.balanceOf([account]), [contracts, account])
+  const [ymgpBalance, updateYMGPBalance] = useUpdateable(() => contracts[chain].YMGP.read.balanceOf([account]), [contracts, account])
+  const [cmgpBalance, updateCMGPBalance] = useUpdateable(() => contracts[chain].CMGP.read.balanceOf([account]), [contracts, account])
+  const [ymgpHoldings, updateYMGPHoldings] = useUpdateable(() => contracts[chain].RMGP.read.balanceOf([contracts[chain].YMGP.address]), [contracts, chain, account])
+  const [mgpCurveBalance, updateMGPCurveBalance] = useUpdateable(() => contracts[chain].MGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account])
+  const [rmgpCurveBalance, updateRMGPCurveBalance] = useUpdateable(() => contracts[chain].RMGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account])
+  const [ymgpCurveBalance, updateYMGPCurveBalance] = useUpdateable(() => contracts[chain].YMGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account])
 
   // Locked
-  const [reefiLockedMGP, updateReefiLockedMGP] = useUpdateable(() => contracts.VLMGP.read.getUserTotalLocked([contracts.RMGP.address]), [contracts, account])
-  const [totalLockedMGPBSC, updateTotalLockedMGPBSC] = useUpdateable(() => chainContracts[56].VLMGP.read.totalLocked(), [chainContracts, account])
-  const [totalLockedMGPARB, updateTotalLockedMGPARB] = useUpdateable(() => chainContracts[42161].VLMGP.read.totalLocked(), [chainContracts, account])
+  const [reefiLockedMGP, updateReefiLockedMGP] = useUpdateable(() => contracts[chain].VLMGP.read.getUserTotalLocked([contracts[chain].RMGP.address]), [contracts, account, chain])
+  const [totalLockedMGPBSC, updateTotalLockedMGPBSC] = useUpdateable(() => contracts[56].VLMGP.read.totalLocked(), [contracts, account])
+  const [totalLockedMGPARB, updateTotalLockedMGPARB] = useUpdateable(() => contracts[42161].VLMGP.read.totalLocked(), [contracts, account])
   const totalLockedMGP = useMemo(() => { return (totalLockedMGPBSC ?? 0n) + (totalLockedMGPARB ?? 0n) }, [totalLockedMGPBSC, totalLockedMGPARB])
   const updateTotalLockedMGP = (): void => {
     updateTotalLockedMGPBSC()
     updateTotalLockedMGPARB()
   }
-  const [totalLockedYMGP, updateTotalLockedYMGP] = useUpdateable(() => contracts.YMGP.read.totalLocked(), [contracts, account])
-  const [userLockedYMGP, updateUserLockedYMGP] = useUpdateable(() => contracts.YMGP.read.lockedBalances([account]), [contracts, account])
+  const [totalLockedYMGP, updateTotalLockedYMGP] = useUpdateable(() => contracts[chain].YMGP.read.totalLocked(), [contracts, account])
+  const [userLockedYMGP, updateUserLockedYMGP] = useUpdateable(() => contracts[chain].YMGP.read.lockedBalances([account]), [contracts, account])
 
   // Supply
-  const [mgpSupply, updateMGPSupply] = useUpdateable(() => chainContracts[56].MGP.read.totalSupply(), [chainContracts])
-  const [ymgpSupply, updateYMGPSupply] = useUpdateable(() => contracts.YMGP.read.totalSupply(), [contracts])
-  const [rmgpSupply, updateRMGPSupply] = useUpdateable(() => contracts.RMGP.read.totalSupply(), [contracts])
-  const [cmgpSupply, updateCMGPSupply] = useUpdateable(() => contracts.CMGP.read.totalSupply(), [contracts])
+  const [mgpSupply, updateMGPSupply] = useUpdateable(() => contracts[56].MGP.read.totalSupply(), [contracts])
+  const [ymgpSupply, updateYMGPSupply] = useUpdateable(() => contracts[chain].YMGP.read.totalSupply(), [contracts, chain])
+  const [rmgpSupply, updateRMGPSupply] = useUpdateable(() => contracts[chain].RMGP.read.totalSupply(), [contracts, chain])
+  const [cmgpSupply, updateCMGPSupply] = useUpdateable(() => contracts[chain].CMGP.read.totalSupply(), [contracts, chain])
   
   // Withdraws
-  const [userPendingWithdraws, updateUserPendingWithdraws] = useUpdateable(() => contracts.RMGP.read.getUserPendingWithdraws([account]), [contracts, account])
-  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useUpdateable(() => contracts.RMGP.read.unsubmittedWithdraws(), [contracts])
-  const [userWithdrawable, updateUserWithdrawable] = useUpdateable(() => contracts.RMGP.read.getUserWithdrawable(), [contracts])
-  const [unlockSchedule, updateUnlockSchedule] = useUpdateable(() => contracts.VLMGP.read.getUserUnlockingSchedule([contracts.RMGP.address]), [contracts])
+  const [userPendingWithdraws, updateUserPendingWithdraws] = useUpdateable(() => contracts[chain].RMGP.read.getUserPendingWithdraws([account]), [contracts, account, chain])
+  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useUpdateable(() => contracts[chain].RMGP.read.unsubmittedWithdraws(), [contracts, chain])
+  const [userWithdrawable, updateUserWithdrawable] = useUpdateable(() => contracts[chain].RMGP.read.getUserWithdrawable(), [contracts, chain])
+  const [unlockSchedule, updateUnlockSchedule] = useUpdateable(() => contracts[chain].VLMGP.read.getUserUnlockingSchedule([contracts[chain].RMGP.address]), [contracts, chain])
 
   // Exchange Rates
   const mgpRMGPRate = useMemo(() => { return rmgpSupply === 0n ? 1 : (Number(reefiLockedMGP) / Number(rmgpSupply)) }, [rmgpSupply, reefiLockedMGP])
   const mgpRMGPCurveRate = useMemo(() => { return mgpCurveBalance === undefined || rmgpCurveBalance === undefined ? undefined : Number(mgpCurveBalance) / Number(rmgpCurveBalance) }, [mgpCurveBalance, rmgpCurveBalance])
   const rmgpYMGPCurveRate = useMemo(() => { return rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? undefined : Number(rmgpCurveBalance) / Number(ymgpCurveBalance) }, [rmgpCurveBalance, ymgpCurveBalance])
-  const [mgpRmgpCurveAmount] = useUpdateable(() => contracts.CMGP.read.get_dy([0n, 1n, sendAmount], { account }), [contracts, sendAmount])
-  const [rmgpMgpCurveAmount] = useUpdateable(() => contracts.CMGP.read.get_dy([1n, 0n, sendAmount], { account }), [contracts, sendAmount])
-  const [rmgpYmgpCurveAmount] = useUpdateable(() => contracts.CMGP.read.get_dy([1n, 2n, sendAmount], { account }), [contracts, sendAmount])
+  const [mgpRmgpCurveAmount] = useUpdateable(() => { return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([0n, 1n, sendAmount], { account }) }, [contracts, chain, sendAmount])
+  const [rmgpMgpCurveAmount] = useUpdateable(() => { return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([1n, 0n, sendAmount], { account }) }, [contracts, chain, sendAmount])
+  const [rmgpYmgpCurveAmount] = useUpdateable(() => { return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([1n, 2n, sendAmount], { account }) }, [contracts, chain, sendAmount])
+
+  // Liquidity
+  const [mgpLPAmount, setMGPLPAmount] = useState(0n)
+  const [rmgpLPAmount, setRMGPLPAmount] = useState(0n)
+  const [ymgpLPAmount, setYMGPLPAmount] = useState(0n)
 
   // Yield
   const [mgpAPR, setMGPAPR] = useState(0)
   const [pendingRewards, setPendingRewards] = useState<Record<Coins, { address: `0x${string}`, rewards: bigint }> | undefined>()
-  const [unclaimedUserYield, updateUnclaimedUserYield] = useUpdateable(() => contracts.YMGP.read.unclaimedUserYield(), [contracts])
+  const [unclaimedUserYield, updateUnclaimedUserYield] = useUpdateable(() => contracts[chain].YMGP.read.unclaimedUserYield(), [contracts, chain])
   const [cmgpPoolAPY, setCMGPPoolAPY] = useState(0)
   const cmgpAPY = useMemo(() => {
     if (mgpCurveBalance === undefined ||rmgpCurveBalance === undefined || ymgpCurveBalance === undefined) return 0
@@ -159,17 +174,12 @@ const App = (): ReactElement => {
   }, [pendingRewards, prices])
   const estimatedCompoundGasFee = useMemo(() => formatEther(compoundRMGPGas, decimals[publicClients[chain].chain.nativeCurrency.symbol])*prices[publicClients[chain].chain.nativeCurrency.symbol], [chain, compoundRMGPGas, prices])
   const updatePendingRewards = async (): Promise<void> => {
-    const data = await contracts.masterMagpie.read.allPendingTokens([contracts.VLMGP.address, contracts.RMGP.address])
+    const data = await contracts[chain].masterMGP.read.allPendingTokens([contracts[chain].VLMGP.address, contracts[chain].RMGP.address])
     const [pendingMGP, bonusTokenAddresses, bonusTokenSymbols, pendingBonusRewards] = data
-    const newPendingRewards: Record<string, { address: `0x${string}`, rewards: bigint }> = { MGP: { address: contracts.MGP.address, rewards: pendingMGP } }
+    const newPendingRewards: Record<string, { address: `0x${string}`, rewards: bigint }> = { MGP: { address: contracts[chain].MGP.address, rewards: pendingMGP } }
     for (const i in bonusTokenSymbols) if (bonusTokenSymbols[i] !== undefined && pendingBonusRewards[i] !== undefined && bonusTokenAddresses[i] !== undefined) newPendingRewards[bonusTokenSymbols[i].replace('Bridged ', '').toUpperCase()] = { rewards: pendingBonusRewards[i], address: bonusTokenAddresses[i] };
     setPendingRewards(newPendingRewards)
   }
-
-  // Liquidity
-  const [mgpLPAmount, setMGPLPAmount] = useState(0n)
-  const [rmgpLPAmount, setRMGPLPAmount] = useState(0n)
-  const [ymgpLPAmount, setYMGPLPAmount] = useState(0n)
 
   useEffect(() => {
     if (window.ethereum) connectWallet();
@@ -178,10 +188,10 @@ const App = (): ReactElement => {
     fetch('https://api.magpiexyz.io/getalltokenprice').then(res => res.json().then((body: { data: { AllPrice: typeof prices }}) => setPrices(body.data.AllPrice)))
     fetch('https://api.curve.finance/api/getVolumes/arbitrum').then(res => res.json()).then((body: { data: { pools: { address: `0x${string}`, latestDailyApyPcent: number }[] } }) => {
       body.data.pools.forEach(pool => {
-        if (pool.address === contracts.CMGP.address) setCMGPPoolAPY(pool.latestDailyApyPcent)
+        if (pool.address === contracts[chain].CMGP.address) setCMGPPoolAPY(pool.latestDailyApyPcent)
       })
     })
-    const interval = setInterval(updatePendingRewards, 5_000)
+    const interval = setInterval(updatePendingRewards, 30_000)
     return (): void => clearInterval(interval)
   }, [])
 
@@ -189,7 +199,7 @@ const App = (): ReactElement => {
     if (walletClients) walletClients[chain].switchChain({ id: chain })
     window.ethereum?.request({ method: 'eth_accounts' }).then(accounts => { if (accounts !== undefined) connectWallet() })
     updatePendingRewards()
-    fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${chain}&rewarder=${contracts.VLSTREAMREWARDER.address}`).then(res => res.json()).then(body => {setMGPAPR((body as { data: { rewardTokenInfo: { apr: number }[] }}).data.rewardTokenInfo.reduce((acc, token) => {return { ...token, apr: acc.apr+token.apr }}).apr)})
+    fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${chain}&rewarder=${contracts[chain].VLREWARDER.address}`).then(res => res.json()).then(body => {setMGPAPR((body as { data: { rewardTokenInfo: { apr: number }[] }}).data.rewardTokenInfo.reduce((acc, token) => {return { ...token, apr: acc.apr+token.apr }}).apr)})
   }, [chain])
 
   useEffect(() => {
@@ -201,8 +211,8 @@ const App = (): ReactElement => {
     for (const item of JSON.parse(abi ?? '[]') as Abi) {
       if (item.type === 'constructor') {
         const args = (item.inputs as { internalType: string, name: string, type: string, value?: string }[]).map(arg => {
-          const contract = arg.name.toUpperCase().replace('_', '').replace('TOKEN', '') as keyof typeof contracts
-          return { ...arg, value: Object.keys(contracts).includes(contract) ? contracts[contract].address : arg.value }
+          const contract = arg.name.toUpperCase().replace('_', '').replace('TOKEN', '') as keyof typeof contracts[Chains]
+          return { ...arg, value: Object.keys(contracts).includes(contract) ? contracts[chain][contract].address : arg.value }
         })
         setConstructorArgs(args)
       }
@@ -223,15 +233,16 @@ const App = (): ReactElement => {
 
   const approve = async (curve = false): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
+    if (!writeContracts) return alert('Contracts not found')
     if (!account) return alert('No address found')
     if (mode === 'deposit') {
       const amount = approveInfinity ? 2n ** 256n - 1n : sendAmount;
-      await contracts.MGP.write.approve([curve ? contracts.CMGP.address : contracts.RMGP.address, amount], { account })
+      await writeContracts[chain].MGP.write.approve([curve ? contracts[chain].CMGP.address : contracts[chain].RMGP.address, amount], { account, chain: walletClients[chain].chain })
       if (curve) updateMGPAllowanceCurve()
       else updateMGPAllowance()
     } else if (mode === 'convert' || mode === 'redeem') {
       const amount = approveInfinity ? 2n ** 256n - 1n : sendAmount;
-      await contracts.RMGP.write.approve([curve ? contracts.CMGP.address : contracts.YMGP.address, amount], { account })
+      await writeContracts[chain].RMGP.write.approve([curve ? contracts[chain].CMGP.address : contracts[chain].YMGP.address, amount], { account, chain: walletClients[chain].chain })
       if (curve) updateRMGPAllowanceCurve()
       else updateRMGPAllowance()
     }
@@ -239,8 +250,9 @@ const App = (): ReactElement => {
 
   const depositMGP = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
+    if (!writeContracts) return alert('Contracts not found')
     if (mgpAllowance === undefined || mgpAllowance < sendAmount) return alert('Allowance too low')
-    await contracts.RMGP.write.deposit([sendAmount], { account })
+    await writeContracts[chain].RMGP.write.deposit([sendAmount], { account, chain: walletClients[chain].chain })
     updateMGPBalance()
     updateRMGPBalance()
     updateMGPSupply()
@@ -251,8 +263,9 @@ const App = (): ReactElement => {
 
   const buyRMGP = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
+    if (!writeContracts) return alert('Contracts not found')
     if (mgpAllowanceCurve === undefined || mgpAllowanceCurve < sendAmount) return alert('Allowance too low')
-    await contracts.CMGP.write.exchange([0, 1, sendAmount, 0], { account })
+    await writeContracts[chain].CMGP.write.exchange([0n, 1n, sendAmount, 0n], { account, chain: walletClients[chain].chain })
     updateMGPBalance()
     updateRMGPBalance()
     updateMGPCurveBalance()
@@ -261,8 +274,9 @@ const App = (): ReactElement => {
 
   const buyYMGP = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
+    if (!writeContracts) return alert('Contracts not found')
     if (rmgpAllowanceCurve === undefined || rmgpAllowanceCurve < sendAmount) return alert('Allowance too low')
-    await contracts.CMGP.write.exchange([1, 2, sendAmount, 0], { account })
+    await writeContracts[chain].CMGP.write.exchange([1n, 2n, sendAmount, 0n], { account, chain: walletClients[chain].chain })
     updateRMGPBalance()
     updateYMGPBalance()
     updateRMGPCurveBalance()
@@ -271,8 +285,9 @@ const App = (): ReactElement => {
 
   const buyMGP = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
+    if (!writeContracts) return alert('Contracts not found')
     if (rmgpAllowanceCurve === undefined || rmgpAllowanceCurve < sendAmount) return alert('Allowance too low')
-    await contracts.CMGP.write.exchange([1, 0, sendAmount, 0], { account })
+    await writeContracts[chain].CMGP.write.exchange([1n, 0n, sendAmount, 0n], { account, chain: walletClients[chain].chain })
     updateMGPBalance()
     updateRMGPBalance()
     updateMGPCurveBalance()
@@ -281,8 +296,9 @@ const App = (): ReactElement => {
 
   const depositRMGP = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
+    if (!writeContracts) return alert('Contracts not found')
     if (rmgpAllowance === undefined || rmgpAllowance < sendAmount) return alert('Allowance too low')
-    await contracts.YMGP.write.deposit([sendAmount], { account })
+    await writeContracts[chain].YMGP.write.deposit([sendAmount], { account, chain: walletClients[chain].chain })
     updateRMGPBalance()
     updateYMGPBalance()
     updateRMGPSupply()
@@ -292,7 +308,8 @@ const App = (): ReactElement => {
 
   const lockYMGP = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
-    await contracts.YMGP.write.lock([sendAmount], { account })
+    if (!writeContracts) return alert('Contracts not found')
+    await writeContracts[chain].YMGP.write.lock([sendAmount], { account, chain: walletClients[chain].chain })
     updateYMGPSupply()
     updateTotalLockedYMGP()
     updateUserLockedYMGP()
@@ -300,7 +317,8 @@ const App = (): ReactElement => {
 
   const unlockYMGP = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
-    await contracts.YMGP.write.unlock([sendAmount], { account })
+    if (!writeContracts) return alert('Contracts not found')
+    await writeContracts[chain].YMGP.write.unlock([sendAmount], { account, chain: walletClients[chain].chain })
     updateYMGPSupply()
     updateTotalLockedYMGP()
     updateUserLockedYMGP()
@@ -308,7 +326,8 @@ const App = (): ReactElement => {
 
   const redeemRMGP = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
-    await contracts.RMGP.write.startUnlock([sendAmount], { account })
+    if (!writeContracts) return alert('Contracts not found')
+    await writeContracts[chain].RMGP.write.startUnlock([sendAmount], { account, chain: walletClients[chain].chain })
     updateUnlockSchedule()
     updateRMGPSupply()
     updateRMGPBalance()
@@ -322,8 +341,9 @@ const App = (): ReactElement => {
 
   const withdrawMGP = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
-    await contracts.RMGP.write.unlock([], { account })
-    await contracts.RMGP.write.withdraw([], { account })
+    if (!writeContracts) return alert('Contracts not found')
+    await writeContracts[chain].RMGP.write.unlock({ account, chain: walletClients[chain].chain })
+    await writeContracts[chain].RMGP.write.withdraw({ account, chain: walletClients[chain].chain })
     updateMGPBalance()
     updateUserPendingWithdraws()
     updateUnsubmittedWithdraws()
@@ -332,8 +352,9 @@ const App = (): ReactElement => {
 
   const compoundRMGP = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
+    if (!writeContracts) return alert('Contracts not found')
     if (!account) return alert('No address found')
-    await contracts.RMGP.write.claim([], { account })
+    await writeContracts[chain].RMGP.write.claim({ account, chain: walletClients[chain].chain })
     updatePendingRewards()
     updateUnclaimedUserYield()
     updateRMGPSupply()
@@ -344,13 +365,14 @@ const App = (): ReactElement => {
 
   const claimYMGPRewards = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
-    await contracts.YMGP.write.claim([], { account })
+    if (!writeContracts) return alert('Contracts not found')
+    await writeContracts[chain].YMGP.write.claim({ account, chain: walletClients[chain].chain })
     updateUnclaimedUserYield()
   }
 
   const estimateCompoundRMGPGas = async (): Promise<bigint> => {
     const gasPrice = await publicClients[chain].getGasPrice()
-    const gas = account === '0x0000000000000000000000000000000000000000' ? 0n : await contracts.RMGP.estimateGas.claim({ account })
+    const gas = account === '0x0000000000000000000000000000000000000000' ? 0n : await contracts[chain].RMGP.estimateGas.claim({ account })
     return gas*gasPrice
   }
 
@@ -369,8 +391,9 @@ const App = (): ReactElement => {
 
   const supplyLiquidity = async (): Promise<void> => {
     if (!walletClients) return alert('Wallet not connected')
+    if (!writeContracts) return alert('Contracts not found')
     if (!account) return alert('No address found')
-    await contracts.CMGP.write.add_liquidity([[mgpLPAmount, rmgpLPAmount, ymgpLPAmount], 0n], { account })
+    await writeContracts[chain].CMGP.write.add_liquidity([[mgpLPAmount, rmgpLPAmount, ymgpLPAmount], 0n], { account, chain: walletClients[chain].chain })
     updateMGPBalance()
     updateRMGPBalance()
     updateYMGPBalance()
@@ -391,8 +414,8 @@ const App = (): ReactElement => {
               <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">MGP: {mgpBalance !== undefined ? formatEther(mgpBalance, decimals.MGP).toFixed(4) : 'Loading...'}</div>
               <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">rMGP: {rmgpBalance !== undefined ? formatEther(rmgpBalance, decimals.RMGP).toFixed(4) : 'Loading...'}</div>
               <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">yMGP: {ymgpBalance !== undefined ? formatEther(ymgpBalance, decimals.YMGP).toFixed(4) : 'Loading...'}</div>
-              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">Locked yMGP: {userLockedYMGP !== undefined ? formatEther(userLockedYMGP, decimals.YMGP).toFixed(4) : 'Loading...'}</div>
               <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">cMGP: {cmgpBalance !== undefined ? formatEther(cmgpBalance, decimals.CMGP).toFixed(4) : 'Loading...'}</div>
+              <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">Locked yMGP: {userLockedYMGP !== undefined ? formatEther(userLockedYMGP, decimals.YMGP).toFixed(4) : 'Loading...'}</div>
               <div className="bg-green-600/20 text-green-400 rounded-lg px-3 py-2 text-sm">{ens ?? `${account.slice(0, 6)}...${account.slice(-4)}`}</div>
               <select className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white" value={chain} onChange={e => {
                 setChain(Number(e.target.value) as 56 | 42161)
@@ -427,7 +450,7 @@ const App = (): ReactElement => {
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Lock Rate</p>
-                    <p className="font-medium">{Math.round(10_000*Number(totalLockedMGP)/Number(mgpSupply))/100}%</p>
+                    <p className="font-medium">{totalLockedMGP && mgpSupply !== undefined ? `${Math.round(10_000*Number(totalLockedMGP)/Number(mgpSupply))/100}%` : 'Loading...'}</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">FDV</p>
@@ -489,7 +512,7 @@ const App = (): ReactElement => {
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Lock Rate</p>
-                    <p className="font-medium">{ymgpSupply === undefined || totalLockedYMGP === undefined ? 'Loading...' : Math.round(10_000*Number(totalLockedYMGP)/Number(ymgpSupply+totalLockedYMGP))/100}%</p>
+                    <p className="font-medium">{ymgpSupply === undefined || totalLockedYMGP === undefined ? 'Loading...' : `${Math.round(10_000*Number(totalLockedYMGP)/Number(ymgpSupply+totalLockedYMGP))/100}%`}</p>
                   </div>
                   <div className="bg-gray-700/50 rounded-lg p-2">
                     <p className="text-gray-400 text-xs">Peg</p>
@@ -554,7 +577,7 @@ const App = (): ReactElement => {
           </div>
 
           <h2 className="text-2xl text-red-400 text-center">VERY EARLY BETA</h2>
-          <p className="text-center mb-4">Reefi is in a very early beta. Please deposit very small amounts that you are okay losing as Reefi has many known and unknown bugs that need to be fixed.</p>
+          <p className="text-center mb-4">Reefi is in a very early beta. Please deposit very small amounts that you are okay losing as Reefi has many known and unknown bugs that need to be fixed. Curve/cMGP related features are only available on Arbitrum.</p>
 
           <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6">
             <div className="flex flex-row-reverse mb-6">
@@ -569,11 +592,11 @@ const App = (): ReactElement => {
                 </div>
                 <div className="text-sm bg-gray-700 rounded-lg px-3 py-1 flex items-center">
                   <div className="w-2 h-2 rounded-full bg-green-400 mr-2" />
-                  <span>Locked yMGP APY: {Math.round(10_000*(((Number(reefiLockedMGP)*aprToApy(mgpAPR)*0.05)/Number(totalLockedYMGP))+(aprToApy(mgpAPR)*0.9)))/100}%+</span>
+                  <span>cMGP APY: ~{(cmgpAPY*100).toFixed(2)}%</span>
                 </div>
                 <div className="text-sm bg-gray-700 rounded-lg px-3 py-1 flex items-center">
                   <div className="w-2 h-2 rounded-full bg-green-400 mr-2" />
-                  <span>cMGP APY: ~{(cmgpAPY*100).toFixed(2)}%</span>
+                  <span>Locked yMGP APY: {Math.round(10_000*(((Number(reefiLockedMGP)*aprToApy(mgpAPR)*0.05)/Number(totalLockedYMGP))+(aprToApy(mgpAPR)*0.9)))/100}%+</span>
                 </div>
               </div>
             </div>
@@ -612,32 +635,10 @@ const App = (): ReactElement => {
                 </div>
                 <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={deployContract}>Deploy Contract</button>
                 <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4" onClick={async () => {
-                  await contracts.RMGP.write.setYMGP([contracts.YMGP.address], { account })
+                  if (walletClients === undefined) return alert('Wallet not connected')
+                  if (!writeContracts) return alert('Contracts not found')
+                  await writeContracts[chain].RMGP.write.setYMGP([contracts[chain].YMGP.address], { account, chain: walletClients[chain].chain })
                 }}>Set yMGP</button>
-              </div>}
-
-              {mode === 'addDEX' && <div className="bg-gray-700/50 p-5 rounded-lg">
-                <h4 className="text-xs font-medium my-2">Token Symbol</h4>
-                <input type="text" placeholder="MGP" className="bg-gray-900 rounded-lg p-3 outline-none text-xs w-full" onChange={e => setDEXToken(e.target.value as Coins)} />
-                <h4 className="text-xs font-medium my-2">Token Contract</h4>
-                <input type="text" placeholder="0x..." className="bg-gray-900 rounded-lg p-3 outline-none text-xs w-full" value={dexToken !== undefined && dexToken in contracts ? contracts[dexToken].address : ''} disabled />
-                <h4 className="text-xs font-medium my-2">Router</h4>
-                <input type="text" placeholder="0x..." className="bg-gray-900 rounded-lg p-3 outline-none text-xs w-full" value={router} onChange={e => setRouter(e.target.value)} />
-                <div className="flex items-center mt-2">
-                  <input id="camelot" type="checkbox" className="mr-2" checked={camelot} onChange={e => setCamelot(e.target.checked)} />
-                  <label htmlFor="camelot" className="text-sm text-gray-300 select-none cursor-pointer">Camelot</label>
-                </div>
-                <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4" onClick={() => {
-                  if (!dexToken) return alert("No token defined")
-                  if (!(dexToken in contracts)) return alert("Token contract not defined")
-                  contracts.RMGP.write.addRewardsToken([contracts[dexToken].address], { account })
-                }}>Add Rewards Token</button>
-                <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4" onClick={() => {
-                  if (!dexToken) return alert("No token defined")
-                  if (!(dexToken in contracts)) return alert("Token contract not defined")
-                  if (!router) return alert("Swap router not defined")
-                  contracts.RMGP.write.setSwapRouter([contracts[dexToken].address, router, camelot], { account })
-                }}>Set Swap Router</button>
               </div>}
 
               {mode === 'deposit' && <>
@@ -658,23 +659,35 @@ const App = (): ReactElement => {
                       </div>
                     </div>
                   </div>
-                  <div className="text-center my-2"><div className="inline-block p-1 bg-gray-700 rounded-full"><ArrowDown size={20} className="text-gray-400" /></div></div>
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center mb-1">
-                      <h3 className="text-md font-medium">Receive rMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {rmgpBalance !== undefined ? formatEther(rmgpBalance, decimals.RMGP) : 'Loading...'} rMGP</div>
-                    </div>
-                    <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
-                      <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount) / mgpRMGPRate} readOnly/>
-                      <div className="flex items-center">
-                        <div className="bg-green-600 rounded-md px-3 py-1 flex items-center">
-                          <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2">R</div>
-                          <span>rMGP</span>
-                        </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {mgpAllowance === undefined ? <p>Loading...</p> : mgpAllowance < sendAmount ? <div>
+                      <div className="flex items-center mt-2">
+                        <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
+                        <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
                       </div>
-                    </div>
+                      <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2" onClick={() => approve()}>Approve MGP</button>
+                    </div> : <button type="submit" className="py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositMGP}>Mint ({formatEther(sendAmount) / mgpRMGPRate} rMGP)</button>}
+                    {mgpAllowanceCurve === undefined ? <p>Loading...</p> : mgpAllowanceCurve < sendAmount
+                      ? <div>
+                        <div className="flex items-center">
+                          <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
+                          <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
+                        </div>
+                        <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2" onClick={() => approve(true)}>Approve MGP on Curve</button>
+                      </div> : <div className="relative">
+                        <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={buyRMGP}>Buy on Curve ({formatEther(mgpRmgpCurveAmount ?? 0n)} rMGP)</button>
+                        {mgpRmgpCurveAmount !== undefined && ((): JSX.Element | null => {
+                          const directRate = formatEther(sendAmount) / mgpRMGPRate;
+                          const curveRate = formatEther(mgpRmgpCurveAmount);
+                          const premiumDiscount = ((curveRate - directRate) / directRate) * 100;
+                          const isPremium = premiumDiscount > 0;
+                          const isSignificant = Math.abs(premiumDiscount) >= 0.01;
+                          return isSignificant ? <span className={`absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? 'bg-green-800/80 text-green-200' : 'bg-red-800/80 text-red-200'}`}>{isPremium ? '+' : ''}{premiumDiscount.toFixed(2)}%</span> : null;
+                        })()}
+                      </div>
+                    }
                   </div>
-                  <div className="mb-4 text-sm text-gray-400">
+                  <div className="mt-4 text-sm text-gray-400">
                     <div className="flex justify-between mb-1">
                       <span>Original APR</span>
                       <span>{Math.round(10_000*mgpAPR)/100}%</span>
@@ -684,39 +697,6 @@ const App = (): ReactElement => {
                       <span>{Math.round(10_000*aprToApy(mgpAPR)*0.9)/100}%</span>
                     </div>
                   </div>
-                  {mgpAllowance === undefined ? <p>Loading...</p> : mgpAllowance < sendAmount ? <>
-                    <div className="flex items-center mt-2">
-                      <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
-                      <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
-                    </div>
-                    <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2" onClick={() => approve()}>Approve MGP</button>
-                  </> : <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositMGP}>Mint rMGP</button>}
-                  {mgpAllowanceCurve === undefined ? <p>Loading...</p> : mgpAllowanceCurve < sendAmount
-                    ? <>
-                      <div className="flex items-center mt-4">
-                        <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
-                        <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
-                      </div>
-                      <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2" onClick={() => approve(true)}>Approve MGP on Curve</button>
-                    </> : <div className="relative">
-                      <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4" onClick={buyRMGP}>
-                        Get rMGP on Curve ({formatEther(mgpRmgpCurveAmount ?? 0n)} rMGP)
-                      </button>
-                      {mgpRmgpCurveAmount !== undefined && (
-                        // TODO: Add seperate approval
-                        <div className="absolute top-2 right-0">
-                          {((): JSX.Element | null => {
-                            const directRate = formatEther(sendAmount) / mgpRMGPRate;
-                            const curveRate = formatEther(mgpRmgpCurveAmount);
-                            const premiumDiscount = ((curveRate - directRate) / directRate) * 100;
-                            const isPremium = premiumDiscount > 0;
-                            const isSignificant = Math.abs(premiumDiscount) >= 0.01;
-                            return isSignificant ? <span className={`text-xs px-2 py-1 rounded ${isPremium ? 'bg-green-800/80 text-green-200' : 'bg-red-800/80 text-red-200'}`}>{isPremium ? '+' : ''}{premiumDiscount.toFixed(2)}%</span> : null;
-                          })()}
-                        </div>
-                      )}
-                    </div>
-                  }
                 </div>
                 <div className="mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm">
                   <div className="flex items-start">
@@ -747,52 +727,32 @@ const App = (): ReactElement => {
                       </div>
                     </div>
                   </div>
-                  <div className="text-center my-2"><div className="inline-block p-1 bg-gray-700 rounded-full"><ArrowDown size={20} className="text-gray-400" /></div></div>
                   <div className="grid grid-cols-1 gap-2 mb-4">
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <h3 className="text-md font-medium">Receive yMGP</h3>
-                        <div className="text-sm text-gray-400">Balance: {ymgpBalance !== undefined ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} yMGP</div>
-                      </div>
-                      <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between mb-8">
-                        <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(sendAmount)} readOnly/>
+                    <div className="grid grid-cols-2 gap-2">
+                      {rmgpAllowance === undefined ? <p>Loading...</p> : rmgpAllowance < sendAmount ? <div>
                         <div className="flex items-center">
-                          <div className="bg-green-600 rounded-md px-3 py-1 flex items-center">
-                            <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2">Y</div>
-                            <span>yMGP</span>
-                          </div>
-                        </div>
-                      </div>
-                      {rmgpAllowance === undefined ? <p>Loading...</p> : rmgpAllowance < sendAmount ? <>
-                        <div className="flex items-center mt-2">
                           <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
                           <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
                         </div>
                         <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2" onClick={() => approve()}>Approve rMGP</button>
-                      </> : <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositRMGP}>Mint yMGP</button>}
+                      </div> : <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositRMGP}>Mint ({formatEther(sendAmount)} yMGP)</button>}
                       {rmgpAllowanceCurve === undefined ? <p>Loading...</p> : rmgpAllowanceCurve < sendAmount
-                        ? <>
-                          <div className="flex items-center mt-4">
+                        ? <div>
+                          <div className="flex items-center">
                             <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
                             <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
                           </div>
-                          <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2" onClick={() => approve(true)}>Approve yMGP on Curve</button>
-                        </> : <div className="relative">
-                          <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4" onClick={buyYMGP}>
-                            Get yMGP on Curve ({formatEther(rmgpYmgpCurveAmount ?? 0n)} yMGP)
-                          </button>
-                          {rmgpYmgpCurveAmount !== undefined && (
-                            <div className="absolute top-2 right-0">
-                              {((): JSX.Element | null => {
-                                const directRate = formatEther(sendAmount);
-                                const curveRate = formatEther(rmgpYmgpCurveAmount);
-                                const premiumDiscount = ((curveRate - directRate) / directRate) * 100;
-                                const isPremium = premiumDiscount > 0;
-                                const isSignificant = Math.abs(premiumDiscount) >= 0.01;
-                                return isSignificant ? <span className={`text-xs px-2 py-1 rounded ${isPremium ? 'bg-green-800/80 text-green-200' : 'bg-red-800/80 text-red-200'}`}>{isPremium ? '+' : ''}{premiumDiscount.toFixed(2)}%</span> : null;
-                              })()}
-                            </div>
-                          )}
+                          <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={() => approve(true)}>Approve yMGP on Curve</button>
+                        </div> : <div className="relative">
+                          <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={buyYMGP}>Buy on Curve ({formatEther(rmgpYmgpCurveAmount ?? 0n)} yMGP)</button>
+                          {rmgpYmgpCurveAmount !== undefined && ((): JSX.Element | null => {
+                            const directRate = formatEther(sendAmount);
+                            const curveRate = formatEther(rmgpYmgpCurveAmount);
+                            const premiumDiscount = ((curveRate - directRate) / directRate) * 100;
+                            const isPremium = premiumDiscount > 0;
+                            const isSignificant = Math.abs(premiumDiscount) >= 0.01;
+                            return isSignificant ? <span className={`absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? 'bg-green-800/80 text-green-200' : 'bg-red-800/80 text-red-200'}`}>{isPremium ? '+' : ''}{premiumDiscount.toFixed(2)}%</span> : null;
+                          })()}
                         </div>
                       }
                     </div>
@@ -849,53 +809,32 @@ const App = (): ReactElement => {
                       </div>
                     </div>
                   </div>
-                  <div className="text-center my-2"><div className="inline-block p-1 bg-gray-700 rounded-full"><ArrowDown size={20} className="text-gray-400" /></div></div>
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center mb-1">
-                      <h3 className="text-md font-medium">Receive MGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {mgpBalance !== undefined ? formatEther(mgpBalance, decimals.MGP) : 'Loading...'} MGP</div>
-                    </div>
-                    <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
-                      <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={mgpRMGPRate*formatEther(sendAmount)*0.9} readOnly />
-                      <div className="flex items-center">
-                        <div className="bg-blue-600 rounded-md px-3 py-1 flex items-center">
-                          <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mr-2">M</div>
-                          <span>MGP</span>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button type="submit" className="py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={redeemRMGP}>Redeem via Queue ({mgpRMGPRate*formatEther(sendAmount)*0.9} MGP)</button>
+                    {rmgpAllowanceCurve === undefined ? <p>Loading...</p> : rmgpAllowanceCurve < sendAmount
+                      ? <div>
+                        <div className="flex items-center">
+                          <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
+                          <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
                         </div>
+                        <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2" onClick={() => approve(true)}>Approve rMGP on Curve</button>
+                      </div> : <div className="relative">
+                        <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={buyMGP}>Redeem Instantly on Curve ({formatEther(rmgpMgpCurveAmount ?? 0n)} MGP)</button>
+                        {rmgpMgpCurveAmount !== undefined && ((): JSX.Element | null => {
+                          const directRate = mgpRMGPRate*formatEther(sendAmount)*0.9
+                          const curveRate = formatEther(rmgpMgpCurveAmount);
+                          const premiumDiscount = ((curveRate - directRate) / directRate) * 100;
+                          const isPremium = premiumDiscount > 0;
+                          const isSignificant = Math.abs(premiumDiscount) >= 0.01;
+                          return isSignificant ? <span className={`absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? 'bg-green-800/80 text-green-200' : 'bg-red-800/80 text-red-200'}`}>{isPremium ? '+' : ''}{premiumDiscount.toFixed(2)}%</span> : null;
+                        })()}
                       </div>
-                    </div>
+                    }
                   </div>
-                  <div className="mb-4 text-sm text-gray-400">
-                    <div className="flex justify-between mb-1">
-                      <span>Redemption Rate</span>
-                      <span>{mgpRMGPRate*0.9} MGP to rMGP</span>
-                    </div>
+                  <div className="mt-4 text-sm text-gray-400 flex justify-between">
+                    <span>Native Redemption Rate</span>
+                    <span>{mgpRMGPRate*0.9} MGP to rMGP</span>
                   </div>
-                  <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}" onClick={redeemRMGP}>Redeem rMGP</button>
-                  {rmgpAllowanceCurve === undefined ? <p>Loading...</p> : rmgpAllowanceCurve < sendAmount
-                    ? <>
-                      <div className="flex items-center mt-4">
-                        <input id="approve-infinity" type="checkbox" className="mr-2" checked={approveInfinity} onChange={() => setApproveInfinity(v => !v)} />
-                        <label htmlFor="approve-infinity" className="text-sm text-gray-300 select-none cursor-pointer">Approve Infinity</label>
-                      </div>
-                      <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2" onClick={() => approve(true)}>Approve rMGP on Curve</button>
-                    </> : <div className="relative">
-                      <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4" onClick={buyMGP}>Get MGP on Curve ({formatEther(rmgpMgpCurveAmount ?? 0n)} MGP)</button>
-                      {rmgpMgpCurveAmount !== undefined && (
-                        // TODO: Add seperate approval
-                        <div className="absolute top-2 right-0">
-                          {((): JSX.Element | null => {
-                            const directRate = mgpRMGPRate / formatEther(sendAmount);
-                            const curveRate = formatEther(rmgpMgpCurveAmount);
-                            const premiumDiscount = ((curveRate - directRate) / directRate) * 100;
-                            const isPremium = premiumDiscount > 0;
-                            const isSignificant = Math.abs(premiumDiscount) >= 0.01;
-                            return isSignificant ? <span className={`text-xs px-2 py-1 rounded ${isPremium ? 'bg-green-800/80 text-green-200' : 'bg-red-800/80 text-red-200'}`}>{isPremium ? '+' : ''}{premiumDiscount.toFixed(2)}%</span> : null;
-                          })()}
-                        </div>
-                      )}
-                    </div>
-                  }
                   {userPendingWithdraws === undefined ? <p>Loading...</p> : userPendingWithdraws > 0n ? <>
                     <h3 className="text-md font-medium mt-4">Pending Withdraws</h3>
                     <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
@@ -914,7 +853,7 @@ const App = (): ReactElement => {
                     </div>
                     <div>
                       <span className="font-medium text-indigo-300">About</span>
-                      <p className="text-gray-300 mt-1">rMGP can be redeemed for the underlying MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate.</p>
+                      <p className="text-gray-300 mt-1">rMGP can be redeemed for the underlying MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate via Curve.</p>
                       <p className="text-gray-300 mt-1">The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.</p>
                       <p className="text-gray-300 mt-1">Only 6 withdrawals can be processed through Magpie at once. If all slots are used, withdrawals will be added to the queue once a new slot is made available making worst case withdrawal time 120 days.</p>
                       <p className="text-gray-300 mt-1">With the 10% withdrawal fee, rMGP depegs under 90% of the underlying value always recover as they can be arbitraged by people willing to wait for withdrawals to be processed.</p>
@@ -969,7 +908,7 @@ const App = (): ReactElement => {
                   <div className="mb-4">
                     <div className="flex justify-between items-center mb-1">
                       <h3 className="text-md font-medium">Supply yMGP</h3>
-                      <div className="text-sm text-gray-400">Balance: {rmgpBalance !== undefined ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} yMGP</div>
+                      <div className="text-sm text-gray-400">Balance: {ymgpBalance !== undefined ? formatEther(ymgpBalance, decimals.YMGP) : 'Loading...'} yMGP</div>
                     </div>
                     <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
                       <input type="text" placeholder="0.0" className="bg-transparent outline-none text-xl w-3/4" value={formatEther(ymgpLPAmount)} onChange={e => setYMGPLPAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))} />
@@ -1081,7 +1020,7 @@ const App = (): ReactElement => {
                   <div className="bg-green-600 bg-opacity-75 w-full h-[0.5px] my-2" />
                   {pendingRewards ? (Object.keys(pendingRewards) as Coins[]).map(symbol => <div key={symbol} className="flex justify-between">
                     <p className="font-small text-xs">{formatNumber(formatEther(pendingRewards[symbol].rewards, decimals[symbol]), 6)} {symbol}</p>
-                    <p className="font-small text-xs">${formatNumber(prices[symbol]*Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol])), 6)}</p>
+                    <p className="font-small text-xs">{formatNumber(prices[symbol]*Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))/prices.MGP, 6)} MGP</p>
                   </div>) : ''}
                 </div>
                 <p className="text-gray-400 text-xs mt-2">Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of RMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as RMGP, 4% sent to the treasury, and 5% to locked YMGP. By clicking the button below, you will receive 1% of the pending yield.</p>
@@ -1089,7 +1028,7 @@ const App = (): ReactElement => {
                 <p className="text-xs text-gray-400">Estimated Gas Fee: <span className="text-red-400">${formatNumber(estimatedCompoundGasFee, 6)}</span></p>
                 <p className="text-gray-400 mt-2">Estimated Profit: <span className={`text-${uncompoundedMGPYield*prices.MGP*0.01 > estimatedCompoundGasFee ? 'green' : 'red'}-400`}>{uncompoundedMGPYield*prices.MGP*0.01 > estimatedCompoundGasFee ? '' : '-'}${String(formatNumber(uncompoundedMGPYield*prices.MGP*0.01-estimatedCompoundGasFee, 6)).replace('-', '')}</span></p>
                 {uncompoundedMGPYield*prices.MGP*0.01 < estimatedCompoundGasFee ? <p className="text-gray-400 text-xs">ETA Till Profitable: {formatTime((estimatedCompoundGasFee/prices.MGP) / (formatEther(BigInt(mgpAPR*Number(reefiLockedMGP)), decimals.MGP) / (365 * 24 * 60 * 60)))}</p> : ''}
-                <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={compoundRMGP}>Compound RMGP Yield (Get ~{formatNumber(0.01*uncompoundedMGPYield*(1/mgpRMGPRate), 6)} rMGP)</button>
+                <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={compoundRMGP}>Compound Yield (Get ~{formatNumber(0.01*uncompoundedMGPYield*(1/mgpRMGPRate), 6)} rMGP)</button>
               </div>
               <div>
                 <div className="bg-gray-700/50 rounded-lg p-4">
@@ -1098,17 +1037,47 @@ const App = (): ReactElement => {
                   <p className="font-small text-xs">Total: {ymgpHoldings === undefined || ymgpSupply === undefined || totalLockedYMGP === undefined ? 'Loading...' : formatNumber(formatEther(ymgpHoldings-ymgpSupply-totalLockedYMGP, decimals.YMGP), 4)} rMGP</p>
                 </div>
                 <p className="text-gray-400 text-xs mt-2">Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.</p>
-                <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={claimYMGPRewards}>Claim YMGP Rewards</button>
+                <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={claimYMGPRewards}>Claim Rewards</button>
               </div>
+            </div>
+          </div>
+
+          <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6 flex flex-col items-center">
+            <h2 className="text-2xl font-bold mb-4">Conversion Rates</h2>
+            {mgpRMGPCurveRate !== undefined && (mgpRMGPCurveRate > mgpRMGPRate || mgpRMGPCurveRate < mgpRMGPRate*0.9) ? <p className="text-lg text-red-500">rMGP can be arbitraged</p> : ''}
+            <div className="bg-gray-700/50 rounded-lg p-4">
+              <table>
+                <thead>
+                  <tr>
+                    <th><h3 className="text-lg font-bold mb-2">Token</h3></th>
+                    <th><h3 className="text-lg font-bold mb-2">Mint</h3></th>
+                    <th><h3 className="text-lg font-bold mb-2">Market</h3></th>
+                    <th><h3 className="text-lg font-bold mb-2">Burn</h3></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><p className="mx-4 my-1 text-sm font-bold">rMGP</p></td>
+                    <td><p className="mx-4 my-1 text-sm">{formatNumber(mgpRMGPRate, 4)} MGP</p></td>
+                    <td><p className="mx-4 my-1 text-sm">{formatNumber(mgpRMGPCurveRate ?? 0, 4)} MGP</p></td>
+                    <td><p className="mx-4 my-1 text-sm">{formatNumber(mgpRMGPRate*0.9, 4)} MGP</p></td>
+                  </tr>
+                  <tr>
+                    <td><p className="mx-4 my-1 text-sm font-bold">yMGP</p></td>
+                    <td><p className="mx-4 my-1 text-sm">1 rMGP</p></td>
+                    <td><p className="mx-4 my-1 text-sm">{formatNumber(rmgpYMGPCurveRate ?? 0, 4)} rMGP</p></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
 
           <div className="bg-gray-800 p-4 rounded-xl border border-gray-700 mb-6">
             <h2 className="text-lg font-bold mb-2">Contract Addresses</h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
-              {(Object.keys(contracts) as (keyof typeof contracts)[]).map(contract => <div key={contract}>
+              {(Object.keys(contracts[chain]) as (keyof typeof contracts[Chains])[]).map(contract => <div key={contract}>
                 <span className="font-semibold">{contract}:</span>
-                <a href={`${publicClients[chain].chain.blockExplorers.default.url}/address/${contracts[contract].address}`} className="ml-2 break-all text-green-300">{contracts[contract].address}</a>
+                <a href={`${publicClients[chain].chain.blockExplorers.default.url}/address/${contracts[chain][contract].address}`} className="ml-2 break-all text-green-300">{contracts[chain][contract].address}</a>
               </div>)}
             </div>
           </div>

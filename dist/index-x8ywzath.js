@@ -24550,92 +24550,12 @@ var require_jsx_dev_runtime = __commonJS((exports, module) => {
 });
 
 // src/index.tsx
-var import_react4 = __toESM(require_react(), 1);
+var import_react3 = __toESM(require_react(), 1);
 var import_client = __toESM(require_client(), 1);
 
 // src/App.tsx
-var import_react3 = __toESM(require_react(), 1);
-
-// node_modules/lucide-react/dist/esm/createLucideIcon.js
 var import_react2 = __toESM(require_react(), 1);
 
-// node_modules/lucide-react/dist/esm/shared/src/utils.js
-var toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-var toCamelCase = (string) => string.replace(/^([A-Z])|[\s-_]+(\w)/g, (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase());
-var toPascalCase = (string) => {
-  const camelCase = toCamelCase(string);
-  return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
-};
-var mergeClasses = (...classes) => classes.filter((className, index, array) => {
-  return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
-}).join(" ").trim();
-var hasA11yProp = (props) => {
-  for (const prop in props) {
-    if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
-      return true;
-    }
-  }
-};
-
-// node_modules/lucide-react/dist/esm/Icon.js
-var import_react = __toESM(require_react(), 1);
-
-// node_modules/lucide-react/dist/esm/defaultAttributes.js
-var defaultAttributes = {
-  xmlns: "http://www.w3.org/2000/svg",
-  width: 24,
-  height: 24,
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 2,
-  strokeLinecap: "round",
-  strokeLinejoin: "round"
-};
-
-// node_modules/lucide-react/dist/esm/Icon.js
-var Icon = import_react.forwardRef(({
-  color = "currentColor",
-  size = 24,
-  strokeWidth = 2,
-  absoluteStrokeWidth,
-  className = "",
-  children,
-  iconNode,
-  ...rest
-}, ref) => import_react.createElement("svg", {
-  ref,
-  ...defaultAttributes,
-  width: size,
-  height: size,
-  stroke: color,
-  strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
-  className: mergeClasses("lucide", className),
-  ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
-  ...rest
-}, [
-  ...iconNode.map(([tag, attrs]) => import_react.createElement(tag, attrs)),
-  ...Array.isArray(children) ? children : [children]
-]));
-
-// node_modules/lucide-react/dist/esm/createLucideIcon.js
-var createLucideIcon = (iconName, iconNode) => {
-  const Component = import_react2.forwardRef(({ className, ...props }, ref) => import_react2.createElement(Icon, {
-    ref,
-    iconNode,
-    className: mergeClasses(`lucide-${toKebabCase(toPascalCase(iconName))}`, `lucide-${iconName}`, className),
-    ...props
-  }));
-  Component.displayName = toPascalCase(iconName);
-  return Component;
-};
-
-// node_modules/lucide-react/dist/esm/icons/arrow-down.js
-var __iconNode = [
-  ["path", { d: "M12 5v14", key: "s699le" }],
-  ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
-];
-var ArrowDown = createLucideIcon("arrow-down", __iconNode);
 // public/diagram.svg
 var diagram_default = "./diagram-q74967cy.svg";
 
@@ -31384,6 +31304,7 @@ var mainnet = /* @__PURE__ */ defineChain({
   }
 });
 // src/utils.ts
+var import_react = __toESM(require_react(), 1);
 var parseEther = (value, decimals = 18) => BigInt(Math.round(value * Number(10n ** BigInt(decimals)) / Number(1n)));
 var formatEther2 = (value, decimals = 18) => {
   const divisor = 10n ** BigInt(decimals);
@@ -31394,10 +31315,20 @@ var formatEther2 = (value, decimals = 18) => {
 var formatNumber = (num2, decimals = 2) => num2 >= 1e9 ? `${(num2 / 1e9).toFixed(decimals)}B` : num2 >= 1e6 ? `${(num2 / 1e6).toFixed(decimals)}M` : num2 >= 1000 ? `${(num2 / 1000).toFixed(decimals)}K` : num2.toFixed(decimals);
 var formatTime = (seconds) => seconds < 60 ? `${seconds} Seconds` : seconds < 3600 ? `${Math.floor(seconds / 60)} Minutes` : seconds < 86400 ? `${Math.floor(seconds / 3600)} Hours` : `${Math.floor(seconds / 86400)} Days`;
 var aprToApy = (apr) => (1 + apr / 365) ** 365 - 1;
+function useUpdateable(factory, deps) {
+  const [updateCount, setUpdateCount] = import_react.useState(0);
+  const [value, setValue] = import_react.useState();
+  import_react.useEffect(() => {
+    factory().then(setValue);
+  }, [...deps, updateCount]);
+  const update = () => setUpdateCount((c) => c + 1);
+  return [value, update];
+}
 
 // src/App.tsx
 var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
-var contractABIs = {
+var decimals = { MGP: 18, RMGP: 18, YMGP: 18, CMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 };
+var ABIs = {
   RMGP: [{ inputs: [{ internalType: "address", name: "_mgpToken", type: "address" }, { internalType: "address", name: "_ymgpToken", type: "address" }, { internalType: "address", name: "_masterMagpie", type: "address" }, { internalType: "address", name: "_vlMGP", type: "address" }, { internalType: "address", name: "_weth", type: "address" }], stateMutability: "nonpayable", type: "constructor" }, { inputs: [], name: "CannotUnlockZero", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "allowance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientAllowance", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }, { internalType: "uint256", name: "balance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientBalance", type: "error" }, { inputs: [{ internalType: "address", name: "approver", type: "address" }], name: "ERC20InvalidApprover", type: "error" }, { inputs: [{ internalType: "address", name: "receiver", type: "address" }], name: "ERC20InvalidReceiver", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }], name: "ERC20InvalidSender", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }], name: "ERC20InvalidSpender", type: "error" }, { inputs: [], name: "InsufficientBalance", type: "error" }, { inputs: [], name: "NoLockedTokens", type: "error" }, { inputs: [], name: "NoSlotsToUnlock", type: "error" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }], name: "OwnableInvalidOwner", type: "error" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "OwnableUnauthorizedAccount", type: "error" }, { inputs: [], name: "SwapRouterNotSet", type: "error" }, { inputs: [], name: "TransferFailed", type: "error" }, { inputs: [{ internalType: "string", name: "name", type: "string" }], name: "ZeroAddress", type: "error" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "owner", type: "address" }, { indexed: true, internalType: "address", name: "spender", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Approval", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "mgpAmount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "rmgpAmount", type: "uint256" }], name: "Deposited", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "mgpAmount", type: "uint256" }], name: "RewardsClaimed", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "from", type: "address" }, { indexed: true, internalType: "address", name: "to", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Transfer", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "rmgpAmount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "mgpAmount", type: "uint256" }], name: "UnlockStarted", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "slot", type: "uint256" }], name: "Unlocked", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Withdrawn", type: "event" }, { inputs: [], name: "MASTER_MAGPIE", outputs: [{ internalType: "contract IMasterMagpie", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "MGP_TOKEN", outputs: [{ internalType: "contract ERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "VL_MGP", outputs: [{ internalType: "contract IVL_MGP", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "WETH", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }], name: "addRewardsToken", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" }], name: "allowance", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "approve", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "claim", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "decimals", outputs: [{ internalType: "uint8", name: "", type: "uint8" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "mgpAmount", type: "uint256" }], name: "deposit", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "user", type: "address" }], name: "getUserPendingWithdraws", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "getUserWithdrawable", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "name", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "pendingWithdraws", outputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "mgpAmount", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }], name: "removeRewardsToken", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "rescueTokens", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "rewardTokens", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }, { internalType: "address", name: "swapRouter", type: "address" }], name: "setSwapRouter", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }], name: "setYMGP", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "rmgpAmount", type: "uint256" }], name: "startUnlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "swapRouters", outputs: [{ internalType: "contract ISwapRouter", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "symbol", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalSupply", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transfer", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "from", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transferFrom", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unsubmittedWithdraws", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "withdraw", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "ymgpToken", outputs: [{ internalType: "contract ERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }],
   YMGP: [{ inputs: [{ internalType: "address", name: "_rmgpToken", type: "address" }], stateMutability: "nonpayable", type: "constructor" }, { inputs: [], name: "CannotLockZero", type: "error" }, { inputs: [], name: "CannotUnlockZero", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "allowance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientAllowance", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }, { internalType: "uint256", name: "balance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientBalance", type: "error" }, { inputs: [{ internalType: "address", name: "approver", type: "address" }], name: "ERC20InvalidApprover", type: "error" }, { inputs: [{ internalType: "address", name: "receiver", type: "address" }], name: "ERC20InvalidReceiver", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }], name: "ERC20InvalidSender", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }], name: "ERC20InvalidSpender", type: "error" }, { inputs: [], name: "InsufficientBalance", type: "error" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }], name: "OwnableInvalidOwner", type: "error" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "OwnableUnauthorizedAccount", type: "error" }, { inputs: [], name: "TransferFailed", type: "error" }, { inputs: [{ internalType: "string", name: "name", type: "string" }], name: "ZeroAddress", type: "error" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "owner", type: "address" }, { indexed: true, internalType: "address", name: "spender", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Approval", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Deposited", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Locked", type: "event" }, { anonymous: false, inputs: [], name: "NoYieldToClaim", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "from", type: "address" }, { indexed: true, internalType: "address", name: "to", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Transfer", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "YieldClaimed", type: "event" }, { inputs: [], name: "RMGP_TOKEN", outputs: [{ internalType: "contract ERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" }], name: "allowance", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "approve", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "claim", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "decimals", outputs: [{ internalType: "uint8", name: "", type: "uint8" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }], name: "deposit", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }], name: "lock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "lockedBalances", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "name", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "rescueTokens", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "symbol", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalLocked", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalSupply", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transfer", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "from", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transferFrom", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unclaimedUserYield", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }], name: "unlock", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "userClaimedYield", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }],
   vlMGP: [{ inputs: [], name: "AllUnlockSlotOccupied", type: "error" }, { inputs: [], name: "AlreadyMigrated", type: "error" }, { inputs: [], name: "BeyondUnlockLength", type: "error" }, { inputs: [], name: "BeyondUnlockSlotLimit", type: "error" }, { inputs: [], name: "BurnEventManagerNotSet", type: "error" }, { inputs: [], name: "BurnEvnentManagerPaused", type: "error" }, { inputs: [], name: "InvalidAddress", type: "error" }, { inputs: [], name: "InvalidCoolDownPeriod", type: "error" }, { inputs: [], name: "IsZeroAddress", type: "error" }, { inputs: [], name: "MaxSlotCantLowered", type: "error" }, { inputs: [], name: "MaxSlotShouldNotZero", type: "error" }, { inputs: [], name: "NotEnoughLockedMPG", type: "error" }, { inputs: [], name: "NotInCoolDown", type: "error" }, { inputs: [], name: "PenaltyToNotSet", type: "error" }, { inputs: [], name: "StillInCoolDown", type: "error" }, { inputs: [], name: "TransferNotWhiteListed", type: "error" }, { inputs: [], name: "UnlockSlotOccupied", type: "error" }, { inputs: [], name: "UnlockedAlready", type: "error" }, { inputs: [], name: "coolDownInSecCanCauseOverflow", type: "error" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "owner", type: "address" }, { indexed: true, internalType: "address", name: "spender", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Approval", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "_coolDownSecs", type: "uint256" }], name: "CoolDownInSecsUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "slotIdx", type: "uint256" }, { indexed: false, internalType: "uint256", name: "mgpamount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "penaltyAmount", type: "uint256" }], name: "ForceUnLock", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint8", name: "version", type: "uint8" }], name: "Initialized", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "_maxSlot", type: "uint256" }], name: "MaxSlotUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: true, internalType: "uint256", name: "timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "NewLock", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_oldMaster", type: "address" }, { indexed: false, internalType: "address", name: "_newMaster", type: "address" }], name: "NewMasterChiefUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Paused", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "penaltyDestination", type: "address" }], name: "PenaltyDestinationUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "penaltyDestination", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "PenaltySentTo", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "slotIdx", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "ReLock", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "from", type: "address" }, { indexed: true, internalType: "address", name: "to", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Transfer", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: true, internalType: "uint256", name: "timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Unlock", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: true, internalType: "uint256", name: "_timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }], name: "UnlockStarts", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Unpaused", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: true, internalType: "uint256", name: "timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_eventId", type: "uint256" }], name: "VlMgpBurn", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_for", type: "address" }, { indexed: false, internalType: "bool", name: "_status", type: "bool" }], name: "WhitelistSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "burnEventManager", type: "address" }], name: "burnEventManagerSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "referralStorage", type: "address" }], name: "referralStorageSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "wombatBribeManager", type: "address" }], name: "wombatBribeManagerSet", type: "event" }, { inputs: [], name: "DENOMINATOR", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "MGP", outputs: [{ internalType: "contract IERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_masterMagpie", type: "address" }, { internalType: "uint256", name: "_maxSlots", type: "uint256" }, { internalType: "address", name: "_mgp", type: "address" }, { internalType: "uint256", name: "_coolDownInSecs", type: "uint256" }], name: "__vlMGP_init_", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" }], name: "allowance", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "approve", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "burnEventManager", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "_vlmgpAmountToBurn", type: "uint256" }, { internalType: "uint256", name: "_vlmgpBurnEventId", type: "uint256" }], name: "burnVlmgp", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "cancelUnlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "coolDownInSecs", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "decimals", outputs: [{ internalType: "uint8", name: "", type: "uint8" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "subtractedValue", type: "uint256" }], name: "decreaseAllowance", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "expectedPenaltyAmount", outputs: [{ internalType: "uint256", name: "penaltyAmount", type: "uint256" }, { internalType: "uint256", name: "amontToUser", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "forceUnLock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getFullyUnlock", outputs: [{ internalType: "uint256", name: "unlockedAmount", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getNextAvailableUnlockSlot", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getRewardablePercentWAD", outputs: [{ internalType: "uint256", name: "percent", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserAmountInCoolDown", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }, { internalType: "uint256", name: "n", type: "uint256" }], name: "getUserNthUnlockSlot", outputs: [{ internalType: "uint256", name: "startTime", type: "uint256" }, { internalType: "uint256", name: "endTime", type: "uint256" }, { internalType: "uint256", name: "amountInCoolDown", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserTotalLocked", outputs: [{ internalType: "uint256", name: "_lockAmount", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserUnlockSlotLength", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserUnlockingSchedule", outputs: [{ components: [{ internalType: "uint256", name: "startTime", type: "uint256" }, { internalType: "uint256", name: "endTime", type: "uint256" }, { internalType: "uint256", name: "amountInCoolDown", type: "uint256" }], internalType: "struct ILocker.UserUnlocking[]", name: "slots", type: "tuple[]" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "addedValue", type: "uint256" }], name: "increaseAllowance", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }], name: "lock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "lockFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "masterMagpie", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "maxSlot", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "name", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "pause", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "paused", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [], name: "penaltyDestination", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "referralStorage", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_coolDownSecs", type: "uint256" }], name: "setCoolDownInSecs", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_masterMagpie", type: "address" }], name: "setMasterChief", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_maxSlots", type: "uint256" }], name: "setMaxSlots", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_burnEventMAnager", type: "address" }], name: "setMgpBurnEventManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_penaltyDestination", type: "address" }], name: "setPenaltyDestination", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_referralStorage", type: "address" }], name: "setReferralStorage", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_for", type: "address" }, { internalType: "bool", name: "_status", type: "bool" }], name: "setWhitelistForTransfer", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_bribeManager", type: "address" }], name: "setWombatBribeManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amountToCoolDown", type: "uint256" }], name: "startUnlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "symbol", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalAmountInCoolDown", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalLocked", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalPenalty", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalSupply", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "transfer", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "from", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "transferFrom", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "transferPenalty", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "transferWhitelist", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "unlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unpause", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }, { internalType: "uint256", name: "", type: "uint256" }], name: "userUnlockings", outputs: [{ internalType: "uint256", name: "startTime", type: "uint256" }, { internalType: "uint256", name: "endTime", type: "uint256" }, { internalType: "uint256", name: "amountInCoolDown", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "wombatBribeManager", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }],
@@ -31405,136 +31336,152 @@ var contractABIs = {
   vlStreamRewarder: [{ inputs: [{ internalType: "address", name: "_logic", type: "address" }, { internalType: "address", name: "admin_", type: "address" }, { internalType: "bytes", name: "_data", type: "bytes" }], stateMutability: "payable", type: "constructor" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "previousAdmin", type: "address" }, { indexed: false, internalType: "address", name: "newAdmin", type: "address" }], name: "AdminChanged", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "beacon", type: "address" }], name: "BeaconUpgraded", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "implementation", type: "address" }], name: "Upgraded", type: "event" }, { stateMutability: "payable", type: "fallback" }, { inputs: [], name: "admin", outputs: [{ internalType: "address", name: "admin_", type: "address" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newAdmin", type: "address" }], name: "changeAdmin", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "implementation", outputs: [{ internalType: "address", name: "implementation_", type: "address" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newImplementation", type: "address" }], name: "upgradeTo", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newImplementation", type: "address" }, { internalType: "bytes", name: "data", type: "bytes" }], name: "upgradeToAndCall", outputs: [], stateMutability: "payable", type: "function" }, { stateMutability: "payable", type: "receive" }],
   CMGP: [{ name: "Transfer", inputs: [{ name: "sender", type: "address", indexed: true }, { name: "receiver", type: "address", indexed: true }, { name: "value", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "Approval", inputs: [{ name: "owner", type: "address", indexed: true }, { name: "spender", type: "address", indexed: true }, { name: "value", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "TokenExchange", inputs: [{ name: "buyer", type: "address", indexed: true }, { name: "sold_id", type: "int128", indexed: false }, { name: "tokens_sold", type: "uint256", indexed: false }, { name: "bought_id", type: "int128", indexed: false }, { name: "tokens_bought", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "TokenExchangeUnderlying", inputs: [{ name: "buyer", type: "address", indexed: true }, { name: "sold_id", type: "int128", indexed: false }, { name: "tokens_sold", type: "uint256", indexed: false }, { name: "bought_id", type: "int128", indexed: false }, { name: "tokens_bought", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "AddLiquidity", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amounts", type: "uint256[]", indexed: false }, { name: "fees", type: "uint256[]", indexed: false }, { name: "invariant", type: "uint256", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RemoveLiquidity", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amounts", type: "uint256[]", indexed: false }, { name: "fees", type: "uint256[]", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RemoveLiquidityOne", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_id", type: "int128", indexed: false }, { name: "token_amount", type: "uint256", indexed: false }, { name: "coin_amount", type: "uint256", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RemoveLiquidityImbalance", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amounts", type: "uint256[]", indexed: false }, { name: "fees", type: "uint256[]", indexed: false }, { name: "invariant", type: "uint256", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RampA", inputs: [{ name: "old_A", type: "uint256", indexed: false }, { name: "new_A", type: "uint256", indexed: false }, { name: "initial_time", type: "uint256", indexed: false }, { name: "future_time", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "StopRampA", inputs: [{ name: "A", type: "uint256", indexed: false }, { name: "t", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "ApplyNewFee", inputs: [{ name: "fee", type: "uint256", indexed: false }, { name: "offpeg_fee_multiplier", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "SetNewMATime", inputs: [{ name: "ma_exp_time", type: "uint256", indexed: false }, { name: "D_ma_time", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { stateMutability: "nonpayable", type: "constructor", inputs: [{ name: "_name", type: "string" }, { name: "_symbol", type: "string" }, { name: "_A", type: "uint256" }, { name: "_fee", type: "uint256" }, { name: "_offpeg_fee_multiplier", type: "uint256" }, { name: "_ma_exp_time", type: "uint256" }, { name: "_coins", type: "address[]" }, { name: "_rate_multipliers", type: "uint256[]" }, { name: "_asset_types", type: "uint8[]" }, { name: "_method_ids", type: "bytes4[]" }, { name: "_oracles", type: "address[]" }], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "exchange", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange_received", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange_received", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "add_liquidity", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_min_mint_amount", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "add_liquidity", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_min_mint_amount", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_one_coin", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "i", type: "int128" }, { name: "_min_received", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_one_coin", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "i", type: "int128" }, { name: "_min_received", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_imbalance", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_max_burn_amount", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_imbalance", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_max_burn_amount", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "_min_amounts", type: "uint256[]" }], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "_min_amounts", type: "uint256[]" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "_min_amounts", type: "uint256[]" }, { name: "_receiver", type: "address" }, { name: "_claim_admin_fees", type: "bool" }], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "nonpayable", type: "function", name: "withdraw_admin_fees", inputs: [], outputs: [] }, { stateMutability: "view", type: "function", name: "last_price", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "ema_price", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_p", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "price_oracle", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "D_oracle", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "transfer", inputs: [{ name: "_to", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "transferFrom", inputs: [{ name: "_from", type: "address" }, { name: "_to", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "approve", inputs: [{ name: "_spender", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "permit", inputs: [{ name: "_owner", type: "address" }, { name: "_spender", type: "address" }, { name: "_value", type: "uint256" }, { name: "_deadline", type: "uint256" }, { name: "_v", type: "uint8" }, { name: "_r", type: "bytes32" }, { name: "_s", type: "bytes32" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "view", type: "function", name: "DOMAIN_SEPARATOR", inputs: [], outputs: [{ name: "", type: "bytes32" }] }, { stateMutability: "view", type: "function", name: "get_dx", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_dy", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "dx", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "calc_withdraw_one_coin", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "i", type: "int128" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "totalSupply", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_virtual_price", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "calc_token_amount", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_is_deposit", type: "bool" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "A", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "A_precise", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "balances", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_balances", inputs: [], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "view", type: "function", name: "stored_rates", inputs: [], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "view", type: "function", name: "dynamic_fee", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "ramp_A", inputs: [{ name: "_future_A", type: "uint256" }, { name: "_future_time", type: "uint256" }], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "stop_ramp_A", inputs: [], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "set_new_fee", inputs: [{ name: "_new_fee", type: "uint256" }, { name: "_new_offpeg_fee_multiplier", type: "uint256" }], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "set_ma_exp_time", inputs: [{ name: "_ma_exp_time", type: "uint256" }, { name: "_D_ma_time", type: "uint256" }], outputs: [] }, { stateMutability: "view", type: "function", name: "N_COINS", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "coins", inputs: [{ name: "arg0", type: "uint256" }], outputs: [{ name: "", type: "address" }] }, { stateMutability: "view", type: "function", name: "fee", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "offpeg_fee_multiplier", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "admin_fee", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "initial_A", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "future_A", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "initial_A_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "future_A_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "admin_balances", inputs: [{ name: "arg0", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "ma_exp_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "D_ma_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "ma_last_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "name", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "symbol", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "decimals", inputs: [], outputs: [{ name: "", type: "uint8" }] }, { stateMutability: "view", type: "function", name: "version", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "balanceOf", inputs: [{ name: "arg0", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "allowance", inputs: [{ name: "arg0", type: "address" }, { name: "arg1", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "nonces", inputs: [{ name: "arg0", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "salt", inputs: [], outputs: [{ name: "", type: "bytes32" }] }]
 };
-var decimals = { MGP: 18, RMGP: 18, YMGP: 18, CMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 };
 var publicClients = {
   1: createPublicClient({ chain: mainnet, transport: webSocket("wss://eth.drpc.org") }),
   56: createPublicClient({ chain: bsc, transport: webSocket("wss://binance.llamarpc.com") }),
   42161: createPublicClient({ chain: arbitrum, transport: webSocket("wss://arbitrum.drpc.org") })
 };
-function useUpdateable(factory, deps) {
-  const [updateCount, setUpdateCount] = import_react3.useState(0);
-  const [value, setValue] = import_react3.useState();
-  import_react3.useEffect(() => {
-    factory().then(setValue);
-  }, [...deps, updateCount]);
-  const update = () => setUpdateCount((c) => c + 1);
-  return [value, update];
-}
+var contracts = {
+  56: {
+    MGP: getContract({ address: "0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa", abi: erc20Abi, client: publicClients[56] }),
+    RMGP: getContract({ address: "0x0277517658a1dd3899bf926fCf6A633e549eB769", abi: ABIs.RMGP, client: publicClients[56] }),
+    YMGP: getContract({ address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb", abi: ABIs.YMGP, client: publicClients[56] }),
+    CMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.CMGP, client: publicClients[56] }),
+    VLMGP: getContract({ address: "0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6", abi: ABIs.vlMGP, client: publicClients[56] }),
+    masterMGP: getContract({ address: "0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46", abi: ABIs.masterMagpie, client: publicClients[56] }),
+    VLREWARDER: getContract({ address: "0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9", abi: ABIs.vlStreamRewarder, client: publicClients[56] }),
+    WETH: getContract({ address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", abi: erc20Abi, client: publicClients[56] })
+  },
+  42161: {
+    MGP: getContract({ address: "0xa61F74247455A40b01b0559ff6274441FAfa22A3", abi: erc20Abi, client: publicClients[42161] }),
+    RMGP: getContract({ address: "0x3788c8791d826254bAbd49b602C93008468D5695", abi: ABIs.RMGP, client: publicClients[42161] }),
+    YMGP: getContract({ address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9", abi: ABIs.YMGP, client: publicClients[42161] }),
+    CMGP: getContract({ address: "0xc370A85bB555A7c519bF675895E545873BDb1359", abi: ABIs.CMGP, client: publicClients[42161] }),
+    VLMGP: getContract({ address: "0x536599497Ce6a35FC65C7503232Fec71A84786b9", abi: ABIs.vlMGP, client: publicClients[42161] }),
+    masterMGP: getContract({ address: "0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7", abi: ABIs.masterMagpie, client: publicClients[42161] }),
+    VLREWARDER: getContract({ address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45", abi: ABIs.vlStreamRewarder, client: publicClients[42161] }),
+    WETH: getContract({ address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", abi: erc20Abi, client: publicClients[42161] })
+  }
+};
 var App = () => {
-  const [mode, setMode] = import_react3.useState("deposit");
-  const [showDiagram, setShowDiagram] = import_react3.useState(false);
-  const [isConnecting, setIsConnecting] = import_react3.useState(false);
-  const [approveInfinity, setApproveInfinity] = import_react3.useState(false);
-  const [sendAmount, setSendAmount] = import_react3.useState(parseEther(100));
-  const [prices, setPrices] = import_react3.useState({ MGP: 0, RMGP: 0, YMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 });
-  const [dexToken, setDEXToken] = import_react3.useState();
-  const [router, setRouter] = import_react3.useState("");
-  const [camelot, setCamelot] = import_react3.useState(false);
-  const [walletClients, setWalletClients] = import_react3.useState();
-  const [chain, setChain] = import_react3.useState(42161);
-  const [account, setAccount] = import_react3.useState("0x0000000000000000000000000000000000000000");
+  const [mode, setMode] = import_react2.useState("deposit");
+  const [showDiagram, setShowDiagram] = import_react2.useState(false);
+  const [isConnecting, setIsConnecting] = import_react2.useState(false);
+  const [approveInfinity, setApproveInfinity] = import_react2.useState(false);
+  const [sendAmount, setSendAmount] = import_react2.useState(parseEther(100));
+  const [prices, setPrices] = import_react2.useState({ MGP: 0, RMGP: 0, YMGP: 0, CMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 });
+  const [walletClients, setWalletClients] = import_react2.useState();
+  const [chain, setChain] = import_react2.useState(42161);
+  const [account, setAccount] = import_react2.useState("0x0000000000000000000000000000000000000000");
   const [ens] = useUpdateable(() => publicClients[1].getEnsName({ address: account }), [account]);
-  const chainContracts = import_react3.useMemo(() => {
+  const writeContracts = import_react2.useMemo(() => {
+    if (!walletClients)
+      return;
     return {
       56: {
-        MGP: getContract({ address: "0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa", abi: erc20Abi, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        RMGP: getContract({ address: "0x0277517658a1dd3899bf926fCf6A633e549eB769", abi: contractABIs.RMGP, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        YMGP: getContract({ address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb", abi: contractABIs.YMGP, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        VLMGP: getContract({ address: "0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6", abi: contractABIs.vlMGP, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        masterMagpie: getContract({ address: "0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46", abi: contractABIs.masterMagpie, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        VLSTREAMREWARDER: getContract({ address: "0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9", abi: contractABIs.vlStreamRewarder, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        WETH: getContract({ address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", abi: erc20Abi, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } }),
-        CMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: contractABIs.CMGP, client: { public: publicClients[56], wallet: walletClients ? walletClients[56] : undefined } })
+        MGP: getContract({ address: "0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa", abi: contracts[56].MGP.abi, client: walletClients[56] }),
+        RMGP: getContract({ address: "0x0277517658a1dd3899bf926fCf6A633e549eB769", abi: contracts[56].RMGP.abi, client: walletClients[56] }),
+        YMGP: getContract({ address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb", abi: contracts[56].YMGP.abi, client: walletClients[56] }),
+        CMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: contracts[56].CMGP.abi, client: walletClients[56] }),
+        VLMGP: getContract({ address: "0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6", abi: contracts[56].VLMGP.abi, client: walletClients[56] }),
+        masterMGP: getContract({ address: "0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46", abi: contracts[56].masterMGP.abi, client: walletClients[56] }),
+        VLREWARDER: getContract({ address: "0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9", abi: contracts[56].VLREWARDER.abi, client: walletClients[56] }),
+        WETH: getContract({ address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", abi: contracts[56].WETH.abi, client: walletClients[56] })
       },
       42161: {
-        MGP: getContract({ address: "0xa61F74247455A40b01b0559ff6274441FAfa22A3", abi: erc20Abi, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        RMGP: getContract({ address: "0x3788c8791d826254bAbd49b602C93008468D5695", abi: contractABIs.RMGP, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        YMGP: getContract({ address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9", abi: contractABIs.YMGP, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        VLMGP: getContract({ address: "0x536599497Ce6a35FC65C7503232Fec71A84786b9", abi: contractABIs.vlMGP, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        masterMagpie: getContract({ address: "0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7", abi: contractABIs.masterMagpie, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        VLSTREAMREWARDER: getContract({ address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45", abi: contractABIs.vlStreamRewarder, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        WETH: getContract({ address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", abi: erc20Abi, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } }),
-        CMGP: getContract({ address: "0xc370A85bB555A7c519bF675895E545873BDb1359", abi: contractABIs.CMGP, client: { public: publicClients[42161], wallet: walletClients ? walletClients[42161] : undefined } })
+        MGP: getContract({ address: "0xa61F74247455A40b01b0559ff6274441FAfa22A3", abi: contracts[42161].MGP.abi, client: walletClients[42161] }),
+        RMGP: getContract({ address: "0x3788c8791d826254bAbd49b602C93008468D5695", abi: contracts[42161].RMGP.abi, client: walletClients[42161] }),
+        YMGP: getContract({ address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9", abi: contracts[42161].YMGP.abi, client: walletClients[42161] }),
+        CMGP: getContract({ address: "0xc370A85bB555A7c519bF675895E545873BDb1359", abi: contracts[42161].CMGP.abi, client: walletClients[42161] }),
+        VLMGP: getContract({ address: "0x536599497Ce6a35FC65C7503232Fec71A84786b9", abi: contracts[42161].VLMGP.abi, client: walletClients[42161] }),
+        masterMGP: getContract({ address: "0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7", abi: contracts[42161].masterMGP.abi, client: walletClients[42161] }),
+        VLREWARDER: getContract({ address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45", abi: contracts[42161].VLREWARDER.abi, client: walletClients[42161] }),
+        WETH: getContract({ address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", abi: contracts[42161].WETH.abi, client: walletClients[42161] })
       }
     };
   }, [walletClients]);
-  const contracts = import_react3.useMemo(() => chainContracts[chain], [chain, walletClients]);
-  const [abi2, setABI] = import_react3.useState();
-  const [constructorArgs, setConstructorArgs] = import_react3.useState([]);
-  const [bytecode, setBytecode] = import_react3.useState();
-  const [mgpAllowance, updateMGPAllowance] = useUpdateable(() => contracts.MGP.read.allowance([account, contracts.RMGP.address]), [contracts, account]);
-  const [rmgpAllowance, updateRMGPAllowance] = useUpdateable(() => contracts.RMGP.read.allowance([account, contracts.YMGP.address]), [contracts, account]);
-  const [mgpAllowanceCurve, updateMGPAllowanceCurve] = useUpdateable(() => contracts.MGP.read.allowance([account, contracts.CMGP.address]), [contracts, account]);
-  const [rmgpAllowanceCurve, updateRMGPAllowanceCurve] = useUpdateable(() => contracts.RMGP.read.allowance([account, contracts.CMGP.address]), [contracts, account]);
-  const [mgpBalance, updateMGPBalance] = useUpdateable(() => contracts.MGP.read.balanceOf([account]), [contracts, account]);
-  const [rmgpBalance, updateRMGPBalance] = useUpdateable(() => contracts.RMGP.read.balanceOf([account]), [contracts, account]);
-  const [ymgpBalance, updateYMGPBalance] = useUpdateable(() => contracts.YMGP.read.balanceOf([account]), [contracts, account]);
-  const [cmgpBalance, updateCMGPBalance] = useUpdateable(() => contracts.CMGP.read.balanceOf([account]), [contracts, account]);
-  const [ymgpHoldings, updateYMGPHoldings] = useUpdateable(() => contracts.RMGP.read.balanceOf([contracts.YMGP.address]), [contracts, account]);
-  const [mgpCurveBalance, updateMGPCurveBalance] = useUpdateable(() => contracts.MGP.read.balanceOf([contracts.CMGP.address]), [contracts, account]);
-  const [rmgpCurveBalance, updateRMGPCurveBalance] = useUpdateable(() => contracts.RMGP.read.balanceOf([contracts.CMGP.address]), [contracts, account]);
-  const [ymgpCurveBalance, updateYMGPCurveBalance] = useUpdateable(() => contracts.YMGP.read.balanceOf([contracts.CMGP.address]), [contracts, account]);
-  const [reefiLockedMGP, updateReefiLockedMGP] = useUpdateable(() => contracts.VLMGP.read.getUserTotalLocked([contracts.RMGP.address]), [contracts, account]);
-  const [totalLockedMGPBSC, updateTotalLockedMGPBSC] = useUpdateable(() => chainContracts[56].VLMGP.read.totalLocked(), [chainContracts, account]);
-  const [totalLockedMGPARB, updateTotalLockedMGPARB] = useUpdateable(() => chainContracts[42161].VLMGP.read.totalLocked(), [chainContracts, account]);
-  const totalLockedMGP = import_react3.useMemo(() => {
+  const [abi2, setABI] = import_react2.useState();
+  const [constructorArgs, setConstructorArgs] = import_react2.useState([]);
+  const [bytecode, setBytecode] = import_react2.useState();
+  const [mgpAllowance, updateMGPAllowance] = useUpdateable(() => contracts[chain].MGP.read.allowance([account, contracts[chain].RMGP.address]), [contracts, chain, account]);
+  const [rmgpAllowance, updateRMGPAllowance] = useUpdateable(() => contracts[chain].RMGP.read.allowance([account, contracts[chain].YMGP.address]), [contracts, chain, account]);
+  const [mgpAllowanceCurve, updateMGPAllowanceCurve] = useUpdateable(() => contracts[chain].MGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account]);
+  const [rmgpAllowanceCurve, updateRMGPAllowanceCurve] = useUpdateable(() => contracts[chain].RMGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account]);
+  const [mgpBalance, updateMGPBalance] = useUpdateable(() => contracts[chain].MGP.read.balanceOf([account]), [contracts, account]);
+  const [rmgpBalance, updateRMGPBalance] = useUpdateable(() => contracts[chain].RMGP.read.balanceOf([account]), [contracts, account]);
+  const [ymgpBalance, updateYMGPBalance] = useUpdateable(() => contracts[chain].YMGP.read.balanceOf([account]), [contracts, account]);
+  const [cmgpBalance, updateCMGPBalance] = useUpdateable(() => contracts[chain].CMGP.read.balanceOf([account]), [contracts, account]);
+  const [ymgpHoldings, updateYMGPHoldings] = useUpdateable(() => contracts[chain].RMGP.read.balanceOf([contracts[chain].YMGP.address]), [contracts, chain, account]);
+  const [mgpCurveBalance, updateMGPCurveBalance] = useUpdateable(() => contracts[chain].MGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account]);
+  const [rmgpCurveBalance, updateRMGPCurveBalance] = useUpdateable(() => contracts[chain].RMGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account]);
+  const [ymgpCurveBalance, updateYMGPCurveBalance] = useUpdateable(() => contracts[chain].YMGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account]);
+  const [reefiLockedMGP, updateReefiLockedMGP] = useUpdateable(() => contracts[chain].VLMGP.read.getUserTotalLocked([contracts[chain].RMGP.address]), [contracts, account, chain]);
+  const [totalLockedMGPBSC, updateTotalLockedMGPBSC] = useUpdateable(() => contracts[56].VLMGP.read.totalLocked(), [contracts, account]);
+  const [totalLockedMGPARB, updateTotalLockedMGPARB] = useUpdateable(() => contracts[42161].VLMGP.read.totalLocked(), [contracts, account]);
+  const totalLockedMGP = import_react2.useMemo(() => {
     return (totalLockedMGPBSC ?? 0n) + (totalLockedMGPARB ?? 0n);
   }, [totalLockedMGPBSC, totalLockedMGPARB]);
   const updateTotalLockedMGP = () => {
     updateTotalLockedMGPBSC();
     updateTotalLockedMGPARB();
   };
-  const [totalLockedYMGP, updateTotalLockedYMGP] = useUpdateable(() => contracts.YMGP.read.totalLocked(), [contracts, account]);
-  const [userLockedYMGP, updateUserLockedYMGP] = useUpdateable(() => contracts.YMGP.read.lockedBalances([account]), [contracts, account]);
-  const [mgpSupply, updateMGPSupply] = useUpdateable(() => chainContracts[56].MGP.read.totalSupply(), [chainContracts]);
-  const [ymgpSupply, updateYMGPSupply] = useUpdateable(() => contracts.YMGP.read.totalSupply(), [contracts]);
-  const [rmgpSupply, updateRMGPSupply] = useUpdateable(() => contracts.RMGP.read.totalSupply(), [contracts]);
-  const [cmgpSupply, updateCMGPSupply] = useUpdateable(() => contracts.CMGP.read.totalSupply(), [contracts]);
-  const [userPendingWithdraws, updateUserPendingWithdraws] = useUpdateable(() => contracts.RMGP.read.getUserPendingWithdraws([account]), [contracts, account]);
-  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useUpdateable(() => contracts.RMGP.read.unsubmittedWithdraws(), [contracts]);
-  const [userWithdrawable, updateUserWithdrawable] = useUpdateable(() => contracts.RMGP.read.getUserWithdrawable(), [contracts]);
-  const [unlockSchedule, updateUnlockSchedule] = useUpdateable(() => contracts.VLMGP.read.getUserUnlockingSchedule([contracts.RMGP.address]), [contracts]);
-  const mgpRMGPRate = import_react3.useMemo(() => {
+  const [totalLockedYMGP, updateTotalLockedYMGP] = useUpdateable(() => contracts[chain].YMGP.read.totalLocked(), [contracts, account]);
+  const [userLockedYMGP, updateUserLockedYMGP] = useUpdateable(() => contracts[chain].YMGP.read.lockedBalances([account]), [contracts, account]);
+  const [mgpSupply, updateMGPSupply] = useUpdateable(() => contracts[56].MGP.read.totalSupply(), [contracts]);
+  const [ymgpSupply, updateYMGPSupply] = useUpdateable(() => contracts[chain].YMGP.read.totalSupply(), [contracts, chain]);
+  const [rmgpSupply, updateRMGPSupply] = useUpdateable(() => contracts[chain].RMGP.read.totalSupply(), [contracts, chain]);
+  const [cmgpSupply, updateCMGPSupply] = useUpdateable(() => contracts[chain].CMGP.read.totalSupply(), [contracts, chain]);
+  const [userPendingWithdraws, updateUserPendingWithdraws] = useUpdateable(() => contracts[chain].RMGP.read.getUserPendingWithdraws([account]), [contracts, account, chain]);
+  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useUpdateable(() => contracts[chain].RMGP.read.unsubmittedWithdraws(), [contracts, chain]);
+  const [userWithdrawable, updateUserWithdrawable] = useUpdateable(() => contracts[chain].RMGP.read.getUserWithdrawable(), [contracts, chain]);
+  const [unlockSchedule, updateUnlockSchedule] = useUpdateable(() => contracts[chain].VLMGP.read.getUserUnlockingSchedule([contracts[chain].RMGP.address]), [contracts, chain]);
+  const mgpRMGPRate = import_react2.useMemo(() => {
     return rmgpSupply === 0n ? 1 : Number(reefiLockedMGP) / Number(rmgpSupply);
   }, [rmgpSupply, reefiLockedMGP]);
-  const mgpRMGPCurveRate = import_react3.useMemo(() => {
+  const mgpRMGPCurveRate = import_react2.useMemo(() => {
     return mgpCurveBalance === undefined || rmgpCurveBalance === undefined ? undefined : Number(mgpCurveBalance) / Number(rmgpCurveBalance);
   }, [mgpCurveBalance, rmgpCurveBalance]);
-  const rmgpYMGPCurveRate = import_react3.useMemo(() => {
+  const rmgpYMGPCurveRate = import_react2.useMemo(() => {
     return rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? undefined : Number(rmgpCurveBalance) / Number(ymgpCurveBalance);
   }, [rmgpCurveBalance, ymgpCurveBalance]);
-  const [mgpRmgpCurveAmount] = useUpdateable(() => contracts.CMGP.read.get_dy([0n, 1n, sendAmount], { account }), [contracts, sendAmount]);
-  const [rmgpMgpCurveAmount] = useUpdateable(() => contracts.CMGP.read.get_dy([1n, 0n, sendAmount], { account }), [contracts, sendAmount]);
-  const [rmgpYmgpCurveAmount] = useUpdateable(() => contracts.CMGP.read.get_dy([1n, 2n, sendAmount], { account }), [contracts, sendAmount]);
-  const [mgpAPR, setMGPAPR] = import_react3.useState(0);
-  const [pendingRewards, setPendingRewards] = import_react3.useState();
-  const [unclaimedUserYield, updateUnclaimedUserYield] = useUpdateable(() => contracts.YMGP.read.unclaimedUserYield(), [contracts]);
-  const [cmgpPoolAPY, setCMGPPoolAPY] = import_react3.useState(0);
-  const cmgpAPY = import_react3.useMemo(() => {
+  const [mgpRmgpCurveAmount] = useUpdateable(() => {
+    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([0n, 1n, sendAmount], { account });
+  }, [contracts, chain, sendAmount]);
+  const [rmgpMgpCurveAmount] = useUpdateable(() => {
+    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([1n, 0n, sendAmount], { account });
+  }, [contracts, chain, sendAmount]);
+  const [rmgpYmgpCurveAmount] = useUpdateable(() => {
+    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([1n, 2n, sendAmount], { account });
+  }, [contracts, chain, sendAmount]);
+  const [mgpLPAmount, setMGPLPAmount] = import_react2.useState(0n);
+  const [rmgpLPAmount, setRMGPLPAmount] = import_react2.useState(0n);
+  const [ymgpLPAmount, setYMGPLPAmount] = import_react2.useState(0n);
+  const [mgpAPR, setMGPAPR] = import_react2.useState(0);
+  const [pendingRewards, setPendingRewards] = import_react2.useState();
+  const [unclaimedUserYield, updateUnclaimedUserYield] = useUpdateable(() => contracts[chain].YMGP.read.unclaimedUserYield(), [contracts, chain]);
+  const [cmgpPoolAPY, setCMGPPoolAPY] = import_react2.useState(0);
+  const cmgpAPY = import_react2.useMemo(() => {
     if (mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined)
       return 0;
     const yieldBearingUnderlyingPercent = Number(rmgpCurveBalance + ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
     const underlyingYield = yieldBearingUnderlyingPercent * aprToApy(mgpAPR) * 0.9;
     return underlyingYield + cmgpPoolAPY / 100;
   }, [cmgpPoolAPY, mgpAPR, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance]);
-  const [compoundRMGPGas, setCompoundRMGPGas] = import_react3.useState(0n);
-  const uncompoundedMGPYield = import_react3.useMemo(() => {
+  const [compoundRMGPGas, setCompoundRMGPGas] = import_react2.useState(0n);
+  const uncompoundedMGPYield = import_react2.useMemo(() => {
     return pendingRewards ? Object.keys(pendingRewards).map((symbol) => prices[symbol] * Number(formatEther2(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0;
   }, [pendingRewards, prices]);
-  const estimatedCompoundGasFee = import_react3.useMemo(() => formatEther2(compoundRMGPGas, decimals[publicClients[chain].chain.nativeCurrency.symbol]) * prices[publicClients[chain].chain.nativeCurrency.symbol], [chain, compoundRMGPGas, prices]);
+  const estimatedCompoundGasFee = import_react2.useMemo(() => formatEther2(compoundRMGPGas, decimals[publicClients[chain].chain.nativeCurrency.symbol]) * prices[publicClients[chain].chain.nativeCurrency.symbol], [chain, compoundRMGPGas, prices]);
   const updatePendingRewards = async () => {
-    const data = await contracts.masterMagpie.read.allPendingTokens([contracts.VLMGP.address, contracts.RMGP.address]);
+    const data = await contracts[chain].masterMGP.read.allPendingTokens([contracts[chain].VLMGP.address, contracts[chain].RMGP.address]);
     const [pendingMGP, bonusTokenAddresses, bonusTokenSymbols, pendingBonusRewards] = data;
-    const newPendingRewards = { MGP: { address: contracts.MGP.address, rewards: pendingMGP } };
+    const newPendingRewards = { MGP: { address: contracts[chain].MGP.address, rewards: pendingMGP } };
     for (const i in bonusTokenSymbols)
       if (bonusTokenSymbols[i] !== undefined && pendingBonusRewards[i] !== undefined && bonusTokenAddresses[i] !== undefined)
         newPendingRewards[bonusTokenSymbols[i].replace("Bridged ", "").toUpperCase()] = { rewards: pendingBonusRewards[i], address: bonusTokenAddresses[i] };
     setPendingRewards(newPendingRewards);
   };
-  const [mgpLPAmount, setMGPLPAmount] = import_react3.useState(0n);
-  const [rmgpLPAmount, setRMGPLPAmount] = import_react3.useState(0n);
-  const [ymgpLPAmount, setYMGPLPAmount] = import_react3.useState(0n);
-  import_react3.useEffect(() => {
+  import_react2.useEffect(() => {
     if (window.ethereum)
       connectWallet();
     const savedChain = window.localStorage.getItem("chain");
@@ -31543,14 +31490,14 @@ var App = () => {
     fetch("https://api.magpiexyz.io/getalltokenprice").then((res) => res.json().then((body) => setPrices(body.data.AllPrice)));
     fetch("https://api.curve.finance/api/getVolumes/arbitrum").then((res) => res.json()).then((body) => {
       body.data.pools.forEach((pool) => {
-        if (pool.address === contracts.CMGP.address)
+        if (pool.address === contracts[chain].CMGP.address)
           setCMGPPoolAPY(pool.latestDailyApyPcent);
       });
     });
-    const interval = setInterval(updatePendingRewards, 5000);
+    const interval = setInterval(updatePendingRewards, 30000);
     return () => clearInterval(interval);
   }, []);
-  import_react3.useEffect(() => {
+  import_react2.useEffect(() => {
     if (walletClients)
       walletClients[chain].switchChain({ id: chain });
     window.ethereum?.request({ method: "eth_accounts" }).then((accounts) => {
@@ -31558,23 +31505,23 @@ var App = () => {
         connectWallet();
     });
     updatePendingRewards();
-    fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${chain}&rewarder=${contracts.VLSTREAMREWARDER.address}`).then((res) => res.json()).then((body) => {
+    fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${chain}&rewarder=${contracts[chain].VLREWARDER.address}`).then((res) => res.json()).then((body) => {
       setMGPAPR(body.data.rewardTokenInfo.reduce((acc, token) => {
         return { ...token, apr: acc.apr + token.apr };
       }).apr);
     });
   }, [chain]);
-  import_react3.useEffect(() => {
+  import_react2.useEffect(() => {
     if (!account)
       return;
     estimateCompoundRMGPGas().then(setCompoundRMGPGas);
   }, [chain, account]);
-  import_react3.useEffect(() => {
+  import_react2.useEffect(() => {
     for (const item of JSON.parse(abi2 ?? "[]")) {
       if (item.type === "constructor") {
         const args = item.inputs.map((arg) => {
           const contract = arg.name.toUpperCase().replace("_", "").replace("TOKEN", "");
-          return { ...arg, value: Object.keys(contracts).includes(contract) ? contracts[contract].address : arg.value };
+          return { ...arg, value: Object.keys(contracts).includes(contract) ? contracts[chain][contract].address : arg.value };
         });
         setConstructorArgs(args);
       }
@@ -31595,18 +31542,20 @@ var App = () => {
   const approve = async (curve = false) => {
     if (!walletClients)
       return alert("Wallet not connected");
+    if (!writeContracts)
+      return alert("Contracts not found");
     if (!account)
       return alert("No address found");
     if (mode === "deposit") {
       const amount = approveInfinity ? 2n ** 256n - 1n : sendAmount;
-      await contracts.MGP.write.approve([curve ? contracts.CMGP.address : contracts.RMGP.address, amount], { account });
+      await writeContracts[chain].MGP.write.approve([curve ? contracts[chain].CMGP.address : contracts[chain].RMGP.address, amount], { account, chain: walletClients[chain].chain });
       if (curve)
         updateMGPAllowanceCurve();
       else
         updateMGPAllowance();
     } else if (mode === "convert" || mode === "redeem") {
       const amount = approveInfinity ? 2n ** 256n - 1n : sendAmount;
-      await contracts.RMGP.write.approve([curve ? contracts.CMGP.address : contracts.YMGP.address, amount], { account });
+      await writeContracts[chain].RMGP.write.approve([curve ? contracts[chain].CMGP.address : contracts[chain].YMGP.address, amount], { account, chain: walletClients[chain].chain });
       if (curve)
         updateRMGPAllowanceCurve();
       else
@@ -31616,9 +31565,11 @@ var App = () => {
   const depositMGP = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
+    if (!writeContracts)
+      return alert("Contracts not found");
     if (mgpAllowance === undefined || mgpAllowance < sendAmount)
       return alert("Allowance too low");
-    await contracts.RMGP.write.deposit([sendAmount], { account });
+    await writeContracts[chain].RMGP.write.deposit([sendAmount], { account, chain: walletClients[chain].chain });
     updateMGPBalance();
     updateRMGPBalance();
     updateMGPSupply();
@@ -31629,9 +31580,11 @@ var App = () => {
   const buyRMGP = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
+    if (!writeContracts)
+      return alert("Contracts not found");
     if (mgpAllowanceCurve === undefined || mgpAllowanceCurve < sendAmount)
       return alert("Allowance too low");
-    await contracts.CMGP.write.exchange([0, 1, sendAmount, 0], { account });
+    await writeContracts[chain].CMGP.write.exchange([0n, 1n, sendAmount, 0n], { account, chain: walletClients[chain].chain });
     updateMGPBalance();
     updateRMGPBalance();
     updateMGPCurveBalance();
@@ -31640,9 +31593,11 @@ var App = () => {
   const buyYMGP = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
+    if (!writeContracts)
+      return alert("Contracts not found");
     if (rmgpAllowanceCurve === undefined || rmgpAllowanceCurve < sendAmount)
       return alert("Allowance too low");
-    await contracts.CMGP.write.exchange([1, 2, sendAmount, 0], { account });
+    await writeContracts[chain].CMGP.write.exchange([1n, 2n, sendAmount, 0n], { account, chain: walletClients[chain].chain });
     updateRMGPBalance();
     updateYMGPBalance();
     updateRMGPCurveBalance();
@@ -31651,9 +31606,11 @@ var App = () => {
   const buyMGP = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
+    if (!writeContracts)
+      return alert("Contracts not found");
     if (rmgpAllowanceCurve === undefined || rmgpAllowanceCurve < sendAmount)
       return alert("Allowance too low");
-    await contracts.CMGP.write.exchange([1, 0, sendAmount, 0], { account });
+    await writeContracts[chain].CMGP.write.exchange([1n, 0n, sendAmount, 0n], { account, chain: walletClients[chain].chain });
     updateMGPBalance();
     updateRMGPBalance();
     updateMGPCurveBalance();
@@ -31662,9 +31619,11 @@ var App = () => {
   const depositRMGP = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
+    if (!writeContracts)
+      return alert("Contracts not found");
     if (rmgpAllowance === undefined || rmgpAllowance < sendAmount)
       return alert("Allowance too low");
-    await contracts.YMGP.write.deposit([sendAmount], { account });
+    await writeContracts[chain].YMGP.write.deposit([sendAmount], { account, chain: walletClients[chain].chain });
     updateRMGPBalance();
     updateYMGPBalance();
     updateRMGPSupply();
@@ -31674,7 +31633,9 @@ var App = () => {
   const lockYMGP = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
-    await contracts.YMGP.write.lock([sendAmount], { account });
+    if (!writeContracts)
+      return alert("Contracts not found");
+    await writeContracts[chain].YMGP.write.lock([sendAmount], { account, chain: walletClients[chain].chain });
     updateYMGPSupply();
     updateTotalLockedYMGP();
     updateUserLockedYMGP();
@@ -31682,7 +31643,9 @@ var App = () => {
   const unlockYMGP = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
-    await contracts.YMGP.write.unlock([sendAmount], { account });
+    if (!writeContracts)
+      return alert("Contracts not found");
+    await writeContracts[chain].YMGP.write.unlock([sendAmount], { account, chain: walletClients[chain].chain });
     updateYMGPSupply();
     updateTotalLockedYMGP();
     updateUserLockedYMGP();
@@ -31690,7 +31653,9 @@ var App = () => {
   const redeemRMGP = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
-    await contracts.RMGP.write.startUnlock([sendAmount], { account });
+    if (!writeContracts)
+      return alert("Contracts not found");
+    await writeContracts[chain].RMGP.write.startUnlock([sendAmount], { account, chain: walletClients[chain].chain });
     updateUnlockSchedule();
     updateRMGPSupply();
     updateRMGPBalance();
@@ -31704,8 +31669,10 @@ var App = () => {
   const withdrawMGP = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
-    await contracts.RMGP.write.unlock([], { account });
-    await contracts.RMGP.write.withdraw([], { account });
+    if (!writeContracts)
+      return alert("Contracts not found");
+    await writeContracts[chain].RMGP.write.unlock({ account, chain: walletClients[chain].chain });
+    await writeContracts[chain].RMGP.write.withdraw({ account, chain: walletClients[chain].chain });
     updateMGPBalance();
     updateUserPendingWithdraws();
     updateUnsubmittedWithdraws();
@@ -31714,9 +31681,11 @@ var App = () => {
   const compoundRMGP = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
+    if (!writeContracts)
+      return alert("Contracts not found");
     if (!account)
       return alert("No address found");
-    await contracts.RMGP.write.claim([], { account });
+    await writeContracts[chain].RMGP.write.claim({ account, chain: walletClients[chain].chain });
     updatePendingRewards();
     updateUnclaimedUserYield();
     updateRMGPSupply();
@@ -31727,12 +31696,14 @@ var App = () => {
   const claimYMGPRewards = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
-    await contracts.YMGP.write.claim([], { account });
+    if (!writeContracts)
+      return alert("Contracts not found");
+    await writeContracts[chain].YMGP.write.claim({ account, chain: walletClients[chain].chain });
     updateUnclaimedUserYield();
   };
   const estimateCompoundRMGPGas = async () => {
     const gasPrice = await publicClients[chain].getGasPrice();
-    const gas = account === "0x0000000000000000000000000000000000000000" ? 0n : await contracts.RMGP.estimateGas.claim({ account });
+    const gas = account === "0x0000000000000000000000000000000000000000" ? 0n : await contracts[chain].RMGP.estimateGas.claim({ account });
     return gas * gasPrice;
   };
   const deployContract2 = async () => {
@@ -31755,9 +31726,11 @@ var App = () => {
   const supplyLiquidity = async () => {
     if (!walletClients)
       return alert("Wallet not connected");
+    if (!writeContracts)
+      return alert("Contracts not found");
     if (!account)
       return alert("No address found");
-    await contracts.CMGP.write.add_liquidity([[mgpLPAmount, rmgpLPAmount, ymgpLPAmount], 0n], { account });
+    await writeContracts[chain].CMGP.write.add_liquidity([[mgpLPAmount, rmgpLPAmount, ymgpLPAmount], 0n], { account, chain: walletClients[chain].chain });
     updateMGPBalance();
     updateRMGPBalance();
     updateYMGPBalance();
@@ -31813,15 +31786,15 @@ var App = () => {
                   /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                     className: "bg-gray-700 rounded-lg px-3 py-2 text-sm",
                     children: [
-                      "Locked yMGP: ",
-                      userLockedYMGP !== undefined ? formatEther2(userLockedYMGP, decimals.YMGP).toFixed(4) : "Loading..."
+                      "cMGP: ",
+                      cmgpBalance !== undefined ? formatEther2(cmgpBalance, decimals.CMGP).toFixed(4) : "Loading..."
                     ]
                   }, undefined, true, undefined, this),
                   /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                     className: "bg-gray-700 rounded-lg px-3 py-2 text-sm",
                     children: [
-                      "cMGP: ",
-                      cmgpBalance !== undefined ? formatEther2(cmgpBalance, decimals.CMGP).toFixed(4) : "Loading..."
+                      "Locked yMGP: ",
+                      userLockedYMGP !== undefined ? formatEther2(userLockedYMGP, decimals.YMGP).toFixed(4) : "Loading..."
                     ]
                   }, undefined, true, undefined, this),
                   /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
@@ -31933,11 +31906,8 @@ var App = () => {
                               }, undefined, false, undefined, this),
                               /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
                                 className: "font-medium",
-                                children: [
-                                  Math.round(1e4 * Number(totalLockedMGP) / Number(mgpSupply)) / 100,
-                                  "%"
-                                ]
-                              }, undefined, true, undefined, this)
+                                children: totalLockedMGP && mgpSupply !== undefined ? `${Math.round(1e4 * Number(totalLockedMGP) / Number(mgpSupply)) / 100}%` : "Loading..."
+                              }, undefined, false, undefined, this)
                             ]
                           }, undefined, true, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
@@ -32146,11 +32116,8 @@ var App = () => {
                               }, undefined, false, undefined, this),
                               /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
                                 className: "font-medium",
-                                children: [
-                                  ymgpSupply === undefined || totalLockedYMGP === undefined ? "Loading..." : Math.round(1e4 * Number(totalLockedYMGP) / Number(ymgpSupply + totalLockedYMGP)) / 100,
-                                  "%"
-                                ]
-                              }, undefined, true, undefined, this)
+                                children: ymgpSupply === undefined || totalLockedYMGP === undefined ? "Loading..." : `${Math.round(1e4 * Number(totalLockedYMGP) / Number(ymgpSupply + totalLockedYMGP)) / 100}%`
+                              }, undefined, false, undefined, this)
                             ]
                           }, undefined, true, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
@@ -32355,7 +32322,7 @@ var App = () => {
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
             className: "text-center mb-4",
-            children: "Reefi is in a very early beta. Please deposit very small amounts that you are okay losing as Reefi has many known and unknown bugs that need to be fixed."
+            children: "Reefi is in a very early beta. Please deposit very small amounts that you are okay losing as Reefi has many known and unknown bugs that need to be fixed. Curve/cMGP related features are only available on Arbitrum."
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
             className: "bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6",
@@ -32403,9 +32370,9 @@ var App = () => {
                         }, undefined, false, undefined, this),
                         /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
                           children: [
-                            "Locked yMGP APY: ",
-                            Math.round(1e4 * (Number(reefiLockedMGP) * aprToApy(mgpAPR) * 0.05 / Number(totalLockedYMGP) + aprToApy(mgpAPR) * 0.9)) / 100,
-                            "%+"
+                            "cMGP APY: ~",
+                            (cmgpAPY * 100).toFixed(2),
+                            "%"
                           ]
                         }, undefined, true, undefined, this)
                       ]
@@ -32418,9 +32385,9 @@ var App = () => {
                         }, undefined, false, undefined, this),
                         /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
                           children: [
-                            "cMGP APY: ~",
-                            (cmgpAPY * 100).toFixed(2),
-                            "%"
+                            "Locked yMGP APY: ",
+                            Math.round(1e4 * (Number(reefiLockedMGP) * aprToApy(mgpAPR) * 0.05 / Number(totalLockedYMGP) + aprToApy(mgpAPR) * 0.9)) / 100,
+                            "%+"
                           ]
                         }, undefined, true, undefined, this)
                       ]
@@ -32547,89 +32514,13 @@ var App = () => {
                         type: "submit",
                         className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4",
                         onClick: async () => {
-                          await contracts.RMGP.write.setYMGP([contracts.YMGP.address], { account });
+                          if (walletClients === undefined)
+                            return alert("Wallet not connected");
+                          if (!writeContracts)
+                            return alert("Contracts not found");
+                          await writeContracts[chain].RMGP.write.setYMGP([contracts[chain].YMGP.address], { account, chain: walletClients[chain].chain });
                         },
                         children: "Set yMGP"
-                      }, undefined, false, undefined, this)
-                    ]
-                  }, undefined, true, undefined, this),
-                  mode === "addDEX" && /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                    className: "bg-gray-700/50 p-5 rounded-lg",
-                    children: [
-                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h4", {
-                        className: "text-xs font-medium my-2",
-                        children: "Token Symbol"
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
-                        type: "text",
-                        placeholder: "MGP",
-                        className: "bg-gray-900 rounded-lg p-3 outline-none text-xs w-full",
-                        onChange: (e) => setDEXToken(e.target.value)
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h4", {
-                        className: "text-xs font-medium my-2",
-                        children: "Token Contract"
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
-                        type: "text",
-                        placeholder: "0x...",
-                        className: "bg-gray-900 rounded-lg p-3 outline-none text-xs w-full",
-                        value: dexToken !== undefined && dexToken in contracts ? contracts[dexToken].address : "",
-                        disabled: true
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h4", {
-                        className: "text-xs font-medium my-2",
-                        children: "Router"
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
-                        type: "text",
-                        placeholder: "0x...",
-                        className: "bg-gray-900 rounded-lg p-3 outline-none text-xs w-full",
-                        value: router,
-                        onChange: (e) => setRouter(e.target.value)
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                        className: "flex items-center mt-2",
-                        children: [
-                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
-                            id: "camelot",
-                            type: "checkbox",
-                            className: "mr-2",
-                            checked: camelot,
-                            onChange: (e) => setCamelot(e.target.checked)
-                          }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("label", {
-                            htmlFor: "camelot",
-                            className: "text-sm text-gray-300 select-none cursor-pointer",
-                            children: "Camelot"
-                          }, undefined, false, undefined, this)
-                        ]
-                      }, undefined, true, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
-                        type: "submit",
-                        className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4",
-                        onClick: () => {
-                          if (!dexToken)
-                            return alert("No token defined");
-                          if (!(dexToken in contracts))
-                            return alert("Token contract not defined");
-                          contracts.RMGP.write.addRewardsToken([contracts[dexToken].address], { account });
-                        },
-                        children: "Add Rewards Token"
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
-                        type: "submit",
-                        className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4",
-                        onClick: () => {
-                          if (!dexToken)
-                            return alert("No token defined");
-                          if (!(dexToken in contracts))
-                            return alert("Token contract not defined");
-                          if (!router)
-                            return alert("Swap router not defined");
-                          contracts.RMGP.write.setSwapRouter([contracts[dexToken].address, router, camelot], { account });
-                        },
-                        children: "Set Swap Router"
                       }, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this),
@@ -32696,66 +32587,108 @@ var App = () => {
                             ]
                           }, undefined, true, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                            className: "text-center my-2",
-                            children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                              className: "inline-block p-1 bg-gray-700 rounded-full",
-                              children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV(ArrowDown, {
-                                size: 20,
-                                className: "text-gray-400"
-                              }, undefined, false, undefined, this)
-                            }, undefined, false, undefined, this)
-                          }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                            className: "mb-4",
+                            className: "grid grid-cols-2 gap-2",
                             children: [
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                className: "flex justify-between items-center mb-1",
+                              mgpAllowance === undefined ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+                                children: "Loading..."
+                              }, undefined, false, undefined, this) : mgpAllowance < sendAmount ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                                 children: [
-                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h3", {
-                                    className: "text-md font-medium",
-                                    children: "Receive rMGP"
-                                  }, undefined, false, undefined, this),
                                   /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                    className: "text-sm text-gray-400",
+                                    className: "flex items-center mt-2",
                                     children: [
-                                      "Balance: ",
-                                      rmgpBalance !== undefined ? formatEther2(rmgpBalance, decimals.RMGP) : "Loading...",
-                                      " rMGP"
+                                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
+                                        id: "approve-infinity",
+                                        type: "checkbox",
+                                        className: "mr-2",
+                                        checked: approveInfinity,
+                                        onChange: () => setApproveInfinity((v) => !v)
+                                      }, undefined, false, undefined, this),
+                                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("label", {
+                                        htmlFor: "approve-infinity",
+                                        className: "text-sm text-gray-300 select-none cursor-pointer",
+                                        children: "Approve Infinity"
+                                      }, undefined, false, undefined, this)
                                     ]
-                                  }, undefined, true, undefined, this)
+                                  }, undefined, true, undefined, this),
+                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
+                                    type: "submit",
+                                    className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2",
+                                    onClick: () => approve(),
+                                    children: "Approve MGP"
+                                  }, undefined, false, undefined, this)
+                                ]
+                              }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
+                                type: "submit",
+                                className: "py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
+                                onClick: depositMGP,
+                                children: [
+                                  "Mint (",
+                                  formatEther2(sendAmount) / mgpRMGPRate,
+                                  " rMGP)"
                                 ]
                               }, undefined, true, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                className: "bg-gray-900 rounded-lg p-4 flex items-center justify-between",
+                              mgpAllowanceCurve === undefined ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+                                children: "Loading..."
+                              }, undefined, false, undefined, this) : mgpAllowanceCurve < sendAmount ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                                 children: [
-                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
-                                    type: "text",
-                                    placeholder: "0.0",
-                                    className: "bg-transparent outline-none text-xl w-3/4",
-                                    value: formatEther2(sendAmount) / mgpRMGPRate,
-                                    readOnly: true
-                                  }, undefined, false, undefined, this),
                                   /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                                     className: "flex items-center",
-                                    children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                      className: "bg-green-600 rounded-md px-3 py-1 flex items-center",
-                                      children: [
-                                        /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                          className: "w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2",
-                                          children: "R"
-                                        }, undefined, false, undefined, this),
-                                        /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
-                                          children: "rMGP"
-                                        }, undefined, false, undefined, this)
-                                      ]
-                                    }, undefined, true, undefined, this)
+                                    children: [
+                                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
+                                        id: "approve-infinity",
+                                        type: "checkbox",
+                                        className: "mr-2",
+                                        checked: approveInfinity,
+                                        onChange: () => setApproveInfinity((v) => !v)
+                                      }, undefined, false, undefined, this),
+                                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("label", {
+                                        htmlFor: "approve-infinity",
+                                        className: "text-sm text-gray-300 select-none cursor-pointer",
+                                        children: "Approve Infinity"
+                                      }, undefined, false, undefined, this)
+                                    ]
+                                  }, undefined, true, undefined, this),
+                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
+                                    type: "submit",
+                                    className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2",
+                                    onClick: () => approve(true),
+                                    children: "Approve MGP on Curve"
                                   }, undefined, false, undefined, this)
+                                ]
+                              }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+                                className: "relative",
+                                children: [
+                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
+                                    type: "submit",
+                                    className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
+                                    onClick: buyRMGP,
+                                    children: [
+                                      "Buy on Curve (",
+                                      formatEther2(mgpRmgpCurveAmount ?? 0n),
+                                      " rMGP)"
+                                    ]
+                                  }, undefined, true, undefined, this),
+                                  mgpRmgpCurveAmount !== undefined && (() => {
+                                    const directRate = formatEther2(sendAmount) / mgpRMGPRate;
+                                    const curveRate = formatEther2(mgpRmgpCurveAmount);
+                                    const premiumDiscount = (curveRate - directRate) / directRate * 100;
+                                    const isPremium = premiumDiscount > 0;
+                                    const isSignificant = Math.abs(premiumDiscount) >= 0.01;
+                                    return isSignificant ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+                                      className: `absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
+                                      children: [
+                                        isPremium ? "+" : "",
+                                        premiumDiscount.toFixed(2),
+                                        "%"
+                                      ]
+                                    }, undefined, true, undefined, this) : null;
+                                  })()
                                 ]
                               }, undefined, true, undefined, this)
                             ]
                           }, undefined, true, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                            className: "mb-4 text-sm text-gray-400",
+                            className: "mt-4 text-sm text-gray-400",
                             children: [
                               /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                                 className: "flex justify-between mb-1",
@@ -32785,101 +32718,6 @@ var App = () => {
                                   }, undefined, true, undefined, this)
                                 ]
                               }, undefined, true, undefined, this)
-                            ]
-                          }, undefined, true, undefined, this),
-                          mgpAllowance === undefined ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
-                            children: "Loading..."
-                          }, undefined, false, undefined, this) : mgpAllowance < sendAmount ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV(jsx_dev_runtime.Fragment, {
-                            children: [
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                className: "flex items-center mt-2",
-                                children: [
-                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
-                                    id: "approve-infinity",
-                                    type: "checkbox",
-                                    className: "mr-2",
-                                    checked: approveInfinity,
-                                    onChange: () => setApproveInfinity((v) => !v)
-                                  }, undefined, false, undefined, this),
-                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("label", {
-                                    htmlFor: "approve-infinity",
-                                    className: "text-sm text-gray-300 select-none cursor-pointer",
-                                    children: "Approve Infinity"
-                                  }, undefined, false, undefined, this)
-                                ]
-                              }, undefined, true, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
-                                type: "submit",
-                                className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2",
-                                onClick: () => approve(),
-                                children: "Approve MGP"
-                              }, undefined, false, undefined, this)
-                            ]
-                          }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
-                            type: "submit",
-                            className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
-                            onClick: depositMGP,
-                            children: "Mint rMGP"
-                          }, undefined, false, undefined, this),
-                          mgpAllowanceCurve === undefined ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
-                            children: "Loading..."
-                          }, undefined, false, undefined, this) : mgpAllowanceCurve < sendAmount ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV(jsx_dev_runtime.Fragment, {
-                            children: [
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                className: "flex items-center mt-4",
-                                children: [
-                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
-                                    id: "approve-infinity",
-                                    type: "checkbox",
-                                    className: "mr-2",
-                                    checked: approveInfinity,
-                                    onChange: () => setApproveInfinity((v) => !v)
-                                  }, undefined, false, undefined, this),
-                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("label", {
-                                    htmlFor: "approve-infinity",
-                                    className: "text-sm text-gray-300 select-none cursor-pointer",
-                                    children: "Approve Infinity"
-                                  }, undefined, false, undefined, this)
-                                ]
-                              }, undefined, true, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
-                                type: "submit",
-                                className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2",
-                                onClick: () => approve(true),
-                                children: "Approve MGP on Curve"
-                              }, undefined, false, undefined, this)
-                            ]
-                          }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                            className: "relative",
-                            children: [
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
-                                type: "submit",
-                                className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4",
-                                onClick: buyRMGP,
-                                children: [
-                                  "Get rMGP on Curve (",
-                                  formatEther2(mgpRmgpCurveAmount ?? 0n),
-                                  " rMGP)"
-                                ]
-                              }, undefined, true, undefined, this),
-                              mgpRmgpCurveAmount !== undefined && /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                className: "absolute top-2 right-0",
-                                children: (() => {
-                                  const directRate = formatEther2(sendAmount) / mgpRMGPRate;
-                                  const curveRate = formatEther2(mgpRmgpCurveAmount);
-                                  const premiumDiscount = (curveRate - directRate) / directRate * 100;
-                                  const isPremium = premiumDiscount > 0;
-                                  const isSignificant = Math.abs(premiumDiscount) >= 0.01;
-                                  return isSignificant ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
-                                    className: `text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
-                                    children: [
-                                      isPremium ? "+" : "",
-                                      premiumDiscount.toFixed(2),
-                                      "%"
-                                    ]
-                                  }, undefined, true, undefined, this) : null;
-                                })()
-                              }, undefined, false, undefined, this)
                             ]
                           }, undefined, true, undefined, this)
                         ]
@@ -33000,69 +32838,16 @@ var App = () => {
                             ]
                           }, undefined, true, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                            className: "text-center my-2",
-                            children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                              className: "inline-block p-1 bg-gray-700 rounded-full",
-                              children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV(ArrowDown, {
-                                size: 20,
-                                className: "text-gray-400"
-                              }, undefined, false, undefined, this)
-                            }, undefined, false, undefined, this)
-                          }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                             className: "grid grid-cols-1 gap-2 mb-4",
                             children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+                              className: "grid grid-cols-2 gap-2",
                               children: [
-                                /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                  className: "flex justify-between items-center mb-1",
-                                  children: [
-                                    /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h3", {
-                                      className: "text-md font-medium",
-                                      children: "Receive yMGP"
-                                    }, undefined, false, undefined, this),
-                                    /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                      className: "text-sm text-gray-400",
-                                      children: [
-                                        "Balance: ",
-                                        ymgpBalance !== undefined ? formatEther2(ymgpBalance, decimals.YMGP) : "Loading...",
-                                        " yMGP"
-                                      ]
-                                    }, undefined, true, undefined, this)
-                                  ]
-                                }, undefined, true, undefined, this),
-                                /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                  className: "bg-gray-900 rounded-lg p-4 flex items-center justify-between mb-8",
-                                  children: [
-                                    /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
-                                      type: "text",
-                                      placeholder: "0.0",
-                                      className: "bg-transparent outline-none text-xl w-3/4",
-                                      value: formatEther2(sendAmount),
-                                      readOnly: true
-                                    }, undefined, false, undefined, this),
-                                    /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                      className: "flex items-center",
-                                      children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                        className: "bg-green-600 rounded-md px-3 py-1 flex items-center",
-                                        children: [
-                                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                            className: "w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2",
-                                            children: "Y"
-                                          }, undefined, false, undefined, this),
-                                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
-                                            children: "yMGP"
-                                          }, undefined, false, undefined, this)
-                                        ]
-                                      }, undefined, true, undefined, this)
-                                    }, undefined, false, undefined, this)
-                                  ]
-                                }, undefined, true, undefined, this),
                                 rmgpAllowance === undefined ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
                                   children: "Loading..."
-                                }, undefined, false, undefined, this) : rmgpAllowance < sendAmount ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV(jsx_dev_runtime.Fragment, {
+                                }, undefined, false, undefined, this) : rmgpAllowance < sendAmount ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                                   children: [
                                     /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                      className: "flex items-center mt-2",
+                                      className: "flex items-center",
                                       children: [
                                         /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
                                           id: "approve-infinity",
@@ -33089,14 +32874,18 @@ var App = () => {
                                   type: "submit",
                                   className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
                                   onClick: depositRMGP,
-                                  children: "Mint yMGP"
-                                }, undefined, false, undefined, this),
+                                  children: [
+                                    "Mint (",
+                                    formatEther2(sendAmount),
+                                    " yMGP)"
+                                  ]
+                                }, undefined, true, undefined, this),
                                 rmgpAllowanceCurve === undefined ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
                                   children: "Loading..."
-                                }, undefined, false, undefined, this) : rmgpAllowanceCurve < sendAmount ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV(jsx_dev_runtime.Fragment, {
+                                }, undefined, false, undefined, this) : rmgpAllowanceCurve < sendAmount ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                                   children: [
                                     /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                      className: "flex items-center mt-4",
+                                      className: "flex items-center",
                                       children: [
                                         /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
                                           id: "approve-infinity",
@@ -33114,7 +32903,7 @@ var App = () => {
                                     }, undefined, true, undefined, this),
                                     /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
                                       type: "submit",
-                                      className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2",
+                                      className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
                                       onClick: () => approve(true),
                                       children: "Approve yMGP on Curve"
                                     }, undefined, false, undefined, this)
@@ -33124,32 +32913,29 @@ var App = () => {
                                   children: [
                                     /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
                                       type: "submit",
-                                      className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4",
+                                      className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
                                       onClick: buyYMGP,
                                       children: [
-                                        "Get yMGP on Curve (",
+                                        "Buy on Curve (",
                                         formatEther2(rmgpYmgpCurveAmount ?? 0n),
                                         " yMGP)"
                                       ]
                                     }, undefined, true, undefined, this),
-                                    rmgpYmgpCurveAmount !== undefined && /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                      className: "absolute top-2 right-0",
-                                      children: (() => {
-                                        const directRate = formatEther2(sendAmount);
-                                        const curveRate = formatEther2(rmgpYmgpCurveAmount);
-                                        const premiumDiscount = (curveRate - directRate) / directRate * 100;
-                                        const isPremium = premiumDiscount > 0;
-                                        const isSignificant = Math.abs(premiumDiscount) >= 0.01;
-                                        return isSignificant ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
-                                          className: `text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
-                                          children: [
-                                            isPremium ? "+" : "",
-                                            premiumDiscount.toFixed(2),
-                                            "%"
-                                          ]
-                                        }, undefined, true, undefined, this) : null;
-                                      })()
-                                    }, undefined, false, undefined, this)
+                                    rmgpYmgpCurveAmount !== undefined && (() => {
+                                      const directRate = formatEther2(sendAmount);
+                                      const curveRate = formatEther2(rmgpYmgpCurveAmount);
+                                      const premiumDiscount = (curveRate - directRate) / directRate * 100;
+                                      const isPremium = premiumDiscount > 0;
+                                      const isSignificant = Math.abs(premiumDiscount) >= 0.01;
+                                      return isSignificant ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+                                        className: `absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
+                                        children: [
+                                          isPremium ? "+" : "",
+                                          premiumDiscount.toFixed(2),
+                                          "%"
+                                        ]
+                                      }, undefined, true, undefined, this) : null;
+                                    })()
                                   ]
                                 }, undefined, true, undefined, this)
                               ]
@@ -33273,146 +33059,90 @@ var App = () => {
                             ]
                           }, undefined, true, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                            className: "text-center my-2",
-                            children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                              className: "inline-block p-1 bg-gray-700 rounded-full",
-                              children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV(ArrowDown, {
-                                size: 20,
-                                className: "text-gray-400"
-                              }, undefined, false, undefined, this)
-                            }, undefined, false, undefined, this)
-                          }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                            className: "mb-4",
+                            className: "grid grid-cols-2 gap-2",
                             children: [
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                className: "flex justify-between items-center mb-1",
+                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
+                                type: "submit",
+                                className: "py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
+                                onClick: redeemRMGP,
                                 children: [
-                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h3", {
-                                    className: "text-md font-medium",
-                                    children: "Receive MGP"
-                                  }, undefined, false, undefined, this),
-                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                    className: "text-sm text-gray-400",
-                                    children: [
-                                      "Balance: ",
-                                      mgpBalance !== undefined ? formatEther2(mgpBalance, decimals.MGP) : "Loading...",
-                                      " MGP"
-                                    ]
-                                  }, undefined, true, undefined, this)
+                                  "Redeem via Queue (",
+                                  mgpRMGPRate * formatEther2(sendAmount) * 0.9,
+                                  " MGP)"
                                 ]
                               }, undefined, true, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                className: "bg-gray-900 rounded-lg p-4 flex items-center justify-between",
+                              rmgpAllowanceCurve === undefined ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+                                children: "Loading..."
+                              }, undefined, false, undefined, this) : rmgpAllowanceCurve < sendAmount ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                                 children: [
-                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
-                                    type: "text",
-                                    placeholder: "0.0",
-                                    className: "bg-transparent outline-none text-xl w-3/4",
-                                    value: mgpRMGPRate * formatEther2(sendAmount) * 0.9,
-                                    readOnly: true
-                                  }, undefined, false, undefined, this),
                                   /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                                     className: "flex items-center",
-                                    children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                      className: "bg-blue-600 rounded-md px-3 py-1 flex items-center",
-                                      children: [
-                                        /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                          className: "w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mr-2",
-                                          children: "M"
-                                        }, undefined, false, undefined, this),
-                                        /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
-                                          children: "MGP"
-                                        }, undefined, false, undefined, this)
-                                      ]
-                                    }, undefined, true, undefined, this)
+                                    children: [
+                                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
+                                        id: "approve-infinity",
+                                        type: "checkbox",
+                                        className: "mr-2",
+                                        checked: approveInfinity,
+                                        onChange: () => setApproveInfinity((v) => !v)
+                                      }, undefined, false, undefined, this),
+                                      /* @__PURE__ */ jsx_dev_runtime.jsxDEV("label", {
+                                        htmlFor: "approve-infinity",
+                                        className: "text-sm text-gray-300 select-none cursor-pointer",
+                                        children: "Approve Infinity"
+                                      }, undefined, false, undefined, this)
+                                    ]
+                                  }, undefined, true, undefined, this),
+                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
+                                    type: "submit",
+                                    className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2",
+                                    onClick: () => approve(true),
+                                    children: "Approve rMGP on Curve"
                                   }, undefined, false, undefined, this)
+                                ]
+                              }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+                                className: "relative",
+                                children: [
+                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
+                                    type: "submit",
+                                    className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
+                                    onClick: buyMGP,
+                                    children: [
+                                      "Redeem Instantly on Curve (",
+                                      formatEther2(rmgpMgpCurveAmount ?? 0n),
+                                      " MGP)"
+                                    ]
+                                  }, undefined, true, undefined, this),
+                                  rmgpMgpCurveAmount !== undefined && (() => {
+                                    const directRate = mgpRMGPRate * formatEther2(sendAmount) * 0.9;
+                                    const curveRate = formatEther2(rmgpMgpCurveAmount);
+                                    const premiumDiscount = (curveRate - directRate) / directRate * 100;
+                                    const isPremium = premiumDiscount > 0;
+                                    const isSignificant = Math.abs(premiumDiscount) >= 0.01;
+                                    return isSignificant ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+                                      className: `absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
+                                      children: [
+                                        isPremium ? "+" : "",
+                                        premiumDiscount.toFixed(2),
+                                        "%"
+                                      ]
+                                    }, undefined, true, undefined, this) : null;
+                                  })()
                                 ]
                               }, undefined, true, undefined, this)
                             ]
                           }, undefined, true, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                            className: "mb-4 text-sm text-gray-400",
-                            children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                              className: "flex justify-between mb-1",
-                              children: [
-                                /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
-                                  children: "Redemption Rate"
-                                }, undefined, false, undefined, this),
-                                /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
-                                  children: [
-                                    mgpRMGPRate * 0.9,
-                                    " MGP to rMGP"
-                                  ]
-                                }, undefined, true, undefined, this)
-                              ]
-                            }, undefined, true, undefined, this)
-                          }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
-                            type: "submit",
-                            className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}",
-                            onClick: redeemRMGP,
-                            children: "Redeem rMGP"
-                          }, undefined, false, undefined, this),
-                          rmgpAllowanceCurve === undefined ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
-                            children: "Loading..."
-                          }, undefined, false, undefined, this) : rmgpAllowanceCurve < sendAmount ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV(jsx_dev_runtime.Fragment, {
+                            className: "mt-4 text-sm text-gray-400 flex justify-between",
                             children: [
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                className: "flex items-center mt-4",
+                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
+                                children: "Native Redemption Rate"
+                              }, undefined, false, undefined, this),
+                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
                                 children: [
-                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("input", {
-                                    id: "approve-infinity",
-                                    type: "checkbox",
-                                    className: "mr-2",
-                                    checked: approveInfinity,
-                                    onChange: () => setApproveInfinity((v) => !v)
-                                  }, undefined, false, undefined, this),
-                                  /* @__PURE__ */ jsx_dev_runtime.jsxDEV("label", {
-                                    htmlFor: "approve-infinity",
-                                    className: "text-sm text-gray-300 select-none cursor-pointer",
-                                    children: "Approve Infinity"
-                                  }, undefined, false, undefined, this)
+                                  mgpRMGPRate * 0.9,
+                                  " MGP to rMGP"
                                 ]
-                              }, undefined, true, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
-                                type: "submit",
-                                className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-2",
-                                onClick: () => approve(true),
-                                children: "Approve rMGP on Curve"
-                              }, undefined, false, undefined, this)
-                            ]
-                          }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                            className: "relative",
-                            children: [
-                              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("button", {
-                                type: "submit",
-                                className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 mt-4",
-                                onClick: buyMGP,
-                                children: [
-                                  "Get MGP on Curve (",
-                                  formatEther2(rmgpMgpCurveAmount ?? 0n),
-                                  " MGP)"
-                                ]
-                              }, undefined, true, undefined, this),
-                              rmgpMgpCurveAmount !== undefined && /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
-                                className: "absolute top-2 right-0",
-                                children: (() => {
-                                  const directRate = mgpRMGPRate / formatEther2(sendAmount);
-                                  const curveRate = formatEther2(rmgpMgpCurveAmount);
-                                  const premiumDiscount = (curveRate - directRate) / directRate * 100;
-                                  const isPremium = premiumDiscount > 0;
-                                  const isSignificant = Math.abs(premiumDiscount) >= 0.01;
-                                  return isSignificant ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
-                                    className: `text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
-                                    children: [
-                                      isPremium ? "+" : "",
-                                      premiumDiscount.toFixed(2),
-                                      "%"
-                                    ]
-                                  }, undefined, true, undefined, this) : null;
-                                })()
-                              }, undefined, false, undefined, this)
+                              }, undefined, true, undefined, this)
                             ]
                           }, undefined, true, undefined, this),
                           userPendingWithdraws === undefined ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
@@ -33509,7 +33239,7 @@ var App = () => {
                                 }, undefined, false, undefined, this),
                                 /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
                                   className: "text-gray-300 mt-1",
-                                  children: "rMGP can be redeemed for the underlying MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate."
+                                  children: "rMGP can be redeemed for the underlying MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate via Curve."
                                 }, undefined, false, undefined, this),
                                 /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
                                   className: "text-gray-300 mt-1",
@@ -33689,7 +33419,7 @@ var App = () => {
                                     className: "text-sm text-gray-400",
                                     children: [
                                       "Balance: ",
-                                      rmgpBalance !== undefined ? formatEther2(ymgpBalance, decimals.YMGP) : "Loading...",
+                                      ymgpBalance !== undefined ? formatEther2(ymgpBalance, decimals.YMGP) : "Loading...",
                                       " yMGP"
                                     ]
                                   }, undefined, true, undefined, this)
@@ -34104,8 +33834,8 @@ var App = () => {
                               /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
                                 className: "font-small text-xs",
                                 children: [
-                                  "$",
-                                  formatNumber(prices[symbol] * Number(formatEther2(pendingRewards[symbol].rewards, decimals[symbol])), 6)
+                                  formatNumber(prices[symbol] * Number(formatEther2(pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 6),
+                                  " MGP"
                                 ]
                               }, undefined, true, undefined, this)
                             ]
@@ -34168,7 +33898,7 @@ var App = () => {
                         className: "w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors",
                         onClick: compoundRMGP,
                         children: [
-                          "Compound RMGP Yield (Get ~",
+                          "Compound Yield (Get ~",
                           formatNumber(0.01 * uncompoundedMGPYield * (1 / mgpRMGPRate), 6),
                           " rMGP)"
                         ]
@@ -34209,12 +33939,128 @@ var App = () => {
                         type: "button",
                         className: "w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors",
                         onClick: claimYMGPRewards,
-                        children: "Claim YMGP Rewards"
+                        children: "Claim Rewards"
                       }, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+            className: "bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6 flex flex-col items-center",
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h2", {
+                className: "text-2xl font-bold mb-4",
+                children: "Conversion Rates"
+              }, undefined, false, undefined, this),
+              mgpRMGPCurveRate !== undefined && (mgpRMGPCurveRate > mgpRMGPRate || mgpRMGPCurveRate < mgpRMGPRate * 0.9) ? /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+                className: "text-lg text-red-500",
+                children: "rMGP can be arbitraged"
+              }, undefined, false, undefined, this) : "",
+              /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+                className: "bg-gray-700/50 rounded-lg p-4",
+                children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("table", {
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime.jsxDEV("thead", {
+                      children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("tr", {
+                        children: [
+                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("th", {
+                            children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h3", {
+                              className: "text-lg font-bold mb-2",
+                              children: "Token"
+                            }, undefined, false, undefined, this)
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("th", {
+                            children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h3", {
+                              className: "text-lg font-bold mb-2",
+                              children: "Mint"
+                            }, undefined, false, undefined, this)
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("th", {
+                            children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h3", {
+                              className: "text-lg font-bold mb-2",
+                              children: "Market"
+                            }, undefined, false, undefined, this)
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime.jsxDEV("th", {
+                            children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("h3", {
+                              className: "text-lg font-bold mb-2",
+                              children: "Burn"
+                            }, undefined, false, undefined, this)
+                          }, undefined, false, undefined, this)
+                        ]
+                      }, undefined, true, undefined, this)
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime.jsxDEV("tbody", {
+                      children: [
+                        /* @__PURE__ */ jsx_dev_runtime.jsxDEV("tr", {
+                          children: [
+                            /* @__PURE__ */ jsx_dev_runtime.jsxDEV("td", {
+                              children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+                                className: "mx-4 my-1 text-sm font-bold",
+                                children: "rMGP"
+                              }, undefined, false, undefined, this)
+                            }, undefined, false, undefined, this),
+                            /* @__PURE__ */ jsx_dev_runtime.jsxDEV("td", {
+                              children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+                                className: "mx-4 my-1 text-sm",
+                                children: [
+                                  formatNumber(mgpRMGPRate, 4),
+                                  " MGP"
+                                ]
+                              }, undefined, true, undefined, this)
+                            }, undefined, false, undefined, this),
+                            /* @__PURE__ */ jsx_dev_runtime.jsxDEV("td", {
+                              children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+                                className: "mx-4 my-1 text-sm",
+                                children: [
+                                  formatNumber(mgpRMGPCurveRate ?? 0, 4),
+                                  " MGP"
+                                ]
+                              }, undefined, true, undefined, this)
+                            }, undefined, false, undefined, this),
+                            /* @__PURE__ */ jsx_dev_runtime.jsxDEV("td", {
+                              children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+                                className: "mx-4 my-1 text-sm",
+                                children: [
+                                  formatNumber(mgpRMGPRate * 0.9, 4),
+                                  " MGP"
+                                ]
+                              }, undefined, true, undefined, this)
+                            }, undefined, false, undefined, this)
+                          ]
+                        }, undefined, true, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime.jsxDEV("tr", {
+                          children: [
+                            /* @__PURE__ */ jsx_dev_runtime.jsxDEV("td", {
+                              children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+                                className: "mx-4 my-1 text-sm font-bold",
+                                children: "yMGP"
+                              }, undefined, false, undefined, this)
+                            }, undefined, false, undefined, this),
+                            /* @__PURE__ */ jsx_dev_runtime.jsxDEV("td", {
+                              children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+                                className: "mx-4 my-1 text-sm",
+                                children: "1 rMGP"
+                              }, undefined, false, undefined, this)
+                            }, undefined, false, undefined, this),
+                            /* @__PURE__ */ jsx_dev_runtime.jsxDEV("td", {
+                              children: /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
+                                className: "mx-4 my-1 text-sm",
+                                children: [
+                                  formatNumber(rmgpYMGPCurveRate ?? 0, 4),
+                                  " rMGP"
+                                ]
+                              }, undefined, true, undefined, this)
+                            }, undefined, false, undefined, this)
+                          ]
+                        }, undefined, true, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this)
+                  ]
+                }, undefined, true, undefined, this)
+              }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
@@ -34226,7 +34072,7 @@ var App = () => {
               }, undefined, false, undefined, this),
               /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                 className: "grid grid-cols-2 md:grid-cols-3 gap-2 text-xs",
-                children: Object.keys(contracts).map((contract) => /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
+                children: Object.keys(contracts[chain]).map((contract) => /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
                   children: [
                     /* @__PURE__ */ jsx_dev_runtime.jsxDEV("span", {
                       className: "font-semibold",
@@ -34236,9 +34082,9 @@ var App = () => {
                       ]
                     }, undefined, true, undefined, this),
                     /* @__PURE__ */ jsx_dev_runtime.jsxDEV("a", {
-                      href: `${publicClients[chain].chain.blockExplorers.default.url}/address/${contracts[contract].address}`,
+                      href: `${publicClients[chain].chain.blockExplorers.default.url}/address/${contracts[chain][contract].address}`,
                       className: "ml-2 break-all text-green-300",
-                      children: contracts[contract].address
+                      children: contracts[chain][contract].address
                     }, undefined, false, undefined, this)
                   ]
                 }, contract, true, undefined, this))
@@ -34255,6 +34101,6 @@ var App_default = App;
 // src/index.tsx
 var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
 var root = import_client.default.createRoot(document.getElementById("root"));
-root.render(/* @__PURE__ */ jsx_dev_runtime2.jsxDEV(import_react4.default.StrictMode, {
+root.render(/* @__PURE__ */ jsx_dev_runtime2.jsxDEV(import_react3.default.StrictMode, {
   children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));

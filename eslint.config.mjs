@@ -45,7 +45,8 @@ export default defineConfig([
       "no-console": "warn",
       "no-debugger": "error",
       "prefer-const": "error",
-      "no-var": "error"
+      "no-var": "error",
+      "no-alert": "error"
     }
   }
 ]);

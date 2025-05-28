@@ -41,7 +41,7 @@ export const RedeemPage = ({ rmgpBalance, sendAmount, rmgpAllowanceCurve, rmgpMG
       {userPendingWithdraws > 0n ? <>
         <h3 className="text-md font-medium mt-4">Pending Withdraws</h3>
         <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
-        {unlockSchedule?.[0] ? <p>Unlock available in: {formatTime(Number(unlockSchedule[0].endTime)-(+new Date()/1000))} to {formatTime(Number(unlockSchedule[unlockSchedule.length-1]?.endTime)+60*60*24*60 - (+new Date()/1000))}</p> : <p>N/A</p>}
+        {unlockSchedule?.[0] ? <p>Unlock available in: {formatTime(Number(unlockSchedule[0].endTime)-(Date.now()/1000))} to {formatTime(Number(unlockSchedule.at(-1)?.endTime)+60*60*24*60 - (Date.now()/1000))}</p> : <p>N/A</p>}
       </> : ''}
       {userWithdrawable > 0n ? <>
         <h3 className="text-md font-medium mt-4">Available To Withdraw</h3>

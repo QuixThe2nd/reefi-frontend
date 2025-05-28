@@ -3,10 +3,10 @@ import type { Pages } from "../App"
 import { Chains, contracts } from "../config/contracts"
 import { Allowances } from "./useAllowances"
 import { Balances } from "./useBalances"
-import { useContracts } from "./useContracts"
+import { Contracts } from "./useContracts"
 import { Supplies } from "./useSupplies"
 
-interface Props {
+interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   readonly page: Pages,
   readonly sendAmount: bigint,
   readonly setConnectRequired: (_state: boolean) => void
@@ -30,8 +30,8 @@ interface Props {
   readonly balances: Balances
   readonly supplies: Supplies
   readonly allowances: Allowances
-  readonly clients: Record<Chains, WalletClient & PublicActions> | undefined
-  readonly writeContracts: ReturnType<typeof useContracts>
+  readonly clients: Clients
+  readonly writeContracts: Contracts<Clients>
 }
 
 interface UseActions {
@@ -50,9 +50,9 @@ interface UseActions {
   supplyLiquidity: () => Promise<void>
 }
 
-export const useActions = ({ page, sendAmount, setConnectRequired, setError, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, updatePendingRewards, updateUnclaimedUserYield, updateTotalLockedMGP, updateReefiLockedMGP, updateTotalLockedYMGP, updateUserLockedYMGP, updateYMGPHoldings, clients, account, chain, balances, supplies, allowances, writeContracts }: Props): UseActions => {
+export const useActions = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ page, sendAmount, setConnectRequired, setError, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, updatePendingRewards, updateUnclaimedUserYield, updateTotalLockedMGP, updateReefiLockedMGP, updateTotalLockedYMGP, updateUserLockedYMGP, updateYMGPHoldings, clients, account, chain, balances, supplies, allowances, writeContracts }: Props<Clients>): UseActions => {
   const approve = async (infinity = false, curve = false): Promise<void> => {
-    if (!clients || !writeContracts || account === undefined) return setConnectRequired(true)
+    if (clients === undefined || !writeContracts || account === undefined) return setConnectRequired(true)
     if (page === 'deposit') {
       const amount = infinity ? 2n ** 256n - 1n : sendAmount;
       await writeContracts[chain].MGP.write.approve([curve ? contracts[chain].CMGP.address : contracts[chain].RMGP.address, amount], { account, chain: clients[chain].chain })

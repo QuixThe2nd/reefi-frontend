@@ -13,23 +13,27 @@ interface UseWallet {
   readonly connectWallet: () => void,
   readonly setChain: React.Dispatch<React.SetStateAction<Chains>>,
   readonly setConnectRequired: React.Dispatch<React.SetStateAction<boolean>>,
-  readonly ens: string | null
+  readonly ens: string | undefined
 }
 
 export const useWallet = ({ setError }: { readonly setError: (_msg: string) => void }): UseWallet => {
   const [clients, setClients] = useState<Record<Chains, WalletClient & PublicActions> | undefined>()
-  const [chain, setChain] = useState<Chains>(42161)
-  const [account, updateAccount] = useUpdateable(async () => clients ? (await clients[chain].requestAddresses())[0] : undefined, [clients])
+  const [chain, setChain] = useState<Chains>(42_161)
+  const [account, updateAccount] = useUpdateable(async () => {
+    if (!clients) return
+    const addresses = await clients[chain].requestAddresses()
+    return addresses[0]
+  }, [clients])
   const [isConnecting, setIsConnecting] = useState(false)
   const [connectRequired, setConnectRequired] = useState(false)
-  const [ens] = useUpdateable(async () => account !== undefined ? await publicClients[1].getEnsName({ address: account }) : null, [account], null)
+  const [ens] = useUpdateable(async () => account === undefined ? undefined : (await publicClients[1].getEnsName({ address: account }) ?? undefined), [account])
 
   const connectWallet = (): void => {
-    if (!window.ethereum) return setError('No wallet found. Please install MetaMask to use Reefi.')
+    if (window.ethereum === undefined) return setError('No wallet found. Please install MetaMask to use Reefi.')
     setIsConnecting(true);
     const clients = {
       56: createWalletClient({ chain: bsc, transport: custom(window.ethereum)}).extend(publicActions),
-      42161: createWalletClient({ chain: arbitrum, transport: custom(window.ethereum)}).extend(publicActions)
+      42_161: createWalletClient({ chain: arbitrum, transport: custom(window.ethereum)}).extend(publicActions)
     } as const
     setClients(clients)
     updateAccount()
@@ -39,7 +43,7 @@ export const useWallet = ({ setError }: { readonly setError: (_msg: string) => v
 
   useEffect(() => {
     if (window.ethereum) connectWallet();
-    const savedChain = window.localStorage.getItem('chain')
+    const savedChain = globalThis.localStorage.getItem('chain')
     if (savedChain !== null) setChain(Number(savedChain) as Chains)
   }, [])
 

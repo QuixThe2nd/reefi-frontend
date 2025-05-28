@@ -24,7 +24,7 @@ export const TokenCard = ({ symbol, decimals, description, features, price, supp
             <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2">{symbol[0]?.toUpperCase()}</div>
             <p className="font-bold text-lg">${symbol}</p>
           </div>
-          {price !== undefined ? <h2 className="text-2xl font-bold mt-2">${price.toFixed(5)}</h2> : ''}
+          {price === undefined ? '' : <h2 className="text-2xl font-bold mt-2">${price.toFixed(5)}</h2>}
         </div>
       </div>
       <div className="grid grid-cols-2 col-span-2 gap-2">
@@ -40,26 +40,26 @@ export const TokenCard = ({ symbol, decimals, description, features, price, supp
           <p className="text-gray-400 text-xs">Mint Rate</p>
           <p className="font-medium">{formatNumber(Number(underlying)/Number(supply), 6)} {underlyingSymbol}</p>
         </div> : ''}
-        {marketRate !== undefined ? <div className="bg-gray-700/50 rounded-lg p-2">
+        {marketRate === undefined ? '' : <div className="bg-gray-700/50 rounded-lg p-2">
           <p className="text-gray-400 text-xs">Market Rate</p>
           <p className="font-medium">{formatNumber(Number(marketRate), 5)} {underlyingSymbol}</p>
-        </div> : ''}
-        {locked !== undefined ? <div className="bg-gray-700/50 rounded-lg p-2">
+        </div>}
+        {locked === undefined ? '' : <div className="bg-gray-700/50 rounded-lg p-2">
           <p className="text-gray-400 text-xs">Locked</p>
           <p className="font-medium">{formatNumber(Math.round(formatEther(locked, decimals)))} {symbol}</p>
-        </div> : ''}
-        {locked !== undefined ? <div className="bg-gray-700/50 rounded-lg p-2">
+        </div>}
+        {locked === undefined ? '' : <div className="bg-gray-700/50 rounded-lg p-2">
           <p className="text-gray-400 text-xs">Lock Rate</p>
           <p className="font-medium">{Math.round(10_000*Number(locked)/Number(supply))/100}%</p>
-        </div> : ''}
-        {price !== undefined ? <div className="bg-gray-700/50 rounded-lg p-2">
+        </div>}
+        {price === undefined ? '' : <div className="bg-gray-700/50 rounded-lg p-2">
           <p className="text-gray-400 text-xs">FDV</p>
           <p className="font-medium">${formatNumber(price*formatEther(supply, decimals))}</p>
-        </div> : ''}
-        {voteMultiplier !== undefined ? <div className="bg-gray-700/50 rounded-lg p-2">
+        </div>}
+        {voteMultiplier === undefined ? '' : <div className="bg-gray-700/50 rounded-lg p-2">
           <p className="text-gray-400 text-xs">Vote Multiplier</p>
           <p className="font-medium">{formatNumber(voteMultiplier)}</p>
-        </div> : ''}
+        </div>}
       </div>
     </div>
     <p className="text-gray-400 text-xs mt-2">{description}</p>

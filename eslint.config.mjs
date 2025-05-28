@@ -3,6 +3,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import { defineConfig } from "eslint/config";
+import eslintPluginUnicorn from 'eslint-plugin-unicorn';
 
 export default defineConfig([
   { files: ["./src/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"] },
@@ -10,6 +11,7 @@ export default defineConfig([
   tseslint.configs.strict,
   tseslint.configs.stylistic,
   pluginReact.configs.flat.recommended,
+  eslintPluginUnicorn.configs.recommended,
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
@@ -33,6 +35,7 @@ export default defineConfig([
       "@typescript-eslint/strict-boolean-expressions": "error",
       "@typescript-eslint/no-invalid-void-type": "off",
       "@typescript-eslint/await-thenable": "error",
+      "@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",
       "@typescript-eslint/require-await": "error",
       "@typescript-eslint/no-misused-promises": [
         "error",
@@ -64,6 +67,10 @@ export default defineConfig([
       "prefer-const": "error",
       "no-var": "error",
       "no-alert": "error",
+      "no-implicit-coercion": "error",
+      "unicorn/filename-case": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/prefer-global-this": "off",
       "no-unused-vars": [
         "error",
         {

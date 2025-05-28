@@ -9,7 +9,7 @@ interface TokenApprovalProps {
   readonly className?: string
 }
 
-export const TokenApproval = ({ allowance, sendAmount, onApprove, tokenSymbol, curve = false, className = "w-full" }: TokenApprovalProps): ReactElement | null => {
+export const TokenApproval = ({ allowance, sendAmount, onApprove, tokenSymbol, curve = false, className = "w-full" }: TokenApprovalProps): ReactElement | undefined => {
   const [approveInfinity, setApproveInfinity] = useState(false)
   const [isApproving, setIsApproving] = useState(false)
 
@@ -18,7 +18,7 @@ export const TokenApproval = ({ allowance, sendAmount, onApprove, tokenSymbol, c
     onApprove(approveInfinity, curve).then(() => setIsApproving(false)).catch(() => setIsApproving(false))
   }
 
-  if (allowance >= sendAmount) return null
+  if (allowance >= sendAmount) return
 
   return (
     <div className={className}>

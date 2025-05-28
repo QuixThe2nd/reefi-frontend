@@ -17,12 +17,12 @@ export interface Allowances {
 }
 
 export const useAllowances = ({ account, chain }: { readonly account: `0x${string}` | undefined, readonly chain: Chains }): Allowances => {
-  const [mgp, updateMGP] = useUpdateable(() => account !== undefined ? contracts[chain].MGP.read.allowance([account, contracts[chain].RMGP.address]) : 0n, [contracts, chain, account], 0n)
-  const [rmgp, updateRMGP] = useUpdateable(() => account !== undefined ? contracts[chain].RMGP.read.allowance([account, contracts[chain].YMGP.address]) : 0n, [contracts, chain, account], 0n)
-  // const [ymgp, updateYMGP] = useUpdateable(() => account !== undefined ? contracts[chain].YMGP.read.allowance([account, contracts[chain].VMGP.address]) : 0n, [contracts, chain, account], 0n)
-  const [mgpCurve, updateMGPCurve] = useUpdateable(() => account !== undefined ? contracts[chain].MGP.read.allowance([account, contracts[chain].CMGP.address]) : 0n, [contracts, chain, account], 0n)
-  const [rmgpCurve, updateRMGPCurve] = useUpdateable(() => account !== undefined ? contracts[chain].RMGP.read.allowance([account, contracts[chain].CMGP.address]) : 0n, [contracts, chain, account], 0n)
-  const [ymgpCurve, updateYMGPCurve] = useUpdateable(() => account !== undefined ? contracts[chain].YMGP.read.allowance([account, contracts[chain].CMGP.address]) : 0n, [contracts, account], 0n)
+  const [mgp, updateMGP] = useUpdateable(() => account === undefined ? 0n : contracts[chain].MGP.read.allowance([account, contracts[chain].RMGP.address]), [contracts, chain, account], 0n)
+  const [rmgp, updateRMGP] = useUpdateable(() => account === undefined ? 0n : contracts[chain].RMGP.read.allowance([account, contracts[chain].YMGP.address]), [contracts, chain, account], 0n)
+  // const [ymgp, updateYMGP] = useUpdateable(() => account === undefined ? 0n : contracts[chain].YMGP.read.allowance([account, contracts[chain].VMGP.address]), [contracts, chain, account], 0n)
+  const [mgpCurve, updateMGPCurve] = useUpdateable(() => account === undefined ? 0n : contracts[chain].MGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account], 0n)
+  const [rmgpCurve, updateRMGPCurve] = useUpdateable(() => account === undefined ? 0n : contracts[chain].RMGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account], 0n)
+  const [ymgpCurve, updateYMGPCurve] = useUpdateable(() => account === undefined ? 0n : contracts[chain].YMGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, account], 0n)
 
   return { mgp, rmgp, mgpCurve, rmgpCurve, ymgpCurve, updateMGP, updateRMGP, updateMGPCurve, updateRMGPCurve, updateYMGPCurve }
 }

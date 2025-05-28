@@ -24,16 +24,16 @@ export const Header = ({ account, ens, chain, decimals, mgpBalance, rmgpBalance,
         <h1 className="text-xl font-bold">REEFI</h1>
         <p>Refinance Magpie Yield and Governance</p>
       </div>
-      {account !== undefined ? <div className="flex items-center space-x-4">
+      {account === undefined ? <button type="button" className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors" onClick={connectWallet} disabled={isConnecting}>{isConnecting ? 'Connecting...' : 'Connect Wallet'}</button> : <div className="flex items-center space-x-4">
         <TokenBalances decimals={decimals} mgpBalance={mgpBalance} rmgpBalance={rmgpBalance} ymgpBalance={ymgpBalance} cmgpBalance={cmgpBalance} userLockedYMGP={userLockedYMGP} />
         <div className="bg-green-600/20 text-green-400 rounded-lg px-3 py-2 text-sm">{ens ?? `${account.slice(0, 6)}...${account.slice(-4)}`}</div>
         <select className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white" value={chain} onChange={e => {
-          setChain(Number(e.target.value) as 56 | 42161)
-          window.localStorage.setItem('chain', String(e.target.value))
+          setChain(Number(e.target.value) as 56 | 42_161)
+          globalThis.localStorage.setItem('chain', String(e.target.value))
         }}>
           <option value="56">BNB Chain</option>
           <option value="42161">Arbitrum</option>
         </select>
-      </div> : <button type="button" className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors" onClick={connectWallet} disabled={isConnecting}>{isConnecting ? 'Connecting...' : 'Connect Wallet'}</button>}
+      </div>}
     </div>
 }

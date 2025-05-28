@@ -13,9 +13,9 @@ export interface Supplies {
 }
 
 export const useSupplies = ({ chain }: { readonly chain: Chains }): Supplies => {
-  const [mgp, updateMGP] = useUpdateable(() => contracts[56].MGP.read.totalSupply(), [contracts], 0n)
-  const [rmgp, updateRMGP] = useUpdateable(() => contracts[chain].RMGP.read.totalSupply(), [contracts, chain], 0n)
-  const [ymgp, updateYMGP] = useUpdateable(() => contracts[chain].YMGP.read.totalSupply(), [contracts, chain], 0n)
+  const [mgp, updateMGP] = useUpdateable(() => contracts[56].MGP.read.totalSupply(), [contracts], 'mgp supply', 0n)
+  const [rmgp, updateRMGP] = useUpdateable(() => contracts[chain].RMGP.read.totalSupply(), [contracts, chain], 'rmgp supply', 0n)
+  const [ymgp, updateYMGP] = useUpdateable(() => contracts[chain].YMGP.read.totalSupply(), [contracts, chain], 'ymgp supply', 0n)
   // const [vmgp, updateVMGP] = useUpdateable(() => contracts[chain].VMGP.read.totalSupply(), [contracts, chain], 0n)
 
   return { mgp, rmgp, ymgp, updateMGP, updateRMGP, updateYMGP }

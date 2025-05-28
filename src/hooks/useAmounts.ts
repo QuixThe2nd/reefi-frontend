@@ -22,9 +22,9 @@ export const useAmounts = ({ chain, account }: { readonly chain: Chains, readonl
   const [mgpLPAmount, setMGPLPAmount] = useState(0n)
   const [rmgpLPAmount, setRMGPLPAmount] = useState(0n)
   const [ymgpLPAmount, setYMGPLPAmount] = useState(0n)
-  const [mgpRmgpCurveAmount] = useUpdateable(() => sendAmount === 0n ? 0n : contracts[chain].CMGP.read.get_dy([0n, 1n, sendAmount], { account }), [contracts, chain, sendAmount], 0n)
-  const [rmgpMgpCurveAmount] = useUpdateable(() => sendAmount === 0n ? 0n : contracts[chain].CMGP.read.get_dy([1n, 0n, sendAmount], { account }), [contracts, chain, sendAmount], 0n)
-  const [rmgpYmgpCurveAmount] = useUpdateable(() => sendAmount === 0n ? 0n : contracts[chain].CMGP.read.get_dy([1n, 2n, sendAmount], { account }), [contracts, chain, sendAmount], 0n)
+  const [mgpRmgpCurveAmount] = useUpdateable(() => sendAmount === 0n ? 0n : contracts[chain].CMGP.read.get_dy([0n, 1n, sendAmount], { account }), [contracts, chain, sendAmount], 'mgpRmgpCurveAmount', 0n)
+  const [rmgpMgpCurveAmount] = useUpdateable(() => sendAmount === 0n ? 0n : contracts[chain].CMGP.read.get_dy([1n, 0n, sendAmount], { account }), [contracts, chain, sendAmount], 'rmgpMgpCurveAmount', 0n)
+  const [rmgpYmgpCurveAmount] = useUpdateable(() => sendAmount === 0n ? 0n : contracts[chain].CMGP.read.get_dy([1n, 2n, sendAmount], { account }), [contracts, chain, sendAmount], 'rmgpYmgpCurveAmount', 0n)
 
   return { sendAmount, setSendAmount, mgpRmgpCurveAmount, rmgpMgpCurveAmount, rmgpYmgpCurveAmount, mgpLPAmount, setMGPLPAmount, rmgpLPAmount, setRMGPLPAmount, ymgpLPAmount, setYMGPLPAmount }
 }

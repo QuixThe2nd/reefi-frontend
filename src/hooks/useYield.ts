@@ -27,7 +27,7 @@ interface Yield {
 export const useYield = ({ chain, account, prices, balances }: Props): Yield => {
   const [mgpAPR, setMGPAPR] = useState(0)
   const [pendingRewards, setPendingRewards] = useState<Record<Coins, { address: `0x${string}`, rewards: bigint }> | undefined>()
-  const [unclaimedUserYield, updateUnclaimedUserYield] = useUpdateable(() => contracts[chain].YMGP.read.unclaimedUserYield(), [contracts, chain], 0n)
+  const [unclaimedUserYield, updateUnclaimedUserYield] = useUpdateable(() => contracts[chain].YMGP.read.unclaimedUserYield(), [contracts, chain], 'unclaimedUserYield', 0n)
   const [cmgpPoolAPY, setCMGPPoolAPY] = useState(0)
   const cmgpAPY = useMemo(() => {
     const yieldBearingUnderlyingPercent = Number(balances.rmgpCurve+balances.ymgpCurve)/Number(balances.mgpCurve+balances.rmgpCurve+balances.ymgpCurve)
@@ -50,7 +50,7 @@ export const useYield = ({ chain, account, prices, balances }: Props): Yield => 
 
   const estimateCompoundRMGPGas = async (): Promise<bigint> => {
     const gasPrice = await publicClients[chain].getGasPrice()
-    const gas = await contracts[chain].RMGP.estimateGas.claim({ account })
+    const gas = account === undefined ? 0n : await contracts[chain].RMGP.estimateGas.claim({ account })
     return gas*gasPrice
   }
 

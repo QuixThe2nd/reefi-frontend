@@ -21,7 +21,8 @@ const onRPCRequest = async (request: Request): Promise<void> => {
             const contract = chain[contractName]
             if (contract.address === call.params[0].to) {
               const decodedData = decodeFunctionData({ abi: contract.abi, data: call.params[0].data })
-              console.log('Duplicate RPC Call', `${contractName}.${decodedData.functionName}(${decodedData.args ? decodedData.args.join(', ') : ''})`)
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-console
+              console.log('Duplicate RPC Call', `${contractName}.${decodedData.functionName}(${decodedData.args === undefined ? '' : decodedData.args.join(', ')})`)
             }
           }
         }
@@ -32,9 +33,9 @@ const onRPCRequest = async (request: Request): Promise<void> => {
 }
 
 export const publicClients = {
-  1: createPublicClient({ chain: mainnet, transport: http('https://eth.drpc.org', { batch: { wait: 1000, batchSize: 3 }, onFetchRequest: onRPCRequest }) }),
-  56: createPublicClient({ chain: bsc, transport: http('https://bsc.drpc.org', { batch: { wait: 1000, batchSize: 3 }, onFetchRequest: onRPCRequest }) }),
-  42_161: createPublicClient({ chain: arbitrum, transport: http('https://arbitrum.drpc.org', { batch: { wait: 1000, batchSize: 3 }, onFetchRequest: onRPCRequest }) })
+  1: createPublicClient({ chain: mainnet, transport: http('https://eth.drpc.org', { retryDelay: 250, batch: { wait: 1000, batchSize: 3 }, onFetchRequest: onRPCRequest }) }),
+  56: createPublicClient({ chain: bsc, transport: http('https://bsc-dataseed1.binance.org', { retryDelay: 250, batch: true, onFetchRequest: onRPCRequest }) }),
+  42_161: createPublicClient({ chain: arbitrum, transport: http('https://arb1.arbitrum.io/rpc', { retryDelay: 250, batch: true, onFetchRequest: onRPCRequest }) })
 }
 
 type Contracts = Record<Chains, {

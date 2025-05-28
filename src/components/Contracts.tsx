@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react'
-import { Chains } from '../App'
 import { PublicClient } from 'viem'
+import { Chains } from '../config/contracts'
 
 export const Contracts = ({ contracts, publicClients, chain }: { contracts: Record<Chains, Record<string, { address: string }>>, publicClients: Record<Chains, PublicClient>, chain: Chains }): ReactElement => {
   return <div className="bg-gray-800 p-4 rounded-xl border border-gray-700 mb-6">

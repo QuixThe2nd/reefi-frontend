@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react'
-import { Coins } from '../App'
 import { formatEther } from '../utils'
+import { Coins } from '../config/contracts'
 
 interface Props {
   decimals: Record<Coins, number>

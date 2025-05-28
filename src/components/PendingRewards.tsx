@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 import { formatNumber, formatEther, formatTime } from '../utils'
-import { Coins } from '../App'
+import { Coins } from '../config/contracts'
 
 interface Props {
   uncompoundedMGPYield: number

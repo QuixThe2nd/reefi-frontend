@@ -1,0 +1,12 @@
+import { useEffect, useState } from "react"
+import type { Coins } from "../config/contracts"
+
+export const usePrices = () => {
+  const [prices, setPrices] = useState<Record<Coins, number>>({ MGP: 0, RMGP: 0, YMGP: 0, VMGP: 0, CMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 })
+
+  useEffect(() => {
+    fetch('https://api.magpiexyz.io/getalltokenprice').then(res => res.json().then((body: { data: { AllPrice: typeof prices }}) => setPrices(body.data.AllPrice)))
+  }, [])
+
+  return prices
+}

@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react'
-import { Coins, Chains } from '../App'
 import { TokenBalances } from './TokenBalances'
+import { Chains, Coins } from '../config/contracts'
 
 interface Props {
   account: `0x${string}` | undefined

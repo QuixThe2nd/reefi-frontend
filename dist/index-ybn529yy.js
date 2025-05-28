@@ -24550,11 +24550,11 @@ var require_jsx_dev_runtime = __commonJS((exports, module) => {
 });
 
 // src/index.tsx
-var import_react5 = __toESM(require_react(), 1);
+var import_react12 = __toESM(require_react(), 1);
 var import_client = __toESM(require_client(), 1);
 
 // src/App.tsx
-var import_react4 = __toESM(require_react(), 1);
+var import_react11 = __toESM(require_react(), 1);
 
 // public/diagram.svg
 var diagram_default = "./diagram-q74967cy.svg";
@@ -31303,31 +31303,62 @@ var mainnet = /* @__PURE__ */ defineChain({
     }
   }
 });
+// src/config/contracts.ts
+var decimals = { MGP: 18, RMGP: 18, YMGP: 18, VMGP: 18, CMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 };
+var publicClients = {
+  1: createPublicClient({ chain: mainnet, transport: webSocket("wss://eth.drpc.org") }),
+  56: createPublicClient({ chain: bsc, transport: webSocket("wss://bsc.drpc.org") }),
+  42161: createPublicClient({ chain: arbitrum, transport: webSocket("wss://arbitrum.drpc.org") })
+};
+var ABIs = {
+  RMGP: [{ inputs: [{ internalType: "address", name: "_mgpToken", type: "address" }, { internalType: "address", name: "_ymgpToken", type: "address" }, { internalType: "address", name: "_masterMagpie", type: "address" }, { internalType: "address", name: "_vlMGP", type: "address" }, { internalType: "address", name: "_weth", type: "address" }], stateMutability: "nonpayable", type: "constructor" }, { inputs: [], name: "CannotUnlockZero", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "allowance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientAllowance", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }, { internalType: "uint256", name: "balance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientBalance", type: "error" }, { inputs: [{ internalType: "address", name: "approver", type: "address" }], name: "ERC20InvalidApprover", type: "error" }, { inputs: [{ internalType: "address", name: "receiver", type: "address" }], name: "ERC20InvalidReceiver", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }], name: "ERC20InvalidSender", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }], name: "ERC20InvalidSpender", type: "error" }, { inputs: [], name: "InsufficientBalance", type: "error" }, { inputs: [], name: "NoLockedTokens", type: "error" }, { inputs: [], name: "NoSlotsToUnlock", type: "error" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }], name: "OwnableInvalidOwner", type: "error" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "OwnableUnauthorizedAccount", type: "error" }, { inputs: [], name: "SwapRouterNotSet", type: "error" }, { inputs: [], name: "TransferFailed", type: "error" }, { inputs: [{ internalType: "string", name: "name", type: "string" }], name: "ZeroAddress", type: "error" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "owner", type: "address" }, { indexed: true, internalType: "address", name: "spender", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Approval", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "mgpAmount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "rmgpAmount", type: "uint256" }], name: "Deposited", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "mgpAmount", type: "uint256" }], name: "RewardsClaimed", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "from", type: "address" }, { indexed: true, internalType: "address", name: "to", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Transfer", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "rmgpAmount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "mgpAmount", type: "uint256" }], name: "UnlockStarted", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "slot", type: "uint256" }], name: "Unlocked", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Withdrawn", type: "event" }, { inputs: [], name: "MASTER_MAGPIE", outputs: [{ internalType: "contract IMasterMagpie", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "MGP_TOKEN", outputs: [{ internalType: "contract ERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "VL_MGP", outputs: [{ internalType: "contract IVL_MGP", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "WETH", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }], name: "addRewardsToken", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" }], name: "allowance", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "approve", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "claim", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "decimals", outputs: [{ internalType: "uint8", name: "", type: "uint8" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "mgpAmount", type: "uint256" }], name: "deposit", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "user", type: "address" }], name: "getUserPendingWithdraws", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "getUserWithdrawable", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "name", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "pendingWithdraws", outputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "mgpAmount", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }], name: "removeRewardsToken", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "rescueTokens", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "rewardTokens", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }, { internalType: "address", name: "swapRouter", type: "address" }], name: "setSwapRouter", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }], name: "setYMGP", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "rmgpAmount", type: "uint256" }], name: "startUnlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "swapRouters", outputs: [{ internalType: "contract ISwapRouter", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "symbol", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalSupply", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transfer", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "from", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transferFrom", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unsubmittedWithdraws", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "withdraw", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "ymgpToken", outputs: [{ internalType: "contract ERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }],
+  YMGP: [{ inputs: [{ internalType: "address", name: "_rmgpToken", type: "address" }], stateMutability: "nonpayable", type: "constructor" }, { inputs: [], name: "CannotLockZero", type: "error" }, { inputs: [], name: "CannotUnlockZero", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "allowance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientAllowance", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }, { internalType: "uint256", name: "balance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientBalance", type: "error" }, { inputs: [{ internalType: "address", name: "approver", type: "address" }], name: "ERC20InvalidApprover", type: "error" }, { inputs: [{ internalType: "address", name: "receiver", type: "address" }], name: "ERC20InvalidReceiver", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }], name: "ERC20InvalidSender", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }], name: "ERC20InvalidSpender", type: "error" }, { inputs: [], name: "InsufficientBalance", type: "error" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }], name: "OwnableInvalidOwner", type: "error" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "OwnableUnauthorizedAccount", type: "error" }, { inputs: [], name: "TransferFailed", type: "error" }, { inputs: [{ internalType: "string", name: "name", type: "string" }], name: "ZeroAddress", type: "error" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "owner", type: "address" }, { indexed: true, internalType: "address", name: "spender", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Approval", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Deposited", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Locked", type: "event" }, { anonymous: false, inputs: [], name: "NoYieldToClaim", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "from", type: "address" }, { indexed: true, internalType: "address", name: "to", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Transfer", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "YieldClaimed", type: "event" }, { inputs: [], name: "RMGP_TOKEN", outputs: [{ internalType: "contract ERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" }], name: "allowance", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "approve", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "claim", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "decimals", outputs: [{ internalType: "uint8", name: "", type: "uint8" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }], name: "deposit", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }], name: "lock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "lockedBalances", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "name", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "rescueTokens", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "symbol", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalLocked", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalSupply", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transfer", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "from", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transferFrom", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unclaimedUserYield", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }], name: "unlock", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "userClaimedYield", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }],
+  VMGP: [{ inputs: [{ internalType: "address", name: "_ymgpToken", type: "address" }], stateMutability: "nonpayable", type: "constructor" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "allowance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientAllowance", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }, { internalType: "uint256", name: "balance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientBalance", type: "error" }, { inputs: [{ internalType: "address", name: "approver", type: "address" }], name: "ERC20InvalidApprover", type: "error" }, { inputs: [{ internalType: "address", name: "receiver", type: "address" }], name: "ERC20InvalidReceiver", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }], name: "ERC20InvalidSender", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }], name: "ERC20InvalidSpender", type: "error" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }], name: "OwnableInvalidOwner", type: "error" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "OwnableUnauthorizedAccount", type: "error" }, { inputs: [], name: "TransferFailed", type: "error" }, { inputs: [{ internalType: "string", name: "name", type: "string" }], name: "ZeroAddress", type: "error" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "owner", type: "address" }, { indexed: true, internalType: "address", name: "spender", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Approval", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Deposited", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "from", type: "address" }, { indexed: true, internalType: "address", name: "to", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Transfer", type: "event" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" }], name: "allowance", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "approve", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "decimals", outputs: [{ internalType: "uint8", name: "", type: "uint8" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }], name: "deposit", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "name", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "rescueTokens", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_ymgpToken", type: "address" }], name: "setYMGP", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "symbol", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalSupply", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transfer", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "from", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transferFrom", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "ymgpToken", outputs: [{ internalType: "contract ERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }],
+  VLMGP: [{ inputs: [], name: "AllUnlockSlotOccupied", type: "error" }, { inputs: [], name: "AlreadyMigrated", type: "error" }, { inputs: [], name: "BeyondUnlockLength", type: "error" }, { inputs: [], name: "BeyondUnlockSlotLimit", type: "error" }, { inputs: [], name: "BurnEventManagerNotSet", type: "error" }, { inputs: [], name: "BurnEvnentManagerPaused", type: "error" }, { inputs: [], name: "InvalidAddress", type: "error" }, { inputs: [], name: "InvalidCoolDownPeriod", type: "error" }, { inputs: [], name: "IsZeroAddress", type: "error" }, { inputs: [], name: "MaxSlotCantLowered", type: "error" }, { inputs: [], name: "MaxSlotShouldNotZero", type: "error" }, { inputs: [], name: "NotEnoughLockedMPG", type: "error" }, { inputs: [], name: "NotInCoolDown", type: "error" }, { inputs: [], name: "PenaltyToNotSet", type: "error" }, { inputs: [], name: "StillInCoolDown", type: "error" }, { inputs: [], name: "TransferNotWhiteListed", type: "error" }, { inputs: [], name: "UnlockSlotOccupied", type: "error" }, { inputs: [], name: "UnlockedAlready", type: "error" }, { inputs: [], name: "coolDownInSecCanCauseOverflow", type: "error" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "owner", type: "address" }, { indexed: true, internalType: "address", name: "spender", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Approval", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "_coolDownSecs", type: "uint256" }], name: "CoolDownInSecsUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "slotIdx", type: "uint256" }, { indexed: false, internalType: "uint256", name: "mgpamount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "penaltyAmount", type: "uint256" }], name: "ForceUnLock", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint8", name: "version", type: "uint8" }], name: "Initialized", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "_maxSlot", type: "uint256" }], name: "MaxSlotUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: true, internalType: "uint256", name: "timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "NewLock", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_oldMaster", type: "address" }, { indexed: false, internalType: "address", name: "_newMaster", type: "address" }], name: "NewMasterChiefUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Paused", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "penaltyDestination", type: "address" }], name: "PenaltyDestinationUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "penaltyDestination", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "PenaltySentTo", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "slotIdx", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "ReLock", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "from", type: "address" }, { indexed: true, internalType: "address", name: "to", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Transfer", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: true, internalType: "uint256", name: "timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Unlock", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: true, internalType: "uint256", name: "_timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }], name: "UnlockStarts", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Unpaused", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: true, internalType: "uint256", name: "timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_eventId", type: "uint256" }], name: "VlMgpBurn", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_for", type: "address" }, { indexed: false, internalType: "bool", name: "_status", type: "bool" }], name: "WhitelistSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "burnEventManager", type: "address" }], name: "burnEventManagerSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "referralStorage", type: "address" }], name: "referralStorageSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "wombatBribeManager", type: "address" }], name: "wombatBribeManagerSet", type: "event" }, { inputs: [], name: "DENOMINATOR", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "MGP", outputs: [{ internalType: "contract IERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_masterMagpie", type: "address" }, { internalType: "uint256", name: "_maxSlots", type: "uint256" }, { internalType: "address", name: "_mgp", type: "address" }, { internalType: "uint256", name: "_coolDownInSecs", type: "uint256" }], name: "__vlMGP_init_", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" }], name: "allowance", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "approve", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "burnEventManager", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "_vlmgpAmountToBurn", type: "uint256" }, { internalType: "uint256", name: "_vlmgpBurnEventId", type: "uint256" }], name: "burnVlmgp", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "cancelUnlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "coolDownInSecs", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "decimals", outputs: [{ internalType: "uint8", name: "", type: "uint8" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "subtractedValue", type: "uint256" }], name: "decreaseAllowance", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "expectedPenaltyAmount", outputs: [{ internalType: "uint256", name: "penaltyAmount", type: "uint256" }, { internalType: "uint256", name: "amontToUser", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "forceUnLock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getFullyUnlock", outputs: [{ internalType: "uint256", name: "unlockedAmount", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getNextAvailableUnlockSlot", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getRewardablePercentWAD", outputs: [{ internalType: "uint256", name: "percent", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserAmountInCoolDown", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }, { internalType: "uint256", name: "n", type: "uint256" }], name: "getUserNthUnlockSlot", outputs: [{ internalType: "uint256", name: "startTime", type: "uint256" }, { internalType: "uint256", name: "endTime", type: "uint256" }, { internalType: "uint256", name: "amountInCoolDown", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserTotalLocked", outputs: [{ internalType: "uint256", name: "_lockAmount", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserUnlockSlotLength", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserUnlockingSchedule", outputs: [{ components: [{ internalType: "uint256", name: "startTime", type: "uint256" }, { internalType: "uint256", name: "endTime", type: "uint256" }, { internalType: "uint256", name: "amountInCoolDown", type: "uint256" }], internalType: "struct ILocker.UserUnlocking[]", name: "slots", type: "tuple[]" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "addedValue", type: "uint256" }], name: "increaseAllowance", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }], name: "lock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "lockFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "masterMagpie", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "maxSlot", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "name", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "pause", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "paused", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [], name: "penaltyDestination", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "referralStorage", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_coolDownSecs", type: "uint256" }], name: "setCoolDownInSecs", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_masterMagpie", type: "address" }], name: "setMasterChief", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_maxSlots", type: "uint256" }], name: "setMaxSlots", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_burnEventMAnager", type: "address" }], name: "setMgpBurnEventManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_penaltyDestination", type: "address" }], name: "setPenaltyDestination", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_referralStorage", type: "address" }], name: "setReferralStorage", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_for", type: "address" }, { internalType: "bool", name: "_status", type: "bool" }], name: "setWhitelistForTransfer", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_bribeManager", type: "address" }], name: "setWombatBribeManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amountToCoolDown", type: "uint256" }], name: "startUnlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "symbol", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalAmountInCoolDown", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalLocked", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalPenalty", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalSupply", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "transfer", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "from", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "transferFrom", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "transferPenalty", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "transferWhitelist", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "unlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unpause", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }, { internalType: "uint256", name: "", type: "uint256" }], name: "userUnlockings", outputs: [{ internalType: "uint256", name: "startTime", type: "uint256" }, { internalType: "uint256", name: "endTime", type: "uint256" }, { internalType: "uint256", name: "amountInCoolDown", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "wombatBribeManager", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }],
+  MASTERMGP: [{ inputs: [], name: "IndexOutOfBound", type: "error" }, { inputs: [], name: "InvalidStakingToken", type: "error" }, { inputs: [], name: "LengthMismatch", type: "error" }, { inputs: [], name: "MGPsetAlready", type: "error" }, { inputs: [], name: "MustBeContract", type: "error" }, { inputs: [], name: "MustBeContractOrZero", type: "error" }, { inputs: [], name: "MustNotBeZero", type: "error" }, { inputs: [], name: "OnlyActivePool", type: "error" }, { inputs: [], name: "OnlyCompounder", type: "error" }, { inputs: [], name: "OnlyLocker", type: "error" }, { inputs: [], name: "OnlyPoolHelper", type: "error" }, { inputs: [], name: "OnlyPoolManager", type: "error" }, { inputs: [], name: "OnlyWhiteListedAllocUpdator", type: "error" }, { inputs: [], name: "PoolExsisted", type: "error" }, { inputs: [], name: "UnlockAmountExceedsLocked", type: "error" }, { inputs: [], name: "WithdrawAmountExceedsStaked", type: "error" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_oldARBRewarder", type: "address" }, { indexed: false, internalType: "address", name: "_newARBRewarder", type: "address" }], name: "ARBRewarderSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "rewarder", type: "address" }], name: "ARBRewarderSetAsQueuer", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "_allocPoint", type: "uint256" }, { indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: true, internalType: "contract IBaseRewardPool", name: "_rewarder", type: "address" }], name: "Add", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_newCompounder", type: "address" }, { indexed: false, internalType: "address", name: "_oldCompounder", type: "address" }], name: "CompounderUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }], name: "Deposit", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }], name: "DepositNotAvailable", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }], name: "EmergencyWithdraw", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_account", type: "address" }, { indexed: true, internalType: "address", name: "_receiver", type: "address" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }, { indexed: false, internalType: "bool", name: "isLock", type: "bool" }], name: "HarvestMGP", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint8", name: "version", type: "uint8" }], name: "Initialized", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "address[]", name: "_legacyRewarder", type: "address[]" }], name: "LegacyRewardersSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "bool", name: "_isRewardMGP", type: "bool" }], name: "LockFreePoolUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_mgp", type: "address" }], name: "MGPSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_mWomSV", type: "address" }, { indexed: false, internalType: "address", name: "_oldMWomSV", type: "address" }], name: "MWomSVpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Paused", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_account", type: "address" }, { indexed: false, internalType: "bool", name: "_status", type: "bool" }], name: "PoolManagerStatus", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_allocPoint", type: "uint256" }, { indexed: true, internalType: "contract IBaseRewardPool", name: "_rewarder", type: "address" }], name: "Set", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Unpaused", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: false, internalType: "uint256", name: "_oldMgpPerSec", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_newMgpPerSec", type: "uint256" }], name: "UpdateEmissionRate", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_lastRewardTimestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_lpSupply", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_accMGPPerShare", type: "uint256" }], name: "UpdatePool", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_oldAllocPoint", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_newAllocPoint", type: "uint256" }], name: "UpdatePoolAlloc", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_newVlmgp", type: "address" }, { indexed: false, internalType: "address", name: "_oldVlmgp", type: "address" }], name: "VLMGPUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }], name: "Withdraw", type: "event" }, { inputs: [], name: "ARBRewarder", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "AllocationManagers", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "MPGRewardPool", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "PoolManagers", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_mgp", type: "address" }, { internalType: "uint256", name: "_mgpPerSec", type: "uint256" }, { internalType: "uint256", name: "_startTimestamp", type: "uint256" }], name: "__MasterMagpie_init", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_allocPoint", type: "uint256" }, { internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "_rewarder", type: "address" }, { internalType: "address", name: "_helper", type: "address" }, { internalType: "bool", name: "_helperNeedsHarvest", type: "bool" }], name: "add", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_newAllocationManager", type: "address" }], name: "addWhitelistedAllocManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "_user", type: "address" }], name: "allPendingLegacyTokens", outputs: [{ internalType: "address[][]", name: "bonusTokenAddresses", type: "address[][]" }, { internalType: "string[][]", name: "bonusTokenSymbols", type: "string[][]" }, { internalType: "uint256[][]", name: "pendingBonusRewards", type: "uint256[][]" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "_user", type: "address" }], name: "allPendingTokens", outputs: [{ internalType: "uint256", name: "pendingMGP", type: "uint256" }, { internalType: "address[]", name: "bonusTokenAddresses", type: "address[]" }, { internalType: "string[]", name: "bonusTokenSymbols", type: "string[]" }, { internalType: "uint256[]", name: "pendingBonusRewards", type: "uint256[]" }], stateMutability: "view", type: "function" }, { inputs: [], name: "compounder", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "mainRewardToken", type: "address" }], name: "createRewarder", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "uint256", name: "_amount", type: "uint256" }], name: "deposit", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "depositFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "depositMWomSVFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "depositVlMGPFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }], name: "getPoolInfo", outputs: [{ internalType: "uint256", name: "emission", type: "uint256" }, { internalType: "uint256", name: "allocpoint", type: "uint256" }, { internalType: "uint256", name: "sizeOfPool", type: "uint256" }, { internalType: "uint256", name: "totalPoint", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "stakingToken", type: "address" }], name: "getRewarder", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "legacyRewarder_deprecated", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }, { internalType: "uint256", name: "", type: "uint256" }], name: "legacyRewarders", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "mWomSV", outputs: [{ internalType: "contract ILocker", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "massUpdatePools", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "mgp", outputs: [{ internalType: "contract MGP", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "mgpPerSec", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }], name: "multiclaim", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }, { internalType: "address[][]", name: "_rewardTokens", type: "address[][]" }, { internalType: "address", name: "_account", type: "address" }], name: "multiclaimFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }, { internalType: "address[][]", name: "_rewardTokens", type: "address[][]" }, { internalType: "address", name: "_account", type: "address" }], name: "multiclaimOnBehalf", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }, { internalType: "address[][]", name: "_rewardTokens", type: "address[][]" }], name: "multiclaimSpec", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "pause", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "paused", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "_user", type: "address" }, { internalType: "address", name: "_rewardToken", type: "address" }], name: "pendingTokens", outputs: [{ internalType: "uint256", name: "pendingMGP", type: "uint256" }, { internalType: "address", name: "bonusTokenAddress", type: "address" }, { internalType: "string", name: "bonusTokenSymbol", type: "string" }, { internalType: "uint256", name: "pendingBonusToken", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "poolLength", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "referral", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "registeredToken", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "index", type: "uint256" }], name: "removeWhitelistedAllocManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }], name: "rewarderBonusTokenInfo", outputs: [{ internalType: "address[]", name: "bonusTokenAddresses", type: "address[]" }, { internalType: "string[]", name: "bonusTokenSymbols", type: "string[]" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "uint256", name: "_allocPoint", type: "uint256" }, { internalType: "address", name: "_helper", type: "address" }, { internalType: "address", name: "_rewarder", type: "address" }, { internalType: "bool", name: "_helperNeedsHarvest", type: "bool" }], name: "set", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_ARBRewarder", type: "address" }], name: "setARBRewarder", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_pools", type: "address[]" }], name: "setARBRewarderAsQueuer", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_compounder", type: "address" }], name: "setCompounder", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }, { internalType: "address[][]", name: "_legacyRewarder", type: "address[][]" }], name: "setLegacyRewarder", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "bool", name: "_isLockFree", type: "bool" }], name: "setMGPRewardPools", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_mWomSV", type: "address" }], name: "setMWomSV", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_account", type: "address" }, { internalType: "bool", name: "_allowedManager", type: "bool" }], name: "setPoolManagerStatus", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_referral", type: "address" }], name: "setReferral", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_vlmgp", type: "address" }], name: "setVlmgp", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "_user", type: "address" }], name: "stakingInfo", outputs: [{ internalType: "uint256", name: "stakedAmount", type: "uint256" }, { internalType: "uint256", name: "availableAmount", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "startTimestamp", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "tokenToPoolInfo", outputs: [{ internalType: "address", name: "stakingToken", type: "address" }, { internalType: "uint256", name: "allocPoint", type: "uint256" }, { internalType: "uint256", name: "lastRewardTimestamp", type: "uint256" }, { internalType: "uint256", name: "accMGPPerShare", type: "uint256" }, { internalType: "address", name: "rewarder", type: "address" }, { internalType: "address", name: "helper", type: "address" }, { internalType: "bool", name: "helperNeedsHarvest", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalAllocPoint", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }, { internalType: "address", name: "", type: "address" }], name: "unClaimedMgp", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "unpause", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_mgpPerSec", type: "uint256" }], name: "updateEmissionRate", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }], name: "updatePool", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }, { internalType: "uint256[]", name: "_allocPoints", type: "uint256[]" }], name: "updatePoolsAlloc", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_rewarder", type: "address" }, { internalType: "address", name: "_manager", type: "address" }, { internalType: "bool", name: "_allowed", type: "bool" }], name: "updateRewarderManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "vlmgp", outputs: [{ internalType: "contract ILocker", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "uint256", name: "_amount", type: "uint256" }], name: "withdraw", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "withdrawFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "withdrawMWomSVFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "withdrawVlMGPFor", outputs: [], stateMutability: "nonpayable", type: "function" }],
+  VLREWARDER: [{ inputs: [{ internalType: "address", name: "_logic", type: "address" }, { internalType: "address", name: "admin_", type: "address" }, { internalType: "bytes", name: "_data", type: "bytes" }], stateMutability: "payable", type: "constructor" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "previousAdmin", type: "address" }, { indexed: false, internalType: "address", name: "newAdmin", type: "address" }], name: "AdminChanged", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "beacon", type: "address" }], name: "BeaconUpgraded", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "implementation", type: "address" }], name: "Upgraded", type: "event" }, { stateMutability: "payable", type: "fallback" }, { inputs: [], name: "admin", outputs: [{ internalType: "address", name: "admin_", type: "address" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newAdmin", type: "address" }], name: "changeAdmin", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "implementation", outputs: [{ internalType: "address", name: "implementation_", type: "address" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newImplementation", type: "address" }], name: "upgradeTo", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newImplementation", type: "address" }, { internalType: "bytes", name: "data", type: "bytes" }], name: "upgradeToAndCall", outputs: [], stateMutability: "payable", type: "function" }, { stateMutability: "payable", type: "receive" }],
+  CMGP: [{ name: "Transfer", inputs: [{ name: "sender", type: "address", indexed: true }, { name: "receiver", type: "address", indexed: true }, { name: "value", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "Approval", inputs: [{ name: "owner", type: "address", indexed: true }, { name: "spender", type: "address", indexed: true }, { name: "value", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "TokenExchange", inputs: [{ name: "buyer", type: "address", indexed: true }, { name: "sold_id", type: "int128", indexed: false }, { name: "tokens_sold", type: "uint256", indexed: false }, { name: "bought_id", type: "int128", indexed: false }, { name: "tokens_bought", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "TokenExchangeUnderlying", inputs: [{ name: "buyer", type: "address", indexed: true }, { name: "sold_id", type: "int128", indexed: false }, { name: "tokens_sold", type: "uint256", indexed: false }, { name: "bought_id", type: "int128", indexed: false }, { name: "tokens_bought", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "AddLiquidity", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amounts", type: "uint256[]", indexed: false }, { name: "fees", type: "uint256[]", indexed: false }, { name: "invariant", type: "uint256", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RemoveLiquidity", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amounts", type: "uint256[]", indexed: false }, { name: "fees", type: "uint256[]", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RemoveLiquidityOne", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_id", type: "int128", indexed: false }, { name: "token_amount", type: "uint256", indexed: false }, { name: "coin_amount", type: "uint256", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RemoveLiquidityImbalance", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amounts", type: "uint256[]", indexed: false }, { name: "fees", type: "uint256[]", indexed: false }, { name: "invariant", type: "uint256", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RampA", inputs: [{ name: "old_A", type: "uint256", indexed: false }, { name: "new_A", type: "uint256", indexed: false }, { name: "initial_time", type: "uint256", indexed: false }, { name: "future_time", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "StopRampA", inputs: [{ name: "A", type: "uint256", indexed: false }, { name: "t", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "ApplyNewFee", inputs: [{ name: "fee", type: "uint256", indexed: false }, { name: "offpeg_fee_multiplier", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "SetNewMATime", inputs: [{ name: "ma_exp_time", type: "uint256", indexed: false }, { name: "D_ma_time", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { stateMutability: "nonpayable", type: "constructor", inputs: [{ name: "_name", type: "string" }, { name: "_symbol", type: "string" }, { name: "_A", type: "uint256" }, { name: "_fee", type: "uint256" }, { name: "_offpeg_fee_multiplier", type: "uint256" }, { name: "_ma_exp_time", type: "uint256" }, { name: "_coins", type: "address[]" }, { name: "_rate_multipliers", type: "uint256[]" }, { name: "_asset_types", type: "uint8[]" }, { name: "_method_ids", type: "bytes4[]" }, { name: "_oracles", type: "address[]" }], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "exchange", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange_received", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange_received", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "add_liquidity", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_min_mint_amount", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "add_liquidity", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_min_mint_amount", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_one_coin", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "i", type: "int128" }, { name: "_min_received", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_one_coin", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "i", type: "int128" }, { name: "_min_received", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_imbalance", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_max_burn_amount", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_imbalance", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_max_burn_amount", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "_min_amounts", type: "uint256[]" }], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "_min_amounts", type: "uint256[]" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "_min_amounts", type: "uint256[]" }, { name: "_receiver", type: "address" }, { name: "_claim_admin_fees", type: "bool" }], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "nonpayable", type: "function", name: "withdraw_admin_fees", inputs: [], outputs: [] }, { stateMutability: "view", type: "function", name: "last_price", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "ema_price", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_p", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "price_oracle", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "D_oracle", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "transfer", inputs: [{ name: "_to", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "transferFrom", inputs: [{ name: "_from", type: "address" }, { name: "_to", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "approve", inputs: [{ name: "_spender", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "permit", inputs: [{ name: "_owner", type: "address" }, { name: "_spender", type: "address" }, { name: "_value", type: "uint256" }, { name: "_deadline", type: "uint256" }, { name: "_v", type: "uint8" }, { name: "_r", type: "bytes32" }, { name: "_s", type: "bytes32" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "view", type: "function", name: "DOMAIN_SEPARATOR", inputs: [], outputs: [{ name: "", type: "bytes32" }] }, { stateMutability: "view", type: "function", name: "get_dx", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_dy", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "dx", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "calc_withdraw_one_coin", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "i", type: "int128" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "totalSupply", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_virtual_price", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "calc_token_amount", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_is_deposit", type: "bool" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "A", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "A_precise", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "balances", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_balances", inputs: [], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "view", type: "function", name: "stored_rates", inputs: [], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "view", type: "function", name: "dynamic_fee", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "ramp_A", inputs: [{ name: "_future_A", type: "uint256" }, { name: "_future_time", type: "uint256" }], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "stop_ramp_A", inputs: [], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "set_new_fee", inputs: [{ name: "_new_fee", type: "uint256" }, { name: "_new_offpeg_fee_multiplier", type: "uint256" }], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "set_ma_exp_time", inputs: [{ name: "_ma_exp_time", type: "uint256" }, { name: "_D_ma_time", type: "uint256" }], outputs: [] }, { stateMutability: "view", type: "function", name: "N_COINS", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "coins", inputs: [{ name: "arg0", type: "uint256" }], outputs: [{ name: "", type: "address" }] }, { stateMutability: "view", type: "function", name: "fee", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "offpeg_fee_multiplier", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "admin_fee", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "initial_A", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "future_A", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "initial_A_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "future_A_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "admin_balances", inputs: [{ name: "arg0", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "ma_exp_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "D_ma_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "ma_last_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "name", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "symbol", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "decimals", inputs: [], outputs: [{ name: "", type: "uint8" }] }, { stateMutability: "view", type: "function", name: "version", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "balanceOf", inputs: [{ name: "arg0", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "allowance", inputs: [{ name: "arg0", type: "address" }, { name: "arg1", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "nonces", inputs: [{ name: "arg0", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "salt", inputs: [], outputs: [{ name: "", type: "bytes32" }] }]
+};
+var contracts = {
+  56: {
+    MGP: getContract({ address: "0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa", abi: erc20Abi, client: publicClients[56] }),
+    RMGP: getContract({ address: "0x0277517658a1dd3899bf926fCf6A633e549eB769", abi: ABIs.RMGP, client: publicClients[56] }),
+    YMGP: getContract({ address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb", abi: ABIs.YMGP, client: publicClients[56] }),
+    VMGP: getContract({ address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb", abi: ABIs.VMGP, client: publicClients[56] }),
+    CMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.CMGP, client: publicClients[56] }),
+    VLMGP: getContract({ address: "0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6", abi: ABIs.VLMGP, client: publicClients[56] }),
+    MASTERMGP: getContract({ address: "0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46", abi: ABIs.MASTERMGP, client: publicClients[56] }),
+    VLREWARDER: getContract({ address: "0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9", abi: ABIs.VLREWARDER, client: publicClients[56] }),
+    WETH: getContract({ address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", abi: erc20Abi, client: publicClients[56] })
+  },
+  42161: {
+    MGP: getContract({ address: "0xa61F74247455A40b01b0559ff6274441FAfa22A3", abi: erc20Abi, client: publicClients[42161] }),
+    RMGP: getContract({ address: "0x3788c8791d826254bAbd49b602C93008468D5695", abi: ABIs.RMGP, client: publicClients[42161] }),
+    YMGP: getContract({ address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9", abi: ABIs.YMGP, client: publicClients[42161] }),
+    VMGP: getContract({ address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9", abi: ABIs.VMGP, client: publicClients[42161] }),
+    CMGP: getContract({ address: "0xA24Daae84B8166Ab0C049880F4F8F3AdC4F0a421", abi: ABIs.CMGP, client: publicClients[42161] }),
+    VLMGP: getContract({ address: "0x536599497Ce6a35FC65C7503232Fec71A84786b9", abi: ABIs.VLMGP, client: publicClients[42161] }),
+    MASTERMGP: getContract({ address: "0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7", abi: ABIs.MASTERMGP, client: publicClients[42161] }),
+    VLREWARDER: getContract({ address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45", abi: ABIs.VLREWARDER, client: publicClients[42161] }),
+    WETH: getContract({ address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", abi: erc20Abi, client: publicClients[42161] })
+  }
+};
+
 // src/utils.ts
-var import_react = __toESM(require_react(), 1);
-var parseEther = (value, decimals = 18) => BigInt(Math.round(value * Number(10n ** BigInt(decimals)) / Number(1n)));
-var formatEther2 = (value, decimals = 18) => {
-  const divisor = 10n ** BigInt(decimals);
+var parseEther = (value, decimals2 = 18) => BigInt(Math.round(value * Number(10n ** BigInt(decimals2)) / Number(1n)));
+var formatEther2 = (value, decimals2 = 18) => {
+  const divisor = 10n ** BigInt(decimals2);
   const wholePart = value / divisor;
   const fractionalPart = value % divisor;
-  return fractionalPart === 0n ? Number(wholePart) : Number(`${wholePart}.${fractionalPart.toString().padStart(decimals, "0").replace(/0+$/, "")}`);
+  return fractionalPart === 0n ? Number(wholePart) : Number(`${wholePart}.${fractionalPart.toString().padStart(decimals2, "0").replace(/0+$/, "")}`);
 };
-var formatNumber = (num2, decimals = 2) => num2 >= 1e9 ? `${(num2 / 1e9).toFixed(decimals)}B` : num2 >= 1e6 ? `${(num2 / 1e6).toFixed(decimals)}M` : num2 >= 1000 ? `${(num2 / 1000).toFixed(decimals)}K` : num2.toFixed(decimals);
+var formatNumber = (num2, decimals2 = 2) => num2 >= 1e9 ? `${(num2 / 1e9).toFixed(decimals2)}B` : num2 >= 1e6 ? `${(num2 / 1e6).toFixed(decimals2)}M` : num2 >= 1000 ? `${(num2 / 1000).toFixed(decimals2)}K` : num2.toFixed(decimals2);
 var formatTime = (seconds) => seconds < 60 ? `${seconds} Seconds` : seconds < 3600 ? `${Math.floor(seconds / 60)} Minutes` : seconds < 86400 ? `${Math.floor(seconds / 3600)} Hours` : `${Math.floor(seconds / 86400)} Days`;
 var aprToApy = (apr) => (1 + apr / 365) ** 365 - 1;
-function useUpdateable(factory, deps) {
-  const [updateCount, setUpdateCount] = import_react.useState(0);
-  const [value, setValue] = import_react.useState();
-  import_react.useEffect(() => {
-    factory().then(setValue);
-  }, [...deps, updateCount]);
-  const update = () => setUpdateCount((c) => c + 1);
-  return [value, update];
-}
 
 // src/components/TokenCard.tsx
 var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
-var TokenCard = ({ symbol, decimals, description, features, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }) => {
+var TokenCard = ({ symbol, decimals: decimals2, description, features, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }) => {
   return /* @__PURE__ */ jsx_dev_runtime.jsxDEV("div", {
     className: "bg-gray-800 p-4 rounded-xl border border-gray-700",
     children: [
@@ -31377,7 +31408,7 @@ var TokenCard = ({ symbol, decimals, description, features, price, supply, under
                   /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
                     className: "font-medium",
                     children: [
-                      formatNumber(formatEther2(supply, decimals), 3),
+                      formatNumber(formatEther2(supply, decimals2), 3),
                       " ",
                       symbol
                     ]
@@ -31445,7 +31476,7 @@ var TokenCard = ({ symbol, decimals, description, features, price, supply, under
                   /* @__PURE__ */ jsx_dev_runtime.jsxDEV("p", {
                     className: "font-medium",
                     children: [
-                      formatNumber(Math.round(formatEther2(locked, decimals))),
+                      formatNumber(Math.round(formatEther2(locked, decimals2))),
                       " ",
                       symbol
                     ]
@@ -31479,7 +31510,7 @@ var TokenCard = ({ symbol, decimals, description, features, price, supply, under
                     className: "font-medium",
                     children: [
                       "$",
-                      formatNumber(price * formatEther2(supply, decimals))
+                      formatNumber(price * formatEther2(supply, decimals2))
                     ]
                   }, undefined, true, undefined, this)
                 ]
@@ -31521,26 +31552,66 @@ var TokenCard = ({ symbol, decimals, description, features, price, supply, under
   }, undefined, true, undefined, this);
 };
 
+// src/hooks/useExchangeRates.ts
+var import_react2 = __toESM(require_react(), 1);
+
+// src/hooks/useUpdateable.ts
+var import_react = __toESM(require_react(), 1);
+function useUpdateable(factory, deps) {
+  const [updateCount, setUpdateCount] = import_react.useState(0);
+  const [value, setValue] = import_react.useState();
+  import_react.useEffect(() => {
+    factory().then(setValue).catch(console.error);
+  }, [...deps, updateCount]);
+  const update = () => setUpdateCount((c) => c + 1);
+  return [value, update];
+}
+
+// src/hooks/useSupplies.ts
+var useSupplies = ({ chain }) => {
+  const [mgp, updateMGP] = useUpdateable(() => contracts[56].MGP.read.totalSupply(), [contracts]);
+  const [rmgp, updateRMGP] = useUpdateable(() => contracts[chain].RMGP.read.totalSupply(), [contracts, chain]);
+  const [ymgp, updateYMGP] = useUpdateable(() => contracts[chain].YMGP.read.totalSupply(), [contracts, chain]);
+  const [vmgp, updateVMGP] = useUpdateable(() => contracts[chain].VMGP.read.totalSupply(), [contracts, chain]);
+  return { mgp, updateMGP, rmgp, updateRMGP, ymgp, updateYMGP, vmgp, updateVMGP };
+};
+
+// src/hooks/useExchangeRates.ts
+var useExchangeRates = ({ reefiLockedMGP, chain, account }) => {
+  const supplies = useSupplies({ chain });
+  const mintRMGP = import_react2.useMemo(() => {
+    return supplies.rmgp === 0n ? 1 : Number(reefiLockedMGP) / Number(supplies.rmgp);
+  }, [supplies.rmgp, reefiLockedMGP]);
+  const [mgpRMGP] = useUpdateable(async () => {
+    return Number(await contracts[chain].CMGP.read.get_dy([0n, 1n, parseEther(0.00001)], { account })) / Number(parseEther(0.00001));
+  }, [contracts, chain]);
+  const [rmgpYMGP] = useUpdateable(async () => {
+    return Number(await contracts[chain].CMGP.read.get_dy([1n, 2n, parseEther(0.00001)], { account })) / Number(parseEther(0.00001));
+  }, [contracts, chain]);
+  return { mintRMGP, curve: { mgpRMGP, rmgpYMGP } };
+};
+
 // src/components/TokenCards.tsx
 var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenCards = ({ prices, decimals, mgpSupply, totalLockedMGP, rmgpSupply, reefiLockedMGP, realMgpRmgpCurveRate, ymgpSupply, totalLockedYMGP, vmgpSupply, realYmgpVmgpCurveRate, realRmgpYmgpCurveRate }) => {
+var TokenCards = ({ prices, decimals: decimals2, mgpSupply, totalLockedMGP, rmgpSupply, reefiLockedMGP, ymgpSupply, totalLockedYMGP, account, chain }) => {
+  const exchangeRates = useExchangeRates({ reefiLockedMGP, account, chain });
   return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
     className: "grid grid-cols-4 gap-4 mb-4",
     children: [
       /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(TokenCard, {
         symbol: "MGP",
         price: prices.MGP,
-        decimals: decimals.MGP,
+        decimals: decimals2.MGP,
         supply: mgpSupply,
         locked: totalLockedMGP,
         description: "MGP is the underlying asset all derivatives rely on."
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(TokenCard, {
         symbol: "rMGP",
-        decimals: decimals.RMGP,
+        decimals: decimals2.RMGP,
         supply: rmgpSupply,
         underlying: reefiLockedMGP,
-        marketRate: realMgpRmgpCurveRate,
+        marketRate: exchangeRates.curve.mgpRMGP,
         underlyingSymbol: "MGP",
         features: {
           Liquid: "Tradable token representing locked MGP",
@@ -31552,25 +31623,14 @@ var TokenCards = ({ prices, decimals, mgpSupply, totalLockedMGP, rmgpSupply, ree
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(TokenCard, {
         symbol: "yMGP",
-        decimals: decimals.YMGP,
+        decimals: decimals2.YMGP,
         supply: (ymgpSupply ?? 0n) + (totalLockedYMGP ?? 0n),
-        marketRate: realRmgpYmgpCurveRate,
+        marketRate: exchangeRates.curve.rmgpYMGP,
         locked: totalLockedYMGP,
         underlying: (ymgpSupply ?? 0n) + (totalLockedYMGP ?? 0n),
         underlyingSymbol: "rMGP",
         features: { Liquid: "Tradable token representing locked rMGP", "Extra Yield": "5% of protocol yield and withdrawals" },
         description: "yMGP is backed 1:1 by rMGP but cannot be converted back to rMGP. 5% of protocol yield and withdrawals are distributed to locked yMGP paid in rMGP."
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(TokenCard, {
-        symbol: "vMGP",
-        decimals: decimals.VMGP,
-        supply: vmgpSupply,
-        marketRate: realYmgpVmgpCurveRate,
-        voteMultiplier: Number(vmgpSupply ?? 0n) / Number(rmgpSupply ?? 0n),
-        underlying: vmgpSupply,
-        underlyingSymbol: "yMGP",
-        features: { "Boosted Votes": "Control all of Reefi's vote power" },
-        description: "vMGP is backed 1:1 by yMGP but cannot be converted back to yMGP. vMGP controls all of Reefi's voting power."
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
@@ -31578,49 +31638,49 @@ var TokenCards = ({ prices, decimals, mgpSupply, totalLockedMGP, rmgpSupply, ree
 
 // src/components/TokenBalances.tsx
 var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenBalances = ({ decimals, mgpBalance, rmgpBalance, ymgpBalance, vmgpBalance, cmgpBalance, userLockedYMGP }) => {
+var TokenBalances = ({ decimals: decimals2, mgpBalance, rmgpBalance, ymgpBalance, vmgpBalance, cmgpBalance, userLockedYMGP }) => {
   return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(jsx_dev_runtime3.Fragment, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
         className: "bg-gray-700 rounded-lg px-3 py-2 text-sm",
         children: [
           "MGP: ",
-          mgpBalance !== undefined ? formatEther2(mgpBalance, decimals.MGP).toFixed(4) : "Loading..."
+          mgpBalance !== undefined ? formatEther2(mgpBalance, decimals2.MGP).toFixed(4) : "Loading..."
         ]
       }, undefined, true, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
         className: "bg-gray-700 rounded-lg px-3 py-2 text-sm",
         children: [
           "rMGP: ",
-          rmgpBalance !== undefined ? formatEther2(rmgpBalance, decimals.RMGP).toFixed(4) : "Loading..."
+          rmgpBalance !== undefined ? formatEther2(rmgpBalance, decimals2.RMGP).toFixed(4) : "Loading..."
         ]
       }, undefined, true, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
         className: "bg-gray-700 rounded-lg px-3 py-2 text-sm",
         children: [
           "yMGP: ",
-          ymgpBalance !== undefined ? formatEther2(ymgpBalance, decimals.YMGP).toFixed(4) : "Loading..."
+          ymgpBalance !== undefined ? formatEther2(ymgpBalance, decimals2.YMGP).toFixed(4) : "Loading..."
         ]
       }, undefined, true, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
         className: "bg-gray-700 rounded-lg px-3 py-2 text-sm",
         children: [
           "vMGP: ",
-          vmgpBalance !== undefined ? formatEther2(vmgpBalance, decimals.VMGP).toFixed(4) : "Loading..."
+          vmgpBalance !== undefined ? formatEther2(vmgpBalance, decimals2.VMGP).toFixed(4) : "Loading..."
         ]
       }, undefined, true, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
         className: "bg-gray-700 rounded-lg px-3 py-2 text-sm",
         children: [
           "cMGP: ",
-          cmgpBalance !== undefined ? formatEther2(cmgpBalance, decimals.CMGP).toFixed(4) : "Loading..."
+          cmgpBalance !== undefined ? formatEther2(cmgpBalance, decimals2.CMGP).toFixed(4) : "Loading..."
         ]
       }, undefined, true, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime3.jsxDEV("div", {
         className: "bg-gray-700 rounded-lg px-3 py-2 text-sm",
         children: [
           "Locked yMGP: ",
-          userLockedYMGP !== undefined ? formatEther2(userLockedYMGP, decimals.YMGP).toFixed(4) : "Loading..."
+          userLockedYMGP !== undefined ? formatEther2(userLockedYMGP, decimals2.YMGP).toFixed(4) : "Loading..."
         ]
       }, undefined, true, undefined, this)
     ]
@@ -31629,7 +31689,7 @@ var TokenBalances = ({ decimals, mgpBalance, rmgpBalance, ymgpBalance, vmgpBalan
 
 // src/components/Header.tsx
 var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
-var Header = ({ account, ens, chain, decimals, mgpBalance, rmgpBalance, ymgpBalance, vmgpBalance, cmgpBalance, userLockedYMGP, isConnecting, connectWallet, setChain }) => {
+var Header = ({ account, ens, chain, decimals: decimals2, mgpBalance, rmgpBalance, ymgpBalance, vmgpBalance, cmgpBalance, userLockedYMGP, isConnecting, connectWallet, setChain }) => {
   return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
     className: "bg-gray-800 p-4 rounded-xl border border-gray-700 mb-6 flex justify-between items-center",
     children: [
@@ -31649,7 +31709,7 @@ var Header = ({ account, ens, chain, decimals, mgpBalance, rmgpBalance, ymgpBala
         className: "flex items-center space-x-4",
         children: [
           /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(TokenBalances, {
-            decimals,
+            decimals: decimals2,
             mgpBalance,
             rmgpBalance,
             ymgpBalance,
@@ -31802,7 +31862,8 @@ var Navbar = ({ page, setPage }) => {
 
 // src/components/ConversionRates.tsx
 var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
-var ConversionRates = ({ mgpRMGPRate, realMgpRmgpCurveRate, mgpRMGPCurveRate, realRmgpYmgpCurveRate, rmgpYMGPCurveRate }) => {
+var ConversionRates = ({ reefiLockedMGP, chain, account }) => {
+  const exchangeRates = useExchangeRates({ reefiLockedMGP, chain, account });
   return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
     className: "bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6 flex flex-col items-center",
     children: [
@@ -31837,12 +31898,6 @@ var ConversionRates = ({ mgpRMGPRate, realMgpRmgpCurveRate, mgpRMGPCurveRate, re
                   /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
                     children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
                       className: "text-lg font-bold mb-2",
-                      children: "Liquidity"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
-                      className: "text-lg font-bold mb-2",
                       children: "Burn"
                     }, undefined, false, undefined, this)
                   }, undefined, false, undefined, this)
@@ -31863,7 +31918,7 @@ var ConversionRates = ({ mgpRMGPRate, realMgpRmgpCurveRate, mgpRMGPCurveRate, re
                       children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
                         className: "mx-4 my-1 text-sm",
                         children: [
-                          formatNumber(mgpRMGPRate, 4),
+                          formatNumber(exchangeRates.mintRMGP, 4),
                           " MGP"
                         ]
                       }, undefined, true, undefined, this)
@@ -31872,7 +31927,7 @@ var ConversionRates = ({ mgpRMGPRate, realMgpRmgpCurveRate, mgpRMGPCurveRate, re
                       children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
                         className: "mx-4 my-1 text-sm",
                         children: [
-                          formatNumber(realMgpRmgpCurveRate, 4),
+                          formatNumber(exchangeRates.curve.mgpRMGP ?? 0, 4),
                           " MGP"
                         ]
                       }, undefined, true, undefined, this)
@@ -31881,16 +31936,7 @@ var ConversionRates = ({ mgpRMGPRate, realMgpRmgpCurveRate, mgpRMGPCurveRate, re
                       children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
                         className: "mx-4 my-1 text-sm",
                         children: [
-                          formatNumber(mgpRMGPCurveRate ?? 0, 4),
-                          " MGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm",
-                        children: [
-                          formatNumber(mgpRMGPRate * 0.9, 4),
+                          formatNumber(exchangeRates.mintRMGP * 0.9, 4),
                           " MGP"
                         ]
                       }, undefined, true, undefined, this)
@@ -31915,16 +31961,7 @@ var ConversionRates = ({ mgpRMGPRate, realMgpRmgpCurveRate, mgpRMGPCurveRate, re
                       children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
                         className: "mx-4 my-1 text-sm",
                         children: [
-                          formatNumber(realRmgpYmgpCurveRate, 4),
-                          " rMGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm",
-                        children: [
-                          formatNumber(rmgpYMGPCurveRate ?? 0, 4),
+                          formatNumber(exchangeRates.curve.rmgpYMGP ?? 0, 4),
                           " rMGP"
                         ]
                       }, undefined, true, undefined, this)
@@ -31989,7 +32026,7 @@ var ConversionRates = ({ mgpRMGPRate, realMgpRmgpCurveRate, mgpRMGPCurveRate, re
 
 // src/components/Contracts.tsx
 var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
-var Contracts = ({ contracts, publicClients, chain }) => {
+var Contracts = ({ contracts: contracts2, publicClients: publicClients2, chain }) => {
   return /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
     className: "bg-gray-800 p-4 rounded-xl border border-gray-700 mb-6",
     children: [
@@ -31999,7 +32036,7 @@ var Contracts = ({ contracts, publicClients, chain }) => {
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
         className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 text-xs",
-        children: Object.keys(contracts[chain]).map((contract) => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+        children: Object.keys(contracts2[chain]).map((contract) => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
             /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
               className: "font-semibold",
@@ -32009,9 +32046,9 @@ var Contracts = ({ contracts, publicClients, chain }) => {
               ]
             }, undefined, true, undefined, this),
             /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("a", {
-              href: `${publicClients[chain].chain?.blockExplorers?.default.url}/address/${contracts[chain][contract]?.address}`,
+              href: `${publicClients2[chain].chain?.blockExplorers?.default.url}/address/${contracts2[chain][contract]?.address}`,
               className: "ml-2 break-all text-green-300",
-              children: contracts[chain][contract]?.address
+              children: contracts2[chain][contract]?.address
             }, undefined, false, undefined, this)
           ]
         }, contract, true, undefined, this))
@@ -32022,7 +32059,7 @@ var Contracts = ({ contracts, publicClients, chain }) => {
 
 // src/components/PendingRewards.tsx
 var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
-var PendingRewards = ({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, ymgpHoldings, ymgpSupply, totalLockedYMGP, unclaimedUserYield, decimals, mgpRMGPRate, reefiLockedMGP, mgpAPR, pendingRewards, compoundRMGP, claimYMGPRewards }) => {
+var PendingRewards = ({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, ymgpHoldings, ymgpSupply, totalLockedYMGP, unclaimedUserYield, decimals: decimals2, mgpRMGPRate, reefiLockedMGP, mgpAPR, pendingRewards, compoundRMGP, claimYMGPRewards }) => {
   return /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
     className: "bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6",
     children: [
@@ -32070,7 +32107,7 @@ var PendingRewards = ({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, y
                       /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
                         className: "font-small text-xs",
                         children: [
-                          formatNumber(formatEther2(pendingRewards[symbol].rewards, decimals[symbol]), 6),
+                          formatNumber(formatEther2(pendingRewards[symbol].rewards, decimals2[symbol]), 6),
                           " ",
                           symbol
                         ]
@@ -32078,7 +32115,7 @@ var PendingRewards = ({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, y
                       /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
                         className: "font-small text-xs",
                         children: [
-                          formatNumber(prices[symbol] * Number(formatEther2(pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 6),
+                          formatNumber(prices[symbol] * Number(formatEther2(pendingRewards[symbol].rewards, decimals2[symbol])) / prices.MGP, 6),
                           " MGP"
                         ]
                       }, undefined, true, undefined, this)
@@ -32134,7 +32171,7 @@ var PendingRewards = ({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, y
                 className: "text-gray-400 text-xs",
                 children: [
                   "ETA Till Profitable: ",
-                  formatTime(estimatedCompoundGasFee / prices.MGP / (formatEther2(BigInt(mgpAPR * Number(reefiLockedMGP)), decimals.MGP) / (365 * 24 * 60 * 60)))
+                  formatTime(estimatedCompoundGasFee / prices.MGP / (formatEther2(BigInt(mgpAPR * Number(reefiLockedMGP)), decimals2.MGP) / (365 * 24 * 60 * 60)))
                 ]
               }, undefined, true, undefined, this) : "",
               /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("button", {
@@ -32161,7 +32198,7 @@ var PendingRewards = ({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, y
                   /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("p", {
                     className: "font-medium text-lg",
                     children: [
-                      unclaimedUserYield !== undefined ? formatNumber(formatEther2(unclaimedUserYield, decimals.YMGP), 4) : "Loading...",
+                      unclaimedUserYield !== undefined ? formatNumber(formatEther2(unclaimedUserYield, decimals2.YMGP), 4) : "Loading...",
                       " rMGP"
                     ]
                   }, undefined, true, undefined, this),
@@ -32169,7 +32206,7 @@ var PendingRewards = ({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, y
                     className: "font-small text-xs",
                     children: [
                       "Total: ",
-                      ymgpHoldings === undefined || ymgpSupply === undefined || totalLockedYMGP === undefined ? "Loading..." : formatNumber(formatEther2(ymgpHoldings - ymgpSupply - totalLockedYMGP, decimals.YMGP), 4),
+                      ymgpHoldings === undefined || ymgpSupply === undefined || totalLockedYMGP === undefined ? "Loading..." : formatNumber(formatEther2(ymgpHoldings - ymgpSupply - totalLockedYMGP, decimals2.YMGP), 4),
                       " rMGP"
                     ]
                   }, undefined, true, undefined, this)
@@ -32218,10 +32255,10 @@ var ConnectWallet = ({ connectRequired, connectWallet, isConnecting }) => {
 };
 
 // src/components/ErrorCard.tsx
-var import_react2 = __toESM(require_react(), 1);
+var import_react3 = __toESM(require_react(), 1);
 var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
 var ErrorCard = ({ error, setError }) => {
-  import_react2.useEffect(() => {
+  import_react3.useEffect(() => {
     if (error.length)
       setTimeout(() => setError(""), 2000);
   }, [error]);
@@ -32245,7 +32282,7 @@ var ErrorCard = ({ error, setError }) => {
 
 // src/components/AmountInput.tsx
 var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
-var AmountInput = ({ label, balance, value, onChange, token }) => {
+var AmountInput = ({ label, balance, value, onChange, token, placeholder }) => {
   return /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
     className: "mb-4",
     children: [
@@ -32272,7 +32309,7 @@ var AmountInput = ({ label, balance, value, onChange, token }) => {
         children: [
           /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("input", {
             type: "text",
-            placeholder: "0",
+            placeholder: placeholder ?? "0",
             className: "bg-transparent outline-none text-xl w-3/4",
             value: value === 0n ? undefined : formatEther2(value),
             onChange: (e) => onChange(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))
@@ -32307,11 +32344,11 @@ var AmountInput = ({ label, balance, value, onChange, token }) => {
 };
 
 // src/components/TokenApproval.tsx
-var import_react3 = __toESM(require_react(), 1);
+var import_react4 = __toESM(require_react(), 1);
 var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
 var TokenApproval = ({ allowance, sendAmount, onApprove, tokenSymbol, curve = false, className = "w-full" }) => {
-  const [approveInfinity, setApproveInfinity] = import_react3.useState(false);
-  const [isApproving, setIsApproving] = import_react3.useState(false);
+  const [approveInfinity, setApproveInfinity] = import_react4.useState(false);
+  const [isApproving, setIsApproving] = import_react4.useState(false);
   const handleApprove = async () => {
     setIsApproving(true);
     try {
@@ -32357,33 +32394,134 @@ var TokenApproval = ({ allowance, sendAmount, onApprove, tokenSymbol, curve = fa
   }, undefined, true, undefined, this);
 };
 
-// src/pages/DepositPage.tsx
+// src/components/InfoCard.tsx
 var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
-var DepositPage = ({ sendAmount, mgpAllowance, mgpBalance, mgpAllowanceCurve, mgpRmgpCurveAmount, mgpRMGPRate, mgpAPR, onApprove, setSendAmount, depositMGP, buyRMGP }) => {
-  return /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(jsx_dev_runtime15.Fragment, {
+var InfoCard = ({ text }) => {
+  if (!Array.isArray(text))
+    text = [text];
+  return /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+    className: "mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm flex items-start",
     children: [
       /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+        className: "p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5",
+        children: /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("svg", {
+          xmlns: "http://www.w3.org/2000/svg",
+          width: "16",
+          height: "16",
+          viewBox: "0 0 24 24",
+          fill: "none",
+          stroke: "currentColor",
+          strokeWidth: "2",
+          strokeLinecap: "round",
+          strokeLinejoin: "round",
+          className: "text-indigo-400",
+          children: [
+            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("title", {
+              children: "Info"
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("circle", {
+              cx: "12",
+              cy: "12",
+              r: "10"
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("path", {
+              d: "M12 16v-4"
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("path", {
+              d: "M12 8h.01"
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("span", {
+            className: "font-medium text-indigo-300",
+            children: "About"
+          }, undefined, false, undefined, this),
+          text.map((line, idx) => /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("p", {
+            className: "text-gray-300 mt-1",
+            dangerouslySetInnerHTML: { __html: line }
+          }, idx, false, undefined, this))
+        ]
+      }, undefined, true, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+};
+
+// src/components/BuyOnCurve.tsx
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
+var BuyOnCurve = ({ sendAmount, curveAmount, allowanceCurve, rate, onApprove, buy, tokenASymbol, tokenBSymbol }) => {
+  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TokenApproval, {
+        sendAmount,
+        allowance: allowanceCurve,
+        onApprove,
+        tokenSymbol: tokenASymbol,
+        curve: true
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+        className: "relative",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("button", {
+            type: "submit",
+            className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
+            onClick: buy,
+            children: [
+              "Buy on Curve (",
+              formatEther2(curveAmount ?? 0n),
+              " ",
+              tokenBSymbol,
+              ")"
+            ]
+          }, undefined, true, undefined, this),
+          curveAmount !== undefined && (() => {
+            const directRate = formatEther2(sendAmount) / rate;
+            const premiumDiscount = (formatEther2(curveAmount) - directRate) / directRate * 100;
+            const isPremium = premiumDiscount > 0;
+            return Math.abs(premiumDiscount) >= 0.01 ? /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
+              className: `absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
+              children: [
+                isPremium ? "+" : "",
+                premiumDiscount.toFixed(2),
+                "%"
+              ]
+            }, undefined, true, undefined, this) : null;
+          })()
+        ]
+      }, undefined, true, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+};
+
+// src/pages/DepositPage.tsx
+var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
+var DepositPage = ({ sendAmount, mgpAllowance, mgpBalance, mgpAllowanceCurve, mgpRmgpCurveAmount, mgpRMGPRate, mgpAPR, onApprove, setSendAmount, depositMGP, buyRMGP }) => {
+  return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
         className: "bg-gray-700/50 p-5 rounded-lg",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(AmountInput, {
+          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(AmountInput, {
             label: "Deposit MGP",
             token: { symbol: "MGP", color: "bg-blue-400", bgColor: "bg-blue-600" },
             balance: mgpBalance,
             value: sendAmount,
             onChange: setSendAmount
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
             className: "grid grid-cols-2 gap-2",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(TokenApproval, {
+                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(TokenApproval, {
                     sendAmount,
                     allowance: mgpAllowance,
                     onApprove,
                     tokenSymbol: "MGP"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("button", {
+                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
                     type: "submit",
                     className: "py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 w-full",
                     onClick: depositMGP,
@@ -32395,58 +32533,28 @@ var DepositPage = ({ sendAmount, mgpAllowance, mgpBalance, mgpAllowanceCurve, mg
                   }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(TokenApproval, {
-                    sendAmount,
-                    allowance: mgpAllowanceCurve,
-                    onApprove,
-                    tokenSymbol: "MGP",
-                    curve: true
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
-                    className: "relative",
-                    children: [
-                      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("button", {
-                        type: "submit",
-                        className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
-                        onClick: buyRMGP,
-                        children: [
-                          "Buy on Curve (",
-                          formatEther2(mgpRmgpCurveAmount ?? 0n),
-                          " rMGP)"
-                        ]
-                      }, undefined, true, undefined, this),
-                      mgpRmgpCurveAmount !== undefined && (() => {
-                        const directRate = formatEther2(sendAmount) / mgpRMGPRate;
-                        const curveRate = formatEther2(mgpRmgpCurveAmount);
-                        const premiumDiscount = (curveRate - directRate) / directRate * 100;
-                        const isPremium = premiumDiscount > 0;
-                        return Math.abs(premiumDiscount) >= 0.01 ? /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("span", {
-                          className: `absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
-                          children: [
-                            isPremium ? "+" : "",
-                            premiumDiscount.toFixed(2),
-                            "%"
-                          ]
-                        }, undefined, true, undefined, this) : null;
-                      })()
-                    ]
-                  }, undefined, true, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
+              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(BuyOnCurve, {
+                sendAmount,
+                curveAmount: mgpRmgpCurveAmount,
+                allowanceCurve: mgpAllowanceCurve,
+                rate: mgpRMGPRate,
+                onApprove,
+                buy: buyRMGP,
+                tokenASymbol: "MGP",
+                tokenBSymbol: "rMGP"
+              }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
             className: "mt-4 text-sm text-gray-400",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
                 className: "flex justify-between mb-1",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
                     children: "Original APR"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
                     children: [
                       Math.round(1e4 * mgpAPR) / 100,
                       "%"
@@ -32454,13 +32562,13 @@ var DepositPage = ({ sendAmount, mgpAllowance, mgpBalance, mgpAllowanceCurve, mg
                   }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
                 className: "flex justify-between mb-1",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
                     children: "Reward APY"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
                     children: [
                       Math.round(1e4 * aprToApy(mgpAPR) * 0.9) / 100,
                       "%"
@@ -32472,295 +32580,97 @@ var DepositPage = ({ sendAmount, mgpAllowance, mgpBalance, mgpAllowanceCurve, mg
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
-        className: "mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm",
-        children: /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
-          className: "flex items-start",
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
-              className: "p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5",
-              children: /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("svg", {
-                xmlns: "http://www.w3.org/2000/svg",
-                width: "16",
-                height: "16",
-                viewBox: "0 0 24 24",
-                fill: "none",
-                stroke: "currentColor",
-                strokeWidth: "2",
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                className: "text-indigo-400",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("title", {
-                    children: "Info"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("circle", {
-                    cx: "12",
-                    cy: "12",
-                    r: "10"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("path", {
-                    d: "M12 16v-4"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("path", {
-                    d: "M12 8h.01"
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
-              children: [
-                /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("span", {
-                  className: "font-medium text-indigo-300",
-                  children: "About"
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards and half the withdrawal fees."
-                }, undefined, false, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
+      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(InfoCard, {
+        text: "MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards and half the withdrawal fees."
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
 
 // src/pages/SupplyLiquidityPage.tsx
-var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
-var SupplyLiquidityPage = ({ mgpBalance, mgpCurveBalance, rmgpCurveBalance, decimals, ymgpCurveBalance, mgpLPAmount, ymgpLPAmount, ymgpBalance, rmgpLPAmount, setYMGPLPAmount, rmgpBalance, supplyLiquidity, setMGPLPAmount, setRMGPLPAmount }) => {
-  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(jsx_dev_runtime16.Fragment, {
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+var SupplyLiquidityPage = ({ mgpBalance, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, mgpLPAmount, ymgpLPAmount, ymgpBalance, rmgpLPAmount, setYMGPLPAmount, rmgpBalance, supplyLiquidity, setMGPLPAmount, setRMGPLPAmount }) => {
+  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
         className: "bg-gray-700/50 p-5 rounded-lg",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-            className: "mb-4",
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(AmountInput, {
+            label: "Supply MGP",
+            balance: mgpBalance,
+            value: mgpLPAmount,
+            onChange: setMGPLPAmount,
+            token: { symbol: "MGP", color: "bg-blue-400", bgColor: "bg-blue-600" },
+            placeholder: (() => {
+              if (mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined)
+                return "0";
+              const mgpTarget = Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
+              const totalRecommendedLP = rmgpLPAmount === 0n ? Number(ymgpLPAmount) / (Number(ymgpCurveBalance) / Number(rmgpCurveBalance + ymgpCurveBalance)) : ymgpLPAmount === 0n ? Number(rmgpLPAmount) / (Number(rmgpCurveBalance) / Number(rmgpCurveBalance + ymgpCurveBalance)) : Number(rmgpLPAmount + ymgpLPAmount);
+              return formatEther2(BigInt(totalRecommendedLP * mgpTarget / (1 - mgpTarget))).toString();
+            })()
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+            className: "mb-4 text-sm text-gray-400 flex justify-between",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                className: "flex justify-between items-center mb-1",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("h3", {
-                    className: "text-md font-medium",
-                    children: "Supply MGP"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                    className: "text-sm text-gray-400",
-                    children: [
-                      "Balance: ",
-                      mgpBalance !== undefined ? formatEther2(mgpBalance, decimals.MGP) : "Loading...",
-                      " MGP"
-                    ]
-                  }, undefined, true, undefined, this)
-                ]
-              }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                className: "bg-gray-900 rounded-lg p-4 flex items-center justify-between",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("input", {
-                    type: "text",
-                    placeholder: (() => {
-                      if (mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined)
-                        return "0";
-                      const mgpTarget = Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
-                      const totalRecommendedLP = rmgpLPAmount === 0n ? Number(ymgpLPAmount) / (Number(ymgpCurveBalance) / Number(rmgpCurveBalance + ymgpCurveBalance)) : ymgpLPAmount === 0n ? Number(rmgpLPAmount) / (Number(rmgpCurveBalance) / Number(rmgpCurveBalance + ymgpCurveBalance)) : Number(rmgpLPAmount + ymgpLPAmount);
-                      const recommendedAmount = BigInt(totalRecommendedLP * mgpTarget / (1 - mgpTarget));
-                      return formatEther2(recommendedAmount).toString();
-                    })(),
-                    className: "bg-transparent outline-none text-xl w-3/4",
-                    value: mgpLPAmount === 0n ? undefined : formatEther2(mgpLPAmount),
-                    onChange: (e) => setMGPLPAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                    className: "flex items-center space-x-2",
-                    children: [
-                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("button", {
-                        type: "button",
-                        className: "text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded",
-                        onClick: () => setMGPLPAmount(mgpBalance ?? 0n),
-                        children: "MAX"
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                        className: "bg-blue-600 rounded-md px-3 py-1 flex items-center",
-                        children: [
-                          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                            className: "w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center mr-2",
-                            children: "M"
-                          }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
-                            children: "MGP"
-                          }, undefined, false, undefined, this)
-                        ]
-                      }, undefined, true, undefined, this)
-                    ]
-                  }, undefined, true, undefined, this)
-                ]
-              }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                className: "mt-2 text-sm text-gray-400 flex justify-between",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
-                    children: "Target"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
-                    children: mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? "Loading..." : `${(100 * Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed()}%`
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
+                children: "Target"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
+                children: mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? "Loading..." : `${(100 * Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed()}%`
+              }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-            className: "mb-4",
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(AmountInput, {
+            label: "Supply rMGP",
+            balance: rmgpBalance,
+            value: rmgpLPAmount,
+            onChange: setRMGPLPAmount,
+            token: { symbol: "rMGP", color: "bg-green-400", bgColor: "bg-green-600" },
+            placeholder: (() => {
+              if (mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined)
+                return "0";
+              const rmgpTarget = Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
+              const totalRecommendedLP = mgpLPAmount === 0n ? Number(ymgpLPAmount) / (Number(ymgpCurveBalance) / Number(mgpCurveBalance + ymgpCurveBalance)) : ymgpLPAmount === 0n ? Number(mgpLPAmount) / (Number(mgpCurveBalance) / Number(mgpCurveBalance + ymgpCurveBalance)) : Number(mgpLPAmount + ymgpLPAmount);
+              return formatEther2(BigInt(totalRecommendedLP * rmgpTarget / (1 - rmgpTarget))).toString();
+            })()
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+            className: "mb-4 text-sm text-gray-400 flex justify-between",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                className: "flex justify-between items-center mb-1",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("h3", {
-                    className: "text-md font-medium",
-                    children: "Supply rMGP"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                    className: "text-sm text-gray-400",
-                    children: [
-                      "Balance: ",
-                      rmgpBalance !== undefined ? formatEther2(rmgpBalance, decimals.RMGP) : "Loading...",
-                      " rMGP"
-                    ]
-                  }, undefined, true, undefined, this)
-                ]
-              }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                className: "bg-gray-900 rounded-lg p-4 flex items-center justify-between",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("input", {
-                    type: "text",
-                    placeholder: (() => {
-                      if (mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined)
-                        return "0";
-                      const rmgpTarget = Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
-                      const totalRecommendedLP = mgpLPAmount === 0n ? Number(ymgpLPAmount) / (Number(ymgpCurveBalance) / Number(mgpCurveBalance + ymgpCurveBalance)) : ymgpLPAmount === 0n ? Number(mgpLPAmount) / (Number(mgpCurveBalance) / Number(mgpCurveBalance + ymgpCurveBalance)) : Number(mgpLPAmount + ymgpLPAmount);
-                      const recommendedAmount = BigInt(totalRecommendedLP * rmgpTarget / (1 - rmgpTarget));
-                      return formatEther2(recommendedAmount).toString();
-                    })(),
-                    className: "bg-transparent outline-none text-xl w-3/4",
-                    value: rmgpLPAmount === 0n ? undefined : formatEther2(rmgpLPAmount),
-                    onChange: (e) => setRMGPLPAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                    className: "flex items-center space-x-2",
-                    children: [
-                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("button", {
-                        type: "button",
-                        className: "text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded",
-                        onClick: () => setRMGPLPAmount(rmgpBalance ?? 0n),
-                        children: "MAX"
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                        className: "bg-green-600 rounded-md px-3 py-1 flex items-center",
-                        children: [
-                          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                            className: "w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2",
-                            children: "R"
-                          }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
-                            children: "rMGP"
-                          }, undefined, false, undefined, this)
-                        ]
-                      }, undefined, true, undefined, this)
-                    ]
-                  }, undefined, true, undefined, this)
-                ]
-              }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                className: "mt-2 text-sm text-gray-400 flex justify-between",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
-                    children: "Target"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
-                    children: mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? "Loading..." : `${(100 * Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed()}%`
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
+                children: "Target"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
+                children: mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? "Loading..." : `${(100 * Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed()}%`
+              }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-            className: "mb-4",
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(AmountInput, {
+            label: "Supply yMGP",
+            balance: ymgpBalance,
+            value: ymgpLPAmount,
+            onChange: setYMGPLPAmount,
+            token: { symbol: "yMGP", color: "bg-green-400", bgColor: "bg-green-600" },
+            placeholder: (() => {
+              if (mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined)
+                return "0";
+              const ymgpTarget = Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
+              const totalRecommendedLP = mgpLPAmount === 0n ? Number(rmgpLPAmount) / (Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance)) : rmgpLPAmount === 0n ? Number(mgpLPAmount) / (Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance)) : Number(mgpLPAmount + rmgpLPAmount);
+              return formatEther2(BigInt(totalRecommendedLP * ymgpTarget / (1 - ymgpTarget))).toString();
+            })()
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+            className: "mb-4 text-sm text-gray-400 flex justify-between",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                className: "flex justify-between items-center mb-1",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("h3", {
-                    className: "text-md font-medium",
-                    children: "Supply yMGP"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                    className: "text-sm text-gray-400",
-                    children: [
-                      "Balance: ",
-                      ymgpBalance !== undefined ? formatEther2(ymgpBalance, decimals.YMGP) : "Loading...",
-                      " yMGP"
-                    ]
-                  }, undefined, true, undefined, this)
-                ]
-              }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                className: "bg-gray-900 rounded-lg p-4 flex items-center justify-between",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("input", {
-                    type: "text",
-                    placeholder: (() => {
-                      if (mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined)
-                        return "0";
-                      const ymgpTarget = Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
-                      const totalRecommendedLP = mgpLPAmount === 0n ? Number(rmgpLPAmount) / (Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance)) : rmgpLPAmount === 0n ? Number(mgpLPAmount) / (Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance)) : Number(mgpLPAmount + rmgpLPAmount);
-                      const recommendedAmount = BigInt(totalRecommendedLP * ymgpTarget / (1 - ymgpTarget));
-                      return formatEther2(recommendedAmount).toString();
-                    })(),
-                    className: "bg-transparent outline-none text-xl w-3/4",
-                    value: ymgpLPAmount === 0n ? undefined : formatEther2(ymgpLPAmount),
-                    onChange: (e) => setYMGPLPAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                    className: "flex items-center space-x-2",
-                    children: [
-                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("button", {
-                        type: "button",
-                        className: "text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded",
-                        onClick: () => setYMGPLPAmount(ymgpBalance ?? 0n),
-                        children: "MAX"
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                        className: "bg-green-600 rounded-md px-3 py-1 flex items-center",
-                        children: [
-                          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                            className: "w-5 h-5 rounded-full bg-green-500 flex items-center justify-center mr-2",
-                            children: "Y"
-                          }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
-                            children: "yMGP"
-                          }, undefined, false, undefined, this)
-                        ]
-                      }, undefined, true, undefined, this)
-                    ]
-                  }, undefined, true, undefined, this)
-                ]
-              }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-                className: "mt-2 text-sm text-gray-400 flex justify-between",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
-                    children: "Target"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
-                    children: mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? "Loading..." : `${(100 * Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed()}%`
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
+                children: "Target"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
+                children: mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? "Loading..." : `${(100 * Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed()}%`
+              }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("button", {
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("button", {
             type: "submit",
             className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}",
             onClick: supplyLiquidity,
@@ -32768,474 +32678,167 @@ var SupplyLiquidityPage = ({ mgpBalance, mgpCurveBalance, rmgpCurveBalance, deci
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-        className: "mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm",
-        children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-          className: "flex items-start",
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-              className: "p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5",
-              children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("svg", {
-                xmlns: "http://www.w3.org/2000/svg",
-                width: "16",
-                height: "16",
-                viewBox: "0 0 24 24",
-                fill: "none",
-                stroke: "currentColor",
-                strokeWidth: "2",
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                className: "text-indigo-400",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("title", {
-                    children: "Info"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("circle", {
-                    cx: "12",
-                    cy: "12",
-                    r: "10"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("path", {
-                    d: "M12 16v-4"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("path", {
-                    d: "M12 8h.01"
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-              children: [
-                /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
-                  className: "font-medium text-indigo-300",
-                  children: "About"
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: [
-                    "Supply liquidity to the cMGP Curve pool (MGP/rMGP/yMGP). You can supply liquidity at any ratio of MGP:rMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use ",
-                    /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("a", {
-                      href: "https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/",
-                      className: "text-blue-400",
-                      children: "Curve"
-                    }, undefined, false, undefined, this),
-                    "."
-                  ]
-                }, undefined, true, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
-      }, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-};
-
-// src/pages/BuyVotesPage.tsx
-var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
-var BuyVotesPage = ({ sendAmount, ymgpAllowance, ymgpAllowanceCurve, ymgpBalance, ymgpVmgpCurveAmount, onApprove, setSendAmount }) => {
-  return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
-    children: [
-      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-        className: "bg-gray-700/50 p-5 rounded-lg",
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(AmountInput, {
-            label: "Get vMGP",
-            token: { symbol: "yMGP", color: "bg-green-400", bgColor: "bg-green-600" },
-            balance: ymgpBalance,
-            value: sendAmount,
-            onChange: setSendAmount
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-            className: "grid grid-cols-1 gap-2 mb-4",
-            children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-              className: "grid grid-cols-2 gap-2",
-              children: [
-                /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-                  children: [
-                    /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(TokenApproval, {
-                      sendAmount,
-                      allowance: ymgpAllowance,
-                      onApprove,
-                      tokenSymbol: "yMGP"
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
-                      type: "submit",
-                      className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
-                      onClick: depositYMGP,
-                      children: [
-                        "Mint (",
-                        formatEther2(sendAmount),
-                        " vMGP)"
-                      ]
-                    }, undefined, true, undefined, this)
-                  ]
-                }, undefined, true, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-                  children: [
-                    /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(TokenApproval, {
-                      sendAmount,
-                      allowance: ymgpAllowanceCurve,
-                      onApprove,
-                      tokenSymbol: "yMGP",
-                      curve: true
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-                      className: "relative",
-                      children: [
-                        /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
-                          type: "submit",
-                          className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
-                          onClick: buyVMGP,
-                          children: [
-                            "Buy on Curve (",
-                            formatEther2(ymgpVmgpCurveAmount ?? 0n),
-                            " yMGP)"
-                          ]
-                        }, undefined, true, undefined, this),
-                        ymgpVmgpCurveAmount !== undefined && (() => {
-                          const directRate = formatEther2(sendAmount);
-                          const curveRate = formatEther2(ymgpVmgpCurveAmount);
-                          const premiumDiscount = (curveRate - directRate) / directRate * 100;
-                          const isPremium = premiumDiscount > 0;
-                          return Math.abs(premiumDiscount) >= 0.01 ? /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
-                            className: `absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
-                            children: [
-                              isPremium ? "+" : "",
-                              premiumDiscount.toFixed(2),
-                              "%"
-                            ]
-                          }, undefined, true, undefined, this) : null;
-                        })()
-                      ]
-                    }, undefined, true, undefined, this)
-                  ]
-                }, undefined, true, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
-          }, undefined, false, undefined, this)
-        ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-        className: "mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm",
-        children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-          className: "flex items-start",
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-              className: "p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5",
-              children: /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("svg", {
-                xmlns: "http://www.w3.org/2000/svg",
-                width: "16",
-                height: "16",
-                viewBox: "0 0 24 24",
-                fill: "none",
-                stroke: "currentColor",
-                strokeWidth: "2",
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                className: "text-indigo-400",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("title", {
-                    children: "Info"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("circle", {
-                    cx: "12",
-                    cy: "12",
-                    r: "10"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("path", {
-                    d: "M12 16v-4"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("path", {
-                    d: "M12 8h.01"
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-              children: [
-                /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
-                  className: "font-medium text-indigo-300",
-                  children: "About"
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "vMGP is backed 1:1 by yMGP. This process can not be undone. vMGP is used to vote on Magpie proposals with Reefi's underlying vlMGP."
-                }, undefined, false, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
+      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(InfoCard, {
+        text: 'Supply liquidity to the cMGP Curve pool (MGP/rMGP/yMGP). You can supply liquidity at any ratio of MGP:rMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use <a href="https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/" className="text-blue-400">Curve</a>.'
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
 
 // src/pages/ConvertPage.tsx
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
-var ConvertPage = ({ sendAmount, rmgpBalance, rmgpAllowance, rmgpAllowanceCurve, rmgpYmgpCurveAmount, onApprove, setSendAmount, depositRMGP, buyYMGP }) => {
-  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(jsx_dev_runtime18.Fragment, {
-    children: [
-      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-        className: "bg-gray-700/50 p-5 rounded-lg",
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(AmountInput, {
-            label: "Convert rMGP",
-            token: { symbol: "rMGP", color: "bg-green-400", bgColor: "bg-green-600" },
-            balance: rmgpBalance,
-            value: sendAmount,
-            onChange: setSendAmount
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-            className: "grid grid-cols-1 gap-2 mb-4",
-            children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-              className: "grid grid-cols-2 gap-2",
-              children: [
-                /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-                  children: [
-                    /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(TokenApproval, {
-                      sendAmount,
-                      allowance: rmgpAllowance,
-                      onApprove,
-                      tokenSymbol: "rMGP"
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("button", {
-                      type: "submit",
-                      className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
-                      onClick: depositRMGP,
-                      children: [
-                        "Mint (",
-                        formatEther2(sendAmount),
-                        " yMGP)"
-                      ]
-                    }, undefined, true, undefined, this)
-                  ]
-                }, undefined, true, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-                  children: [
-                    /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(TokenApproval, {
-                      sendAmount,
-                      allowance: rmgpAllowanceCurve,
-                      onApprove,
-                      tokenSymbol: "rMGP",
-                      curve: true
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-                      className: "relative",
-                      children: [
-                        /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("button", {
-                          type: "submit",
-                          className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
-                          onClick: buyYMGP,
-                          children: [
-                            "Buy on Curve (",
-                            formatEther2(rmgpYmgpCurveAmount ?? 0n),
-                            " yMGP)"
-                          ]
-                        }, undefined, true, undefined, this),
-                        rmgpYmgpCurveAmount !== undefined && (() => {
-                          const directRate = formatEther2(sendAmount);
-                          const curveRate = formatEther2(rmgpYmgpCurveAmount);
-                          const premiumDiscount = (curveRate - directRate) / directRate * 100;
-                          const isPremium = premiumDiscount > 0;
-                          return Math.abs(premiumDiscount) >= 0.01 ? /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
-                            className: `absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
-                            children: [
-                              isPremium ? "+" : "",
-                              premiumDiscount.toFixed(2),
-                              "%"
-                            ]
-                          }, undefined, true, undefined, this) : null;
-                        })()
-                      ]
-                    }, undefined, true, undefined, this)
-                  ]
-                }, undefined, true, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
-          }, undefined, false, undefined, this)
-        ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-        className: "mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm",
-        children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-          className: "flex items-start",
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-              className: "p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5",
-              children: /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("svg", {
-                xmlns: "http://www.w3.org/2000/svg",
-                width: "16",
-                height: "16",
-                viewBox: "0 0 24 24",
-                fill: "none",
-                stroke: "currentColor",
-                strokeWidth: "2",
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                className: "text-indigo-400",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("title", {
-                    children: "Info"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("circle", {
-                    cx: "12",
-                    cy: "12",
-                    r: "10"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("path", {
-                    d: "M12 16v-4"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("path", {
-                    d: "M12 8h.01"
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
-              children: [
-                /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
-                  className: "font-medium text-indigo-300",
-                  children: "About"
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "yMGP is backed 1:1 by rMGP. This process can not be undone. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield."
-                }, undefined, false, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
-      }, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-};
-
-// src/pages/RedeemPage.tsx
 var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
-var RedeemPage = ({ rmgpBalance, sendAmount, rmgpAllowanceCurve, mgpRMGPRate, rmgpMgpCurveAmount, userWithdrawable, onApprove, setSendAmount, redeemRMGP, buyMGP, withdrawMGP, decimals, userPendingWithdraws, unsubmittedWithdraws, unlockSchedule }) => {
+var ConvertPage = ({ sendAmount, rmgpBalance, rmgpAllowance, rmgpAllowanceCurve, rmgpYmgpCurveAmount, onApprove, setSendAmount, depositRMGP, buyYMGP }) => {
   return /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
         className: "bg-gray-700/50 p-5 rounded-lg",
         children: [
           /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(AmountInput, {
-            label: "Redeem rMGP",
+            label: "Convert rMGP",
             token: { symbol: "rMGP", color: "bg-green-400", bgColor: "bg-green-600" },
             balance: rmgpBalance,
             value: sendAmount,
             onChange: setSendAmount
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+            className: "grid grid-cols-2 gap-2 mb-4",
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(TokenApproval, {
+                    sendAmount,
+                    allowance: rmgpAllowance,
+                    onApprove,
+                    tokenSymbol: "rMGP"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("button", {
+                    type: "submit",
+                    className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
+                    onClick: depositRMGP,
+                    children: [
+                      "Mint (",
+                      formatEther2(sendAmount),
+                      " yMGP)"
+                    ]
+                  }, undefined, true, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(BuyOnCurve, {
+                sendAmount,
+                curveAmount: rmgpYmgpCurveAmount,
+                allowanceCurve: rmgpAllowanceCurve,
+                rate: 1,
+                onApprove,
+                buy: buyYMGP,
+                tokenASymbol: "rMGP",
+                tokenBSymbol: "yMGP"
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(InfoCard, {
+        text: "yMGP is backed 1:1 by rMGP. This process can not be undone. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield."
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+};
+
+// src/pages/RedeemPage.tsx
+var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
+var RedeemPage = ({ rmgpBalance, sendAmount, rmgpAllowanceCurve, rmgpMGPRate, rmgpMgpCurveAmount, userWithdrawable, onApprove, setSendAmount, redeemRMGP, buyMGP, withdrawMGP, decimals: decimals2, userPendingWithdraws, unsubmittedWithdraws, unlockSchedule }) => {
+  return /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+        className: "bg-gray-700/50 p-5 rounded-lg",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(AmountInput, {
+            label: "Redeem rMGP",
+            token: { symbol: "rMGP", color: "bg-green-400", bgColor: "bg-green-600" },
+            balance: rmgpBalance,
+            value: sendAmount,
+            onChange: setSendAmount
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
             className: "grid grid-cols-2 gap-2",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("button", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("button", {
                 type: "submit",
                 className: "py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
                 onClick: redeemRMGP,
                 children: [
                   "Redeem via Queue (",
-                  mgpRMGPRate * formatEther2(sendAmount) * 0.9,
+                  rmgpMGPRate * formatEther2(sendAmount),
                   " MGP)"
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(TokenApproval, {
-                    sendAmount,
-                    allowance: rmgpAllowanceCurve,
-                    onApprove,
-                    tokenSymbol: "rMGP",
-                    curve: true
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
-                    className: "relative",
-                    children: [
-                      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("button", {
-                        type: "submit",
-                        className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
-                        onClick: buyMGP,
-                        children: [
-                          "Redeem Instantly on Curve (",
-                          formatEther2(rmgpMgpCurveAmount ?? 0n),
-                          " MGP)"
-                        ]
-                      }, undefined, true, undefined, this),
-                      rmgpMgpCurveAmount !== undefined && (() => {
-                        const directRate = mgpRMGPRate * formatEther2(sendAmount) * 0.9;
-                        const curveRate = formatEther2(rmgpMgpCurveAmount);
-                        const premiumDiscount = (curveRate - directRate) / directRate * 100;
-                        const isPremium = premiumDiscount > 0;
-                        return Math.abs(premiumDiscount) >= 0.01 ? /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
-                          className: `absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
-                          children: [
-                            isPremium ? "+" : "",
-                            premiumDiscount.toFixed(2),
-                            "%"
-                          ]
-                        }, undefined, true, undefined, this) : null;
-                      })()
-                    ]
-                  }, undefined, true, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(BuyOnCurve, {
+                sendAmount,
+                curveAmount: rmgpMgpCurveAmount,
+                allowanceCurve: rmgpAllowanceCurve,
+                rate: rmgpMGPRate,
+                onApprove,
+                buy: buyMGP,
+                tokenASymbol: "rMGP",
+                tokenBSymbol: "MGP"
+              }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
             className: "mt-4 text-sm text-gray-400 flex justify-between",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
                 children: "Native Redemption Rate"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
                 children: [
-                  mgpRMGPRate * 0.9,
+                  rmgpMGPRate,
                   " MGP to rMGP"
                 ]
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          userPendingWithdraws === undefined ? /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+          userPendingWithdraws === undefined ? /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
             children: "Loading..."
-          }, undefined, false, undefined, this) : userPendingWithdraws > 0n ? /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+          }, undefined, false, undefined, this) : userPendingWithdraws > 0n ? /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("h3", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("h3", {
                 className: "text-md font-medium mt-4",
                 children: "Pending Withdraws"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
                 children: [
-                  formatEther2(userPendingWithdraws, decimals.MGP),
+                  formatEther2(userPendingWithdraws, decimals2.MGP),
                   " MGP"
                 ]
               }, undefined, true, undefined, this),
-              unlockSchedule?.[0] ? /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+              unlockSchedule?.[0] ? /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
                 children: [
                   "Unlock available in: ",
                   formatTime(Number(unlockSchedule[0].endTime) - +new Date / 1000),
                   " to ",
                   formatTime((unsubmittedWithdraws !== undefined ? Number(unlockSchedule[unlockSchedule.length - 1]?.endTime) + 60 * 60 * 24 * 60 : Number(unlockSchedule[unlockSchedule.length - 1]?.endTime)) - +new Date / 1000)
                 ]
-              }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+              }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
                 children: "N/A"
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this) : "",
-          userWithdrawable === undefined ? /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+          userWithdrawable === undefined ? /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
             children: "Loading..."
-          }, undefined, false, undefined, this) : userWithdrawable > 0n ? /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(jsx_dev_runtime19.Fragment, {
+          }, undefined, false, undefined, this) : userWithdrawable > 0n ? /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("h3", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("h3", {
                 className: "text-md font-medium mt-4",
                 children: "Available To Withdraw"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
                 children: [
-                  formatEther2(userWithdrawable, decimals.MGP),
+                  formatEther2(userWithdrawable, decimals2.MGP),
                   " MGP"
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("button", {
+              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("button", {
                 type: "submit",
                 className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}",
                 onClick: withdrawMGP,
@@ -33245,102 +32848,44 @@ var RedeemPage = ({ rmgpBalance, sendAmount, rmgpAllowanceCurve, mgpRMGPRate, rm
           }, undefined, true, undefined, this) : ""
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
-        className: "mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm",
-        children: /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
-          className: "flex items-start",
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
-              className: "p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5",
-              children: /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("svg", {
-                xmlns: "http://www.w3.org/2000/svg",
-                width: "16",
-                height: "16",
-                viewBox: "0 0 24 24",
-                fill: "none",
-                stroke: "currentColor",
-                strokeWidth: "2",
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                className: "text-indigo-400",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("title", {
-                    children: "Info"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("circle", {
-                    cx: "12",
-                    cy: "12",
-                    r: "10"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("path", {
-                    d: "M12 16v-4"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("path", {
-                    d: "M12 8h.01"
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
-              children: [
-                /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
-                  className: "font-medium text-indigo-300",
-                  children: "About"
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "rMGP can be redeemed for the underlying MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate via Curve."
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days."
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "Only 6 withdrawals can be processed through Magpie at once. If all slots are used, withdrawals will be added to the queue once a new slot is made available making worst case withdrawal time 120 days."
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "With the 10% withdrawal fee, rMGP depegs under 90% of the underlying value always recover as they can be arbitraged by people willing to wait for withdrawals to be processed."
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "Half of the withdrawal fee (5% of withdrawal) is redistributed to yMGP holders as yield, with the other half sent to the Reefi treasury."
-                }, undefined, false, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(InfoCard, {
+        text: [
+          "rMGP can be redeemed for the underlying MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate via Curve.",
+          "The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.",
+          "Only 6 withdrawals can be processed through Magpie at once. If all slots are used, withdrawals will be added to the queue once a new slot is made available making worst case withdrawal time 120 days.",
+          "With the 10% withdrawal fee, rMGP depegs under 90% of the underlying value always recover as they can be arbitraged by people willing to wait for withdrawals to be processed.",
+          "Half of the withdrawal fee (5% of withdrawal) is redistributed to yMGP holders as yield, with the other half sent to the Reefi treasury."
+        ]
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
 
 // src/pages/LockPage.tsx
-var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
 var LockPage = ({ sendAmount, ymgpBalance, totalLockedYMGP, mgpAPR, reefiLockedMGP, setSendAmount, lockYMGP }) => {
-  return /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+  return /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
         className: "bg-gray-700/50 p-5 rounded-lg",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(AmountInput, {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(AmountInput, {
             label: "Lock yMGP",
             token: { symbol: "yMGP", color: "bg-green-400", bgColor: "bg-green-600" },
             balance: ymgpBalance,
             value: sendAmount,
             onChange: setSendAmount
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
             className: "mb-4 text-sm text-gray-400",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
                 className: "flex justify-between mb-1",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                     children: "Base APY"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                     children: [
                       Math.round(1e4 * aprToApy(mgpAPR) * 0.9) / 100,
                       "%"
@@ -33348,13 +32893,13 @@ var LockPage = ({ sendAmount, ymgpBalance, totalLockedYMGP, mgpAPR, reefiLockedM
                   }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
                 className: "flex justify-between mb-1",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                     children: "Additional APY"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                     children: [
                       Math.round(1e4 * (Number(reefiLockedMGP) * aprToApy(mgpAPR) * 0.05 / Number(totalLockedYMGP))) / 100,
                       "%+"
@@ -33362,13 +32907,13 @@ var LockPage = ({ sendAmount, ymgpBalance, totalLockedYMGP, mgpAPR, reefiLockedM
                   }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
                 className: "flex justify-between mb-1",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                     children: "Total APY"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
                     children: [
                       Math.round(1e4 * (Number(reefiLockedMGP) * aprToApy(mgpAPR) * 0.05 / Number(totalLockedYMGP) + aprToApy(mgpAPR) * 0.9)) / 100,
                       "%+"
@@ -33378,7 +32923,7 @@ var LockPage = ({ sendAmount, ymgpBalance, totalLockedYMGP, mgpAPR, reefiLockedM
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("button", {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("button", {
             type: "submit",
             className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
             onClick: lockYMGP,
@@ -33386,126 +32931,32 @@ var LockPage = ({ sendAmount, ymgpBalance, totalLockedYMGP, mgpAPR, reefiLockedM
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
-        className: "mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm",
-        children: /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
-          className: "flex items-start",
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
-              className: "p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5",
-              children: /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("svg", {
-                xmlns: "http://www.w3.org/2000/svg",
-                width: "16",
-                height: "16",
-                viewBox: "0 0 24 24",
-                fill: "none",
-                stroke: "currentColor",
-                strokeWidth: "2",
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                className: "text-indigo-400",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("title", {
-                    children: "Info"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("circle", {
-                    cx: "12",
-                    cy: "12",
-                    r: "10"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("path", {
-                    d: "M12 16v-4"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("path", {
-                    d: "M12 8h.01"
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
-              children: [
-                /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
-                  className: "font-medium text-indigo-300",
-                  children: "About"
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "yMGP can be locked to earn additional yield paid in rMGP. 5% of protocol yield and half of rMGP withdrawal fees are paid to yMGP lockers."
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi's vlMGP."
-                }, undefined, false, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
+      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(InfoCard, {
+        text: [
+          "yMGP can be locked to earn additional yield paid in rMGP. 5% of protocol yield and half of rMGP withdrawal fees are paid to yMGP lockers.",
+          "Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi's vlMGP."
+        ]
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
 
 // src/pages/UnlockPage.tsx
-var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
-var UnlockPage = ({ ymgpBalance, decimals, sendAmount, setSendAmount, unlockYMGP }) => {
-  return /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
+var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
+var UnlockPage = ({ ymgpBalance, sendAmount, setSendAmount, unlockYMGP }) => {
+  return /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(jsx_dev_runtime22.Fragment, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
         className: "bg-gray-700/50 p-5 rounded-lg",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-            className: "flex justify-between items-center mb-1",
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("h3", {
-                className: "text-md font-medium",
-                children: "Unlock yMGP"
-              }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-                className: "text-sm text-gray-400",
-                children: [
-                  "Balance: ",
-                  ymgpBalance !== undefined ? formatEther2(ymgpBalance, decimals.YMGP) : "Loading...",
-                  " yMGP"
-                ]
-              }, undefined, true, undefined, this)
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-            className: "bg-gray-900 rounded-lg p-4 flex items-center justify-between mb-4",
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("input", {
-                type: "text",
-                placeholder: "0.0",
-                className: "bg-transparent outline-none text-xl w-3/4",
-                value: formatEther2(sendAmount),
-                onChange: (e) => setSendAmount(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))
-              }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-                className: "flex items-center space-x-2",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("button", {
-                    type: "button",
-                    className: "text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded",
-                    onClick: () => setSendAmount(ymgpBalance ?? 0n),
-                    children: "MAX"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-                    className: "rounded-md px-3 py-1 flex items-center bg-green-600",
-                    children: [
-                      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-                        className: "w-5 h-5 rounded-full flex items-center justify-center mr-2 bg-green-500",
-                        children: "Y"
-                      }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
-                        children: "yMGP"
-                      }, undefined, false, undefined, this)
-                    ]
-                  }, undefined, true, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("button", {
+          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(AmountInput, {
+            label: "Unlock yMGP",
+            balance: ymgpBalance,
+            value: sendAmount,
+            onChange: setSendAmount,
+            token: { symbol: "yMGP", color: "bg-green-400", bgColor: "bg-green-600" }
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("button", {
             type: "submit",
             className: "w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700",
             onClick: unlockYMGP,
@@ -33513,237 +32964,109 @@ var UnlockPage = ({ ymgpBalance, decimals, sendAmount, setSendAmount, unlockYMGP
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-        className: "mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm",
-        children: /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-          className: "flex items-start",
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-              className: "p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5",
-              children: /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("svg", {
-                xmlns: "http://www.w3.org/2000/svg",
-                width: "16",
-                height: "16",
-                viewBox: "0 0 24 24",
-                fill: "none",
-                stroke: "currentColor",
-                strokeWidth: "2",
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                className: "text-indigo-400",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("title", {
-                    children: "Info"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("circle", {
-                    cx: "12",
-                    cy: "12",
-                    r: "10"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("path", {
-                    d: "M12 16v-4"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("path", {
-                    d: "M12 8h.01"
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
-              children: [
-                /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
-                  className: "font-medium text-indigo-300",
-                  children: "About"
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "yMGP can be locked to earn additional yield paid in rMGP. 5% of protocol yield and half of rMGP withdrawal fees are paid to yMGP lockers."
-                }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
-                  className: "text-gray-300 mt-1",
-                  children: "Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi's vlMGP."
-                }, undefined, false, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
+      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(InfoCard, {
+        text: ["yMGP can be locked to earn additional yield paid in rMGP. 5% of protocol yield and half of rMGP withdrawal fees are paid to yMGP lockers.", "Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi's vlMGP."]
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
 
-// src/App.tsx
-var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
-var decimals = { MGP: 18, RMGP: 18, YMGP: 18, VMGP: 18, CMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 };
-var publicClients = {
-  1: createPublicClient({ chain: mainnet, transport: webSocket("wss://eth.drpc.org") }),
-  56: createPublicClient({ chain: bsc, transport: webSocket("wss://bsc.drpc.org") }),
-  42161: createPublicClient({ chain: arbitrum, transport: webSocket("wss://arbitrum.drpc.org") })
+// src/hooks/useAllowances.ts
+var useAllowances = ({ account, chain }) => {
+  const [mgp, updateMGP] = useUpdateable(() => contracts[chain].MGP.read.allowance([account, contracts[chain].RMGP.address]), [contracts, chain, account]);
+  const [rmgp, updateRMGP] = useUpdateable(() => contracts[chain].RMGP.read.allowance([account, contracts[chain].YMGP.address]), [contracts, chain, account]);
+  const [ymgp, updateYMGP] = useUpdateable(() => contracts[chain].YMGP.read.allowance([account, contracts[chain].VMGP.address]), [contracts, chain, account]);
+  const [mgpCurve, updateMGPCurve] = useUpdateable(() => contracts[chain].MGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account]);
+  const [rmgpCurve, updateRMGPCurve] = useUpdateable(() => contracts[chain].RMGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account]);
+  const [ymgpCurve, updateYMGPCurve] = useUpdateable(() => contracts[chain].YMGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, account]);
+  return { mgp, rmgp, ymgp, mgpCurve, rmgpCurve, ymgpCurve, updateMGP, updateRMGP, updateYMGP, updateMGPCurve, updateRMGPCurve, updateYMGPCurve };
 };
-var ABIs = {
-  RMGP: [{ inputs: [{ internalType: "address", name: "_mgpToken", type: "address" }, { internalType: "address", name: "_ymgpToken", type: "address" }, { internalType: "address", name: "_masterMagpie", type: "address" }, { internalType: "address", name: "_vlMGP", type: "address" }, { internalType: "address", name: "_weth", type: "address" }], stateMutability: "nonpayable", type: "constructor" }, { inputs: [], name: "CannotUnlockZero", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "allowance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientAllowance", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }, { internalType: "uint256", name: "balance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientBalance", type: "error" }, { inputs: [{ internalType: "address", name: "approver", type: "address" }], name: "ERC20InvalidApprover", type: "error" }, { inputs: [{ internalType: "address", name: "receiver", type: "address" }], name: "ERC20InvalidReceiver", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }], name: "ERC20InvalidSender", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }], name: "ERC20InvalidSpender", type: "error" }, { inputs: [], name: "InsufficientBalance", type: "error" }, { inputs: [], name: "NoLockedTokens", type: "error" }, { inputs: [], name: "NoSlotsToUnlock", type: "error" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }], name: "OwnableInvalidOwner", type: "error" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "OwnableUnauthorizedAccount", type: "error" }, { inputs: [], name: "SwapRouterNotSet", type: "error" }, { inputs: [], name: "TransferFailed", type: "error" }, { inputs: [{ internalType: "string", name: "name", type: "string" }], name: "ZeroAddress", type: "error" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "owner", type: "address" }, { indexed: true, internalType: "address", name: "spender", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Approval", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "mgpAmount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "rmgpAmount", type: "uint256" }], name: "Deposited", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "mgpAmount", type: "uint256" }], name: "RewardsClaimed", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "from", type: "address" }, { indexed: true, internalType: "address", name: "to", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Transfer", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "rmgpAmount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "mgpAmount", type: "uint256" }], name: "UnlockStarted", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "slot", type: "uint256" }], name: "Unlocked", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Withdrawn", type: "event" }, { inputs: [], name: "MASTER_MAGPIE", outputs: [{ internalType: "contract IMasterMagpie", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "MGP_TOKEN", outputs: [{ internalType: "contract ERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "VL_MGP", outputs: [{ internalType: "contract IVL_MGP", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "WETH", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }], name: "addRewardsToken", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" }], name: "allowance", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "approve", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "claim", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "decimals", outputs: [{ internalType: "uint8", name: "", type: "uint8" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "mgpAmount", type: "uint256" }], name: "deposit", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "user", type: "address" }], name: "getUserPendingWithdraws", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "getUserWithdrawable", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "name", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "pendingWithdraws", outputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "mgpAmount", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }], name: "removeRewardsToken", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "rescueTokens", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "rewardTokens", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }, { internalType: "address", name: "swapRouter", type: "address" }], name: "setSwapRouter", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }], name: "setYMGP", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "rmgpAmount", type: "uint256" }], name: "startUnlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "swapRouters", outputs: [{ internalType: "contract ISwapRouter", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "symbol", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalSupply", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transfer", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "from", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transferFrom", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unsubmittedWithdraws", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "withdraw", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "ymgpToken", outputs: [{ internalType: "contract ERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }],
-  YMGP: [{ inputs: [{ internalType: "address", name: "_rmgpToken", type: "address" }], stateMutability: "nonpayable", type: "constructor" }, { inputs: [], name: "CannotLockZero", type: "error" }, { inputs: [], name: "CannotUnlockZero", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "allowance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientAllowance", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }, { internalType: "uint256", name: "balance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientBalance", type: "error" }, { inputs: [{ internalType: "address", name: "approver", type: "address" }], name: "ERC20InvalidApprover", type: "error" }, { inputs: [{ internalType: "address", name: "receiver", type: "address" }], name: "ERC20InvalidReceiver", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }], name: "ERC20InvalidSender", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }], name: "ERC20InvalidSpender", type: "error" }, { inputs: [], name: "InsufficientBalance", type: "error" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }], name: "OwnableInvalidOwner", type: "error" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "OwnableUnauthorizedAccount", type: "error" }, { inputs: [], name: "TransferFailed", type: "error" }, { inputs: [{ internalType: "string", name: "name", type: "string" }], name: "ZeroAddress", type: "error" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "owner", type: "address" }, { indexed: true, internalType: "address", name: "spender", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Approval", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Deposited", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Locked", type: "event" }, { anonymous: false, inputs: [], name: "NoYieldToClaim", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "from", type: "address" }, { indexed: true, internalType: "address", name: "to", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Transfer", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "YieldClaimed", type: "event" }, { inputs: [], name: "RMGP_TOKEN", outputs: [{ internalType: "contract ERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" }], name: "allowance", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "approve", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "claim", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "decimals", outputs: [{ internalType: "uint8", name: "", type: "uint8" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }], name: "deposit", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }], name: "lock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "lockedBalances", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "name", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "rescueTokens", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "symbol", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalLocked", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalSupply", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transfer", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "from", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transferFrom", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unclaimedUserYield", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }], name: "unlock", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "userClaimedYield", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }],
-  VMGP: [{ inputs: [{ internalType: "address", name: "_ymgpToken", type: "address" }], stateMutability: "nonpayable", type: "constructor" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "allowance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientAllowance", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }, { internalType: "uint256", name: "balance", type: "uint256" }, { internalType: "uint256", name: "needed", type: "uint256" }], name: "ERC20InsufficientBalance", type: "error" }, { inputs: [{ internalType: "address", name: "approver", type: "address" }], name: "ERC20InvalidApprover", type: "error" }, { inputs: [{ internalType: "address", name: "receiver", type: "address" }], name: "ERC20InvalidReceiver", type: "error" }, { inputs: [{ internalType: "address", name: "sender", type: "address" }], name: "ERC20InvalidSender", type: "error" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }], name: "ERC20InvalidSpender", type: "error" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }], name: "OwnableInvalidOwner", type: "error" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "OwnableUnauthorizedAccount", type: "error" }, { inputs: [], name: "TransferFailed", type: "error" }, { inputs: [{ internalType: "string", name: "name", type: "string" }], name: "ZeroAddress", type: "error" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "owner", type: "address" }, { indexed: true, internalType: "address", name: "spender", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Approval", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Deposited", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "from", type: "address" }, { indexed: true, internalType: "address", name: "to", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Transfer", type: "event" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" }], name: "allowance", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "approve", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "account", type: "address" }], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "decimals", outputs: [{ internalType: "uint8", name: "", type: "uint8" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }], name: "deposit", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "name", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "token", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "rescueTokens", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_ymgpToken", type: "address" }], name: "setYMGP", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "symbol", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalSupply", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transfer", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "from", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "value", type: "uint256" }], name: "transferFrom", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "ymgpToken", outputs: [{ internalType: "contract ERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }],
-  VLMGP: [{ inputs: [], name: "AllUnlockSlotOccupied", type: "error" }, { inputs: [], name: "AlreadyMigrated", type: "error" }, { inputs: [], name: "BeyondUnlockLength", type: "error" }, { inputs: [], name: "BeyondUnlockSlotLimit", type: "error" }, { inputs: [], name: "BurnEventManagerNotSet", type: "error" }, { inputs: [], name: "BurnEvnentManagerPaused", type: "error" }, { inputs: [], name: "InvalidAddress", type: "error" }, { inputs: [], name: "InvalidCoolDownPeriod", type: "error" }, { inputs: [], name: "IsZeroAddress", type: "error" }, { inputs: [], name: "MaxSlotCantLowered", type: "error" }, { inputs: [], name: "MaxSlotShouldNotZero", type: "error" }, { inputs: [], name: "NotEnoughLockedMPG", type: "error" }, { inputs: [], name: "NotInCoolDown", type: "error" }, { inputs: [], name: "PenaltyToNotSet", type: "error" }, { inputs: [], name: "StillInCoolDown", type: "error" }, { inputs: [], name: "TransferNotWhiteListed", type: "error" }, { inputs: [], name: "UnlockSlotOccupied", type: "error" }, { inputs: [], name: "UnlockedAlready", type: "error" }, { inputs: [], name: "coolDownInSecCanCauseOverflow", type: "error" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "owner", type: "address" }, { indexed: true, internalType: "address", name: "spender", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Approval", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "_coolDownSecs", type: "uint256" }], name: "CoolDownInSecsUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "slotIdx", type: "uint256" }, { indexed: false, internalType: "uint256", name: "mgpamount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "penaltyAmount", type: "uint256" }], name: "ForceUnLock", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint8", name: "version", type: "uint8" }], name: "Initialized", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "_maxSlot", type: "uint256" }], name: "MaxSlotUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: true, internalType: "uint256", name: "timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "NewLock", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_oldMaster", type: "address" }, { indexed: false, internalType: "address", name: "_newMaster", type: "address" }], name: "NewMasterChiefUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Paused", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "penaltyDestination", type: "address" }], name: "PenaltyDestinationUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "penaltyDestination", type: "address" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "PenaltySentTo", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: false, internalType: "uint256", name: "slotIdx", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "ReLock", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "from", type: "address" }, { indexed: true, internalType: "address", name: "to", type: "address" }, { indexed: false, internalType: "uint256", name: "value", type: "uint256" }], name: "Transfer", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: true, internalType: "uint256", name: "timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }], name: "Unlock", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: true, internalType: "uint256", name: "_timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }], name: "UnlockStarts", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Unpaused", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "user", type: "address" }, { indexed: true, internalType: "uint256", name: "timestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "amount", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_eventId", type: "uint256" }], name: "VlMgpBurn", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_for", type: "address" }, { indexed: false, internalType: "bool", name: "_status", type: "bool" }], name: "WhitelistSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "burnEventManager", type: "address" }], name: "burnEventManagerSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "referralStorage", type: "address" }], name: "referralStorageSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "wombatBribeManager", type: "address" }], name: "wombatBribeManagerSet", type: "event" }, { inputs: [], name: "DENOMINATOR", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "MGP", outputs: [{ internalType: "contract IERC20", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_masterMagpie", type: "address" }, { internalType: "uint256", name: "_maxSlots", type: "uint256" }, { internalType: "address", name: "_mgp", type: "address" }, { internalType: "uint256", name: "_coolDownInSecs", type: "uint256" }], name: "__vlMGP_init_", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "owner", type: "address" }, { internalType: "address", name: "spender", type: "address" }], name: "allowance", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "approve", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "balanceOf", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "burnEventManager", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "_vlmgpAmountToBurn", type: "uint256" }, { internalType: "uint256", name: "_vlmgpBurnEventId", type: "uint256" }], name: "burnVlmgp", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "cancelUnlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "coolDownInSecs", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "decimals", outputs: [{ internalType: "uint8", name: "", type: "uint8" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "subtractedValue", type: "uint256" }], name: "decreaseAllowance", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "expectedPenaltyAmount", outputs: [{ internalType: "uint256", name: "penaltyAmount", type: "uint256" }, { internalType: "uint256", name: "amontToUser", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "forceUnLock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getFullyUnlock", outputs: [{ internalType: "uint256", name: "unlockedAmount", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getNextAvailableUnlockSlot", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getRewardablePercentWAD", outputs: [{ internalType: "uint256", name: "percent", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserAmountInCoolDown", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }, { internalType: "uint256", name: "n", type: "uint256" }], name: "getUserNthUnlockSlot", outputs: [{ internalType: "uint256", name: "startTime", type: "uint256" }, { internalType: "uint256", name: "endTime", type: "uint256" }, { internalType: "uint256", name: "amountInCoolDown", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserTotalLocked", outputs: [{ internalType: "uint256", name: "_lockAmount", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserUnlockSlotLength", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_user", type: "address" }], name: "getUserUnlockingSchedule", outputs: [{ components: [{ internalType: "uint256", name: "startTime", type: "uint256" }, { internalType: "uint256", name: "endTime", type: "uint256" }, { internalType: "uint256", name: "amountInCoolDown", type: "uint256" }], internalType: "struct ILocker.UserUnlocking[]", name: "slots", type: "tuple[]" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "spender", type: "address" }, { internalType: "uint256", name: "addedValue", type: "uint256" }], name: "increaseAllowance", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }], name: "lock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "lockFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "masterMagpie", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "maxSlot", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "name", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "pause", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "paused", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [], name: "penaltyDestination", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "referralStorage", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_coolDownSecs", type: "uint256" }], name: "setCoolDownInSecs", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_masterMagpie", type: "address" }], name: "setMasterChief", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_maxSlots", type: "uint256" }], name: "setMaxSlots", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_burnEventMAnager", type: "address" }], name: "setMgpBurnEventManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_penaltyDestination", type: "address" }], name: "setPenaltyDestination", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_referralStorage", type: "address" }], name: "setReferralStorage", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_for", type: "address" }, { internalType: "bool", name: "_status", type: "bool" }], name: "setWhitelistForTransfer", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_bribeManager", type: "address" }], name: "setWombatBribeManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amountToCoolDown", type: "uint256" }], name: "startUnlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "symbol", outputs: [{ internalType: "string", name: "", type: "string" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalAmountInCoolDown", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalLocked", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalPenalty", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalSupply", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "transfer", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "from", type: "address" }, { internalType: "address", name: "to", type: "address" }, { internalType: "uint256", name: "amount", type: "uint256" }], name: "transferFrom", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "transferPenalty", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "transferWhitelist", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "_slotIndex", type: "uint256" }], name: "unlock", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "unpause", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }, { internalType: "uint256", name: "", type: "uint256" }], name: "userUnlockings", outputs: [{ internalType: "uint256", name: "startTime", type: "uint256" }, { internalType: "uint256", name: "endTime", type: "uint256" }, { internalType: "uint256", name: "amountInCoolDown", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "wombatBribeManager", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }],
-  MASTERMGP: [{ inputs: [], name: "IndexOutOfBound", type: "error" }, { inputs: [], name: "InvalidStakingToken", type: "error" }, { inputs: [], name: "LengthMismatch", type: "error" }, { inputs: [], name: "MGPsetAlready", type: "error" }, { inputs: [], name: "MustBeContract", type: "error" }, { inputs: [], name: "MustBeContractOrZero", type: "error" }, { inputs: [], name: "MustNotBeZero", type: "error" }, { inputs: [], name: "OnlyActivePool", type: "error" }, { inputs: [], name: "OnlyCompounder", type: "error" }, { inputs: [], name: "OnlyLocker", type: "error" }, { inputs: [], name: "OnlyPoolHelper", type: "error" }, { inputs: [], name: "OnlyPoolManager", type: "error" }, { inputs: [], name: "OnlyWhiteListedAllocUpdator", type: "error" }, { inputs: [], name: "PoolExsisted", type: "error" }, { inputs: [], name: "UnlockAmountExceedsLocked", type: "error" }, { inputs: [], name: "WithdrawAmountExceedsStaked", type: "error" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_oldARBRewarder", type: "address" }, { indexed: false, internalType: "address", name: "_newARBRewarder", type: "address" }], name: "ARBRewarderSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "rewarder", type: "address" }], name: "ARBRewarderSetAsQueuer", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint256", name: "_allocPoint", type: "uint256" }, { indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: true, internalType: "contract IBaseRewardPool", name: "_rewarder", type: "address" }], name: "Add", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_newCompounder", type: "address" }, { indexed: false, internalType: "address", name: "_oldCompounder", type: "address" }], name: "CompounderUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }], name: "Deposit", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }], name: "DepositNotAvailable", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }], name: "EmergencyWithdraw", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_account", type: "address" }, { indexed: true, internalType: "address", name: "_receiver", type: "address" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }, { indexed: false, internalType: "bool", name: "isLock", type: "bool" }], name: "HarvestMGP", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "uint8", name: "version", type: "uint8" }], name: "Initialized", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "address[]", name: "_legacyRewarder", type: "address[]" }], name: "LegacyRewardersSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "bool", name: "_isRewardMGP", type: "bool" }], name: "LockFreePoolUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_mgp", type: "address" }], name: "MGPSet", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_mWomSV", type: "address" }, { indexed: false, internalType: "address", name: "_oldMWomSV", type: "address" }], name: "MWomSVpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Paused", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_account", type: "address" }, { indexed: false, internalType: "bool", name: "_status", type: "bool" }], name: "PoolManagerStatus", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_allocPoint", type: "uint256" }, { indexed: true, internalType: "contract IBaseRewardPool", name: "_rewarder", type: "address" }], name: "Set", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Unpaused", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: false, internalType: "uint256", name: "_oldMgpPerSec", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_newMgpPerSec", type: "uint256" }], name: "UpdateEmissionRate", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_lastRewardTimestamp", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_lpSupply", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_accMGPPerShare", type: "uint256" }], name: "UpdatePool", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_oldAllocPoint", type: "uint256" }, { indexed: false, internalType: "uint256", name: "_newAllocPoint", type: "uint256" }], name: "UpdatePoolAlloc", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_newVlmgp", type: "address" }, { indexed: false, internalType: "address", name: "_oldVlmgp", type: "address" }], name: "VLMGPUpdated", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "_user", type: "address" }, { indexed: true, internalType: "address", name: "_stakingToken", type: "address" }, { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }], name: "Withdraw", type: "event" }, { inputs: [], name: "ARBRewarder", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "AllocationManagers", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "MPGRewardPool", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "PoolManagers", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_mgp", type: "address" }, { internalType: "uint256", name: "_mgpPerSec", type: "uint256" }, { internalType: "uint256", name: "_startTimestamp", type: "uint256" }], name: "__MasterMagpie_init", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_allocPoint", type: "uint256" }, { internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "_rewarder", type: "address" }, { internalType: "address", name: "_helper", type: "address" }, { internalType: "bool", name: "_helperNeedsHarvest", type: "bool" }], name: "add", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_newAllocationManager", type: "address" }], name: "addWhitelistedAllocManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "_user", type: "address" }], name: "allPendingLegacyTokens", outputs: [{ internalType: "address[][]", name: "bonusTokenAddresses", type: "address[][]" }, { internalType: "string[][]", name: "bonusTokenSymbols", type: "string[][]" }, { internalType: "uint256[][]", name: "pendingBonusRewards", type: "uint256[][]" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "_user", type: "address" }], name: "allPendingTokens", outputs: [{ internalType: "uint256", name: "pendingMGP", type: "uint256" }, { internalType: "address[]", name: "bonusTokenAddresses", type: "address[]" }, { internalType: "string[]", name: "bonusTokenSymbols", type: "string[]" }, { internalType: "uint256[]", name: "pendingBonusRewards", type: "uint256[]" }], stateMutability: "view", type: "function" }, { inputs: [], name: "compounder", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "mainRewardToken", type: "address" }], name: "createRewarder", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "uint256", name: "_amount", type: "uint256" }], name: "deposit", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "depositFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "depositMWomSVFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "depositVlMGPFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }], name: "getPoolInfo", outputs: [{ internalType: "uint256", name: "emission", type: "uint256" }, { internalType: "uint256", name: "allocpoint", type: "uint256" }, { internalType: "uint256", name: "sizeOfPool", type: "uint256" }, { internalType: "uint256", name: "totalPoint", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "stakingToken", type: "address" }], name: "getRewarder", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "legacyRewarder_deprecated", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }, { internalType: "uint256", name: "", type: "uint256" }], name: "legacyRewarders", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "mWomSV", outputs: [{ internalType: "contract ILocker", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "massUpdatePools", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "mgp", outputs: [{ internalType: "contract MGP", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "mgpPerSec", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }], name: "multiclaim", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }, { internalType: "address[][]", name: "_rewardTokens", type: "address[][]" }, { internalType: "address", name: "_account", type: "address" }], name: "multiclaimFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }, { internalType: "address[][]", name: "_rewardTokens", type: "address[][]" }, { internalType: "address", name: "_account", type: "address" }], name: "multiclaimOnBehalf", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }, { internalType: "address[][]", name: "_rewardTokens", type: "address[][]" }], name: "multiclaimSpec", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "pause", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "paused", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "_user", type: "address" }, { internalType: "address", name: "_rewardToken", type: "address" }], name: "pendingTokens", outputs: [{ internalType: "uint256", name: "pendingMGP", type: "uint256" }, { internalType: "address", name: "bonusTokenAddress", type: "address" }, { internalType: "string", name: "bonusTokenSymbol", type: "string" }, { internalType: "uint256", name: "pendingBonusToken", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "poolLength", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "referral", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "registeredToken", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "index", type: "uint256" }], name: "removeWhitelistedAllocManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }], name: "rewarderBonusTokenInfo", outputs: [{ internalType: "address[]", name: "bonusTokenAddresses", type: "address[]" }, { internalType: "string[]", name: "bonusTokenSymbols", type: "string[]" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "uint256", name: "_allocPoint", type: "uint256" }, { internalType: "address", name: "_helper", type: "address" }, { internalType: "address", name: "_rewarder", type: "address" }, { internalType: "bool", name: "_helperNeedsHarvest", type: "bool" }], name: "set", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_ARBRewarder", type: "address" }], name: "setARBRewarder", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_pools", type: "address[]" }], name: "setARBRewarderAsQueuer", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_compounder", type: "address" }], name: "setCompounder", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }, { internalType: "address[][]", name: "_legacyRewarder", type: "address[][]" }], name: "setLegacyRewarder", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "bool", name: "_isLockFree", type: "bool" }], name: "setMGPRewardPools", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_mWomSV", type: "address" }], name: "setMWomSV", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_account", type: "address" }, { internalType: "bool", name: "_allowedManager", type: "bool" }], name: "setPoolManagerStatus", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_referral", type: "address" }], name: "setReferral", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_vlmgp", type: "address" }], name: "setVlmgp", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "address", name: "_user", type: "address" }], name: "stakingInfo", outputs: [{ internalType: "uint256", name: "stakedAmount", type: "uint256" }, { internalType: "uint256", name: "availableAmount", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "startTimestamp", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }], name: "tokenToPoolInfo", outputs: [{ internalType: "address", name: "stakingToken", type: "address" }, { internalType: "uint256", name: "allocPoint", type: "uint256" }, { internalType: "uint256", name: "lastRewardTimestamp", type: "uint256" }, { internalType: "uint256", name: "accMGPPerShare", type: "uint256" }, { internalType: "address", name: "rewarder", type: "address" }, { internalType: "address", name: "helper", type: "address" }, { internalType: "bool", name: "helperNeedsHarvest", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [], name: "totalAllocPoint", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "", type: "address" }, { internalType: "address", name: "", type: "address" }], name: "unClaimedMgp", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "unpause", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_mgpPerSec", type: "uint256" }], name: "updateEmissionRate", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }], name: "updatePool", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }, { internalType: "uint256[]", name: "_allocPoints", type: "uint256[]" }], name: "updatePoolsAlloc", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_rewarder", type: "address" }, { internalType: "address", name: "_manager", type: "address" }, { internalType: "bool", name: "_allowed", type: "bool" }], name: "updateRewarderManager", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "vlmgp", outputs: [{ internalType: "contract ILocker", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "uint256", name: "_amount", type: "uint256" }], name: "withdraw", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }, { internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "withdrawFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "withdrawMWomSVFor", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_amount", type: "uint256" }, { internalType: "address", name: "_for", type: "address" }], name: "withdrawVlMGPFor", outputs: [], stateMutability: "nonpayable", type: "function" }],
-  VLREWARDER: [{ inputs: [{ internalType: "address", name: "_logic", type: "address" }, { internalType: "address", name: "admin_", type: "address" }, { internalType: "bytes", name: "_data", type: "bytes" }], stateMutability: "payable", type: "constructor" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "previousAdmin", type: "address" }, { indexed: false, internalType: "address", name: "newAdmin", type: "address" }], name: "AdminChanged", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "beacon", type: "address" }], name: "BeaconUpgraded", type: "event" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "implementation", type: "address" }], name: "Upgraded", type: "event" }, { stateMutability: "payable", type: "fallback" }, { inputs: [], name: "admin", outputs: [{ internalType: "address", name: "admin_", type: "address" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newAdmin", type: "address" }], name: "changeAdmin", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "implementation", outputs: [{ internalType: "address", name: "implementation_", type: "address" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newImplementation", type: "address" }], name: "upgradeTo", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newImplementation", type: "address" }, { internalType: "bytes", name: "data", type: "bytes" }], name: "upgradeToAndCall", outputs: [], stateMutability: "payable", type: "function" }, { stateMutability: "payable", type: "receive" }],
-  CMGP: [{ name: "Transfer", inputs: [{ name: "sender", type: "address", indexed: true }, { name: "receiver", type: "address", indexed: true }, { name: "value", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "Approval", inputs: [{ name: "owner", type: "address", indexed: true }, { name: "spender", type: "address", indexed: true }, { name: "value", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "TokenExchange", inputs: [{ name: "buyer", type: "address", indexed: true }, { name: "sold_id", type: "int128", indexed: false }, { name: "tokens_sold", type: "uint256", indexed: false }, { name: "bought_id", type: "int128", indexed: false }, { name: "tokens_bought", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "TokenExchangeUnderlying", inputs: [{ name: "buyer", type: "address", indexed: true }, { name: "sold_id", type: "int128", indexed: false }, { name: "tokens_sold", type: "uint256", indexed: false }, { name: "bought_id", type: "int128", indexed: false }, { name: "tokens_bought", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "AddLiquidity", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amounts", type: "uint256[]", indexed: false }, { name: "fees", type: "uint256[]", indexed: false }, { name: "invariant", type: "uint256", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RemoveLiquidity", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amounts", type: "uint256[]", indexed: false }, { name: "fees", type: "uint256[]", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RemoveLiquidityOne", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_id", type: "int128", indexed: false }, { name: "token_amount", type: "uint256", indexed: false }, { name: "coin_amount", type: "uint256", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RemoveLiquidityImbalance", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amounts", type: "uint256[]", indexed: false }, { name: "fees", type: "uint256[]", indexed: false }, { name: "invariant", type: "uint256", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RampA", inputs: [{ name: "old_A", type: "uint256", indexed: false }, { name: "new_A", type: "uint256", indexed: false }, { name: "initial_time", type: "uint256", indexed: false }, { name: "future_time", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "StopRampA", inputs: [{ name: "A", type: "uint256", indexed: false }, { name: "t", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "ApplyNewFee", inputs: [{ name: "fee", type: "uint256", indexed: false }, { name: "offpeg_fee_multiplier", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "SetNewMATime", inputs: [{ name: "ma_exp_time", type: "uint256", indexed: false }, { name: "D_ma_time", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { stateMutability: "nonpayable", type: "constructor", inputs: [{ name: "_name", type: "string" }, { name: "_symbol", type: "string" }, { name: "_A", type: "uint256" }, { name: "_fee", type: "uint256" }, { name: "_offpeg_fee_multiplier", type: "uint256" }, { name: "_ma_exp_time", type: "uint256" }, { name: "_coins", type: "address[]" }, { name: "_rate_multipliers", type: "uint256[]" }, { name: "_asset_types", type: "uint8[]" }, { name: "_method_ids", type: "bytes4[]" }, { name: "_oracles", type: "address[]" }], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "exchange", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange_received", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange_received", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "_dx", type: "uint256" }, { name: "_min_dy", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "add_liquidity", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_min_mint_amount", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "add_liquidity", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_min_mint_amount", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_one_coin", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "i", type: "int128" }, { name: "_min_received", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_one_coin", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "i", type: "int128" }, { name: "_min_received", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_imbalance", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_max_burn_amount", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_imbalance", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_max_burn_amount", type: "uint256" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "_min_amounts", type: "uint256[]" }], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "_min_amounts", type: "uint256[]" }, { name: "_receiver", type: "address" }], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "_min_amounts", type: "uint256[]" }, { name: "_receiver", type: "address" }, { name: "_claim_admin_fees", type: "bool" }], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "nonpayable", type: "function", name: "withdraw_admin_fees", inputs: [], outputs: [] }, { stateMutability: "view", type: "function", name: "last_price", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "ema_price", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_p", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "price_oracle", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "D_oracle", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "transfer", inputs: [{ name: "_to", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "transferFrom", inputs: [{ name: "_from", type: "address" }, { name: "_to", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "approve", inputs: [{ name: "_spender", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "permit", inputs: [{ name: "_owner", type: "address" }, { name: "_spender", type: "address" }, { name: "_value", type: "uint256" }, { name: "_deadline", type: "uint256" }, { name: "_v", type: "uint8" }, { name: "_r", type: "bytes32" }, { name: "_s", type: "bytes32" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "view", type: "function", name: "DOMAIN_SEPARATOR", inputs: [], outputs: [{ name: "", type: "bytes32" }] }, { stateMutability: "view", type: "function", name: "get_dx", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_dy", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }, { name: "dx", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "calc_withdraw_one_coin", inputs: [{ name: "_burn_amount", type: "uint256" }, { name: "i", type: "int128" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "totalSupply", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_virtual_price", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "calc_token_amount", inputs: [{ name: "_amounts", type: "uint256[]" }, { name: "_is_deposit", type: "bool" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "A", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "A_precise", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "balances", inputs: [{ name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_balances", inputs: [], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "view", type: "function", name: "stored_rates", inputs: [], outputs: [{ name: "", type: "uint256[]" }] }, { stateMutability: "view", type: "function", name: "dynamic_fee", inputs: [{ name: "i", type: "int128" }, { name: "j", type: "int128" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "ramp_A", inputs: [{ name: "_future_A", type: "uint256" }, { name: "_future_time", type: "uint256" }], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "stop_ramp_A", inputs: [], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "set_new_fee", inputs: [{ name: "_new_fee", type: "uint256" }, { name: "_new_offpeg_fee_multiplier", type: "uint256" }], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "set_ma_exp_time", inputs: [{ name: "_ma_exp_time", type: "uint256" }, { name: "_D_ma_time", type: "uint256" }], outputs: [] }, { stateMutability: "view", type: "function", name: "N_COINS", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "coins", inputs: [{ name: "arg0", type: "uint256" }], outputs: [{ name: "", type: "address" }] }, { stateMutability: "view", type: "function", name: "fee", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "offpeg_fee_multiplier", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "admin_fee", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "initial_A", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "future_A", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "initial_A_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "future_A_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "admin_balances", inputs: [{ name: "arg0", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "ma_exp_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "D_ma_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "ma_last_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "name", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "symbol", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "decimals", inputs: [], outputs: [{ name: "", type: "uint8" }] }, { stateMutability: "view", type: "function", name: "version", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "balanceOf", inputs: [{ name: "arg0", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "allowance", inputs: [{ name: "arg0", type: "address" }, { name: "arg1", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "nonces", inputs: [{ name: "arg0", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "salt", inputs: [], outputs: [{ name: "", type: "bytes32" }] }]
-};
-var contracts = {
-  56: {
-    MGP: getContract({ address: "0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa", abi: erc20Abi, client: publicClients[56] }),
-    RMGP: getContract({ address: "0x0277517658a1dd3899bf926fCf6A633e549eB769", abi: ABIs.RMGP, client: publicClients[56] }),
-    YMGP: getContract({ address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb", abi: ABIs.YMGP, client: publicClients[56] }),
-    VMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.VMGP, client: publicClients[56] }),
-    CMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.CMGP, client: publicClients[56] }),
-    VLMGP: getContract({ address: "0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6", abi: ABIs.VLMGP, client: publicClients[56] }),
-    MASTERMGP: getContract({ address: "0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46", abi: ABIs.MASTERMGP, client: publicClients[56] }),
-    VLREWARDER: getContract({ address: "0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9", abi: ABIs.VLREWARDER, client: publicClients[56] }),
-    WETH: getContract({ address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", abi: erc20Abi, client: publicClients[56] })
-  },
-  42161: {
-    MGP: getContract({ address: "0xa61F74247455A40b01b0559ff6274441FAfa22A3", abi: erc20Abi, client: publicClients[42161] }),
-    RMGP: getContract({ address: "0x3788c8791d826254bAbd49b602C93008468D5695", abi: ABIs.RMGP, client: publicClients[42161] }),
-    YMGP: getContract({ address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9", abi: ABIs.YMGP, client: publicClients[42161] }),
-    VMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.VMGP, client: publicClients[42161] }),
-    CMGP: getContract({ address: "0xA24Daae84B8166Ab0C049880F4F8F3AdC4F0a421", abi: ABIs.CMGP, client: publicClients[42161] }),
-    VLMGP: getContract({ address: "0x536599497Ce6a35FC65C7503232Fec71A84786b9", abi: ABIs.VLMGP, client: publicClients[42161] }),
-    MASTERMGP: getContract({ address: "0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7", abi: ABIs.MASTERMGP, client: publicClients[42161] }),
-    VLREWARDER: getContract({ address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45", abi: ABIs.VLREWARDER, client: publicClients[42161] }),
-    WETH: getContract({ address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", abi: erc20Abi, client: publicClients[42161] })
-  }
-};
-var App = () => {
-  const [mode, setMode] = import_react4.useState("deposit");
-  const [showDiagram, setShowDiagram] = import_react4.useState(false);
-  const [isConnecting, setIsConnecting] = import_react4.useState(false);
-  const [sendAmount, setSendAmount] = import_react4.useState(parseEther(1));
-  const [prices, setPrices] = import_react4.useState({ MGP: 0, RMGP: 0, YMGP: 0, VMGP: 0, CMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 });
-  const [error, setError] = import_react4.useState("");
-  const [walletClients, setWalletClients] = import_react4.useState();
-  const [chain, setChain] = import_react4.useState(42161);
-  const [account, setAccount] = import_react4.useState("0x0000000000000000000000000000000000000000");
-  const [ens] = useUpdateable(() => publicClients[1].getEnsName({ address: account }), [account]);
-  const [connectRequired, setConnectRequired] = import_react4.useState(false);
-  const writeContracts = import_react4.useMemo(() => {
-    if (!walletClients)
-      return;
-    return {
-      56: {
-        MGP: getContract({ address: "0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa", abi: contracts[56].MGP.abi, client: walletClients[56] }),
-        RMGP: getContract({ address: "0x0277517658a1dd3899bf926fCf6A633e549eB769", abi: contracts[56].RMGP.abi, client: walletClients[56] }),
-        YMGP: getContract({ address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb", abi: contracts[56].YMGP.abi, client: walletClients[56] }),
-        CMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: contracts[56].CMGP.abi, client: walletClients[56] }),
-        VLMGP: getContract({ address: "0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6", abi: contracts[56].VLMGP.abi, client: walletClients[56] }),
-        masterMGP: getContract({ address: "0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46", abi: contracts[56].MASTERMGP.abi, client: walletClients[56] }),
-        VLREWARDER: getContract({ address: "0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9", abi: contracts[56].VLREWARDER.abi, client: walletClients[56] }),
-        WETH: getContract({ address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", abi: contracts[56].WETH.abi, client: walletClients[56] })
-      },
-      42161: {
-        MGP: getContract({ address: "0xa61F74247455A40b01b0559ff6274441FAfa22A3", abi: contracts[42161].MGP.abi, client: walletClients[42161] }),
-        RMGP: getContract({ address: "0x3788c8791d826254bAbd49b602C93008468D5695", abi: contracts[42161].RMGP.abi, client: walletClients[42161] }),
-        YMGP: getContract({ address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9", abi: contracts[42161].YMGP.abi, client: walletClients[42161] }),
-        CMGP: getContract({ address: "0xc370A85bB555A7c519bF675895E545873BDb1359", abi: contracts[42161].CMGP.abi, client: walletClients[42161] }),
-        VLMGP: getContract({ address: "0x536599497Ce6a35FC65C7503232Fec71A84786b9", abi: contracts[42161].VLMGP.abi, client: walletClients[42161] }),
-        masterMGP: getContract({ address: "0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7", abi: contracts[42161].MASTERMGP.abi, client: walletClients[42161] }),
-        VLREWARDER: getContract({ address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45", abi: contracts[42161].VLREWARDER.abi, client: walletClients[42161] }),
-        WETH: getContract({ address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", abi: contracts[42161].WETH.abi, client: walletClients[42161] })
-      }
-    };
-  }, [walletClients]);
-  const [mgpAllowance, updateMGPAllowance] = useUpdateable(() => contracts[chain].MGP.read.allowance([account, contracts[chain].RMGP.address]), [contracts, chain, account]);
-  const [rmgpAllowance, updateRMGPAllowance] = useUpdateable(() => contracts[chain].RMGP.read.allowance([account, contracts[chain].YMGP.address]), [contracts, chain, account]);
-  const [ymgpAllowance, updateYMGPAllowance] = useUpdateable(() => contracts[chain].YMGP.read.allowance([account, contracts[chain].VMGP.address]), [contracts, chain, account]);
-  const [mgpAllowanceCurve, updateMGPAllowanceCurve] = useUpdateable(() => contracts[chain].MGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account]);
-  const [rmgpAllowanceCurve, updateRMGPAllowanceCurve] = useUpdateable(() => contracts[chain].RMGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account]);
-  const [ymgpAllowanceCurve, updateYMGPAllowanceCurve] = useUpdateable(() => contracts[chain].YMGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, account]);
-  const [mgpBalance, updateMGPBalance] = useUpdateable(() => contracts[chain].MGP.read.balanceOf([account]), [contracts, account]);
-  const [rmgpBalance, updateRMGPBalance] = useUpdateable(() => contracts[chain].RMGP.read.balanceOf([account]), [contracts, account]);
-  const [ymgpBalance, updateYMGPBalance] = useUpdateable(() => contracts[chain].YMGP.read.balanceOf([account]), [contracts, account]);
-  const [vmgpBalance, updateVMGPBalance] = useUpdateable(() => contracts[chain].VMGP.read.balanceOf([account]), [contracts, account]);
-  const [cmgpBalance, updateCMGPBalance] = useUpdateable(() => contracts[chain].CMGP.read.balanceOf([account]), [contracts, account]);
+
+// src/hooks/useBalances.ts
+var useBalances = ({ account, chain }) => {
+  const [mgp, updateMGP] = useUpdateable(() => contracts[chain].MGP.read.balanceOf([account]), [contracts, account]);
+  const [rmgp, updateRMGP] = useUpdateable(() => contracts[chain].RMGP.read.balanceOf([account]), [contracts, account]);
+  const [ymgp, updateYMGP] = useUpdateable(() => contracts[chain].YMGP.read.balanceOf([account]), [contracts, account]);
+  const [vmgp, updateVMGP] = useUpdateable(() => contracts[chain].VMGP.read.balanceOf([account]), [contracts, account]);
+  const [cmgp, updateCMGP] = useUpdateable(() => contracts[chain].CMGP.read.balanceOf([account]), [contracts, account]);
+  const [mgpCurve, updateMGPCurve] = useUpdateable(() => contracts[chain].MGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account]);
+  const [rmgpCurve, updateRMGPCurve] = useUpdateable(() => contracts[chain].RMGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account]);
+  const [ymgpCurve, updateYMGPCurve] = useUpdateable(() => contracts[chain].YMGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account]);
   const [ymgpHoldings, updateYMGPHoldings] = useUpdateable(() => contracts[chain].RMGP.read.balanceOf([contracts[chain].YMGP.address]), [contracts, chain, account]);
-  const [mgpCurveBalance, updateMGPCurveBalance] = useUpdateable(() => contracts[chain].MGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account]);
-  const [rmgpCurveBalance, updateRMGPCurveBalance] = useUpdateable(() => contracts[chain].RMGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account]);
-  const [ymgpCurveBalance, updateYMGPCurveBalance] = useUpdateable(() => contracts[chain].YMGP.read.balanceOf([contracts[chain].CMGP.address]), [contracts, chain, account]);
-  const [reefiLockedMGP, updateReefiLockedMGP] = useUpdateable(() => contracts[chain].VLMGP.read.getUserTotalLocked([contracts[chain].RMGP.address]), [contracts, account, chain]);
-  const [totalLockedMGPBSC, updateTotalLockedMGPBSC] = useUpdateable(() => contracts[56].VLMGP.read.totalLocked(), [contracts, account]);
-  const [totalLockedMGPARB, updateTotalLockedMGPARB] = useUpdateable(() => contracts[42161].VLMGP.read.totalLocked(), [contracts, account]);
-  const totalLockedMGP = import_react4.useMemo(() => {
-    return totalLockedMGPBSC === undefined || totalLockedMGPARB === undefined ? undefined : totalLockedMGPBSC + totalLockedMGPARB;
-  }, [totalLockedMGPBSC, totalLockedMGPARB]);
-  const updateTotalLockedMGP = () => {
-    updateTotalLockedMGPBSC();
-    updateTotalLockedMGPARB();
+  return { mgp, rmgp, ymgp, vmgp, cmgp, updateMGP, updateRMGP, updateYMGP, updateVMGP, updateCMGP, mgpCurve, updateMGPCurve, rmgpCurve, updateRMGPCurve, ymgpCurve, updateYMGPCurve, ymgpHoldings, updateYMGPHoldings };
+};
+
+// src/hooks/useWallet.ts
+var import_react5 = __toESM(require_react(), 1);
+var useWallet = ({ setError }) => {
+  const [clients, setClients] = import_react5.useState();
+  const [chain, setChain] = import_react5.useState(42161);
+  const [account, setAccount] = import_react5.useState("0x0000000000000000000000000000000000000000");
+  const [isConnecting, setIsConnecting] = import_react5.useState(false);
+  const [connectRequired, setConnectRequired] = import_react5.useState(false);
+  const [ens] = useUpdateable(() => publicClients[1].getEnsName({ address: account }), [account]);
+  const connectWallet = async () => {
+    if (!window.ethereum)
+      return setError("No wallet found. Please install MetaMask to use Reefi.");
+    setIsConnecting(true);
+    const clients2 = {
+      56: createWalletClient({ chain: bsc, transport: custom(window.ethereum) }).extend(publicActions),
+      42161: createWalletClient({ chain: arbitrum, transport: custom(window.ethereum) }).extend(publicActions)
+    };
+    setClients(clients2);
+    setAccount((await clients2[chain].requestAddresses())[0] ?? "0x0000000000000000000000000000000000000000");
+    setIsConnecting(false);
+    setConnectRequired(false);
   };
-  const [totalLockedYMGP, updateTotalLockedYMGP] = useUpdateable(() => contracts[chain].YMGP.read.totalLocked(), [contracts, account]);
-  const [userLockedYMGP, updateUserLockedYMGP] = useUpdateable(() => contracts[chain].YMGP.read.lockedBalances([account]), [contracts, account]);
-  const [mgpSupply, updateMGPSupply] = useUpdateable(() => contracts[56].MGP.read.totalSupply(), [contracts]);
-  const [rmgpSupply, updateRMGPSupply] = useUpdateable(() => contracts[chain].RMGP.read.totalSupply(), [contracts, chain]);
-  const [ymgpSupply, updateYMGPSupply] = useUpdateable(() => contracts[chain].YMGP.read.totalSupply(), [contracts, chain]);
-  const [vmgpSupply, updateVMGPSupply] = useUpdateable(() => contracts[chain].VMGP.read.totalSupply(), [contracts, chain]);
-  const [userPendingWithdraws, updateUserPendingWithdraws] = useUpdateable(() => contracts[chain].RMGP.read.getUserPendingWithdraws([account]), [contracts, account, chain]);
-  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useUpdateable(() => contracts[chain].RMGP.read.unsubmittedWithdraws(), [contracts, chain]);
-  const [userWithdrawable, updateUserWithdrawable] = useUpdateable(() => contracts[chain].RMGP.read.getUserWithdrawable(), [contracts, chain]);
-  const [unlockSchedule, updateUnlockSchedule] = useUpdateable(() => contracts[chain].VLMGP.read.getUserUnlockingSchedule([contracts[chain].RMGP.address]), [contracts, chain]);
-  const mgpRMGPRate = import_react4.useMemo(() => {
-    return rmgpSupply === 0n ? 1 : Number(reefiLockedMGP) / Number(rmgpSupply);
-  }, [rmgpSupply, reefiLockedMGP]);
-  const mgpRMGPCurveRate = import_react4.useMemo(() => {
-    return mgpCurveBalance === undefined || rmgpCurveBalance === undefined ? undefined : Number(mgpCurveBalance) / Number(rmgpCurveBalance);
-  }, [mgpCurveBalance, rmgpCurveBalance]);
-  const rmgpYMGPCurveRate = import_react4.useMemo(() => {
-    return rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? undefined : Number(rmgpCurveBalance) / Number(ymgpCurveBalance);
-  }, [rmgpCurveBalance, ymgpCurveBalance]);
-  const [mgpRmgpCurveAmount] = useUpdateable(() => {
-    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([0n, 1n, sendAmount], { account });
-  }, [contracts, chain, sendAmount]);
-  const [rmgpMgpCurveAmount] = useUpdateable(() => {
-    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([1n, 0n, sendAmount], { account });
-  }, [contracts, chain, sendAmount]);
-  const [rmgpYmgpCurveAmount] = useUpdateable(() => {
-    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([1n, 2n, sendAmount], { account });
-  }, [contracts, chain, sendAmount]);
-  const [ymgpVmgpCurveAmount] = useUpdateable(() => {
-    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([2n, 3n, sendAmount], { account });
-  }, [contracts, chain, sendAmount]);
-  const [minMgpRmgpCurveAmount_] = useUpdateable(() => {
-    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([0n, 1n, parseEther(0.00001)], { account });
-  }, [contracts, chain, sendAmount]);
-  const realMgpRmgpCurveRate = import_react4.useMemo(() => {
-    return minMgpRmgpCurveAmount_ !== undefined ? Number(BigInt(Math.round(Number(minMgpRmgpCurveAmount_) / 0.99))) / Number(parseEther(0.00001)) : 0;
-  }, [minMgpRmgpCurveAmount_]);
-  const [minRmgpYmgpCurveAmount_] = useUpdateable(() => {
-    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([1n, 2n, parseEther(0.00001)], { account });
-  }, [contracts, chain, sendAmount]);
-  const realRmgpYmgpCurveRate = import_react4.useMemo(() => {
-    return minRmgpYmgpCurveAmount_ !== undefined ? Number(BigInt(Math.round(Number(minRmgpYmgpCurveAmount_) / 0.99))) / Number(parseEther(0.00001)) : 0;
-  }, [minRmgpYmgpCurveAmount_]);
-  const [minYmgpVmgpCurveAmount_] = useUpdateable(() => {
-    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([2n, 3n, parseEther(0.00001)], { account });
-  }, [contracts, chain, sendAmount]);
-  const realYmgpVmgpCurveRate = import_react4.useMemo(() => {
-    return minRmgpYmgpCurveAmount_ !== undefined ? Number(BigInt(Math.round(Number(minYmgpVmgpCurveAmount_) / 0.99))) / Number(parseEther(0.00001)) : 0;
-  }, [minYmgpVmgpCurveAmount_]);
-  const [mgpLPAmount, setMGPLPAmount] = import_react4.useState(0n);
-  const [rmgpLPAmount, setRMGPLPAmount] = import_react4.useState(0n);
-  const [ymgpLPAmount, setYMGPLPAmount] = import_react4.useState(0n);
-  const [mgpAPR, setMGPAPR] = import_react4.useState(0);
-  const [pendingRewards, setPendingRewards] = import_react4.useState();
+  import_react5.useEffect(() => {
+    if (window.ethereum)
+      connectWallet();
+    const savedChain = window.localStorage.getItem("chain");
+    if (savedChain !== null)
+      setChain(Number(savedChain));
+  }, []);
+  import_react5.useEffect(() => {
+    if (clients)
+      clients[chain].switchChain({ id: chain });
+    window.ethereum?.request({ method: "eth_accounts" }).then((accounts) => {
+      if (accounts !== undefined)
+        connectWallet();
+    });
+  }, [chain]);
+  return { clients, chain, account, isConnecting, connectRequired, connectWallet, setChain, setConnectRequired, ens };
+};
+
+// src/hooks/usePrices.ts
+var import_react6 = __toESM(require_react(), 1);
+var usePrices = () => {
+  const [prices, setPrices] = import_react6.useState({ MGP: 0, RMGP: 0, YMGP: 0, VMGP: 0, CMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 });
+  import_react6.useEffect(() => {
+    fetch("https://api.magpiexyz.io/getalltokenprice").then((res) => res.json().then((body) => setPrices(body.data.AllPrice)));
+  }, []);
+  return prices;
+};
+
+// src/hooks/useYield.ts
+var import_react7 = __toESM(require_react(), 1);
+var useYield = ({ chain, account }) => {
+  const balances = useBalances({ account, chain });
+  const prices = usePrices();
+  const [mgpAPR, setMGPAPR] = import_react7.useState(0);
+  const [pendingRewards, setPendingRewards] = import_react7.useState();
   const [unclaimedUserYield, updateUnclaimedUserYield] = useUpdateable(() => contracts[chain].YMGP.read.unclaimedUserYield(), [contracts, chain]);
-  const [cmgpPoolAPY, setCMGPPoolAPY] = import_react4.useState(0);
-  const cmgpAPY = import_react4.useMemo(() => {
-    if (mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined)
+  const [cmgpPoolAPY, setCMGPPoolAPY] = import_react7.useState(0);
+  const cmgpAPY = import_react7.useMemo(() => {
+    if (balances.mgpCurve === undefined || balances.rmgpCurve === undefined || balances.ymgpCurve === undefined)
       return 0;
-    const yieldBearingUnderlyingPercent = Number(rmgpCurveBalance + ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
+    const yieldBearingUnderlyingPercent = Number(balances.rmgpCurve + balances.ymgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve + balances.ymgpCurve);
     const underlyingYield = yieldBearingUnderlyingPercent * aprToApy(mgpAPR) * 0.9;
     return underlyingYield + cmgpPoolAPY / 100;
-  }, [cmgpPoolAPY, mgpAPR, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance]);
-  const [compoundRMGPGas, setCompoundRMGPGas] = import_react4.useState(0n);
-  const uncompoundedMGPYield = import_react4.useMemo(() => {
+  }, [cmgpPoolAPY, mgpAPR, balances.mgpCurve, balances.rmgpCurve, balances.ymgpCurve]);
+  const [compoundRMGPGas, setCompoundRMGPGas] = import_react7.useState(0n);
+  const uncompoundedMGPYield = import_react7.useMemo(() => {
     return pendingRewards ? Object.keys(pendingRewards).map((symbol) => prices[symbol] * Number(formatEther2(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0;
   }, [pendingRewards, prices]);
-  const estimatedCompoundGasFee = import_react4.useMemo(() => formatEther2(compoundRMGPGas, decimals[publicClients[chain].chain.nativeCurrency.symbol]) * prices[publicClients[chain].chain.nativeCurrency.symbol], [chain, compoundRMGPGas, prices]);
+  const estimatedCompoundGasFee = import_react7.useMemo(() => formatEther2(compoundRMGPGas, decimals[publicClients[chain].chain.nativeCurrency.symbol]) * prices[publicClients[chain].chain.nativeCurrency.symbol], [chain, compoundRMGPGas, prices]);
   const updatePendingRewards = async () => {
     const data = await contracts[chain].MASTERMGP.read.allPendingTokens([contracts[chain].VLMGP.address, contracts[chain].RMGP.address]);
     const [pendingMGP, bonusTokenAddresses, bonusTokenSymbols, pendingBonusRewards] = data;
@@ -33753,28 +33076,21 @@ var App = () => {
         newPendingRewards[bonusTokenSymbols[i].replace("Bridged ", "").toUpperCase()] = { rewards: pendingBonusRewards[i], address: bonusTokenAddresses[i] };
     setPendingRewards(newPendingRewards);
   };
-  import_react4.useEffect(() => {
-    if (window.ethereum)
-      connectWallet();
-    const savedChain = window.localStorage.getItem("chain");
-    if (savedChain !== null)
-      setChain(Number(savedChain));
-    fetch("https://api.magpiexyz.io/getalltokenprice").then((res) => res.json().then((body) => setPrices(body.data.AllPrice)));
+  const estimateCompoundRMGPGas = async () => {
+    const gasPrice = await publicClients[chain].getGasPrice();
+    const gas = account === "0x0000000000000000000000000000000000000000" ? 0n : await contracts[chain].RMGP.estimateGas.claim({ account });
+    return gas * gasPrice;
+  };
+  import_react7.useEffect(() => {
+    const interval = setInterval(updatePendingRewards, 30000);
+    return () => clearInterval(interval);
+  }, []);
+  import_react7.useEffect(() => {
     fetch("https://api.curve.finance/api/getVolumes/arbitrum").then((res) => res.json()).then((body) => {
       body.data.pools.forEach((pool) => {
         if (pool.address === contracts[chain].CMGP.address)
           setCMGPPoolAPY(pool.latestWeeklyApyPcent);
       });
-    });
-    const interval = setInterval(updatePendingRewards, 30000);
-    return () => clearInterval(interval);
-  }, []);
-  import_react4.useEffect(() => {
-    if (walletClients)
-      walletClients[chain].switchChain({ id: chain });
-    window.ethereum?.request({ method: "eth_accounts" }).then((accounts) => {
-      if (accounts !== undefined)
-        connectWallet();
     });
     updatePendingRewards();
     fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${chain}&rewarder=${contracts[chain].VLREWARDER.address}`).then((res) => res.json()).then((body) => {
@@ -33783,126 +33099,154 @@ var App = () => {
       }).apr);
     });
   }, [chain]);
-  import_react4.useEffect(() => {
+  import_react7.useEffect(() => {
     if (!account)
       return;
     estimateCompoundRMGPGas().then(setCompoundRMGPGas);
   }, [chain, account]);
-  const connectWallet = async () => {
-    if (!window.ethereum)
-      return setError("No wallet found. Please install MetaMask to use Reefi.");
-    setIsConnecting(true);
-    const clients = {
-      56: createWalletClient({ chain: bsc, transport: custom(window.ethereum) }).extend(publicActions),
-      42161: createWalletClient({ chain: arbitrum, transport: custom(window.ethereum) }).extend(publicActions)
+  return { mgpAPR, pendingRewards, unclaimedUserYield, cmgpPoolAPY, cmgpAPY, uncompoundedMGPYield, estimatedCompoundGasFee, updatePendingRewards, updateUnclaimedUserYield };
+};
+
+// src/hooks/useContracts.ts
+var import_react8 = __toESM(require_react(), 1);
+var useContracts = ({ clients }) => {
+  const writeContracts = import_react8.useMemo(() => {
+    if (!clients)
+      return;
+    return {
+      56: {
+        MGP: getContract({ address: "0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa", abi: contracts[56].MGP.abi, client: clients[56] }),
+        RMGP: getContract({ address: "0x0277517658a1dd3899bf926fCf6A633e549eB769", abi: contracts[56].RMGP.abi, client: clients[56] }),
+        YMGP: getContract({ address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb", abi: contracts[56].YMGP.abi, client: clients[56] }),
+        CMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: contracts[56].CMGP.abi, client: clients[56] }),
+        VLMGP: getContract({ address: "0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6", abi: contracts[56].VLMGP.abi, client: clients[56] }),
+        masterMGP: getContract({ address: "0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46", abi: contracts[56].MASTERMGP.abi, client: clients[56] }),
+        VLREWARDER: getContract({ address: "0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9", abi: contracts[56].VLREWARDER.abi, client: clients[56] }),
+        WETH: getContract({ address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", abi: contracts[56].WETH.abi, client: clients[56] })
+      },
+      42161: {
+        MGP: getContract({ address: "0xa61F74247455A40b01b0559ff6274441FAfa22A3", abi: contracts[42161].MGP.abi, client: clients[42161] }),
+        RMGP: getContract({ address: "0x3788c8791d826254bAbd49b602C93008468D5695", abi: contracts[42161].RMGP.abi, client: clients[42161] }),
+        YMGP: getContract({ address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9", abi: contracts[42161].YMGP.abi, client: clients[42161] }),
+        CMGP: getContract({ address: "0xc370A85bB555A7c519bF675895E545873BDb1359", abi: contracts[42161].CMGP.abi, client: clients[42161] }),
+        VLMGP: getContract({ address: "0x536599497Ce6a35FC65C7503232Fec71A84786b9", abi: contracts[42161].VLMGP.abi, client: clients[42161] }),
+        masterMGP: getContract({ address: "0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7", abi: contracts[42161].MASTERMGP.abi, client: clients[42161] }),
+        VLREWARDER: getContract({ address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45", abi: contracts[42161].VLREWARDER.abi, client: clients[42161] }),
+        WETH: getContract({ address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", abi: contracts[42161].WETH.abi, client: clients[42161] })
+      }
     };
-    setWalletClients(clients);
-    setAccount((await clients[chain].requestAddresses())[0] ?? "0x0000000000000000000000000000000000000000");
-    setIsConnecting(false);
-    setConnectRequired(false);
-  };
+  }, [clients]);
+  return { write: writeContracts, read: contracts };
+};
+
+// src/hooks/useActions.ts
+var useActions = ({ page, sendAmount, setConnectRequired, setError, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, updatePendingRewards, updateUnclaimedUserYield, updateTotalLockedMGP, updateReefiLockedMGP, updateTotalLockedYMGP, updateUserLockedYMGP, updateYMGPHoldings, clients, account, chain }) => {
+  const balances = useBalances({ account, chain });
+  const supplies = useSupplies({ chain });
+  const allowances = useAllowances({ account, chain });
+  const { write: writeContracts } = useContracts({ clients });
   const approve = async (infinity = false, curve = false) => {
-    if (!walletClients || !writeContracts)
+    if (!clients || !writeContracts)
       return setConnectRequired(true);
     if (!account)
       return setConnectRequired(true);
-    if (mode === "deposit") {
+    if (page === "deposit") {
       const amount = infinity ? 2n ** 256n - 1n : sendAmount;
-      await writeContracts[chain].MGP.write.approve([curve ? contracts[chain].CMGP.address : contracts[chain].RMGP.address, amount], { account, chain: walletClients[chain].chain });
+      await writeContracts[chain].MGP.write.approve([curve ? contracts[chain].CMGP.address : contracts[chain].RMGP.address, amount], { account, chain: clients[chain].chain });
       if (curve)
-        updateMGPAllowanceCurve();
+        allowances.updateMGPCurve();
       else
-        updateMGPAllowance();
-    } else if (mode === "convert" || mode === "redeem") {
+        allowances.updateMGP();
+    } else if (page === "convert" || page === "redeem") {
       const amount = infinity ? 2n ** 256n - 1n : sendAmount;
-      await writeContracts[chain].RMGP.write.approve([curve ? contracts[chain].CMGP.address : contracts[chain].YMGP.address, amount], { account, chain: walletClients[chain].chain });
+      await writeContracts[chain].RMGP.write.approve([curve ? contracts[chain].CMGP.address : contracts[chain].YMGP.address, amount], { account, chain: clients[chain].chain });
       if (curve)
-        updateRMGPAllowanceCurve();
+        allowances.updateRMGPCurve();
       else
-        updateRMGPAllowance();
+        allowances.updateRMGP();
     }
   };
   const depositMGP = async () => {
-    if (!walletClients || !writeContracts)
+    if (!clients || !writeContracts)
       return setConnectRequired(true);
-    if (mgpAllowance === undefined || mgpAllowance < sendAmount)
+    if (allowances.mgp === undefined || allowances.mgp < sendAmount)
       return setError("Allowance too low");
-    await writeContracts[chain].RMGP.write.deposit([sendAmount], { account, chain: walletClients[chain].chain });
-    updateMGPBalance();
-    updateRMGPBalance();
-    updateMGPSupply();
-    updateRMGPSupply();
+    await writeContracts[chain].RMGP.write.deposit([sendAmount], { account, chain: clients[chain].chain });
+    balances.updateMGP();
+    balances.updateRMGP();
+    supplies.updateMGP();
+    supplies.updateRMGP();
     updateTotalLockedMGP();
     updateReefiLockedMGP();
   };
   const buyRMGP = async () => {
-    if (!walletClients || !writeContracts)
+    if (!clients || !writeContracts)
       return setConnectRequired(true);
-    if (mgpAllowanceCurve === undefined || mgpAllowanceCurve < sendAmount)
+    if (allowances.mgpCurve === undefined || allowances.mgpCurve < sendAmount)
       return setError("Allowance too low");
-    await writeContracts[chain].CMGP.write.exchange([0n, 1n, sendAmount, 0n], { account, chain: walletClients[chain].chain });
-    updateMGPBalance();
-    updateRMGPBalance();
-    updateMGPCurveBalance();
-    updateRMGPCurveBalance();
+    await writeContracts[chain].CMGP.write.exchange([0n, 1n, sendAmount, 0n], { account, chain: clients[chain].chain });
+    balances.updateMGP();
+    balances.updateRMGP();
+    balances.updateMGPCurve();
+    balances.updateRMGPCurve();
   };
   const buyYMGP = async () => {
-    if (!walletClients || !writeContracts)
+    if (!clients || !writeContracts)
       return setConnectRequired(true);
-    if (rmgpAllowanceCurve === undefined || rmgpAllowanceCurve < sendAmount)
+    if (allowances.rmgpCurve === undefined || allowances.rmgpCurve < sendAmount)
       return setError("Allowance too low");
-    await writeContracts[chain].CMGP.write.exchange([1n, 2n, sendAmount, 0n], { account, chain: walletClients[chain].chain });
-    updateRMGPBalance();
-    updateYMGPBalance();
-    updateRMGPCurveBalance();
-    updateYMGPCurveBalance();
+    await writeContracts[chain].CMGP.write.exchange([1n, 2n, sendAmount, 0n], { account, chain: clients[chain].chain });
+    balances.updateRMGP();
+    balances.updateYMGP();
+    balances.updateRMGPCurve();
+    balances.updateYMGPCurve();
   };
   const buyMGP = async () => {
-    if (!walletClients || !writeContracts)
+    if (!clients || !writeContracts)
       return setConnectRequired(true);
-    if (rmgpAllowanceCurve === undefined || rmgpAllowanceCurve < sendAmount)
+    if (allowances.rmgpCurve === undefined || allowances.rmgpCurve < sendAmount)
       return setError("Allowance too low");
-    await writeContracts[chain].CMGP.write.exchange([1n, 0n, sendAmount, 0n], { account, chain: walletClients[chain].chain });
-    updateMGPBalance();
-    updateRMGPBalance();
-    updateMGPCurveBalance();
-    updateRMGPCurveBalance();
+    await writeContracts[chain].CMGP.write.exchange([1n, 0n, sendAmount, 0n], { account, chain: clients[chain].chain });
+    balances.updateMGP();
+    balances.updateRMGP();
+    balances.updateMGPCurve();
+    balances.updateRMGPCurve();
   };
   const depositRMGP = async () => {
-    if (!walletClients || !writeContracts)
+    if (!clients || !writeContracts)
       return setConnectRequired(true);
-    if (rmgpAllowance === undefined || rmgpAllowance < sendAmount)
+    if (allowances.rmgp === undefined || allowances.rmgp < sendAmount)
       return setError("Allowance too low");
-    await writeContracts[chain].YMGP.write.deposit([sendAmount], { account, chain: walletClients[chain].chain });
-    updateRMGPBalance();
-    updateYMGPBalance();
-    updateRMGPSupply();
-    updateYMGPSupply();
+    await writeContracts[chain].YMGP.write.deposit([sendAmount], { account, chain: clients[chain].chain });
+    balances.updateRMGP();
+    balances.updateYMGP();
+    supplies.updateRMGP();
+    supplies.updateYMGP();
     updateYMGPHoldings();
   };
   const lockYMGP = async () => {
-    if (!walletClients || !writeContracts)
+    if (!clients || !writeContracts)
       return setConnectRequired(true);
-    await writeContracts[chain].YMGP.write.lock([sendAmount], { account, chain: walletClients[chain].chain });
-    updateYMGPSupply();
+    await writeContracts[chain].YMGP.write.lock([sendAmount], { account, chain: clients[chain].chain });
+    supplies.updateYMGP();
     updateTotalLockedYMGP();
     updateUserLockedYMGP();
   };
   const unlockYMGP = async () => {
-    if (!walletClients || !writeContracts)
+    if (!clients || !writeContracts)
       return setConnectRequired(true);
-    await writeContracts[chain].YMGP.write.unlock([sendAmount], { account, chain: walletClients[chain].chain });
-    updateYMGPSupply();
+    await writeContracts[chain].YMGP.write.unlock([sendAmount], { account, chain: clients[chain].chain });
+    supplies.updateYMGP();
     updateTotalLockedYMGP();
     updateUserLockedYMGP();
   };
   const redeemRMGP = async () => {
-    if (!walletClients || !writeContracts)
+    if (!clients || !writeContracts)
       return setConnectRequired(true);
-    await writeContracts[chain].RMGP.write.startUnlock([sendAmount], { account, chain: walletClients[chain].chain });
+    await writeContracts[chain].RMGP.write.startUnlock([sendAmount], { account, chain: clients[chain].chain });
     updateUnlockSchedule();
-    updateRMGPSupply();
-    updateRMGPBalance();
+    supplies.updateRMGP();
+    balances.updateRMGP();
     updateTotalLockedMGP();
     updateReefiLockedMGP();
     updateUserPendingWithdraws();
@@ -33911,107 +33255,167 @@ var App = () => {
     updateUnclaimedUserYield();
   };
   const withdrawMGP = async () => {
-    if (!walletClients || !writeContracts)
+    if (!clients || !writeContracts)
       return setConnectRequired(true);
-    await writeContracts[chain].RMGP.write.unlock({ account, chain: walletClients[chain].chain });
-    await writeContracts[chain].RMGP.write.withdraw({ account, chain: walletClients[chain].chain });
-    updateMGPBalance();
+    await writeContracts[chain].RMGP.write.unlock({ account, chain: clients[chain].chain });
+    await writeContracts[chain].RMGP.write.withdraw({ account, chain: clients[chain].chain });
+    balances.updateMGP();
     updateUserPendingWithdraws();
     updateUnsubmittedWithdraws();
     updateUserWithdrawable();
   };
   const compoundRMGP = async () => {
-    if (!walletClients || !writeContracts || !account)
+    if (!clients || !writeContracts || !account)
       return setConnectRequired(true);
-    await writeContracts[chain].RMGP.write.claim({ account, chain: walletClients[chain].chain });
+    await writeContracts[chain].RMGP.write.claim({ account, chain: clients[chain].chain });
     updatePendingRewards();
     updateUnclaimedUserYield();
-    updateRMGPSupply();
-    updateRMGPBalance();
+    supplies.updateRMGP();
+    balances.updateRMGP();
     updateTotalLockedMGP();
     updateReefiLockedMGP();
   };
   const claimYMGPRewards = async () => {
-    if (!walletClients || !writeContracts)
+    if (!clients || !writeContracts)
       return setConnectRequired(true);
-    await writeContracts[chain].YMGP.write.claim({ account, chain: walletClients[chain].chain });
+    await writeContracts[chain].YMGP.write.claim({ account, chain: clients[chain].chain });
     updateUnclaimedUserYield();
   };
-  const estimateCompoundRMGPGas = async () => {
-    const gasPrice = await publicClients[chain].getGasPrice();
-    const gas = account === "0x0000000000000000000000000000000000000000" ? 0n : await contracts[chain].RMGP.estimateGas.claim({ account });
-    return gas * gasPrice;
-  };
   const supplyLiquidity = async () => {
-    if (!walletClients || !writeContracts || !account)
+    if (!clients || !writeContracts || !account)
       return setConnectRequired(true);
-    await writeContracts[chain].CMGP.write.add_liquidity([[mgpLPAmount, rmgpLPAmount, ymgpLPAmount], 0n], { account, chain: walletClients[chain].chain });
-    updateMGPBalance();
-    updateRMGPBalance();
-    updateYMGPBalance();
-    updateCMGPBalance();
-    updateMGPCurveBalance();
-    updateRMGPCurveBalance();
-    updateYMGPCurveBalance();
+    await writeContracts[chain].CMGP.write.add_liquidity([[mgpLPAmount, rmgpLPAmount, ymgpLPAmount], 0n], { account, chain: clients[chain].chain });
+    balances.updateMGP();
+    balances.updateRMGP();
+    balances.updateYMGP();
+    balances.updateCMGP();
+    balances.updateMGPCurve();
+    balances.updateRMGPCurve();
+    balances.updateYMGPCurve();
   };
-  return /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+  return { approve, depositMGP, buyRMGP, buyYMGP, buyMGP, depositRMGP, lockYMGP, unlockYMGP, redeemRMGP, withdrawMGP, compoundRMGP, claimYMGPRewards, supplyLiquidity };
+};
+
+// src/hooks/useWithdraws.ts
+var useWithdraws = ({ account, chain }) => {
+  const [userPendingWithdraws, updateUserPendingWithdraws] = useUpdateable(() => contracts[chain].RMGP.read.getUserPendingWithdraws([account]), [contracts, account, chain]);
+  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useUpdateable(() => contracts[chain].RMGP.read.unsubmittedWithdraws(), [contracts, chain]);
+  const [userWithdrawable, updateUserWithdrawable] = useUpdateable(() => contracts[chain].RMGP.read.getUserWithdrawable(), [contracts, chain]);
+  const [unlockSchedule, updateUnlockSchedule] = useUpdateable(() => contracts[chain].VLMGP.read.getUserUnlockingSchedule([contracts[chain].RMGP.address]), [contracts, chain]);
+  return { userPendingWithdraws, updateUserPendingWithdraws, unsubmittedWithdraws, updateUnsubmittedWithdraws, userWithdrawable, updateUserWithdrawable, unlockSchedule, updateUnlockSchedule };
+};
+
+// src/hooks/useAmounts.ts
+var import_react9 = __toESM(require_react(), 1);
+var useAmounts = ({ chain, account }) => {
+  const [sendAmount, setSendAmount] = import_react9.useState(parseEther(1));
+  const [mgpLPAmount, setMGPLPAmount] = import_react9.useState(0n);
+  const [rmgpLPAmount, setRMGPLPAmount] = import_react9.useState(0n);
+  const [ymgpLPAmount, setYMGPLPAmount] = import_react9.useState(0n);
+  const [mgpRmgpCurveAmount] = useUpdateable(() => {
+    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([0n, 1n, sendAmount], { account });
+  }, [contracts, chain, sendAmount]);
+  const [rmgpMgpCurveAmount] = useUpdateable(() => {
+    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([1n, 0n, sendAmount], { account });
+  }, [contracts, chain, sendAmount]);
+  const [rmgpYmgpCurveAmount] = useUpdateable(() => {
+    return sendAmount === 0n ? Promise.resolve(0n) : contracts[chain].CMGP.read.get_dy([1n, 2n, sendAmount], { account });
+  }, [contracts, chain, sendAmount]);
+  return { sendAmount, setSendAmount, mgpRmgpCurveAmount, rmgpMgpCurveAmount, rmgpYmgpCurveAmount, mgpLPAmount, setMGPLPAmount, rmgpLPAmount, setRMGPLPAmount, ymgpLPAmount, setYMGPLPAmount };
+};
+
+// src/hooks/useLocked.ts
+var import_react10 = __toESM(require_react(), 1);
+var useLocked = ({ chain, account }) => {
+  const [reefiMGP, updateReefiMGP] = useUpdateable(() => contracts[chain].VLMGP.read.getUserTotalLocked([contracts[chain].RMGP.address]), [contracts, account, chain]);
+  const [mgpBSC, updateMGPBSC] = useUpdateable(() => contracts[56].VLMGP.read.totalLocked(), [contracts, account]);
+  const [mgpARB, updateMGPARB] = useUpdateable(() => contracts[42161].VLMGP.read.totalLocked(), [contracts, account]);
+  const mgp = import_react10.useMemo(() => {
+    return mgpBSC === undefined || mgpARB === undefined ? undefined : mgpBSC + mgpARB;
+  }, [mgpBSC, mgpARB]);
+  const updateMGP = () => {
+    updateMGPBSC();
+    updateMGPARB();
+  };
+  const [ymgp, updateYMGP] = useUpdateable(() => contracts[chain].YMGP.read.totalLocked(), [contracts, account]);
+  const [userYMGP, updateUserYMGP] = useUpdateable(() => contracts[chain].YMGP.read.lockedBalances([account]), [contracts, account]);
+  return { reefiMGP, updateReefiMGP, ymgp, updateYMGP, userYMGP, updateUserYMGP, mgp, updateMGP };
+};
+
+// src/App.tsx
+var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
+var App = () => {
+  const [page, setPage] = import_react11.useState("deposit");
+  const [showDiagram, setShowDiagram] = import_react11.useState(false);
+  const [error, setError] = import_react11.useState("");
+  const { chain, account, ens, connectRequired, connectWallet, isConnecting, setConnectRequired, setChain, clients } = useWallet({ setError });
+  const balances = useBalances({ account, chain });
+  const allowances = useAllowances({ account, chain });
+  const supplies = useSupplies({ chain });
+  const prices = usePrices();
+  const { sendAmount, setSendAmount, mgpRmgpCurveAmount, rmgpMgpCurveAmount, rmgpYmgpCurveAmount, mgpLPAmount, setMGPLPAmount, rmgpLPAmount, setRMGPLPAmount, ymgpLPAmount, setYMGPLPAmount } = useAmounts({ account, chain });
+  const { uncompoundedMGPYield, estimatedCompoundGasFee, mgpAPR, cmgpAPY, unclaimedUserYield, pendingRewards, updatePendingRewards, updateUnclaimedUserYield } = useYield({ account, chain });
+  const { userWithdrawable, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, userPendingWithdraws, unsubmittedWithdraws, unlockSchedule } = useWithdraws({ account, chain });
+  const locked = useLocked({ account, chain });
+  const { approve, depositRMGP, buyYMGP, lockYMGP, unlockYMGP, depositMGP, buyRMGP, redeemRMGP, compoundRMGP, claimYMGPRewards, withdrawMGP, supplyLiquidity, buyMGP } = useActions({ page, sendAmount, setConnectRequired, setError, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, updatePendingRewards, updateUnclaimedUserYield, updateTotalLockedMGP: locked.updateMGP, updateReefiLockedMGP: locked.updateReefiMGP, updateTotalLockedYMGP: locked.updateYMGP, updateUserLockedYMGP: locked.updateUserYMGP, updateYMGPHoldings: balances.updateYMGPHoldings, clients, account, chain });
+  const exchangeRates = useExchangeRates({ reefiLockedMGP: locked.reefiMGP, account, chain });
+  return /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
     className: "flex h-screen bg-gray-900 text-white",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(ConnectWallet, {
+      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(ConnectWallet, {
         connectRequired,
         connectWallet,
         isConnecting
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(ErrorCard, {
+      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(ErrorCard, {
         error,
         setError
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
         className: "flex-grow overflow-auto",
-        children: /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+        children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
           className: "p-4 md:p-6",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(Header, {
+            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(Header, {
               account,
               decimals,
-              mgpBalance,
-              rmgpBalance,
-              ymgpBalance,
-              vmgpBalance,
-              cmgpBalance,
-              userLockedYMGP,
+              mgpBalance: balances.mgp,
+              rmgpBalance: balances.rmgp,
+              ymgpBalance: balances.ymgp,
+              vmgpBalance: balances.vmgp,
+              cmgpBalance: balances.cmgp,
+              userLockedYMGP: locked.userYMGP,
               ens,
               chain,
               isConnecting,
               connectWallet,
               setChain
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(TokenCards, {
+            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(TokenCards, {
               prices,
               decimals,
-              mgpSupply,
-              totalLockedMGP,
-              rmgpSupply,
-              reefiLockedMGP,
-              realMgpRmgpCurveRate,
-              ymgpSupply,
-              totalLockedYMGP,
-              vmgpSupply,
-              realYmgpVmgpCurveRate,
-              realRmgpYmgpCurveRate
+              mgpSupply: supplies.mgp,
+              totalLockedMGP: locked.mgp,
+              rmgpSupply: supplies.rmgp,
+              reefiLockedMGP: locked.reefiMGP,
+              ymgpSupply: supplies.ymgp,
+              totalLockedYMGP: locked.ymgp,
+              vmgpSupply: supplies.vmgp,
+              account,
+              chain
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
               className: "flex flex-col justify-center mb-4 items-center",
               children: [
-                /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("button", {
+                /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("button", {
                   type: "button",
                   className: "bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors w-fit",
                   onClick: () => setShowDiagram(!showDiagram),
                   children: showDiagram ? "Hide Diagram" : "Show Diagram"
                 }, undefined, false, undefined, this),
-                showDiagram && /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+                showDiagram && /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
                   className: "flex justify-center mt-4",
-                  children: /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("img", {
+                  children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("img", {
                     src: diagram_default,
                     alt: "Diagram",
                     className: "h-120"
@@ -34019,65 +33423,56 @@ var App = () => {
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("h2", {
+            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("h2", {
               className: "text-2xl text-red-400 text-center",
               children: "VERY EARLY BETA"
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("p", {
+            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
               className: "text-center mb-4",
               children: "Reefi is in very early beta. Please deposit very small amounts that you are okay loosing as Reefi likely has unknown bugs. Curve/cMGP related features are only available on Arbitrum."
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
               className: "bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6",
               children: [
-                /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(YieldBadges, {
+                /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(YieldBadges, {
                   mgpAPR,
                   cmgpAPY,
-                  reefiLockedMGP,
-                  totalLockedYMGP
+                  reefiLockedMGP: locked.reefiMGP,
+                  totalLockedYMGP: locked.ymgp
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(Navbar, {
-                  page: mode,
-                  setPage: setMode
+                /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(Navbar, {
+                  page,
+                  setPage
                 }, undefined, false, undefined, this),
-                mode === "deposit" && /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(DepositPage, {
+                page === "deposit" && /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(DepositPage, {
                   sendAmount,
-                  mgpAllowance,
-                  mgpBalance,
-                  mgpAllowanceCurve,
+                  mgpAllowance: allowances.mgp,
+                  mgpBalance: balances.mgp,
+                  mgpAllowanceCurve: allowances.mgpCurve,
                   mgpRmgpCurveAmount,
-                  mgpRMGPRate,
+                  mgpRMGPRate: exchangeRates.mintRMGP,
                   mgpAPR,
                   onApprove: approve,
                   setSendAmount,
                   depositMGP,
                   buyRMGP
                 }, undefined, false, undefined, this),
-                mode === "convert" && /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(ConvertPage, {
+                page === "convert" && /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(ConvertPage, {
                   sendAmount,
-                  rmgpBalance,
-                  rmgpAllowance,
-                  rmgpAllowanceCurve,
+                  rmgpBalance: balances.rmgp,
+                  rmgpAllowance: allowances.rmgp,
+                  rmgpAllowanceCurve: allowances.rmgpCurve,
                   rmgpYmgpCurveAmount,
                   onApprove: approve,
                   setSendAmount,
                   depositRMGP,
                   buyYMGP
                 }, undefined, false, undefined, this),
-                mode === "buyVotes" && /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(BuyVotesPage, {
+                page === "redeem" && /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(RedeemPage, {
+                  rmgpBalance: balances.rmgp,
                   sendAmount,
-                  ymgpAllowance,
-                  ymgpAllowanceCurve,
-                  ymgpBalance,
-                  ymgpVmgpCurveAmount,
-                  onApprove: approve,
-                  setSendAmount
-                }, undefined, false, undefined, this),
-                mode === "redeem" && /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(RedeemPage, {
-                  rmgpBalance,
-                  sendAmount,
-                  rmgpAllowanceCurve,
-                  mgpRMGPRate,
+                  rmgpAllowanceCurve: allowances.rmgpCurve,
+                  rmgpMGPRate: 1 / exchangeRates.mintRMGP,
                   rmgpMgpCurveAmount,
                   userWithdrawable,
                   onApprove: approve,
@@ -34090,64 +33485,60 @@ var App = () => {
                   unsubmittedWithdraws,
                   unlockSchedule
                 }, undefined, false, undefined, this),
-                mode === "supplyLiquidity" && /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(SupplyLiquidityPage, {
-                  mgpBalance,
-                  rmgpBalance,
-                  ymgpBalance,
-                  mgpCurveBalance,
-                  rmgpCurveBalance,
-                  ymgpCurveBalance,
+                page === "supplyLiquidity" && /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(SupplyLiquidityPage, {
+                  mgpBalance: balances.mgp,
+                  rmgpBalance: balances.rmgp,
+                  ymgpBalance: balances.ymgp,
+                  mgpCurveBalance: balances.mgpCurve,
+                  rmgpCurveBalance: balances.rmgpCurve,
+                  ymgpCurveBalance: balances.ymgpCurve,
                   mgpLPAmount,
                   ymgpLPAmount,
                   rmgpLPAmount,
-                  decimals,
                   supplyLiquidity,
                   setMGPLPAmount,
                   setRMGPLPAmount,
                   setYMGPLPAmount
                 }, undefined, false, undefined, this),
-                mode === "lock" && /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(LockPage, {
+                page === "lock" && /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(LockPage, {
                   sendAmount,
-                  ymgpBalance,
-                  totalLockedYMGP,
+                  ymgpBalance: balances.ymgp,
+                  totalLockedYMGP: locked.ymgp,
                   mgpAPR,
-                  reefiLockedMGP,
+                  reefiLockedMGP: locked.reefiMGP,
                   setSendAmount,
                   lockYMGP
                 }, undefined, false, undefined, this),
-                mode === "unlock" && /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(UnlockPage, {
-                  ymgpBalance,
-                  decimals,
+                page === "unlock" && /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(UnlockPage, {
+                  ymgpBalance: balances.ymgp,
                   sendAmount,
                   setSendAmount,
                   unlockYMGP
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(PendingRewards, {
+            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(PendingRewards, {
               uncompoundedMGPYield,
               prices,
               estimatedCompoundGasFee,
-              ymgpHoldings,
-              ymgpSupply,
-              totalLockedYMGP,
+              ymgpHoldings: balances.ymgpHoldings,
+              ymgpSupply: supplies.ymgp,
+              totalLockedYMGP: locked.ymgp,
               unclaimedUserYield,
               decimals,
-              mgpRMGPRate,
-              reefiLockedMGP,
+              mgpRMGPRate: exchangeRates.mintRMGP,
+              reefiLockedMGP: locked.reefiMGP,
               mgpAPR,
               pendingRewards,
               compoundRMGP,
               claimYMGPRewards
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(ConversionRates, {
-              mgpRMGPRate,
-              realMgpRmgpCurveRate,
-              mgpRMGPCurveRate,
-              realRmgpYmgpCurveRate,
-              rmgpYMGPCurveRate
+            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(ConversionRates, {
+              reefiLockedMGP: locked.reefiMGP,
+              chain,
+              account
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(Contracts, {
+            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(Contracts, {
               contracts,
               publicClients,
               chain
@@ -34161,8 +33552,7 @@ var App = () => {
 var App_default = App;
 
 // src/index.tsx
-var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
-var root = import_client.default.createRoot(document.getElementById("root"));
-root.render(/* @__PURE__ */ jsx_dev_runtime23.jsxDEV(import_react5.default.StrictMode, {
-  children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(App_default, {}, undefined, false, undefined, this)
+var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
+import_client.default.createRoot(document.getElementById("root")).render(/* @__PURE__ */ jsx_dev_runtime24.jsxDEV(import_react12.default.StrictMode, {
+  children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));

@@ -1,6 +1,7 @@
 import { ReactElement } from 'react'
 import { AmountInput } from '../components/AmountInput'
 import { aprToApy } from '../utils'
+import { InfoCard } from '../components/InfoCard'
 
 interface Props {
   sendAmount: bigint,
@@ -32,17 +33,9 @@ export const LockPage = ({ sendAmount, ymgpBalance, totalLockedYMGP, mgpAPR, ree
       </div>
       <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={lockYMGP}>Lock yMGP</button>
     </div>
-    <div className="mt-4 bg-indigo-900/20 border border-green-800/30 rounded-lg p-3 text-sm">
-      <div className="flex items-start">
-        <div className="p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-400"><title>Info</title><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-        </div>
-        <div>
-          <span className="font-medium text-indigo-300">About</span>
-          <p className="text-gray-300 mt-1">yMGP can be locked to earn additional yield paid in rMGP. 5% of protocol yield and half of rMGP withdrawal fees are paid to yMGP lockers.</p>
-          <p className="text-gray-300 mt-1">Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi&apos;s vlMGP.</p>
-        </div>
-      </div>
-    </div>
+    <InfoCard text={[
+      "yMGP can be locked to earn additional yield paid in rMGP. 5% of protocol yield and half of rMGP withdrawal fees are paid to yMGP lockers.",
+      "Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi's vlMGP."
+    ]} />
   </>
 }

@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { memo, type ReactElement } from 'react'
 import { formatEther } from '../utils'
 import { InfoCard } from '../components/InfoCard'
 import { AmountInput } from '../components/AmountInput'
@@ -19,7 +19,7 @@ interface Props {
   readonly setYMGPLPAmount: (_rmgpLPAmount: bigint) => void
 }
 
-export const SupplyLiquidityPage = ({ mgpBalance, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, mgpLPAmount, ymgpLPAmount, ymgpBalance, rmgpLPAmount, setYMGPLPAmount, rmgpBalance, supplyLiquidity, setMGPLPAmount, setRMGPLPAmount }: Props): ReactElement => {
+export const SupplyLiquidityPage = memo(({ mgpBalance, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, mgpLPAmount, ymgpLPAmount, ymgpBalance, rmgpLPAmount, setYMGPLPAmount, rmgpBalance, supplyLiquidity, setMGPLPAmount, setRMGPLPAmount }: Props): ReactElement => {
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
       <AmountInput label="Supply MGP" balance={mgpBalance} value={mgpLPAmount} onChange={setMGPLPAmount} token={{ symbol: 'MGP', color: 'bg-blue-400', bgColor: 'bg-blue-600' }} placeholder={((): string => {
@@ -53,4 +53,5 @@ export const SupplyLiquidityPage = ({ mgpBalance, mgpCurveBalance, rmgpCurveBala
     </div>
     <InfoCard text='Supply liquidity to the cMGP Curve pool (MGP/rMGP/yMGP). You can supply liquidity at any ratio of MGP:rMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use <a href="https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/" className="text-blue-400">Curve</a>.' />
   </>
-}
+})
+SupplyLiquidityPage.displayName = 'SupplyLiquidityPage'

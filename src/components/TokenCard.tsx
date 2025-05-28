@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react'
+import { memo, type ReactElement } from 'react'
 import { formatNumber, formatEther } from '../utils'
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
   readonly underlyingSymbol?: string | undefined,
 }
 
-export const TokenCard = ({ symbol, decimals, description, features, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }: Props): ReactElement => {
+export const TokenCard = memo(({ symbol, decimals, description, features, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }: Props): ReactElement => {
   return <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
     <div className="grid grid-cols-3">
       <div className="flex justify-between items-start">
@@ -67,4 +67,5 @@ export const TokenCard = ({ symbol, decimals, description, features, price, supp
       {features ? Object.entries(features).map((feature: readonly [string, string]) => <li key={feature[0]}><strong>{feature[0]}</strong>: {feature[1]}</li>) : ''}
     </ul>
   </div>
-}
+})
+TokenCard.displayName = 'TokenCard'

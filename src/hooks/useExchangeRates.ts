@@ -21,7 +21,7 @@ interface Props {
   readonly supplies: Supplies
 }
 
-export const useExchangeRates = ({ reefiLockedMGP, chain, account, supplies }: Props): ExchangeRates => {
+export function useExchangeRates({ reefiLockedMGP, chain, account, supplies }: Props): ExchangeRates {
   const mintRMGP = useMemo(() => { return supplies.rmgp === 0n ? 1 : (Number(reefiLockedMGP) / Number(supplies.rmgp)) }, [supplies.rmgp, reefiLockedMGP])
   const [mgpRMGP] = useUpdateable(async () => { return Number(await contracts[chain].CMGP.read.get_dy([0n, 1n, parseEther(0.000_01)], { account }))/Number(parseEther(0.000_01)) }, [contracts, chain], 'mgpRMGP curve', 0)
   const [rmgpYMGP] = useUpdateable(async () => { return Number(await contracts[chain].CMGP.read.get_dy([1n, 2n, parseEther(0.000_01)], { account }))/Number(parseEther(0.000_01)) }, [contracts, chain], 'rmgpYMGP curve', 0)

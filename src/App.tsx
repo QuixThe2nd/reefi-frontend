@@ -83,7 +83,7 @@ const App = (): ReactElement => {
       <div className="flex-grow overflow-auto">
         <div className="p-4 md:p-6">
           <Header account={account} decimals={decimals} mgpBalance={balances.mgp} rmgpBalance={balances.rmgp} ymgpBalance={balances.ymgp} cmgpBalance={balances.cmgp} userLockedYMGP={locked.userYMGP} ens={ens} chain={chain} isConnecting={isConnecting} connectWallet={connectWallet} setChain={setChain} />
-          <TokenCards prices={prices} decimals={decimals} mgpSupply={supplies.mgp} totalLockedMGP={locked.mgp} rmgpSupply={supplies.rmgp} reefiLockedMGP={locked.reefiMGP} ymgpSupply={supplies.ymgp} totalLockedYMGP={locked.ymgp} exchangeRates={exchangeRates} />
+          <TokenCards prices={prices} decimals={decimals} mgpSupply={supplies.mgp} totalLockedMGP={locked.mgp} rmgpSupply={supplies.rmgp} reefiLockedMGP={locked.reefiMGP} ymgpSupply={supplies.ymgp} totalLockedYMGP={locked.ymgp} mgpRMGPRate={exchangeRates.curve.mgpRMGP} rmgpYMGPRate={exchangeRates.curve.rmgpYMGP} />
           <div className="flex flex-col justify-center mb-4 items-center">
             <button type="button" className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors w-fit" onClick={() => setShowDiagram(!showDiagram)}>{showDiagram ? 'Hide Diagram' : 'Show Diagram'}</button>
             {showDiagram && <div className="flex justify-center mt-4"><img src={Diagram} alt="Diagram" className="h-120" /></div>}
@@ -102,7 +102,7 @@ const App = (): ReactElement => {
             {page === 'unlock' && <UnlockPage ymgpBalance={balances.ymgp} sendAmount={sendAmount} setSendAmount={setSendAmount} unlockYMGP={unlockYMGP} />}
           </div>
           <PendingRewards uncompoundedMGPYield={uncompoundedMGPYield} prices={prices} estimatedCompoundGasFee={estimatedCompoundGasFee} ymgpHoldings={balances.ymgpHoldings} ymgpSupply={supplies.ymgp} totalLockedYMGP={locked.ymgp} unclaimedUserYield={unclaimedUserYield} decimals={decimals} mgpRMGPRate={exchangeRates.mintRMGP} reefiLockedMGP={locked.reefiMGP} mgpAPR={mgpAPR} pendingRewards={pendingRewards} compoundRMGP={compoundRMGP} claimYMGPRewards={claimYMGPRewards} />
-          <ConversionRates exchangeRates={exchangeRates} />
+          <ConversionRates mgpRMGP={exchangeRates.curve.mgpRMGP} rmgpMGP={exchangeRates.curve.rmgpMGP} rmgpYMGP={exchangeRates.curve.rmgpYMGP} ymgpRMGP={exchangeRates.curve.ymgpRMGP} mintRMGP={exchangeRates.mintRMGP} />
           <Contracts contracts={contracts} publicClients={publicClients} chain={chain} />
         </div>
       </div>

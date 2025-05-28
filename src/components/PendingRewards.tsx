@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { memo, type ReactElement } from 'react'
 import { formatNumber, formatEther, formatTime } from '../utils'
 import { Coins } from '../config/contracts'
 
@@ -19,7 +19,7 @@ interface Props {
   readonly claimYMGPRewards: () => void
 }
 
-export const PendingRewards = ({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, ymgpHoldings, ymgpSupply, totalLockedYMGP, unclaimedUserYield, decimals, mgpRMGPRate, reefiLockedMGP, mgpAPR, pendingRewards, compoundRMGP, claimYMGPRewards }: Props): ReactElement => {
+export const PendingRewards = memo(({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, ymgpHoldings, ymgpSupply, totalLockedYMGP, unclaimedUserYield, decimals, mgpRMGPRate, reefiLockedMGP, mgpAPR, pendingRewards, compoundRMGP, claimYMGPRewards }: Props): ReactElement => {
   return <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6">
     <h2 className="text-2xl font-bold mb-4">Pending Rewards</h2>
     <div className="grid grid-cols-2 gap-4">
@@ -54,4 +54,5 @@ export const PendingRewards = ({ uncompoundedMGPYield, prices, estimatedCompound
       </div>
     </div>
   </div>
-}
+})
+PendingRewards.displayName = 'PendingRewards'

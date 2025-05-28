@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { memo, type ReactElement } from 'react'
 import { formatEther } from '../utils';
 import { AmountInput } from '../components/AmountInput';
 import { TokenApproval } from '../components/TokenApproval';
@@ -11,13 +11,13 @@ interface Props {
   readonly rmgpAllowance: bigint,
   readonly rmgpAllowanceCurve: bigint,
   readonly rmgpYmgpCurveAmount: bigint,
-  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly onApprove: (_infinity: boolean, _curve: boolean) => void
   readonly setSendAmount: (_value: bigint) => void
   readonly depositRMGP: () => void
   readonly buyYMGP: () => void
 }
 
-export const ConvertPage = ({ sendAmount, rmgpBalance, rmgpAllowance, rmgpAllowanceCurve, rmgpYmgpCurveAmount, onApprove, setSendAmount, depositRMGP, buyYMGP }: Props): ReactElement => {
+export const ConvertPage = memo(({ sendAmount, rmgpBalance, rmgpAllowance, rmgpAllowanceCurve, rmgpYmgpCurveAmount, onApprove, setSendAmount, depositRMGP, buyYMGP }: Props): ReactElement => {
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
       <AmountInput label="Convert rMGP" token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={rmgpBalance} value={sendAmount} onChange={setSendAmount} />
@@ -31,4 +31,5 @@ export const ConvertPage = ({ sendAmount, rmgpBalance, rmgpAllowance, rmgpAllowa
     </div>
     <InfoCard text="yMGP is backed 1:1 by rMGP. This process can not be undone. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield." />
   </>
-}
+})
+ConvertPage.displayName = 'ConvertPage'

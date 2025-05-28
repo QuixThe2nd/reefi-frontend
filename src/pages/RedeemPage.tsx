@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { memo, type ReactElement } from 'react'
 import { AmountInput } from '../components/AmountInput';
 import { formatTime, formatEther } from '../utils';
 import { InfoCard } from '../components/InfoCard';
@@ -12,7 +12,7 @@ interface Props {
   readonly rmgpMGPRate: number,
   readonly rmgpMgpCurveAmount: bigint,
   readonly userWithdrawable: bigint,
-  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly onApprove: (_infinity: boolean, _curve: boolean) => void
   readonly setSendAmount: (_value: bigint) => void
   readonly redeemRMGP: () => void
   readonly buyMGP: () => void
@@ -26,7 +26,7 @@ interface Props {
   }[] | undefined
 }
 
-export const RedeemPage = ({ rmgpBalance, sendAmount, rmgpAllowanceCurve, rmgpMGPRate, rmgpMgpCurveAmount, userWithdrawable, onApprove, setSendAmount, redeemRMGP, buyMGP, withdrawMGP, decimals, userPendingWithdraws, unlockSchedule }: Props): ReactElement => {
+export const RedeemPage = memo(({ rmgpBalance, sendAmount, rmgpAllowanceCurve, rmgpMGPRate, rmgpMgpCurveAmount, userWithdrawable, onApprove, setSendAmount, redeemRMGP, buyMGP, withdrawMGP, decimals, userPendingWithdraws, unlockSchedule }: Props): ReactElement => {
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
       <AmountInput label="Redeem rMGP" token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={rmgpBalance} value={sendAmount} onChange={setSendAmount} />
@@ -57,4 +57,5 @@ export const RedeemPage = ({ rmgpBalance, sendAmount, rmgpAllowanceCurve, rmgpMG
       "Half of the withdrawal fee (5% of withdrawal) is redistributed to yMGP holders as yield, with the other half sent to the Reefi treasury."
     ]} />
   </>
-}
+})
+RedeemPage.displayName = 'RedeemPage'

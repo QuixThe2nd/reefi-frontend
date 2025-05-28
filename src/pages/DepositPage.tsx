@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { memo, type ReactElement } from 'react'
 import { AmountInput } from '../components/AmountInput';
 import { TokenApproval } from '../components/TokenApproval';
 import { aprToApy, formatEther } from '../utils';
@@ -13,13 +13,13 @@ interface Props {
   readonly mgpRmgpCurveAmount: bigint,
   readonly mgpRMGPRate: number,
   readonly mgpAPR: number,
-  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly onApprove: (_infinity: boolean, _curve: boolean) => void
   readonly setSendAmount: (_value: bigint) => void
   readonly depositMGP: () => void
   readonly buyRMGP: () => void
 }
 
-export const DepositPage = ({ sendAmount, mgpAllowance, mgpBalance, mgpAllowanceCurve, mgpRmgpCurveAmount, mgpRMGPRate, mgpAPR, onApprove, setSendAmount, depositMGP, buyRMGP }: Props): ReactElement => {
+export const DepositPage = memo(({ sendAmount, mgpAllowance, mgpBalance, mgpAllowanceCurve, mgpRmgpCurveAmount, mgpRMGPRate, mgpAPR, onApprove, setSendAmount, depositMGP, buyRMGP }: Props): ReactElement => {
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
       <AmountInput label="Deposit MGP" token={{ symbol: 'MGP', color: 'bg-blue-400', bgColor: 'bg-blue-600' }} balance={mgpBalance} value={sendAmount} onChange={setSendAmount} />
@@ -43,4 +43,5 @@ export const DepositPage = ({ sendAmount, mgpAllowance, mgpBalance, mgpAllowance
     </div>
     <InfoCard text="MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards and half the withdrawal fees." />
   </>
-}
+})
+DepositPage.displayName = 'DepositPage'

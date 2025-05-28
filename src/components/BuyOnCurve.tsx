@@ -1,4 +1,4 @@
-import type { JSX, ReactElement } from 'react'
+import { memo, type JSX, type ReactElement } from 'react'
 import { formatEther } from '../utils';
 import { TokenApproval } from './TokenApproval';
 
@@ -7,13 +7,13 @@ interface Props {
   readonly curveAmount: bigint
   readonly allowanceCurve: bigint
   readonly rate: number
-  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly onApprove: (_infinity: boolean, _curve: boolean) => void
   readonly buy: () => void
   readonly tokenASymbol: string
   readonly tokenBSymbol: string
 }
 
-export const BuyOnCurve = ({ sendAmount, curveAmount, allowanceCurve, rate, onApprove, buy, tokenASymbol, tokenBSymbol }: Props): ReactElement => {
+export const BuyOnCurve = memo(({ sendAmount, curveAmount, allowanceCurve, rate, onApprove, buy, tokenASymbol, tokenBSymbol }: Props): ReactElement => {
   return <div>
     <TokenApproval sendAmount={sendAmount} allowance={allowanceCurve} onApprove={onApprove} tokenSymbol={tokenASymbol} curve={true} />
     <div className="relative">
@@ -26,4 +26,5 @@ export const BuyOnCurve = ({ sendAmount, curveAmount, allowanceCurve, rate, onAp
       })()}
     </div>
   </div>
-}
+})
+BuyOnCurve.displayName = 'BuyOnCurve'

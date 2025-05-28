@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { memo, type ReactElement } from 'react'
 import { formatEther } from '../utils';
 import { AmountInput } from '../components/AmountInput';
 import { TokenApproval } from '../components/TokenApproval';
@@ -17,7 +17,7 @@ interface Props {
   readonly buyVMGP: () => Promise<void>
 }
 
-export const BuyVotesPage = ({ sendAmount, ymgpAllowance, ymgpAllowanceCurve, ymgpBalance, ymgpVmgpCurveAmount, onApprove, setSendAmount, depositYMGP, buyVMGP }: Props): ReactElement => {
+export const BuyVotesPage = memo(({ sendAmount, ymgpAllowance, ymgpAllowanceCurve, ymgpBalance, ymgpVmgpCurveAmount, onApprove, setSendAmount, depositYMGP, buyVMGP }: Props): ReactElement => {
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
       <AmountInput label="Get vMGP" token={{ symbol: 'yMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={ymgpBalance} value={sendAmount} onChange={setSendAmount} />
@@ -33,4 +33,5 @@ export const BuyVotesPage = ({ sendAmount, ymgpAllowance, ymgpAllowanceCurve, ym
     </div>
     <InfoCard text="vMGP is backed 1:1 by yMGP. This process can not be undone. vMGP is used to vote on Magpie proposals with Reefi's underlying vlMGP." />
   </>
-}
+})
+BuyVotesPage.displayName = 'BuyVotesPage'

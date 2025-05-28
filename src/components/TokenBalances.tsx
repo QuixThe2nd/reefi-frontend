@@ -1,6 +1,6 @@
-import type { ReactElement } from 'react'
-import { formatEther } from '../utils'
+import { memo, type ReactElement } from 'react'
 import { Coins } from '../config/contracts'
+import { TokenBalance } from './TokenBalance'
 
 interface Props {
   readonly decimals: Readonly<Record<Coins, number>>
@@ -12,14 +12,14 @@ interface Props {
   readonly userLockedYMGP: bigint
 }
 
-export const TokenBalances = ({ decimals, mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance, userLockedYMGP }: Props): ReactElement => {
+export const TokenBalances = memo(({ decimals, mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance }: Props): ReactElement => {
   return <>
-    <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">MGP: {formatEther(mgpBalance, decimals.MGP).toFixed(4)}</div>
-    <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">rMGP: {formatEther(rmgpBalance, decimals.RMGP).toFixed(4)}</div>
-    <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">yMGP: {formatEther(ymgpBalance, decimals.YMGP).toFixed(4)}</div>
-    {/* <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">vMGP: {formatEther(vmgpBalance, decimals.VMGP).toFixed(4)}</div> */}
-    <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">cMGP: {formatEther(cmgpBalance, decimals.CMGP).toFixed(4)}</div>
-    <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">Locked yMGP: {formatEther(userLockedYMGP, decimals.YMGP).toFixed(4)}</div>
-    {/* <div className="bg-gray-700 rounded-lg px-3 py-2 text-sm">Staked cMGP: {formatEther(stakedCMGPBalance, decimals.CMGP).toFixed(4)}</div> */}
+    <TokenBalance symbol="MGP" balance={mgpBalance} decimals={decimals.MGP} />
+    <TokenBalance symbol="RMGP" balance={rmgpBalance} decimals={decimals.RMGP} />
+    <TokenBalance symbol="YMGP" balance={ymgpBalance} decimals={decimals.YMGP} />
+    {/* <TokenBalance symbol="VMGP" balance={vmgpBalance} decimals={decimals.VMGP} /> */}
+    <TokenBalance symbol="CMGP" balance={cmgpBalance} decimals={decimals.CMGP} /> 
+    {/* <TokenBalance symbol="Locked yMGP" balance={userLockedYMGP} decimals={decimals.YMGP} /> */}
   </>
-}
+})
+TokenBalances.displayName = 'TokenBalance';

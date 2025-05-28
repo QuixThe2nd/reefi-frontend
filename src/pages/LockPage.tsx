@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { memo, type ReactElement } from 'react'
 import { AmountInput } from '../components/AmountInput'
 import { aprToApy } from '../utils'
 import { InfoCard } from '../components/InfoCard'
@@ -13,7 +13,7 @@ interface Props {
   readonly lockYMGP: () => void
 }
 
-export const LockPage = ({ sendAmount, ymgpBalance, totalLockedYMGP, mgpAPR, reefiLockedMGP, setSendAmount, lockYMGP }: Props): ReactElement => {
+export const LockPage = memo(({ sendAmount, ymgpBalance, totalLockedYMGP, mgpAPR, reefiLockedMGP, setSendAmount, lockYMGP }: Props): ReactElement => {
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
       <AmountInput label="Lock yMGP" token={{ symbol: 'yMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={ymgpBalance} value={sendAmount} onChange={setSendAmount} />
@@ -38,4 +38,5 @@ export const LockPage = ({ sendAmount, ymgpBalance, totalLockedYMGP, mgpAPR, ree
       "Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi's vlMGP."
     ]} />
   </>
-}
+})
+LockPage.displayName = 'LockPage'

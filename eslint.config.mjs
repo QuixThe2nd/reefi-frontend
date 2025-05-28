@@ -4,14 +4,35 @@ import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import { defineConfig } from "eslint/config";
 import eslintPluginUnicorn from 'eslint-plugin-unicorn';
+import reactPlugin from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks';
 
 export default defineConfig([
-  { files: ["./src/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"] },
-  { files: ["./src/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], languageOptions: { globals: globals.browser } },
   tseslint.configs.strict,
   tseslint.configs.stylistic,
   pluginReact.configs.flat.recommended,
   eslintPluginUnicorn.configs.recommended,
+  reactPlugin.configs.flat.recommended,
+  reactPlugin.configs.flat['jsx-runtime'],
+  reactHooks.configs['recommended-latest'],
+  {
+    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
+    plugins: {
+      js,
+      reactPlugin,
+    },
+    extends: ["js/recommended"],
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: globals.browser,
+    },
+    rules: {},
+    // ... others are omitted for brevity
+  },
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {

@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import { ReactElement, memo } from 'react'
 import { formatEther, parseEther } from '../utils'
 
 interface AmountInputProps {
@@ -14,7 +14,7 @@ interface AmountInputProps {
   readonly placeholder?: string
 }
 
-export const AmountInput = ({ label, balance, value, onChange, token, placeholder }: AmountInputProps): ReactElement => {
+export const AmountInput = memo(({ label, balance, value, onChange, token, placeholder }: AmountInputProps): ReactElement => {
   return <div className="mb-4">
     <div className="flex justify-between items-center mb-1">
       <h3 className="text-md font-medium">{label}</h3>
@@ -31,4 +31,5 @@ export const AmountInput = ({ label, balance, value, onChange, token, placeholde
       </div>
     </div>
   </div>
-}
+})
+AmountInput.displayName = 'AmountInput';

@@ -1,21 +1,21 @@
-import { ReactElement, useState } from 'react'
+import { type ReactElement, memo, useState } from 'react'
 
 interface TokenApprovalProps {
   readonly allowance: bigint
   readonly sendAmount: bigint
-  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly onApprove: (_infinity: boolean, _curve: boolean) => void
   readonly tokenSymbol: string
   readonly curve?: boolean
   readonly className?: string
 }
 
-export const TokenApproval = ({ allowance, sendAmount, onApprove, tokenSymbol, curve = false, className = "w-full" }: TokenApprovalProps): ReactElement | undefined => {
+export const TokenApproval = memo(({ allowance, sendAmount, onApprove, tokenSymbol, curve = false, className = "w-full" }: TokenApprovalProps): ReactElement | undefined => {
   const [approveInfinity, setApproveInfinity] = useState(false)
   const [isApproving, setIsApproving] = useState(false)
 
   const handleApprove = (): void => {
     setIsApproving(true)
-    onApprove(approveInfinity, curve).then(() => setIsApproving(false)).catch(() => setIsApproving(false))
+    onApprove(approveInfinity, curve)
   }
 
   if (allowance >= sendAmount) return
@@ -31,4 +31,5 @@ export const TokenApproval = ({ allowance, sendAmount, onApprove, tokenSymbol, c
       </button>
     </div>
   )
-}
+})
+TokenApproval.displayName = 'TokenApproval'

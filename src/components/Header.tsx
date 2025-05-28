@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react'
+import { memo, type ReactElement } from 'react'
 import { TokenBalances } from './TokenBalances'
 import { Chains, Coins } from '../config/contracts'
 
@@ -18,7 +18,7 @@ interface Props {
   readonly setChain: (_chain: Chains) => void
 }
 
-export const Header = ({ account, ens, chain, decimals, mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance, userLockedYMGP, isConnecting, connectWallet, setChain }: Props): ReactElement => {
+export const Header = memo(({ account, ens, chain, decimals, mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance, userLockedYMGP, isConnecting, connectWallet, setChain }: Props): ReactElement => {
   return <div className="bg-gray-800 p-4 rounded-xl border border-gray-700 mb-6 flex justify-between items-center">
       <div className="flex items-center gap-4">
         <h1 className="text-xl font-bold">REEFI</h1>
@@ -36,4 +36,5 @@ export const Header = ({ account, ens, chain, decimals, mgpBalance, rmgpBalance,
         </select>
       </div>}
     </div>
-}
+})
+Header.displayName = 'Header'

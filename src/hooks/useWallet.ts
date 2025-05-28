@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } from "react"
 import { createWalletClient, custom, publicActions, type WalletClient, type PublicActions } from "viem"
 import { arbitrum, bsc } from 'viem/chains'
 import { publicClients, type Chains } from "../config/contracts"
@@ -11,8 +11,8 @@ interface UseWallet {
   readonly isConnecting: boolean,
   readonly connectRequired: boolean,
   readonly connectWallet: () => void,
-  readonly setChain: React.Dispatch<React.SetStateAction<Chains>>,
-  readonly setConnectRequired: React.Dispatch<React.SetStateAction<boolean>>,
+  readonly setChain: Dispatch<SetStateAction<Chains>>,
+  readonly setConnectRequired: Dispatch<SetStateAction<boolean>>,
   readonly ens: string | undefined
 }
 

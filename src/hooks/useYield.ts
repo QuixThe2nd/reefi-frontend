@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo, useEffect, useCallback } from "react"
 import { Chains, type Coins, contracts, decimals, publicClients } from "../config/contracts"
 import { aprToApy, formatEther } from "../utils"
 import { useUpdateable } from "./useUpdateable"
@@ -39,25 +39,25 @@ export const useYield = ({ chain, account, prices, balances }: Props): Yield => 
     return pendingRewards ? (Object.keys(pendingRewards) as Coins[]).map(symbol => prices[symbol]*Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0)/prices.MGP : 0
   }, [pendingRewards, prices])
   const estimatedCompoundGasFee = useMemo(() => formatEther(compoundRMGPGas, decimals[publicClients[chain].chain.nativeCurrency.symbol])*prices[publicClients[chain].chain.nativeCurrency.symbol], [chain, compoundRMGPGas, prices])
-  const updatePendingRewards = (): void => {
+  const updatePendingRewards = useCallback((): void => {
     contracts[chain].MASTERMGP.read.allPendingTokens([contracts[chain].VLMGP.address, contracts[chain].RMGP.address]).then(data => {
       const [pendingMGP, bonusTokenAddresses, bonusTokenSymbols, pendingBonusRewards] = data
       const newPendingRewards: Record<string, { address: `0x${string}`, rewards: bigint }> = { MGP: { address: contracts[chain].MGP.address, rewards: pendingMGP } }
       for (const i in bonusTokenSymbols) if (bonusTokenSymbols[i] !== undefined && pendingBonusRewards[i] !== undefined && bonusTokenAddresses[i] !== undefined) newPendingRewards[bonusTokenSymbols[i].replace('Bridged ', '').toUpperCase()] = { rewards: pendingBonusRewards[i], address: bonusTokenAddresses[i] };
       setPendingRewards(newPendingRewards)
     })  
-  }
+  }, [chain])
 
-  const estimateCompoundRMGPGas = async (): Promise<bigint> => {
+  const estimateCompoundRMGPGas = useCallback(async (): Promise<bigint> => {
     const gasPrice = await publicClients[chain].getGasPrice()
     const gas = account === undefined ? 0n : await contracts[chain].RMGP.estimateGas.claim({ account })
     return gas*gasPrice
-  }
+  }, [account, chain])
 
   useEffect(() => {
     const interval = setInterval(() => { updatePendingRewards() }, 30_000)
     return (): void => clearInterval(interval)
-  }, [])
+  }, [updatePendingRewards])
 
   useEffect(() => {
     (async (): Promise<void> => {
@@ -77,11 +77,11 @@ export const useYield = ({ chain, account, prices, balances }: Props): Yield => 
       }
       setMGPAPR(apr)
     })()
-  }, [chain])
+  }, [chain, updatePendingRewards])
 
   useEffect(() => {
     estimateCompoundRMGPGas().then(setCompoundRMGPGas)
-  }, [chain, account])
+  }, [chain, account, estimateCompoundRMGPGas])
 
   return { mgpAPR, pendingRewards, unclaimedUserYield, cmgpPoolAPY, cmgpAPY, uncompoundedMGPYield, estimatedCompoundGasFee, updatePendingRewards, updateUnclaimedUserYield }
 }

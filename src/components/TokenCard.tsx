@@ -2,17 +2,17 @@ import type { ReactElement } from 'react'
 import { formatNumber, formatEther } from '../utils'
 
 interface Props {
-  symbol: string,
-  decimals: number,
-  description: string,
-  features?: Record<string, string>,
-  price?: number | undefined,
-  supply: bigint | undefined,
-  locked?: bigint | undefined,
-  marketRate?: number | undefined,
-  voteMultiplier?: number | undefined,
-  underlying?: bigint | undefined,
-  underlyingSymbol?: string | undefined,
+  readonly symbol: string,
+  readonly decimals: number,
+  readonly description: string,
+  readonly features?: Readonly<Record<string, string>>,
+  readonly price?: number,
+  readonly supply: bigint,
+  readonly locked?: bigint,
+  readonly marketRate?: number,
+  readonly voteMultiplier?: number,
+  readonly underlying?: bigint,
+  readonly underlyingSymbol?: string | undefined,
 }
 
 export const TokenCard = ({ symbol, decimals, description, features, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }: Props): ReactElement => {
@@ -28,15 +28,15 @@ export const TokenCard = ({ symbol, decimals, description, features, price, supp
         </div>
       </div>
       <div className="grid grid-cols-2 col-span-2 gap-2">
-        {supply !== undefined ? <div className="bg-gray-700/50 rounded-lg p-2">
+        <div className="bg-gray-700/50 rounded-lg p-2">
           <p className="text-gray-400 text-xs">Supply</p>
           <p className="font-medium">{formatNumber(formatEther(supply, decimals), 3)} {symbol}</p>
-        </div> : ''}
+        </div>
         {underlying !== undefined && underlying !== supply ? <div className="bg-gray-700/50 rounded-lg p-2">
           <p className="text-gray-400 text-xs">TVL</p>
           <p className="font-medium">{formatNumber(formatEther(underlying), 4)} {underlyingSymbol}</p>
         </div> : ''}
-        {underlying !== undefined && supply !== undefined && underlying !== supply ? <div className="bg-gray-700/50 rounded-lg p-2">
+        {underlying !== undefined && underlying !== supply ? <div className="bg-gray-700/50 rounded-lg p-2">
           <p className="text-gray-400 text-xs">Mint Rate</p>
           <p className="font-medium">{formatNumber(Number(underlying)/Number(supply), 6)} {underlyingSymbol}</p>
         </div> : ''}
@@ -48,11 +48,11 @@ export const TokenCard = ({ symbol, decimals, description, features, price, supp
           <p className="text-gray-400 text-xs">Locked</p>
           <p className="font-medium">{formatNumber(Math.round(formatEther(locked, decimals)))} {symbol}</p>
         </div> : ''}
-        {locked !== undefined && supply !== undefined ? <div className="bg-gray-700/50 rounded-lg p-2">
+        {locked !== undefined ? <div className="bg-gray-700/50 rounded-lg p-2">
           <p className="text-gray-400 text-xs">Lock Rate</p>
           <p className="font-medium">{Math.round(10_000*Number(locked)/Number(supply))/100}%</p>
         </div> : ''}
-        {price !== undefined && supply !== undefined ? <div className="bg-gray-700/50 rounded-lg p-2">
+        {price !== undefined ? <div className="bg-gray-700/50 rounded-lg p-2">
           <p className="text-gray-400 text-xs">FDV</p>
           <p className="font-medium">${formatNumber(price*formatEther(supply, decimals))}</p>
         </div> : ''}
@@ -64,7 +64,7 @@ export const TokenCard = ({ symbol, decimals, description, features, price, supp
     </div>
     <p className="text-gray-400 text-xs mt-2">{description}</p>
     <ul className="list-disc list-inside text-gray-300 text-xs mt-2">
-      {features ? Object.entries(features).map(feature => <li key={feature[0]}><strong>{feature[0]}</strong>: {feature[1]}</li>) : ''}
+      {features ? Object.entries(features).map((feature: readonly [string, string]) => <li key={feature[0]}><strong>{feature[0]}</strong>: {feature[1]}</li>) : ''}
     </ul>
   </div>
 }

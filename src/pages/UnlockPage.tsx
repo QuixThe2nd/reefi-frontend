@@ -3,10 +3,10 @@ import { InfoCard } from '../components/InfoCard'
 import { AmountInput } from '../components/AmountInput'
 
 interface Props {
-  ymgpBalance: bigint | undefined,
-  sendAmount: bigint
-  setSendAmount: (sendAmount: bigint) => void
-  unlockYMGP: () => void
+  readonly ymgpBalance: bigint,
+  readonly sendAmount: bigint
+  readonly setSendAmount: (_sendAmount: bigint) => void
+  readonly unlockYMGP: () => void
 }
 
 export const UnlockPage = ({ ymgpBalance, sendAmount, setSendAmount, unlockYMGP }: Props): ReactElement => {

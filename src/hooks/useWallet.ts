@@ -5,26 +5,26 @@ import { publicClients, type Chains } from "../config/contracts"
 import { useUpdateable } from "./useUpdateable"
 
 interface UseWallet {
-  clients: Record<Chains, WalletClient & PublicActions> | undefined,
-  chain: Chains,
-  account: `0x${string}`,
-  isConnecting: boolean,
-  connectRequired: boolean,
-  connectWallet: () => Promise<void | (() => void)>,
-  setChain: React.Dispatch<React.SetStateAction<Chains>>,
-  setConnectRequired: React.Dispatch<React.SetStateAction<boolean>>,
-  ens: string | null | undefined
+  readonly clients: Record<Chains, WalletClient & PublicActions> | undefined,
+  readonly chain: Chains,
+  readonly account: `0x${string}` | undefined,
+  readonly isConnecting: boolean,
+  readonly connectRequired: boolean,
+  readonly connectWallet: () => void,
+  readonly setChain: React.Dispatch<React.SetStateAction<Chains>>,
+  readonly setConnectRequired: React.Dispatch<React.SetStateAction<boolean>>,
+  readonly ens: string | null
 }
 
-export const useWallet = ({ setError }: { setError: (msg: string) => void }): UseWallet => {
+export const useWallet = ({ setError }: { readonly setError: (_msg: string) => void }): UseWallet => {
   const [clients, setClients] = useState<Record<Chains, WalletClient & PublicActions> | undefined>()
   const [chain, setChain] = useState<Chains>(42161)
-  const [account, setAccount] = useState<`0x${string}`>('0x0000000000000000000000000000000000000000')
+  const [account, updateAccount] = useUpdateable(async () => clients ? (await clients[chain].requestAddresses())[0] : undefined, [clients])
   const [isConnecting, setIsConnecting] = useState(false)
   const [connectRequired, setConnectRequired] = useState(false)
-  const [ens] = useUpdateable(() => publicClients[1].getEnsName({ address: account }), [account])
+  const [ens] = useUpdateable(async () => account !== undefined ? await publicClients[1].getEnsName({ address: account }) : null, [account], null)
 
-  const connectWallet = async (): Promise<void | (() => void)> => {
+  const connectWallet = (): void => {
     if (!window.ethereum) return setError('No wallet found. Please install MetaMask to use Reefi.')
     setIsConnecting(true);
     const clients = {
@@ -32,7 +32,7 @@ export const useWallet = ({ setError }: { setError: (msg: string) => void }): Us
       42161: createWalletClient({ chain: arbitrum, transport: custom(window.ethereum)}).extend(publicActions)
     } as const
     setClients(clients)
-    setAccount((await clients[chain].requestAddresses())[0] ?? '0x0000000000000000000000000000000000000000')
+    updateAccount()
     setIsConnecting(false)
     setConnectRequired(false)
   }
@@ -44,8 +44,8 @@ export const useWallet = ({ setError }: { setError: (msg: string) => void }): Us
   }, [])
 
   useEffect(() => {
-    if (clients) clients[chain].switchChain({ id: chain })
-    window.ethereum?.request({ method: 'eth_accounts' }).then(accounts => { if (accounts !== undefined) connectWallet() })
+    if (clients) (async (): Promise<void> => clients[chain].switchChain({ id: chain }))().catch(() => setError('Failed to switch chains'))
+    connectWallet()
   }, [chain])
 
   return { clients, chain, account, isConnecting, connectRequired, connectWallet, setChain, setConnectRequired, ens }

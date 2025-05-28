@@ -22,15 +22,32 @@ export default defineConfig([
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/no-unused-vars": "error",
       "@typescript-eslint/no-non-null-assertion": "error",
-      "@typescript-eslint/explicit-function-return-type": "warn",
+      "@typescript-eslint/explicit-function-return-type": "error",
       "@typescript-eslint/no-unsafe-assignment": "error",
       "@typescript-eslint/no-unsafe-call": "error",
       "@typescript-eslint/no-unsafe-member-access": "error",
       "@typescript-eslint/no-unsafe-return": "error",
+      "@typescript-eslint/no-unsafe-argument": "error",
       "@typescript-eslint/prefer-nullish-coalescing": "error",
       "@typescript-eslint/prefer-optional-chain": "error",
       "@typescript-eslint/strict-boolean-expressions": "error",
-      "@typescript-eslint/no-invalid-void-type": "off"
+      "@typescript-eslint/no-invalid-void-type": "off",
+      "@typescript-eslint/await-thenable": "error",
+      "@typescript-eslint/require-await": "error",
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        {
+          "checksVoidReturn": false
+        }
+      ],
+      "@typescript-eslint/prefer-readonly": "error",
+      "@typescript-eslint/switch-exhaustiveness-check": "error",
+      "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+      "@typescript-eslint/explicit-member-accessibility": "error",
+      "@typescript-eslint/no-meaningless-void-operator": "error",
+      "@typescript-eslint/no-unnecessary-condition": "error",
+      "@typescript-eslint/prefer-string-starts-ends-with": "error",
+      "@typescript-eslint/prefer-includes": "error"
     }
   },
   {
@@ -42,11 +59,19 @@ export default defineConfig([
     rules: {
       "react/prop-types": "off",
       "react/react-in-jsx-scope": "off",
-      "no-console": "warn",
+      "no-console": "error",
       "no-debugger": "error",
       "prefer-const": "error",
       "no-var": "error",
-      "no-alert": "error"
+      "no-alert": "error",
+      "no-unused-vars": [
+        "error",
+        {
+          "varsIgnorePattern": "^_",
+          "argsIgnorePattern": "^_",
+          "destructuredArrayIgnorePattern": "^_"
+        }
+      ]
     }
   }
 ]);

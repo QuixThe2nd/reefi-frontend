@@ -6,15 +6,15 @@ import { InfoCard } from '../components/InfoCard';
 import { BuyOnCurve } from '../components/BuyOnCurve';
 
 interface Props {
-  sendAmount: bigint,
-  rmgpBalance: bigint | undefined,
-  rmgpAllowance: bigint | undefined,
-  rmgpAllowanceCurve: bigint | undefined,
-  rmgpYmgpCurveAmount: bigint | undefined,
-  onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
-  setSendAmount: (value: bigint) => void
-  depositRMGP: () => void
-  buyYMGP: () => void
+  readonly sendAmount: bigint,
+  readonly rmgpBalance: bigint,
+  readonly rmgpAllowance: bigint,
+  readonly rmgpAllowanceCurve: bigint,
+  readonly rmgpYmgpCurveAmount: bigint,
+  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly setSendAmount: (_value: bigint) => void
+  readonly depositRMGP: () => void
+  readonly buyYMGP: () => void
 }
 
 export const ConvertPage = ({ sendAmount, rmgpBalance, rmgpAllowance, rmgpAllowanceCurve, rmgpYmgpCurveAmount, onApprove, setSendAmount, depositRMGP, buyYMGP }: Props): ReactElement => {

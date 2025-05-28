@@ -6,17 +6,17 @@ import { InfoCard } from '../components/InfoCard';
 import { BuyOnCurve } from '../components/BuyOnCurve';
 
 interface Props {
-  sendAmount: bigint,
-  mgpAllowance: bigint | undefined,
-  mgpBalance: bigint | undefined,
-  mgpAllowanceCurve: bigint | undefined,
-  mgpRmgpCurveAmount: bigint | undefined,
-  mgpRMGPRate: number,
-  mgpAPR: number,
-  onApprove: (infinity: boolean, curve: boolean) => Promise<void>
-  setSendAmount: (value: bigint) => void
-  depositMGP: () => void
-  buyRMGP: () => void
+  readonly sendAmount: bigint,
+  readonly mgpAllowance: bigint,
+  readonly mgpBalance: bigint,
+  readonly mgpAllowanceCurve: bigint,
+  readonly mgpRmgpCurveAmount: bigint,
+  readonly mgpRMGPRate: number,
+  readonly mgpAPR: number,
+  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly setSendAmount: (_value: bigint) => void
+  readonly depositMGP: () => void
+  readonly buyRMGP: () => void
 }
 
 export const DepositPage = ({ sendAmount, mgpAllowance, mgpBalance, mgpAllowanceCurve, mgpRmgpCurveAmount, mgpRMGPRate, mgpAPR, onApprove, setSendAmount, depositMGP, buyRMGP }: Props): ReactElement => {

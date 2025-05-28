@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react'
 import { Pages } from '../App'
 
-export const Navbar = ({ page, setPage }: { page: Pages, setPage: (_page: Pages) => void }): ReactElement => {
+export const Navbar = ({ page, setPage }: { readonly page: Pages, readonly setPage: (_page: Pages) => void }): ReactElement => {
   return <div className="flex justify-center mb-6">
     <div className="bg-gray-700 p-1 rounded-lg flex">
       <button type="button" className={`px-4 py-2 rounded-md transition-colors ${page === 'deposit' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => setPage('deposit')}>Deposit MGP</button>

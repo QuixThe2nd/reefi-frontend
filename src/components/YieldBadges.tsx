@@ -2,7 +2,7 @@ import type { ReactElement } from 'react'
 import { YieldBadge } from './YieldBadge'
 import { aprToApy } from '../utils'
 
-export const YieldBadges = ({ mgpAPR, cmgpAPY, reefiLockedMGP, totalLockedYMGP }: { mgpAPR: number, cmgpAPY: number, reefiLockedMGP: bigint | undefined, totalLockedYMGP: bigint | undefined }): ReactElement => {
+export const YieldBadges = ({ mgpAPR, cmgpAPY, reefiLockedMGP, totalLockedYMGP }: { readonly mgpAPR: number, readonly cmgpAPY: number, readonly reefiLockedMGP: bigint, readonly totalLockedYMGP: bigint }): ReactElement => {
   return <div className="flex flex-row-reverse mb-6">
     <div className="flex gap-1">
       <YieldBadge asset="MGP" apr={mgpAPR} />

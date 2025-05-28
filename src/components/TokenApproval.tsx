@@ -1,28 +1,23 @@
 import { ReactElement, useState } from 'react'
 
 interface TokenApprovalProps {
-  allowance: bigint | undefined
-  sendAmount: bigint
-  onApprove: (infinity: boolean, curve: boolean) => Promise<void>
-  tokenSymbol: string
-  curve?: boolean
-  className?: string
+  readonly allowance: bigint
+  readonly sendAmount: bigint
+  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly tokenSymbol: string
+  readonly curve?: boolean
+  readonly className?: string
 }
 
 export const TokenApproval = ({ allowance, sendAmount, onApprove, tokenSymbol, curve = false, className = "w-full" }: TokenApprovalProps): ReactElement | null => {
   const [approveInfinity, setApproveInfinity] = useState(false)
   const [isApproving, setIsApproving] = useState(false)
 
-  const handleApprove = async (): Promise<void> => {
+  const handleApprove = (): void => {
     setIsApproving(true)
-    try {
-      await onApprove(approveInfinity, curve)
-    } finally {
-      setIsApproving(false)
-    }
+    onApprove(approveInfinity, curve).then(() => setIsApproving(false)).catch(() => setIsApproving(false))
   }
 
-  if (allowance === undefined) return <p>Loading...</p>
   if (allowance >= sendAmount) return null
 
   return (

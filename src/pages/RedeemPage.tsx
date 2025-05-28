@@ -6,28 +6,27 @@ import { BuyOnCurve } from '../components/BuyOnCurve';
 import { Coins } from '../config/contracts';
 
 interface Props {
-  rmgpBalance: bigint | undefined,
-  sendAmount: bigint,
-  rmgpAllowanceCurve: bigint | undefined,
-  rmgpMGPRate: number,
-  rmgpMgpCurveAmount: bigint | undefined,
-  userWithdrawable: bigint | undefined,
-  onApprove: (infinity: boolean, curve: boolean) => Promise<void>
-  setSendAmount: (value: bigint) => void
-  redeemRMGP: () => void
-  buyMGP: () => void
-  withdrawMGP: () => void
-  decimals: Record<Coins, number>
-  userPendingWithdraws: bigint | undefined
-  unsubmittedWithdraws: bigint | undefined
-  unlockSchedule: readonly {
-    startTime: bigint;
-    endTime: bigint;
-    amountInCoolDown: bigint;
+  readonly rmgpBalance: bigint,
+  readonly sendAmount: bigint,
+  readonly rmgpAllowanceCurve: bigint,
+  readonly rmgpMGPRate: number,
+  readonly rmgpMgpCurveAmount: bigint,
+  readonly userWithdrawable: bigint,
+  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly setSendAmount: (_value: bigint) => void
+  readonly redeemRMGP: () => void
+  readonly buyMGP: () => void
+  readonly withdrawMGP: () => void
+  readonly decimals: Readonly<Record<Coins, number>>
+  readonly userPendingWithdraws: bigint
+  readonly unlockSchedule: readonly {
+    readonly startTime: bigint;
+    readonly endTime: bigint;
+    readonly amountInCoolDown: bigint;
   }[] | undefined
 }
 
-export const RedeemPage = ({ rmgpBalance, sendAmount, rmgpAllowanceCurve, rmgpMGPRate, rmgpMgpCurveAmount, userWithdrawable, onApprove, setSendAmount, redeemRMGP, buyMGP, withdrawMGP, decimals, userPendingWithdraws, unsubmittedWithdraws, unlockSchedule }: Props): ReactElement => {
+export const RedeemPage = ({ rmgpBalance, sendAmount, rmgpAllowanceCurve, rmgpMGPRate, rmgpMgpCurveAmount, userWithdrawable, onApprove, setSendAmount, redeemRMGP, buyMGP, withdrawMGP, decimals, userPendingWithdraws, unlockSchedule }: Props): ReactElement => {
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
       <AmountInput label="Redeem rMGP" token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={rmgpBalance} value={sendAmount} onChange={setSendAmount} />
@@ -39,12 +38,12 @@ export const RedeemPage = ({ rmgpBalance, sendAmount, rmgpAllowanceCurve, rmgpMG
         <span>Native Redemption Rate</span>
         <span>{rmgpMGPRate} MGP to rMGP</span>
       </div>
-      {userPendingWithdraws === undefined ? <p>Loading...</p> : userPendingWithdraws > 0n ? <>
+      {userPendingWithdraws > 0n ? <>
         <h3 className="text-md font-medium mt-4">Pending Withdraws</h3>
         <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
-        {unlockSchedule?.[0] ? <p>Unlock available in: {formatTime(Number(unlockSchedule[0].endTime)-(+new Date()/1000))} to {formatTime((unsubmittedWithdraws !== undefined ? Number(unlockSchedule[unlockSchedule.length-1]?.endTime) + 60*60*24*60 : Number(unlockSchedule[unlockSchedule.length-1]?.endTime))-(+new Date()/1000))}</p> : <p>N/A</p>}
+        {unlockSchedule?.[0] ? <p>Unlock available in: {formatTime(Number(unlockSchedule[0].endTime)-(+new Date()/1000))} to {formatTime(Number(unlockSchedule[unlockSchedule.length-1]?.endTime)+60*60*24*60 - (+new Date()/1000))}</p> : <p>N/A</p>}
       </> : ''}
-      {userWithdrawable === undefined ? <p>Loading...</p> : userWithdrawable > 0n ? <>
+      {userWithdrawable > 0n ? <>
         <h3 className="text-md font-medium mt-4">Available To Withdraw</h3>
         <p>{formatEther(userWithdrawable, decimals.MGP)} MGP</p>
         <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}" onClick={withdrawMGP}>Withdraw MGP</button>

@@ -3,7 +3,7 @@
 import { useState, ReactElement } from 'react'
 import Diagram from '../public/diagram.svg'
 import { type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods } from 'viem'
-import { decimals, publicClients } from './config/contracts'
+import { decimals, publicClients, contracts } from './config/contracts';
 import { TokenCards } from './components/TokenCards'
 import { Header } from './components/Header'
 import { YieldBadges } from './components/YieldBadges'
@@ -23,7 +23,6 @@ import { useAllowances } from './hooks/useAllowances'
 import { useBalances } from './hooks/useBalances'
 import { useWallet } from './hooks/useWallet'
 import { useSupplies } from './hooks/useSupplies'
-import { contracts } from './config/contracts'
 import { usePrices } from './hooks/usePrices'
 import { useExchangeRates } from './hooks/useExchangeRates'
 import { useYield } from './hooks/useYield'
@@ -31,6 +30,7 @@ import { useActions } from './hooks/useActions'
 import { useWithdraws } from './hooks/useWithdraws'
 import { useAmounts } from './hooks/useAmounts'
 import { useLocked } from './hooks/useLocked'
+import { useContracts } from './hooks/useContracts';
 // import { Web3Provider } from '@ethersproject/providers';
 // import snapshot from '@snapshot-labs/snapshot.js';
 
@@ -49,8 +49,8 @@ import { useLocked } from './hooks/useLocked'
 declare global {
   interface Window {
     ethereum?: {
-      on: <event extends keyof EIP1193EventMap>(event: event, listener: EIP1193EventMap[event]) => void;
-      removeListener: <event extends keyof EIP1193EventMap>(event: event, listener: EIP1193EventMap[event]) => void;
+      on: <event extends keyof EIP1193EventMap>(event: event, _listener: EIP1193EventMap[event]) => void;
+      removeListener: <event extends keyof EIP1193EventMap>(event: event, _listener: EIP1193EventMap[event]) => void;
       request: EIP1193RequestFn<EIP1474Methods>;
     };
   }
@@ -68,21 +68,22 @@ const App = (): ReactElement => {
   const allowances = useAllowances({ account, chain })
   const supplies = useSupplies({ chain })
   const prices = usePrices()
+  const writeContracts = useContracts({ clients })
   const { sendAmount, setSendAmount, mgpRmgpCurveAmount, rmgpMgpCurveAmount, rmgpYmgpCurveAmount, mgpLPAmount, setMGPLPAmount, rmgpLPAmount, setRMGPLPAmount, ymgpLPAmount, setYMGPLPAmount } = useAmounts({ account, chain })
-  const { uncompoundedMGPYield, estimatedCompoundGasFee, mgpAPR, cmgpAPY, unclaimedUserYield, pendingRewards, updatePendingRewards, updateUnclaimedUserYield } = useYield({ account, chain })
-  const { userWithdrawable, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, userPendingWithdraws, unsubmittedWithdraws, unlockSchedule } = useWithdraws({ account, chain })
+  const { uncompoundedMGPYield, estimatedCompoundGasFee, mgpAPR, cmgpAPY, unclaimedUserYield, pendingRewards, updatePendingRewards, updateUnclaimedUserYield } = useYield({ account, chain, prices, balances })
+  const { userWithdrawable, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, userPendingWithdraws, unlockSchedule } = useWithdraws({ account, chain })
   const locked = useLocked({ account, chain })
-  const { approve, depositRMGP, buyYMGP, lockYMGP, unlockYMGP, depositMGP, buyRMGP, redeemRMGP, compoundRMGP, claimYMGPRewards, withdrawMGP, supplyLiquidity, buyMGP } = useActions({ page, sendAmount, setConnectRequired, setError, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, updatePendingRewards, updateUnclaimedUserYield, updateTotalLockedMGP: locked.updateMGP, updateReefiLockedMGP: locked.updateReefiMGP, updateTotalLockedYMGP: locked.updateYMGP, updateUserLockedYMGP: locked.updateUserYMGP, updateYMGPHoldings: balances.updateYMGPHoldings, clients, account, chain })
-  const exchangeRates = useExchangeRates({ reefiLockedMGP: locked.reefiMGP, account, chain })
+  const { approve, depositRMGP, buyYMGP, lockYMGP, unlockYMGP, depositMGP, buyRMGP, redeemRMGP, compoundRMGP, claimYMGPRewards, withdrawMGP, supplyLiquidity, buyMGP } = useActions({ page, sendAmount, setConnectRequired, setError, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, updatePendingRewards, updateUnclaimedUserYield, updateTotalLockedMGP: locked.updateMGP, updateReefiLockedMGP: locked.updateReefiMGP, updateTotalLockedYMGP: locked.updateYMGP, updateUserLockedYMGP: locked.updateUserYMGP, updateYMGPHoldings: balances.updateYMGPHoldings, clients, account, chain, balances, supplies, allowances, writeContracts })
+  const exchangeRates = useExchangeRates({ reefiLockedMGP: locked.reefiMGP, account, chain, supplies })
 
   return (
     <div className="flex h-screen bg-gray-900 text-white">
-      <ConnectWallet connectRequired={connectRequired} connectWallet={connectWallet} isConnecting={isConnecting} />
+      <ConnectWallet connectRequired={connectRequired} connectWallet={() => { connectWallet() }} isConnecting={isConnecting} />
       <ErrorCard error={error} setError={setError} />
       <div className="flex-grow overflow-auto">
         <div className="p-4 md:p-6">
-          <Header account={account} decimals={decimals} mgpBalance={balances.mgp} rmgpBalance={balances.rmgp} ymgpBalance={balances.ymgp} vmgpBalance={balances.vmgp} cmgpBalance={balances.cmgp} userLockedYMGP={locked.userYMGP} ens={ens} chain={chain} isConnecting={isConnecting} connectWallet={connectWallet} setChain={setChain} />
-          <TokenCards prices={prices} decimals={decimals} mgpSupply={supplies.mgp} totalLockedMGP={locked.mgp} rmgpSupply={supplies.rmgp} reefiLockedMGP={locked.reefiMGP} ymgpSupply={supplies.ymgp} totalLockedYMGP={locked.ymgp} vmgpSupply={supplies.vmgp} account={account} chain={chain} />
+          <Header account={account} decimals={decimals} mgpBalance={balances.mgp} rmgpBalance={balances.rmgp} ymgpBalance={balances.ymgp} cmgpBalance={balances.cmgp} userLockedYMGP={locked.userYMGP} ens={ens} chain={chain} isConnecting={isConnecting} connectWallet={connectWallet} setChain={setChain} />
+          <TokenCards prices={prices} decimals={decimals} mgpSupply={supplies.mgp} totalLockedMGP={locked.mgp} rmgpSupply={supplies.rmgp} reefiLockedMGP={locked.reefiMGP} ymgpSupply={supplies.ymgp} totalLockedYMGP={locked.ymgp} exchangeRates={exchangeRates} />
           <div className="flex flex-col justify-center mb-4 items-center">
             <button type="button" className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors w-fit" onClick={() => setShowDiagram(!showDiagram)}>{showDiagram ? 'Hide Diagram' : 'Show Diagram'}</button>
             {showDiagram && <div className="flex justify-center mt-4"><img src={Diagram} alt="Diagram" className="h-120" /></div>}
@@ -95,13 +96,13 @@ const App = (): ReactElement => {
             {page === 'deposit' && <DepositPage sendAmount={sendAmount} mgpAllowance={allowances.mgp} mgpBalance={balances.mgp} mgpAllowanceCurve={allowances.mgpCurve} mgpRmgpCurveAmount={mgpRmgpCurveAmount} mgpRMGPRate={exchangeRates.mintRMGP} mgpAPR={mgpAPR} onApprove={approve} setSendAmount={setSendAmount} depositMGP={depositMGP} buyRMGP={buyRMGP} />}
             {page === 'convert' && <ConvertPage sendAmount={sendAmount} rmgpBalance={balances.rmgp} rmgpAllowance={allowances.rmgp} rmgpAllowanceCurve={allowances.rmgpCurve} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} onApprove={approve} setSendAmount={setSendAmount} depositRMGP={depositRMGP} buyYMGP={buyYMGP} />}
             {/* {page === 'buyVotes' && <BuyVotesPage sendAmount={sendAmount} ymgpAllowance={allowances.ymgp} ymgpAllowanceCurve={allowances.ymgpCurve} ymgpBalance={balances.ymgp} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} onApprove={approve} setSendAmount={setSendAmount} />} */}
-            {page === 'redeem' && <RedeemPage rmgpBalance={balances.rmgp} sendAmount={sendAmount} rmgpAllowanceCurve={allowances.rmgpCurve} rmgpMGPRate={1/exchangeRates.mintRMGP} rmgpMgpCurveAmount={rmgpMgpCurveAmount} userWithdrawable={userWithdrawable} onApprove={approve} setSendAmount={setSendAmount} redeemRMGP={redeemRMGP} buyMGP={buyMGP} withdrawMGP={withdrawMGP} decimals={decimals} userPendingWithdraws={userPendingWithdraws} unsubmittedWithdraws={unsubmittedWithdraws} unlockSchedule={unlockSchedule} />}
+            {page === 'redeem' && <RedeemPage rmgpBalance={balances.rmgp} sendAmount={sendAmount} rmgpAllowanceCurve={allowances.rmgpCurve} rmgpMGPRate={1/exchangeRates.mintRMGP} rmgpMgpCurveAmount={rmgpMgpCurveAmount} userWithdrawable={userWithdrawable} onApprove={approve} setSendAmount={setSendAmount} redeemRMGP={redeemRMGP} buyMGP={buyMGP} withdrawMGP={withdrawMGP} decimals={decimals} userPendingWithdraws={userPendingWithdraws} unlockSchedule={unlockSchedule} />}
             {page === 'supplyLiquidity' && <SupplyLiquidityPage mgpBalance={balances.mgp} rmgpBalance={balances.rmgp} ymgpBalance={balances.ymgp} mgpCurveBalance={balances.mgpCurve} rmgpCurveBalance={balances.rmgpCurve} ymgpCurveBalance={balances.ymgpCurve} mgpLPAmount={mgpLPAmount} ymgpLPAmount={ymgpLPAmount} rmgpLPAmount={rmgpLPAmount} supplyLiquidity={supplyLiquidity} setMGPLPAmount={setMGPLPAmount} setRMGPLPAmount={setRMGPLPAmount} setYMGPLPAmount={setYMGPLPAmount} />}
             {page === 'lock' && <LockPage sendAmount={sendAmount} ymgpBalance={balances.ymgp} totalLockedYMGP={locked.ymgp} mgpAPR={mgpAPR} reefiLockedMGP={locked.reefiMGP} setSendAmount={setSendAmount} lockYMGP={lockYMGP} />}
             {page === 'unlock' && <UnlockPage ymgpBalance={balances.ymgp} sendAmount={sendAmount} setSendAmount={setSendAmount} unlockYMGP={unlockYMGP} />}
           </div>
           <PendingRewards uncompoundedMGPYield={uncompoundedMGPYield} prices={prices} estimatedCompoundGasFee={estimatedCompoundGasFee} ymgpHoldings={balances.ymgpHoldings} ymgpSupply={supplies.ymgp} totalLockedYMGP={locked.ymgp} unclaimedUserYield={unclaimedUserYield} decimals={decimals} mgpRMGPRate={exchangeRates.mintRMGP} reefiLockedMGP={locked.reefiMGP} mgpAPR={mgpAPR} pendingRewards={pendingRewards} compoundRMGP={compoundRMGP} claimYMGPRewards={claimYMGPRewards} />
-          <ConversionRates reefiLockedMGP={locked.reefiMGP} chain={chain} account={account} />
+          <ConversionRates exchangeRates={exchangeRates} />
           <Contracts contracts={contracts} publicClients={publicClients} chain={chain} />
         </div>
       </div>

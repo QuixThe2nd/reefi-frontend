@@ -4,53 +4,50 @@ import { InfoCard } from '../components/InfoCard'
 import { AmountInput } from '../components/AmountInput'
 
 interface Props {
-  mgpBalance: bigint | undefined,
-  rmgpBalance: bigint | undefined
-  ymgpBalance: bigint | undefined
-  mgpCurveBalance: bigint | undefined,
-  rmgpCurveBalance: bigint | undefined
-  ymgpCurveBalance: bigint | undefined
-  mgpLPAmount: bigint
-  ymgpLPAmount: bigint
-  rmgpLPAmount: bigint
-  supplyLiquidity: () => void
-  setMGPLPAmount: (mgpLPAmount: bigint) => void
-  setRMGPLPAmount: (rmgpLPAmount: bigint) => void
-  setYMGPLPAmount: (rmgpLPAmount: bigint) => void
+  readonly mgpBalance: bigint,
+  readonly rmgpBalance: bigint
+  readonly ymgpBalance: bigint
+  readonly mgpCurveBalance: bigint,
+  readonly rmgpCurveBalance: bigint
+  readonly ymgpCurveBalance: bigint
+  readonly mgpLPAmount: bigint
+  readonly ymgpLPAmount: bigint
+  readonly rmgpLPAmount: bigint
+  readonly supplyLiquidity: () => void
+  readonly setMGPLPAmount: (_mgpLPAmount: bigint) => void
+  readonly setRMGPLPAmount: (_rmgpLPAmount: bigint) => void
+  readonly setYMGPLPAmount: (_rmgpLPAmount: bigint) => void
 }
 
 export const SupplyLiquidityPage = ({ mgpBalance, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, mgpLPAmount, ymgpLPAmount, ymgpBalance, rmgpLPAmount, setYMGPLPAmount, rmgpBalance, supplyLiquidity, setMGPLPAmount, setRMGPLPAmount }: Props): ReactElement => {
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
       <AmountInput label="Supply MGP" balance={mgpBalance} value={mgpLPAmount} onChange={setMGPLPAmount} token={{ symbol: 'MGP', color: 'bg-blue-400', bgColor: 'bg-blue-600' }} placeholder={((): string => {
-        if (mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined) return '0'
         const mgpTarget = Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)
         const totalRecommendedLP = rmgpLPAmount === 0n ? Number(ymgpLPAmount) / (Number(ymgpCurveBalance) / Number(rmgpCurveBalance + ymgpCurveBalance)) : ymgpLPAmount === 0n ? Number(rmgpLPAmount) / (Number(rmgpCurveBalance) / Number(rmgpCurveBalance + ymgpCurveBalance)) : Number(rmgpLPAmount + ymgpLPAmount)
         return formatEther(BigInt(totalRecommendedLP * mgpTarget / (1 - mgpTarget))).toString()
       })()} />
       <div className="mb-4 text-sm text-gray-400 flex justify-between">
         <span>Target</span>
-        <span>{mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? 'Loading...' : `${(100*Number(mgpCurveBalance)/Number(mgpCurveBalance+rmgpCurveBalance+ymgpCurveBalance)).toFixed()}%`}</span>
+        <span>{(100*Number(mgpCurveBalance)/Number(mgpCurveBalance+rmgpCurveBalance+ymgpCurveBalance)).toFixed()}%</span>
       </div>
       <AmountInput label="Supply rMGP" balance={rmgpBalance} value={rmgpLPAmount} onChange={setRMGPLPAmount} token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} placeholder={((): string => {
-        if (mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined) return '0'
         const rmgpTarget = Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)
         const totalRecommendedLP = mgpLPAmount === 0n ? Number(ymgpLPAmount) / (Number(ymgpCurveBalance) / Number(mgpCurveBalance + ymgpCurveBalance)) : ymgpLPAmount === 0n ? Number(mgpLPAmount) / (Number(mgpCurveBalance) / Number(mgpCurveBalance + ymgpCurveBalance)) : Number(mgpLPAmount + ymgpLPAmount)
         return formatEther(BigInt(totalRecommendedLP * rmgpTarget / (1 - rmgpTarget))).toString()
       })()} />
       <div className="mb-4 text-sm text-gray-400 flex justify-between">
         <span>Target</span>
-        <span>{mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? 'Loading...' : `${(100*Number(rmgpCurveBalance)/Number(mgpCurveBalance+rmgpCurveBalance+ymgpCurveBalance)).toFixed()}%`}</span>
+        <span>{(100*Number(rmgpCurveBalance)/Number(mgpCurveBalance+rmgpCurveBalance+ymgpCurveBalance)).toFixed()}%</span>
       </div>
       <AmountInput label="Supply yMGP" balance={ymgpBalance} value={ymgpLPAmount} onChange={setYMGPLPAmount} token={{ symbol: 'yMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} placeholder={((): string => {
-        if (mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined) return '0'
         const ymgpTarget = Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)
         const totalRecommendedLP = mgpLPAmount === 0n ? Number(rmgpLPAmount) / (Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance)) : rmgpLPAmount === 0n ? Number(mgpLPAmount) / (Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance)) : Number(mgpLPAmount + rmgpLPAmount)
         return formatEther(BigInt(totalRecommendedLP * ymgpTarget / (1 - ymgpTarget))).toString()
       })()} />
       <div className="mb-4 text-sm text-gray-400 flex justify-between">
         <span>Target</span>
-        <span>{mgpCurveBalance === undefined || rmgpCurveBalance === undefined || ymgpCurveBalance === undefined ? 'Loading...' : `${(100*Number(ymgpCurveBalance)/Number(mgpCurveBalance+rmgpCurveBalance+ymgpCurveBalance)).toFixed()}%`}</span>
+        <span>{(100*Number(ymgpCurveBalance)/Number(mgpCurveBalance+rmgpCurveBalance+ymgpCurveBalance)).toFixed()}%</span>
       </div>
       <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}" onClick={supplyLiquidity}>Get cMGP</button>
     </div>

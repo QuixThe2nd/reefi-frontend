@@ -3,22 +3,22 @@ import { formatEther } from '../utils';
 import { TokenApproval } from './TokenApproval';
 
 interface Props {
-  sendAmount: bigint
-  curveAmount: bigint | undefined
-  allowanceCurve: bigint | undefined
-  rate: number
-  onApprove: (infinity: boolean, curve: boolean) => Promise<void>
-  buy: () => void
-  tokenASymbol: string
-  tokenBSymbol: string
+  readonly sendAmount: bigint
+  readonly curveAmount: bigint
+  readonly allowanceCurve: bigint
+  readonly rate: number
+  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly buy: () => void
+  readonly tokenASymbol: string
+  readonly tokenBSymbol: string
 }
 
 export const BuyOnCurve = ({ sendAmount, curveAmount, allowanceCurve, rate, onApprove, buy, tokenASymbol, tokenBSymbol }: Props): ReactElement => {
   return <div>
     <TokenApproval sendAmount={sendAmount} allowance={allowanceCurve} onApprove={onApprove} tokenSymbol={tokenASymbol} curve={true} />
     <div className="relative">
-      <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={buy}>Buy on Curve ({formatEther(curveAmount ?? 0n)} {tokenBSymbol})</button>
-      {curveAmount !== undefined && ((): JSX.Element | null => {
+      <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={buy}>Buy on Curve ({formatEther(curveAmount)} {tokenBSymbol})</button>
+      {((): JSX.Element | null => {
         const directRate = formatEther(sendAmount) / rate;
         const premiumDiscount = ((formatEther(curveAmount) - directRate) / directRate) * 100;
         const isPremium = premiumDiscount > 0;

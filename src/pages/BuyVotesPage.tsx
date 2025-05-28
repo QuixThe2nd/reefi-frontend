@@ -6,16 +6,18 @@ import { InfoCard } from '../components/InfoCard';
 import { BuyOnCurve } from '../components/BuyOnCurve';
 
 interface Props {
-  sendAmount: bigint,
-  ymgpAllowance: bigint | undefined,
-  ymgpAllowanceCurve: bigint | undefined,
-  ymgpBalance: bigint | undefined,
-  ymgpVmgpCurveAmount: bigint | undefined,
-  onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
-  setSendAmount: (value: bigint) => void
+  readonly sendAmount: bigint,
+  readonly ymgpAllowance: bigint,
+  readonly ymgpAllowanceCurve: bigint,
+  readonly ymgpBalance: bigint,
+  readonly ymgpVmgpCurveAmount: bigint,
+  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly setSendAmount: (_value: bigint) => void
+  readonly depositYMGP: () => Promise<void>
+  readonly buyVMGP: () => Promise<void>
 }
 
-export const BuyVotesPage = ({ sendAmount, ymgpAllowance, ymgpAllowanceCurve, ymgpBalance, ymgpVmgpCurveAmount, onApprove, setSendAmount }: Props): ReactElement => {
+export const BuyVotesPage = ({ sendAmount, ymgpAllowance, ymgpAllowanceCurve, ymgpBalance, ymgpVmgpCurveAmount, onApprove, setSendAmount, depositYMGP, buyVMGP }: Props): ReactElement => {
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
       <AmountInput label="Get vMGP" token={{ symbol: 'yMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={ymgpBalance} value={sendAmount} onChange={setSendAmount} />
@@ -23,9 +25,9 @@ export const BuyVotesPage = ({ sendAmount, ymgpAllowance, ymgpAllowanceCurve, ym
         <div className="grid grid-cols-2 gap-2">
           <div>
             <TokenApproval sendAmount={sendAmount} allowance={ymgpAllowance} onApprove={onApprove} tokenSymbol='yMGP' />
-            <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={depositYMGP}>Mint ({formatEther(sendAmount)} vMGP)</button>
+            <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={() => depositYMGP()}>Mint ({formatEther(sendAmount)} vMGP)</button>
           </div>
-          <BuyOnCurve sendAmount={sendAmount} curveAmount={ymgpVmgpCurveAmount} allowanceCurve={ymgpAllowanceCurve} rate={1} onApprove={onApprove} buy={buyVMGP} tokenASymbol='yMGP' tokenBSymbol='vMGP' />
+          <BuyOnCurve sendAmount={sendAmount} curveAmount={ymgpVmgpCurveAmount} allowanceCurve={ymgpAllowanceCurve} rate={1} onApprove={onApprove} buy={() => buyVMGP()} tokenASymbol='yMGP' tokenBSymbol='vMGP' />
         </div>
       </div>
     </div>

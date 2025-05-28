@@ -1,11 +1,22 @@
 import { Chains, contracts } from "../config/contracts"
 import { useUpdateable } from "./useUpdateable"
 
-export const useWithdraws = ({ account, chain }: { account: `0x${string}`, chain: Chains }) => {
-  const [userPendingWithdraws, updateUserPendingWithdraws] = useUpdateable(() => contracts[chain].RMGP.read.getUserPendingWithdraws([account]), [contracts, account, chain])
-  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useUpdateable(() => contracts[chain].RMGP.read.unsubmittedWithdraws(), [contracts, chain])
-  const [userWithdrawable, updateUserWithdrawable] = useUpdateable(() => contracts[chain].RMGP.read.getUserWithdrawable(), [contracts, chain])
-  const [unlockSchedule, updateUnlockSchedule] = useUpdateable(() => contracts[chain].VLMGP.read.getUserUnlockingSchedule([contracts[chain].RMGP.address]), [contracts, chain])
+interface Withdraws {
+  userPendingWithdraws: bigint
+  updateUserPendingWithdraws: () => void
+  unsubmittedWithdraws: bigint
+  updateUnsubmittedWithdraws: () => void
+  userWithdrawable: bigint
+  updateUserWithdrawable: () => void
+  unlockSchedule: readonly { startTime: bigint; endTime: bigint; amountInCoolDown: bigint; }[]
+  updateUnlockSchedule: () => void
+}
+
+export const useWithdraws = ({ account, chain }: { readonly account: `0x${string}` | undefined, readonly chain: Chains }): Withdraws => {
+  const [userPendingWithdraws, updateUserPendingWithdraws] = useUpdateable(() => account !== undefined ? contracts[chain].RMGP.read.getUserPendingWithdraws([account]) : 0n, [contracts, account, chain], 0n)
+  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useUpdateable(() => contracts[chain].RMGP.read.unsubmittedWithdraws(), [contracts, chain], 0n)
+  const [userWithdrawable, updateUserWithdrawable] = useUpdateable(() => contracts[chain].RMGP.read.getUserWithdrawable(), [contracts, chain], 0n)
+  const [unlockSchedule, updateUnlockSchedule] = useUpdateable(() => contracts[chain].VLMGP.read.getUserUnlockingSchedule([contracts[chain].RMGP.address]), [contracts, chain], [])
 
   return { userPendingWithdraws, updateUserPendingWithdraws, unsubmittedWithdraws, updateUnsubmittedWithdraws, userWithdrawable, updateUserWithdrawable, unlockSchedule, updateUnlockSchedule }
 }

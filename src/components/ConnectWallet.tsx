@@ -1,6 +1,6 @@
 import { ReactElement } from 'react'
 
-export const ConnectWallet = ({ connectRequired, connectWallet, isConnecting }: { connectRequired: boolean, connectWallet: () => void, isConnecting: boolean }): ReactElement => {
+export const ConnectWallet = ({ connectRequired, connectWallet, isConnecting }: { readonly connectRequired: boolean, readonly connectWallet: () => void, readonly isConnecting: boolean }): ReactElement => {
   return connectRequired ? <div className="absolute w-full h-full bg-black z-1 flex items-center justify-center">
     <div className="bg-gray-700/50 p-10 rounded-lg text-center">
       <p className="text-xl mb-4">Connect your wallet to use Reefi</p>

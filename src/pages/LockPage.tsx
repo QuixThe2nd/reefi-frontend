@@ -4,13 +4,13 @@ import { aprToApy } from '../utils'
 import { InfoCard } from '../components/InfoCard'
 
 interface Props {
-  sendAmount: bigint,
-  ymgpBalance: bigint | undefined,
-  totalLockedYMGP: bigint | undefined,
-  mgpAPR: number,
-  reefiLockedMGP: bigint | undefined,
-  setSendAmount: (value: bigint) => void
-  lockYMGP: () => void
+  readonly sendAmount: bigint,
+  readonly ymgpBalance: bigint,
+  readonly totalLockedYMGP: bigint,
+  readonly mgpAPR: number,
+  readonly reefiLockedMGP: bigint,
+  readonly setSendAmount: (_value: bigint) => void
+  readonly lockYMGP: () => void
 }
 
 export const LockPage = ({ sendAmount, ymgpBalance, totalLockedYMGP, mgpAPR, reefiLockedMGP, setSendAmount, lockYMGP }: Props): ReactElement => {

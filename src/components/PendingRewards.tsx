@@ -3,20 +3,20 @@ import { formatNumber, formatEther, formatTime } from '../utils'
 import { Coins } from '../config/contracts'
 
 interface Props {
-  uncompoundedMGPYield: number
-  prices: Record<Coins, number>
-  decimals: Record<Coins, number>
-  estimatedCompoundGasFee: number
-  totalLockedYMGP: bigint | undefined
-  ymgpHoldings: bigint | undefined
-  ymgpSupply: bigint | undefined
-  unclaimedUserYield: bigint | undefined
-  mgpRMGPRate: number
-  reefiLockedMGP: bigint | undefined
-  mgpAPR: number
-  pendingRewards: Record<Coins, { address: `0x${string}`, rewards: bigint }> | undefined
-  compoundRMGP: () => void
-  claimYMGPRewards: () => void
+  readonly uncompoundedMGPYield: number
+  readonly prices: Readonly<Record<Coins, number>>
+  readonly decimals: Readonly<Record<Coins, number>>
+  readonly estimatedCompoundGasFee: number
+  readonly totalLockedYMGP: bigint
+  readonly ymgpHoldings: bigint
+  readonly ymgpSupply: bigint
+  readonly unclaimedUserYield: bigint
+  readonly mgpRMGPRate: number
+  readonly reefiLockedMGP: bigint
+  readonly mgpAPR: number
+  readonly pendingRewards: Readonly<Record<Coins, { readonly address: `0x${string}`, readonly rewards: bigint }>> | undefined
+  readonly compoundRMGP: () => void
+  readonly claimYMGPRewards: () => void
 }
 
 export const PendingRewards = ({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, ymgpHoldings, ymgpSupply, totalLockedYMGP, unclaimedUserYield, decimals, mgpRMGPRate, reefiLockedMGP, mgpAPR, pendingRewards, compoundRMGP, claimYMGPRewards }: Props): ReactElement => {
@@ -46,8 +46,8 @@ export const PendingRewards = ({ uncompoundedMGPYield, prices, estimatedCompound
       <div>
         <div className="bg-gray-700/50 rounded-lg p-4">
           <p className="text-gray-400 text-sm">Unclaimed Rewards</p>
-          <p className="font-medium text-lg">{unclaimedUserYield !== undefined ? formatNumber(formatEther(unclaimedUserYield, decimals.YMGP), 4) : 'Loading...'} rMGP</p>
-          <p className="font-small text-xs">Total: {ymgpHoldings === undefined || ymgpSupply === undefined || totalLockedYMGP === undefined ? 'Loading...' : formatNumber(formatEther(ymgpHoldings-ymgpSupply-totalLockedYMGP, decimals.YMGP), 4)} rMGP</p>
+          <p className="font-medium text-lg">{formatNumber(formatEther(unclaimedUserYield, decimals.YMGP), 4)} rMGP</p>
+          <p className="font-small text-xs">Total: {formatNumber(formatEther(ymgpHoldings-ymgpSupply-totalLockedYMGP, decimals.YMGP), 4)} rMGP</p>
         </div>
         <p className="text-gray-400 text-xs mt-2">Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.</p>
         <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={claimYMGPRewards}>Claim Rewards</button>

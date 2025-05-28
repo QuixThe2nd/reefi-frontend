@@ -22,7 +22,7 @@ export const BuyOnCurve = memo(({ sendAmount, curveAmount, allowanceCurve, rate,
         const directRate = formatEther(sendAmount) / rate;
         const premiumDiscount = ((formatEther(curveAmount) - directRate) / directRate) * 100;
         const isPremium = premiumDiscount > 0;
-        return Math.abs(premiumDiscount) >= 0.01 ? <span className={`absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? 'bg-green-800/80 text-green-200' : 'bg-red-800/80 text-red-200'}`}>{isPremium ? '+' : ''}{premiumDiscount.toFixed(2)}%</span> : undefined;
+        return Math.abs(premiumDiscount) >= 0.01 ? <span className={`absolute -top-2 right-2 text-xs px-2 py-1 rounded ${isPremium ? 'bg-green-800/80 text-green-200' : 'bg-red-800/80 text-red-200'}`}>{isPremium ? '+' : ''}{premiumDiscount.toFixed(2)}%</span> : undefined;
       })()}
     </div>
   </div>

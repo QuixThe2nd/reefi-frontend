@@ -32336,7 +32336,7 @@ var BuyOnCurve = import_react17.memo(({ sendAmount, curveAmount, allowanceCurve,
             const premiumDiscount = (formatEther2(curveAmount) - directRate) / directRate * 100;
             const isPremium = premiumDiscount > 0;
             return Math.abs(premiumDiscount) >= 0.01 ? /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
-              className: `absolute -top-2 right-0 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
+              className: `absolute -top-2 right-2 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
               children: [
                 isPremium ? "+" : "",
                 premiumDiscount.toFixed(2),
@@ -32903,7 +32903,7 @@ var useWallet = ({ setError }) => {
   const [isConnecting, setIsConnecting] = import_react25.useState(false);
   const [connectRequired, setConnectRequired] = import_react25.useState(false);
   const [ens] = useUpdateable(async () => account === undefined ? undefined : await publicClients[1].getEnsName({ address: account }) ?? undefined, [account], "ens");
-  const connectWallet = () => {
+  const connectWallet = import_react25.useCallback(() => {
     if (window.ethereum === undefined)
       return setError("No wallet found. Please install MetaMask to use Reefi.");
     setIsConnecting(true);
@@ -32915,7 +32915,7 @@ var useWallet = ({ setError }) => {
     updateAccount();
     setIsConnecting(false);
     setConnectRequired(false);
-  };
+  }, []);
   import_react25.useEffect(() => {
     if (window.ethereum)
       connectWallet();

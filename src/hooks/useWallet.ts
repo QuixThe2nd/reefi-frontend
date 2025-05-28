@@ -28,7 +28,7 @@ export const useWallet = ({ setError }: { readonly setError: (_msg: string) => v
   const [connectRequired, setConnectRequired] = useState(false)
   const [ens] = useUpdateable(async () => account === undefined ? undefined : (await publicClients[1].getEnsName({ address: account }) ?? undefined), [account], 'ens')
 
-  const connectWallet = (): void => {
+  const connectWallet = useCallback((): void => {
     if (window.ethereum === undefined) return setError('No wallet found. Please install MetaMask to use Reefi.')
     setIsConnecting(true);
     const clients = {
@@ -39,7 +39,7 @@ export const useWallet = ({ setError }: { readonly setError: (_msg: string) => v
     updateAccount()
     setIsConnecting(false)
     setConnectRequired(false)
-  }
+  }, [])
 
   useEffect(() => {
     if (window.ethereum) connectWallet();

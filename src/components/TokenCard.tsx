@@ -1,5 +1,7 @@
 import { memo, type ReactElement } from 'react'
 import { formatNumber, formatEther } from '../utils'
+import { TokenStat } from './TokenStat'
+import { TokenFeatures } from './TokenFeatures'
 
 interface Props {
   readonly symbol: string,
@@ -24,48 +26,22 @@ export const TokenCard = memo(({ symbol, decimals, description, features, price,
             <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2">{symbol[0]?.toUpperCase()}</div>
             <p className="font-bold text-lg">${symbol}</p>
           </div>
-          {price === undefined ? '' : <h2 className="text-2xl font-bold mt-2">${price.toFixed(5)}</h2>}
+          {price !== undefined && <h2 className="text-2xl font-bold mt-2">${price.toFixed(5)}</h2>}
         </div>
       </div>
       <div className="grid grid-cols-2 col-span-2 gap-2">
-        <div className="bg-gray-700/50 rounded-lg p-2">
-          <p className="text-gray-400 text-xs">Supply</p>
-          <p className="font-medium">{formatNumber(formatEther(supply, decimals), 3)} {symbol}</p>
-        </div>
-        {underlying !== undefined && underlying !== supply ? <div className="bg-gray-700/50 rounded-lg p-2">
-          <p className="text-gray-400 text-xs">TVL</p>
-          <p className="font-medium">{formatNumber(formatEther(underlying), 4)} {underlyingSymbol}</p>
-        </div> : ''}
-        {underlying !== undefined && underlying !== supply ? <div className="bg-gray-700/50 rounded-lg p-2">
-          <p className="text-gray-400 text-xs">Mint Rate</p>
-          <p className="font-medium">{formatNumber(Number(underlying)/Number(supply), 6)} {underlyingSymbol}</p>
-        </div> : ''}
-        {marketRate === undefined ? '' : <div className="bg-gray-700/50 rounded-lg p-2">
-          <p className="text-gray-400 text-xs">Market Rate</p>
-          <p className="font-medium">{formatNumber(Number(marketRate), 5)} {underlyingSymbol}</p>
-        </div>}
-        {locked === undefined ? '' : <div className="bg-gray-700/50 rounded-lg p-2">
-          <p className="text-gray-400 text-xs">Locked</p>
-          <p className="font-medium">{formatNumber(Math.round(formatEther(locked, decimals)))} {symbol}</p>
-        </div>}
-        {locked === undefined ? '' : <div className="bg-gray-700/50 rounded-lg p-2">
-          <p className="text-gray-400 text-xs">Lock Rate</p>
-          <p className="font-medium">{Math.round(10_000*Number(locked)/Number(supply))/100}%</p>
-        </div>}
-        {price === undefined ? '' : <div className="bg-gray-700/50 rounded-lg p-2">
-          <p className="text-gray-400 text-xs">FDV</p>
-          <p className="font-medium">${formatNumber(price*formatEther(supply, decimals))}</p>
-        </div>}
-        {voteMultiplier === undefined ? '' : <div className="bg-gray-700/50 rounded-lg p-2">
-          <p className="text-gray-400 text-xs">Vote Multiplier</p>
-          <p className="font-medium">{formatNumber(voteMultiplier)}</p>
-        </div>}
+        <TokenStat title="Supply" detail={`${formatNumber(formatEther(supply, decimals), 3)} ${symbol}`} />
+        {underlying !== undefined && underlying !== supply && <TokenStat title="TVL" detail={`${formatNumber(formatEther(underlying), 4)} ${underlyingSymbol}`} />}
+        {underlying !== undefined && underlying !== supply && <TokenStat title="Mint Rate" detail={`${formatNumber(Number(underlying)/Number(supply), 6)} ${underlyingSymbol}`} />}
+        {marketRate !== undefined && <TokenStat title="Market Rate" detail={`${formatNumber(Number(marketRate), 5)} ${underlyingSymbol}`} />}
+        {locked !== undefined && <TokenStat title="Locked" detail={`${formatNumber(Math.round(formatEther(locked, decimals)))} ${symbol}`} />}
+        {locked !== undefined && <TokenStat title="Lock Rate" detail={`${Math.round(10_000*Number(locked)/Number(supply))/100}%`} />}
+        {price !== undefined && <TokenStat title="FDV" detail={`${formatNumber(price*formatEther(supply, decimals))}`} />}
+        {voteMultiplier !== undefined && <TokenStat title="Vote Multiplier" detail={`${formatNumber(voteMultiplier)}`} />}
       </div>
     </div>
     <p className="text-gray-400 text-xs mt-2">{description}</p>
-    <ul className="list-disc list-inside text-gray-300 text-xs mt-2">
-      {features ? Object.entries(features).map((feature: readonly [string, string]) => <li key={feature[0]}><strong>{feature[0]}</strong>: {feature[1]}</li>) : ''}
-    </ul>
+    {features && <TokenFeatures features={features} />}
   </div>
 })
 TokenCard.displayName = 'TokenCard'

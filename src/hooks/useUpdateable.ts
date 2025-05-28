@@ -7,6 +7,7 @@ export function useUpdateable<T>(_factory: () => T | Promise<T>, _deps: readonly
 export function useUpdateable<T>(_factory: () => T | Promise<T>, _deps: readonly unknown[], _label: string): [T | undefined, () => void];
 export function useUpdateable<T>(factory: () => T | Promise<T>, deps: readonly unknown[], label: string, initial?: T): [T | undefined, () => void] {
   const [updateCount, setUpdateCount] = useState(0);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [value, setValue] = initial === undefined ? useState<T>() : useState<T>(initial);
   useEffect(() => {
     (async (): Promise<void> => {

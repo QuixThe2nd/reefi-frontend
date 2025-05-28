@@ -35,7 +35,7 @@ const onRPCRequest = async (request: Request): Promise<void> => {
 export const publicClients = {
   1: createPublicClient({ chain: mainnet, transport: http('https://eth.drpc.org', { retryDelay: 250, batch: { wait: 1000, batchSize: 3 }, onFetchRequest: onRPCRequest }) }),
   56: createPublicClient({ chain: bsc, transport: http('https://bsc-dataseed1.binance.org', { retryDelay: 250, batch: true, onFetchRequest: onRPCRequest }) }),
-  42_161: createPublicClient({ chain: arbitrum, transport: http('https://arb1.arbitrum.io/rpc', { retryDelay: 250, batch: true, onFetchRequest: onRPCRequest }) })
+  42_161: createPublicClient({ chain: arbitrum, transport: http('https://arb1.arbitrum.io/rpc', { retryDelay: 500, batch: { wait: 150 }, onFetchRequest: onRPCRequest }) })
 }
 
 type Contracts = Record<Chains, {

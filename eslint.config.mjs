@@ -92,6 +92,7 @@ export default defineConfig([
       "unicorn/filename-case": "off",
       "unicorn/prevent-abbreviations": "off",
       "unicorn/prefer-global-this": "off",
+      "no-redeclare": "off",
       "no-unused-vars": [
         "error",
         {

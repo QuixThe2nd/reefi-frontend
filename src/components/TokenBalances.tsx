@@ -1,24 +1,16 @@
 import { memo, type ReactElement } from 'react'
-import { Coins } from '../config/contracts'
 import { TokenBalance } from './TokenBalance'
+import { useGlobalContext } from '../contexts/GlobalContext'
+import { decimals } from '../config/contracts'
 
-interface Props {
-  readonly decimals: Readonly<Record<Coins, number>>
-  readonly mgpBalance: bigint
-  readonly rmgpBalance: bigint
-  readonly ymgpBalance: bigint
-  // readonly vmgpBalance: bigint
-  readonly cmgpBalance: bigint
-  readonly userLockedYMGP: bigint
-}
-
-export const TokenBalances = memo(({ decimals, mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance }: Props): ReactElement => {
+export const TokenBalances = memo((): ReactElement => {
+  const { balances } = useGlobalContext()
   return <>
-    <TokenBalance symbol="MGP" balance={mgpBalance} decimals={decimals.MGP} />
-    <TokenBalance symbol="RMGP" balance={rmgpBalance} decimals={decimals.RMGP} />
-    <TokenBalance symbol="YMGP" balance={ymgpBalance} decimals={decimals.YMGP} />
+    <TokenBalance symbol="MGP" balance={balances.mgp} decimals={decimals.MGP} />
+    <TokenBalance symbol="RMGP" balance={balances.rmgp} decimals={decimals.RMGP} />
+    <TokenBalance symbol="YMGP" balance={balances.ymgp} decimals={decimals.YMGP} />
     {/* <TokenBalance symbol="VMGP" balance={vmgpBalance} decimals={decimals.VMGP} /> */}
-    <TokenBalance symbol="CMGP" balance={cmgpBalance} decimals={decimals.CMGP} /> 
+    <TokenBalance symbol="CMGP" balance={balances.cmgp} decimals={decimals.CMGP} /> 
     {/* <TokenBalance symbol="Locked yMGP" balance={userLockedYMGP} decimals={decimals.YMGP} /> */}
   </>
 })

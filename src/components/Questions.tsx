@@ -119,7 +119,6 @@ const qaData: readonly QAItem[] = [
 
 export const QASection = (): ReactElement => {
   const [openItems, setOpenItems] = useState<Set<number>>(new Set())
-  const [showDiagram, setShowDiagram] = useState(false)
 
   const toggleItem = (index: number): void => {
     const newOpenItems = new Set(openItems)
@@ -181,10 +180,7 @@ export const QASection = (): ReactElement => {
           </div>
         ))}
       </div>
-      <div className="flex flex-col justify-center mb-4 items-center">
-        <button type="button" className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors w-fit" onClick={() => setShowDiagram(!showDiagram)}>{showDiagram ? 'Hide Diagram' : 'Show Diagram'}</button>
-        {showDiagram && <div className="flex justify-center mt-4"><img src={Diagram} alt="Diagram" className="h-120" /></div>}
-      </div>
+      <div className="flex justify-center my-4"><img src={Diagram} alt="Diagram" className="h-120" /></div>
     </div>
   )
 }

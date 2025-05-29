@@ -1,7 +1,8 @@
 import { useUpdateable } from './useUpdateable'
-import { Chains, contracts } from '../config/contracts'
+import { contracts } from '../config/contracts'
+import { UseWallet } from './useWallet'
 
-export interface Allowances {
+export interface UseAllowances {
   readonly mgp: bigint
   readonly rmgp: bigint
   // readonly ymgp: bigint
@@ -16,13 +17,13 @@ export interface Allowances {
   readonly updateYMGPCurve: () => void
 }
 
-export const useAllowances = ({ account, chain }: { readonly account: `0x${string}` | undefined, readonly chain: Chains }): Allowances => {
-  const [mgp, updateMGP] = useUpdateable(() => account === undefined ? 0n : contracts[chain].MGP.read.allowance([account, contracts[chain].RMGP.address]), [contracts, chain, account], 'mgp allowance', 0n)
-  const [rmgp, updateRMGP] = useUpdateable(() => account === undefined ? 0n : contracts[chain].RMGP.read.allowance([account, contracts[chain].YMGP.address]), [contracts, chain, account], 'rmgp allowance', 0n)
-  // const [ymgp, updateYMGP] = useUpdateable(() => account === undefined ? 0n : contracts[chain].YMGP.read.allowance([account, contracts[chain].VMGP.address]), [contracts, chain, account], 'ymgp allowance', 0n)
-  const [mgpCurve, updateMGPCurve] = useUpdateable(() => account === undefined ? 0n : contracts[chain].MGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account], 'mgpCurve allowance', 0n)
-  const [rmgpCurve, updateRMGPCurve] = useUpdateable(() => account === undefined ? 0n : contracts[chain].RMGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, chain, account], 'rmgpCurve allowance', 0n)
-  const [ymgpCurve, updateYMGPCurve] = useUpdateable(() => account === undefined ? 0n : contracts[chain].YMGP.read.allowance([account, contracts[chain].CMGP.address]), [contracts, account], 'ymgpCurve allowance', 0n)
+export const useAllowances = ({ wallet }: { readonly wallet: UseWallet }): UseAllowances => {
+  const [mgp, updateMGP] = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].RMGP.address]), [contracts, wallet.chain, wallet.account], 'mgp allowance', 0n)
+  const [rmgp, updateRMGP] = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.allowance([wallet.account, contracts[wallet.chain].YMGP.address]), [contracts, wallet.chain, wallet.account], 'rmgp allowance', 0n)
+  // const [ymgp, updateYMGP] = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.allowance([wallet.account, contracts[wallet.chain].VMGP.address]), [contracts, wallet.chain, wallet.account], 'ymgp allowance', 0n)
+  const [mgpCurve, updateMGPCurve] = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], 'mgpCurve allowance', 0n)
+  const [rmgpCurve, updateRMGPCurve] = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], 'rmgpCurve allowance', 0n)
+  const [ymgpCurve, updateYMGPCurve] = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], 'ymgpCurve allowance', 0n)
 
   return { mgp, rmgp, mgpCurve, rmgpCurve, ymgpCurve, updateMGP, updateRMGP, updateMGPCurve, updateRMGPCurve, updateYMGPCurve }
 }

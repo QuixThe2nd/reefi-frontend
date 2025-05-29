@@ -1,7 +1,8 @@
 import { useUpdateable } from './useUpdateable'
-import { contracts, Chains } from '../config/contracts';
+import { contracts } from '../config/contracts';
+import { UseWallet } from './useWallet';
 
-export interface Supplies {
+export interface UseSupplies {
   readonly mgp: bigint
   readonly rmgp: bigint
   readonly ymgp: bigint
@@ -12,11 +13,11 @@ export interface Supplies {
   // readonly updateVMGP: () => void
 }
 
-export const useSupplies = ({ chain }: { readonly chain: Chains }): Supplies => {
+export const useSupplies = ({ wallet }: { readonly wallet: UseWallet }): UseSupplies => {
   const [mgp, updateMGP] = useUpdateable(() => contracts[56].MGP.read.totalSupply(), [contracts], 'mgp supply', 0n)
-  const [rmgp, updateRMGP] = useUpdateable(() => contracts[chain].RMGP.read.totalSupply(), [contracts, chain], 'rmgp supply', 0n)
-  const [ymgp, updateYMGP] = useUpdateable(() => contracts[chain].YMGP.read.totalSupply(), [contracts, chain], 'ymgp supply', 0n)
-  // const [vmgp, updateVMGP] = useUpdateable(() => contracts[chain].VMGP.read.totalSupply(), [contracts, chain], 0n)
+  const [rmgp, updateRMGP] = useUpdateable(() => contracts[wallet.chain].RMGP.read.totalSupply(), [contracts, wallet.chain], 'rmgp supply', 0n)
+  const [ymgp, updateYMGP] = useUpdateable(() => contracts[wallet.chain].YMGP.read.totalSupply(), [contracts, wallet.chain], 'ymgp supply', 0n)
+  // const [vmgp, updateVMGP] = useUpdateable(() => contracts[wallet.chain].VMGP.read.totalSupply(), [contracts, wallet.chain], 0n)
 
   return { mgp, rmgp, ymgp, updateMGP, updateRMGP, updateYMGP }
 }

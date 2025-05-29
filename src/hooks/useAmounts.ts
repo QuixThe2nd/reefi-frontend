@@ -1,30 +1,30 @@
 import { useState } from "react";
 import { parseEther } from "../utils";
-import { Chains, contracts } from "../config/contracts";
+import { contracts } from "../config/contracts";
 import { useUpdateable } from "./useUpdateable";
+import { UseWallet } from "./useWallet";
 
-interface Amounts {
-  sendAmount: bigint
-  setSendAmount: (_amount: bigint) => void
-  mgpRmgpCurveAmount: bigint
-  rmgpMgpCurveAmount: bigint
-  rmgpYmgpCurveAmount: bigint
-  mgpLPAmount: bigint
-  setMGPLPAmount: (_amount: bigint) => void
-  rmgpLPAmount: bigint
-  setRMGPLPAmount: (_amount: bigint) => void
-  ymgpLPAmount: bigint
-  setYMGPLPAmount: (_amount: bigint) => void
+export interface UseAmounts {
+  send: bigint
+  setSend: (_amount: bigint) => void
+  mgpRmgpCurve: bigint
+  rmgpMgpCurve: bigint
+  rmgpYmgpCurve: bigint
+  mgpLP: bigint
+  setMGPLP: (_amount: bigint) => void
+  rmgpLP: bigint
+  setRMGPLP: (_amount: bigint) => void
+  ymgpLP: bigint
+  setYMGPLP: (_amount: bigint) => void
 }
 
-export const useAmounts = ({ chain, account }: { readonly chain: Chains, readonly account: `0x${string}` | undefined }): Amounts => {
-  const [sendAmount, setSendAmount] = useState(parseEther(1));
-  const [mgpLPAmount, setMGPLPAmount] = useState(0n)
-  const [rmgpLPAmount, setRMGPLPAmount] = useState(0n)
-  const [ymgpLPAmount, setYMGPLPAmount] = useState(0n)
-  const [mgpRmgpCurveAmount] = useUpdateable(() => sendAmount === 0n ? 0n : contracts[chain].CMGP.read.get_dy([0n, 1n, sendAmount], { account }), [contracts, chain, sendAmount], 'mgpRmgpCurveAmount', 0n)
-  const [rmgpMgpCurveAmount] = useUpdateable(() => sendAmount === 0n ? 0n : contracts[chain].CMGP.read.get_dy([1n, 0n, sendAmount], { account }), [contracts, chain, sendAmount], 'rmgpMgpCurveAmount', 0n)
-  const [rmgpYmgpCurveAmount] = useUpdateable(() => sendAmount === 0n ? 0n : contracts[chain].CMGP.read.get_dy([1n, 2n, sendAmount], { account }), [contracts, chain, sendAmount], 'rmgpYmgpCurveAmount', 0n)
-
-  return { sendAmount, setSendAmount, mgpRmgpCurveAmount, rmgpMgpCurveAmount, rmgpYmgpCurveAmount, mgpLPAmount, setMGPLPAmount, rmgpLPAmount, setRMGPLPAmount, ymgpLPAmount, setYMGPLPAmount }
+export const useAmounts = ({ wallet }: { readonly wallet: UseWallet }): UseAmounts => {
+  const [send, setSend] = useState(parseEther(1));
+  const [mgpLP, setMGPLP] = useState(0n)
+  const [rmgpLP, setRMGPLP] = useState(0n)
+  const [ymgpLP, setYMGPLP] = useState(0n)
+  const [mgpRmgpCurve] = useUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([0n, 1n, send], { account: wallet.account }), [contracts, wallet.chain, send], 'mgpRmgpCurveAmount', 0n)
+  const [rmgpMgpCurve] = useUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 0n, send], { account: wallet.account }), [contracts, wallet.chain, send], 'rmgpMgpCurveAmount', 0n)
+  const [rmgpYmgpCurve] = useUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 2n, send], { account: wallet.account }), [contracts, wallet.chain, send], 'rmgpYmgpCurveAmount', 0n)
+  return { send, setSend, mgpRmgpCurve, rmgpMgpCurve, rmgpYmgpCurve, mgpLP, setMGPLP, rmgpLP, setRMGPLP, ymgpLP, setYMGPLP }
 }

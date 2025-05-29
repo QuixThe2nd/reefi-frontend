@@ -3,7 +3,7 @@ import { Chains } from "../../config/contracts"
 import { WalletClient, PublicActions } from "viem"
 import { Contracts } from "../useContracts"
 import { Balances } from "../useBalances"
-import { Supplies } from "../useSupplies"
+import { UseSupplies } from "../useSupplies"
 
 interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined
@@ -11,7 +11,7 @@ interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | u
   chain: Chains
   clients: Clients
   setConnectRequired: (_val: boolean) => void
-  supplies: Supplies
+  supplies: UseSupplies
   updatePendingRewards: () => void
   updateReefiLockedMGP: () => void
   updateTotalLockedMGP: () => void

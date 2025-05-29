@@ -4,7 +4,7 @@ import { WalletClient, PublicActions } from "viem"
 import { Contracts } from "../useContracts"
 import { Allowances } from "../useAllowances"
 import { Balances } from "../useBalances"
-import { Supplies } from "../useSupplies"
+import { UseSupplies } from "../useSupplies"
 
 interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined
@@ -15,7 +15,7 @@ interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | u
   sendAmount: bigint
   setConnectRequired: (_val: boolean) => void
   setError: (_val: string) => void
-  supplies: Supplies
+  supplies: UseSupplies
   updateYMGPHoldings: () => void
   writeContracts: Contracts<Clients>
 }

@@ -4,7 +4,7 @@ import { arbitrum, bsc } from 'viem/chains'
 import { publicClients, type Chains } from "../config/contracts"
 import { useUpdateable } from "./useUpdateable"
 
-interface UseWallet {
+export interface UseWallet {
   readonly clients: Record<Chains, WalletClient & PublicActions> | undefined,
   readonly chain: Chains,
   readonly account: `0x${string}` | undefined,

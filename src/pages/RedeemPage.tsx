@@ -3,50 +3,31 @@ import { AmountInput } from '../components/AmountInput';
 import { formatTime, formatEther } from '../utils';
 import { InfoCard } from '../components/InfoCard';
 import { BuyOnCurve } from '../components/BuyOnCurve';
-import { Coins } from '../config/contracts';
+import { useGlobalContext } from '../contexts/GlobalContext';
+import { decimals } from '../config/contracts';
 
-interface Props {
-  readonly rmgpBalance: bigint,
-  readonly sendAmount: bigint,
-  readonly rmgpAllowanceCurve: bigint,
-  readonly rmgpMGPRate: number,
-  readonly rmgpMgpCurveAmount: bigint,
-  readonly userWithdrawable: bigint,
-  readonly onApprove: (_infinity: boolean, _curve: boolean) => void
-  readonly setSendAmount: (_value: bigint) => void
-  readonly redeemRMGP: () => void
-  readonly buyMGP: () => void
-  readonly withdrawMGP: () => void
-  readonly decimals: Readonly<Record<Coins, number>>
-  readonly userPendingWithdraws: bigint
-  readonly unlockSchedule: readonly {
-    readonly startTime: bigint;
-    readonly endTime: bigint;
-    readonly amountInCoolDown: bigint;
-  }[] | undefined
-}
-
-export const RedeemPage = memo(({ rmgpBalance, sendAmount, rmgpAllowanceCurve, rmgpMGPRate, rmgpMgpCurveAmount, userWithdrawable, onApprove, setSendAmount, redeemRMGP, buyMGP, withdrawMGP, decimals, userPendingWithdraws, unlockSchedule }: Props): ReactElement => {
+export const RedeemPage = memo((): ReactElement => {
+  const { actions, balances, amounts, allowances, exchangeRates, withdraws } = useGlobalContext()
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
-      <AmountInput label="Redeem rMGP" token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={rmgpBalance} value={sendAmount} onChange={setSendAmount} />
+      <AmountInput label="Redeem rMGP" token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={balances.rmgp} value={amounts.send} onChange={amounts.setSend} />
       <div className="grid grid-cols-2 gap-2">
-        <button type="submit" className="py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={redeemRMGP}>Redeem via Queue ({rmgpMGPRate*formatEther(sendAmount)} MGP)</button>
-        <BuyOnCurve sendAmount={sendAmount} curveAmount={rmgpMgpCurveAmount} allowanceCurve={rmgpAllowanceCurve} rate={rmgpMGPRate} onApprove={onApprove} buy={buyMGP} tokenASymbol='rMGP' tokenBSymbol='MGP' />
+        <button type="submit" className="py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={actions.redeemRMGP}>Redeem via Queue ({exchangeRates.curve.rmgpMGP*formatEther(amounts.send)} MGP)</button>
+        <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.rmgpMgpCurve} allowanceCurve={allowances.rmgpCurve} rate={exchangeRates.curve.rmgpMGP} onApprove={actions.approve} buy={actions.buyMGP} tokenASymbol='rMGP' tokenBSymbol='MGP' />
       </div>
       <div className="mt-4 text-sm text-gray-400 flex justify-between">
         <span>Native Redemption Rate</span>
-        <span>{rmgpMGPRate} MGP to rMGP</span>
+        <span>{exchangeRates.curve.rmgpMGP} MGP to rMGP</span>
       </div>
-      {userPendingWithdraws > 0n ? <>
+      {withdraws.userPendingWithdraws > 0n ? <>
         <h3 className="text-md font-medium mt-4">Pending Withdraws</h3>
-        <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
-        {unlockSchedule?.[0] ? <p>Unlock available in: {formatTime(Number(unlockSchedule[0].endTime)-(Date.now()/1000))} to {formatTime(Number(unlockSchedule.at(-1)?.endTime)+60*60*24*60 - (Date.now()/1000))}</p> : <p>N/A</p>}
+        <p>{formatEther(withdraws.userPendingWithdraws, decimals.MGP)} MGP</p>
+        {withdraws.unlockSchedule[0] ? <p>Unlock available in: {formatTime(Number(withdraws.unlockSchedule[0].endTime)-(Date.now()/1000))} to {formatTime(Number(withdraws.unlockSchedule.at(-1)?.endTime)+60*60*24*60 - (Date.now()/1000))}</p> : <p>N/A</p>}
       </> : ''}
-      {userWithdrawable > 0n ? <>
+      {withdraws.userWithdrawable > 0n ? <>
         <h3 className="text-md font-medium mt-4">Available To Withdraw</h3>
-        <p>{formatEther(userWithdrawable, decimals.MGP)} MGP</p>
-        <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}" onClick={withdrawMGP}>Withdraw MGP</button>
+        <p>{formatEther(withdraws.userWithdrawable, decimals.MGP)} MGP</p>
+        <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700}" onClick={actions.withdrawMGP}>Withdraw MGP</button>
       </> : ''}
     </div>
     <InfoCard text={[

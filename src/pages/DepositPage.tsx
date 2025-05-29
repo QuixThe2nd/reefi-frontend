@@ -6,6 +6,7 @@ import { InfoCard } from '../components/InfoCard';
 import { BuyOnCurve } from '../components/BuyOnCurve';
 import { decimals, type Coins } from '../config/contracts';
 import { useGlobalContext } from '../contexts/GlobalContext';
+import { useUpdateable } from '../hooks/useUpdateable';
 
 const coins: Record<Coins, { symbol: string; color: string; bgColor: string }> = {
   MGP: { symbol: 'MGP', color: 'bg-blue-400', bgColor: 'bg-blue-600' },
@@ -22,7 +23,7 @@ const coins: Record<Coins, { symbol: string; color: string; bgColor: string }> =
 } as const
 
 export const DepositPage = memo((): ReactElement => {
-  const { balances, allowances, amounts, exchangeRates, prices, actions, rewards } = useGlobalContext()
+  const { actions, allowances, amounts, writeContracts, exchangeRates, prices, rewards, wallet } = useGlobalContext()
 
   const [selectedCoin, setSelectedCoin] = useState<Coins>('MGP')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -37,11 +38,8 @@ export const DepositPage = memo((): ReactElement => {
     return (): void => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
   
-  const selectedConfig = coins[selectedCoin]
-  const selectedBalance = selectedCoin === 'MGP' ? balances.mgp : 0n // TODO: Add other coin balances
-  const selectedAllowance = selectedCoin === 'MGP' ? allowances.mgp : 0n // TODO: Add other coin allowances
-  const selectedAllowanceCurve = selectedCoin === 'MGP' ? allowances.mgpCurve : 0n // TODO: Add other coin allowances
-  const rMGPAmount = selectedCoin === 'MGP' ? formatEther(amounts.send) / exchangeRates.curve.mgpRMGP : (formatEther(amounts.send) * prices[selectedCoin]) / (prices.MGP * exchangeRates.curve.mgpRMGP)
+  const [selectedBalance] = useUpdateable(() => writeContracts && wallet.account !== undefined ? writeContracts[wallet.chain][selectedCoin].read.balanceOf([wallet.account]) : 0n, [wallet.chain, wallet.account, selectedCoin], 'Balance', 0n)
+  const rMGPAmount = selectedCoin === 'MGP' ? formatEther(amounts.send) / exchangeRates.curve.mgpRMGP : (selectedCoin === 'YMGP' ? formatEther(amounts.send) / exchangeRates.curve.ymgpMGP : (formatEther(amounts.send) * prices[selectedCoin]) / (prices.MGP * exchangeRates.curve.mgpRMGP))
 
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
@@ -55,16 +53,13 @@ export const DepositPage = memo((): ReactElement => {
           <div className="flex items-center space-x-2">
             <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => amounts.setSend(selectedBalance)}>MAX</button>
             <div className="relative" ref={dropdownRef}>
-              <button type="button" onClick={() => setIsDropdownOpen(!isDropdownOpen)} className={`rounded-md px-3 py-1 flex items-center cursor-pointer hover:opacity-90 transition-opacity ${selectedConfig.bgColor}`}>
-                <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-2 ${selectedConfig.color}`}>
-                  {selectedCoin[0]?.toUpperCase()}
-                </div>
+              <button type="button" onClick={() => setIsDropdownOpen(!isDropdownOpen)} className={`rounded-md px-3 py-1 flex items-center cursor-pointer hover:opacity-90 transition-opacity ${coins[selectedCoin].bgColor}`}>
+                <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-2 ${coins[selectedCoin].color}`}>{selectedCoin[0]?.toUpperCase()}</div>
                 <span className="mr-2">{selectedCoin}</span>
                 <svg className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
               </button>
-              
               {isDropdownOpen && <div className="absolute top-full mt-1 right-0 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50 min-w-32">
-                {(Object.keys(coins) as Coins[]).map(coin => <button key={coin} className={`w-full px-3 py-2 flex items-center hover:bg-gray-700 transition-colors first:rounded-t-lg last:rounded-b-lg ${selectedCoin === coin ? 'bg-gray-700' : ''}`} type="button" onClick={() => {
+                {(Object.keys(coins) as Coins[]).map(coin => coin === 'RMGP' || coin === 'CMGP' ? '' : <button key={coin} className={`w-full px-3 py-2 flex items-center hover:bg-gray-700 transition-colors first:rounded-t-lg last:rounded-b-lg ${selectedCoin === coin ? 'bg-gray-700' : ''}`} type="button" onClick={() => {
                   setSelectedCoin(coin)
                   setIsDropdownOpen(false)
                 }}>
@@ -78,13 +73,16 @@ export const DepositPage = memo((): ReactElement => {
         <div className="mt-2 text-sm text-gray-400 text-center">≈ {rMGPAmount.toFixed(6)} rMGP</div>
       </div>
       
-      <div className="grid grid-cols-2 gap-2">
+      {selectedCoin === 'MGP' ? <div className="grid grid-cols-2 gap-2">
         <div>
-          <TokenApproval sendAmount={amounts.send} allowance={selectedAllowance} onApprove={actions.approve} tokenSymbol={selectedCoin} />
-          <button type="submit" className="py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 w-full" onClick={actions.depositMGP} disabled={selectedCoin !== 'MGP'}>{selectedCoin === 'MGP' ? `Mint (${rMGPAmount.toFixed(6)} rMGP)` : 'Coming Soon'}</button>
+          <TokenApproval sendAmount={amounts.send} allowance={allowances[selectedCoin][0]} onApprove={actions.approve} tokenSymbol={selectedCoin} />
+          <button type="submit" className="py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 w-full" onClick={actions.depositMGP}>Mint ({rMGPAmount.toFixed(6)} rMGP)</button>
         </div>
-        <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.mgpRmgpCurve} allowanceCurve={selectedAllowanceCurve} rate={exchangeRates.curve.mgpRMGP} onApprove={actions.approve} buy={actions.buyRMGP} tokenASymbol={selectedCoin} tokenBSymbol='rMGP' />
-      </div>
+        <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.mgpRmgpCurve} allowanceCurve={allowances.curve[selectedCoin][0]} rate={exchangeRates.curve.mgpRMGP} onApprove={actions.approve} buy={actions.buyRMGP} tokenASymbol={selectedCoin} tokenBSymbol='rMGP' />
+      </div> : <>
+        <TokenApproval sendAmount={amounts.send} allowance={allowances.curve[selectedCoin][0]} onApprove={actions.approve} tokenSymbol={selectedCoin} />
+        <button type="submit" className="py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 w-full" onClick={actions.swapToMGP}>Swap to MGP</button>
+      </>}
       <div className="mt-4 text-sm text-gray-400">
         <div className="flex justify-between mb-1">
           <span>Original APR</span>

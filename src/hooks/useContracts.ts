@@ -4,16 +4,12 @@ import { Chains, contracts } from "../config/contracts"
 import { ABIs } from "../config/ABIs/abis"
 import { UseWallet } from "./useWallet"
 
-export type UseContracts<Clients> = Clients extends undefined ? undefined : Record<Chains, {
-  MGP: GetContractReturnType<typeof ABIs.MGP, WalletClient & PublicActions>
-  RMGP: GetContractReturnType<typeof ABIs.RMGP, WalletClient & PublicActions>
-  YMGP: GetContractReturnType<typeof ABIs.YMGP, WalletClient & PublicActions>
-  CMGP: GetContractReturnType<typeof ABIs.CMGP, WalletClient & PublicActions>
-  VLMGP: GetContractReturnType<typeof ABIs.VLMGP, WalletClient & PublicActions>
-  masterMGP: GetContractReturnType<typeof ABIs.MASTERMGP, WalletClient & PublicActions>
-  VLREWARDER: GetContractReturnType<typeof ABIs.VLREWARDER, WalletClient & PublicActions>
-  WETH: GetContractReturnType<typeof ABIs.WETH, WalletClient & PublicActions>
-}>
+type ContractAddresses = {
+  [K in keyof typeof ABIs]: GetContractReturnType<typeof ABIs[K], WalletClient & PublicActions>
+}
+type Contracts = Record<Chains, ContractAddresses>
+
+export type UseContracts<Clients> = Clients extends undefined ? undefined : Contracts
 
 export const useContracts = ({ wallet }: { wallet: UseWallet }): UseContracts<typeof wallet['clients']> => {
   const writeContracts = useMemo(() => {
@@ -27,8 +23,15 @@ export const useContracts = ({ wallet }: { wallet: UseWallet }): UseContracts<ty
         VLMGP: getContract({ address: contracts[56].VLMGP.address, abi: ABIs.VLMGP, client: wallet.clients[56] }),
         masterMGP: getContract({ address: contracts[56].MASTERMGP.address, abi: ABIs.MASTERMGP, client: wallet.clients[56] }),
         VLREWARDER: getContract({ address: contracts[56].VLREWARDER.address, abi: ABIs.VLREWARDER, client: wallet.clients[56] }),
-        // stakedCMGP: getContract({ address: contracts[56].stakedCMGP.address, abi: ABIs.stakedCMGP, client: wallet.clients[56] }),
-        WETH: getContract({ address: contracts[56].WETH.address, abi: ABIs.WETH, client: wallet.clients[56] }),
+        // stakedCMGP: getContract({ address: contracts[56].stakedCMGP.address, abi: ABIs.stakedCMGP, client: wallet.clients[56] }),        CKP: getContract({ address: contracts[56].CKP.address, abi: ABIs.CKP, client: wallet.clients[56] }),
+        PNP: getContract({ address: contracts[56].PNP.address, abi: ABIs.PNP, client: wallet.clients[56] }),
+        EGP: getContract({ address: contracts[56].EGP.address, abi: ABIs.EGP, client: wallet.clients[56] }),
+        LTP: getContract({ address: contracts[56].LTP.address, abi: ABIs.LTP, client: wallet.clients[56] }),
+        ETH: getContract({ address: contracts[56].ETH.address, abi: ABIs.ETH, client: wallet.clients[56] }),
+        BNB: getContract({ address: contracts[56].BNB.address, abi: ABIs.BNB, client: wallet.clients[56] }),
+        VMGP: getContract({ address: contracts[56].BNB.address, abi: ABIs.VMGP, client: wallet.clients[56] }),
+        MASTERMGP: getContract({ address: contracts[56].BNB.address, abi: ABIs.MASTERMGP, client: wallet.clients[56] }),
+        CKP: getContract({ address: contracts[56].BNB.address, abi: ABIs.CKP, client: wallet.clients[56] }),
       },
       42_161: {
         MGP: getContract({ address: contracts[42_161].MGP.address, abi: ABIs.MGP, client: wallet.clients[42_161] }),
@@ -39,7 +42,14 @@ export const useContracts = ({ wallet }: { wallet: UseWallet }): UseContracts<ty
         masterMGP: getContract({ address: contracts[42_161].MASTERMGP.address, abi: ABIs.MASTERMGP, client: wallet.clients[42_161] }),
         VLREWARDER: getContract({ address: contracts[42_161].VLREWARDER.address, abi: ABIs.VLREWARDER, client: wallet.clients[42_161] }),
         // stakedCMGP: getContract({ address: contracts[42_161].stakedCMGP.address, abi: ABIs.stakedCMGP, client: wallet.clients[42_161] }),
-        WETH: getContract({ address: contracts[42_161].WETH.address, abi: ABIs.WETH, client: wallet.clients[42_161] }),
+        PNP: getContract({ address: contracts[42_161].PNP.address, abi: ABIs.PNP, client: wallet.clients[42_161] }),
+        EGP: getContract({ address: contracts[42_161].EGP.address, abi: ABIs.EGP, client: wallet.clients[42_161] }),
+        LTP: getContract({ address: contracts[42_161].LTP.address, abi: ABIs.LTP, client: wallet.clients[42_161] }),
+        ETH: getContract({ address: contracts[42_161].ETH.address, abi: ABIs.ETH, client: wallet.clients[42_161] }),
+        BNB: getContract({ address: contracts[42_161].BNB.address, abi: ABIs.BNB, client: wallet.clients[42_161] }),
+        VMGP: getContract({ address: contracts[42_161].BNB.address, abi: ABIs.VMGP, client: wallet.clients[42_161] }),
+        MASTERMGP: getContract({ address: contracts[42_161].BNB.address, abi: ABIs.MASTERMGP, client: wallet.clients[42_161] }),
+        CKP: getContract({ address: contracts[42_161].BNB.address, abi: ABIs.CKP, client: wallet.clients[42_161] }),
       }
     }
   }, [wallet.clients])

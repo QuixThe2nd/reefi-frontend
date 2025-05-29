@@ -5,8 +5,8 @@ import { ABIs } from './ABIs/abis'
 type NonEmptyArray<T> = [T, ...T[]]
 
 export type Chains = 56 | 42_161
-export type Coins = 'MGP' | 'RMGP' | 'YMGP' | 'VMGP' | 'CMGP' | 'CKP' | 'PNP' | 'EGP' | 'LTP' | 'ETH' | 'BNB'
-export const decimals: Record<Coins, number> = { MGP: 18, RMGP: 18, YMGP: 18, VMGP: 18, CMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 }
+export type Coins = 'MGP' | 'RMGP' | 'YMGP' | 'CMGP' | 'CKP' | 'PNP' | 'EGP' | 'LTP' | 'ETH' | 'BNB'
+export const decimals: Record<Coins, number> = { MGP: 18, RMGP: 18, YMGP: 18, CMGP: 18, CKP: 18, PNP: 18, EGP: 18, LTP: 18, ETH: 18, BNB: 18 }
 
 type ContractAddresses = {
   [K in keyof typeof ABIs]: GetContractReturnType<typeof ABIs[K], PublicClient>
@@ -39,7 +39,7 @@ const onRPCRequest = async (request: Request): Promise<void> => {
 export const publicClients = {
   1: createPublicClient({ chain: mainnet, transport: http('https://eth.drpc.org', { retryDelay: 250, batch: { wait: 1000, batchSize: 3 }, onFetchRequest: onRPCRequest }) }),
   56: createPublicClient({ chain: bsc, transport: http('https://bsc-dataseed1.binance.org', { retryDelay: 250, batch: true, onFetchRequest: onRPCRequest }) }),
-  42_161: createPublicClient({ chain: arbitrum, transport: http('https://arb1.arbitrum.io/rpc', { retryDelay: 1_000, batch: { wait: 150 }, onFetchRequest: onRPCRequest }) })
+  42_161: createPublicClient({ chain: arbitrum, transport: http('https://arb1.arbitrum.io/rpc', { retryDelay: 1000, batch: { wait: 150 }, onFetchRequest: onRPCRequest }) })
 }
 
 

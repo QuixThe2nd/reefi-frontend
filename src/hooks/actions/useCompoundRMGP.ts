@@ -1,13 +1,13 @@
 import { useRef, useEffect, useCallback } from "react"
 import { Chains } from "../../config/contracts"
 import { WalletClient, PublicActions } from "viem"
-import { Contracts } from "../useContracts"
-import { Balances } from "../useBalances"
+import { UseContracts } from "../useContracts"
+import { UseBalances } from "../useBalances"
 import { UseSupplies } from "../useSupplies"
 
 interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined
-  balances: Balances
+  balances: UseBalances
   chain: Chains
   clients: Clients
   setConnectRequired: (_val: boolean) => void
@@ -16,7 +16,7 @@ interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | u
   updateReefiLockedMGP: () => void
   updateTotalLockedMGP: () => void
   updateUnclaimedUserYield: () => void
-  writeContracts: Contracts<Clients>
+  writeContracts: UseContracts<Clients>
 }
 
 export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, balances, chain, clients, setConnectRequired, supplies, updatePendingRewards, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, writeContracts }: Props<Clients>): () => void => {
@@ -82,7 +82,7 @@ export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & Pu
     updatePendingRewardsRef.current()
     updateUnclaimedUserYieldRef.current()
     suppliesRef.current.updateRMGP()
-    balancesRef.current.updateRMGP()
+    balancesRef.current.RMGP[1]()
     updateTotalLockedMGPRef.current()
     updateReefiLockedMGPRef.current()
   }, [])

@@ -2,7 +2,6 @@ import { useUpdateable } from './useUpdateable'
 import { Coins, contracts } from '../config/contracts'
 import { UseWallet } from './useWallet'
 
-
 type Contracts = Record<Coins, [bigint, () => void]>
 
 export interface UseAllowances {
@@ -19,7 +18,6 @@ export const useAllowances = ({ wallet }: { readonly wallet: UseWallet }): UseAl
     MGP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], 'mgpCurve allowance', 0n),
     RMGP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], 'rmgpCurve allowance', 0n),
     YMGP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], 'ymgpCurve allowance', 0n),
-    VMGP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].VMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], 'VMGPCurve allowance', 0n),
     CMGP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], 'CMGPCurve allowance', 0n),
     CKP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CKP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], 'CKPCurve allowance', 0n),
     PNP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].PNP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], 'PNPCurve allowance', 0n),

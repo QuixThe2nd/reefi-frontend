@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback } from "react"
 import { Chains } from "../../config/contracts"
 import { WalletClient, PublicActions } from "viem"
-import { Contracts } from "../useContracts"
+import { UseContracts } from "../useContracts"
 
 interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined
@@ -9,7 +9,7 @@ interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | u
   clients: Clients
   setConnectRequired: (_val: boolean) => void
   updateUnclaimedUserYield: () => void
-  writeContracts: Contracts<Clients>
+  writeContracts: UseContracts<Clients>
 }
 
 export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, setConnectRequired, updateUnclaimedUserYield, writeContracts }: Props<Clients>): () => void => {

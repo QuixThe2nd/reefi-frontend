@@ -1,19 +1,19 @@
 import { useRef, useEffect, useCallback } from "react"
 import { Chains } from "../../config/contracts"
 import { WalletClient, PublicActions } from "viem"
-import { Contracts } from "../useContracts"
-import { Balances } from "../useBalances"
+import { UseContracts } from "../useContracts"
+import { UseBalances } from "../useBalances"
 
 interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined
-  balances: Balances
+  balances: UseBalances
   chain: Chains
   clients: Clients
   setConnectRequired: (_val: boolean) => void
   updateUnsubmittedWithdraws: () => void
   updateUserPendingWithdraws: () => void
   updateUserWithdrawable: () => void
-  writeContracts: Contracts<Clients>
+  writeContracts: UseContracts<Clients>
 }
 
 export const useWithdrawMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, balances, chain, clients, setConnectRequired, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }: Props<Clients>): () => void => {
@@ -67,7 +67,7 @@ export const useWithdrawMGP = <Clients extends Record<Chains, WalletClient & Pub
     if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
     await writeContractsRef.current[chainRef.current].RMGP.write.unlock({ account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
     await writeContractsRef.current[chainRef.current].RMGP.write.withdraw({ account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-    balancesRef.current.updateMGP()
+    balancesRef.current.MGP[1]()
     updateUserPendingWithdrawsRef.current()
     updateUnsubmittedWithdrawsRef.current()
     updateUserWithdrawableRef.current()

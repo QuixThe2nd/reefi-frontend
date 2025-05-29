@@ -93,6 +93,7 @@ export default defineConfig([
       "unicorn/prevent-abbreviations": "off",
       "unicorn/prefer-global-this": "off",
       "no-redeclare": "off",
+      "consistent-type-imports": "off",
       "no-unused-vars": [
         "error",
         {

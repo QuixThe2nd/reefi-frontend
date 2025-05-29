@@ -2,18 +2,18 @@ import { useRef, useEffect, useCallback } from "react"
 import { Chains, contracts } from "../../config/contracts"
 import { WalletClient, PublicActions } from "viem"
 import { Pages } from "../../App"
-import { Contracts } from "../useContracts"
-import { Allowances } from "../useAllowances"
+import { UseContracts } from "../useContracts"
+import { UseAllowances } from "../useAllowances"
 
 interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined
-  allowances: Allowances
+  allowances: UseAllowances
   chain: Chains
   clients: Clients
   page: Pages
   sendAmount: bigint
   setConnectRequired: (_val: boolean) => void
-  writeContracts: Contracts<Clients>
+  writeContracts: UseContracts<Clients>
 }
 
 export const useApprove = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, page, sendAmount, setConnectRequired, writeContracts }: Props<Clients>): () => void => {
@@ -63,13 +63,13 @@ export const useApprove = <Clients extends Record<Chains, WalletClient & PublicA
     if (pageRef.current === 'deposit') {
       const amount = infinity ? 2n ** 256n - 1n : sendAmountRef.current;
       await writeContractsRef.current[chainRef.current].MGP.write.approve([curve ? contracts[chainRef.current].CMGP.address : contracts[chainRef.current].RMGP.address, amount], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-      if (curve) allowancesRef.current.updateMGPCurve()
-      else allowancesRef.current.updateMGP()
+      if (curve) allowancesRef.current.curve.MGP[1]()
+      else allowancesRef.current.MGP[1]()
     } else if (pageRef.current === 'convert' || pageRef.current === 'redeem') {
       const amount = infinity ? 2n ** 256n - 1n : sendAmountRef.current;
       await writeContractsRef.current[chainRef.current].RMGP.write.approve([curve ? contracts[chainRef.current].CMGP.address : contracts[chainRef.current].YMGP.address, amount], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-      if (curve) allowancesRef.current.updateRMGPCurve()
-      else allowancesRef.current.updateRMGP()
+      if (curve) allowancesRef.current.curve.RMGP[1]()
+      else allowancesRef.current.RMGP[1]()
     }
   }, [])
 

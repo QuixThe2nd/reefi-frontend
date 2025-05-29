@@ -6,13 +6,11 @@ import { InfoCard } from '../components/InfoCard';
 import { BuyOnCurve } from '../components/BuyOnCurve';
 import { decimals, type Coins } from '../config/contracts';
 import { useGlobalContext } from '../contexts/GlobalContext';
-import { useUpdateable } from '../hooks/useUpdateable';
 
 const coins: Record<Coins, { symbol: string; color: string; bgColor: string }> = {
   MGP: { symbol: 'MGP', color: 'bg-blue-400', bgColor: 'bg-blue-600' },
   RMGP: { symbol: 'RMGP', color: 'bg-green-400', bgColor: 'bg-green-600' },
   YMGP: { symbol: 'YMGP', color: 'bg-green-400', bgColor: 'bg-green-600' },
-  VMGP: { symbol: 'VMGP', color: 'bg-purple-400', bgColor: 'bg-purple-600' },
   CMGP: { symbol: 'CMGP', color: 'bg-indigo-400', bgColor: 'bg-indigo-600' },
   CKP: { symbol: 'CKP', color: 'bg-pink-400', bgColor: 'bg-pink-600' },
   PNP: { symbol: 'PNP', color: 'bg-orange-400', bgColor: 'bg-orange-600' },
@@ -23,7 +21,7 @@ const coins: Record<Coins, { symbol: string; color: string; bgColor: string }> =
 } as const
 
 export const DepositPage = memo((): ReactElement => {
-  const { actions, allowances, amounts, writeContracts, exchangeRates, prices, rewards, wallet } = useGlobalContext()
+  const { actions, allowances, amounts, balances, exchangeRates, prices, rewards } = useGlobalContext()
 
   const [selectedCoin, setSelectedCoin] = useState<Coins>('MGP')
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
@@ -38,7 +36,7 @@ export const DepositPage = memo((): ReactElement => {
     return (): void => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
   
-  const [selectedBalance] = useUpdateable(() => writeContracts && wallet.account !== undefined ? writeContracts[wallet.chain][selectedCoin].read.balanceOf([wallet.account]) : 0n, [wallet.chain, wallet.account, selectedCoin], 'Balance', 0n)
+
   const rMGPAmount = selectedCoin === 'MGP' ? formatEther(amounts.send) / exchangeRates.curve.mgpRMGP : (selectedCoin === 'YMGP' ? formatEther(amounts.send) / exchangeRates.curve.ymgpMGP : (formatEther(amounts.send) * prices[selectedCoin]) / (prices.MGP * exchangeRates.curve.mgpRMGP))
 
   return <>
@@ -46,12 +44,12 @@ export const DepositPage = memo((): ReactElement => {
       <div className="mb-4">
         <div className="flex justify-between items-center mb-1">
           <h3 className="text-md font-medium">Get rMGP</h3>
-          <div className="text-sm text-gray-400">Balance: {formatEther(selectedBalance, decimals[selectedCoin])} {selectedCoin}</div>
+          <div className="text-sm text-gray-400">Balance: {formatEther(balances[selectedCoin][0], decimals[selectedCoin])} {selectedCoin}</div>
         </div>
         <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
           <input type="text" placeholder="0" className="bg-transparent outline-none text-xl w-3/4" value={amounts.send === 0n ? undefined : formatEther(amounts.send, decimals[selectedCoin])} onChange={e => amounts.setSend(BigInt(Math.round((Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)) * Number(10n ** BigInt(decimals[selectedCoin])))))} />
           <div className="flex items-center space-x-2">
-            <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => amounts.setSend(selectedBalance)}>MAX</button>
+            <button type="button" className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded" onClick={() => amounts.setSend(balances[selectedCoin][0])}>MAX</button>
             <div className="relative" ref={dropdownRef}>
               <button type="button" onClick={() => setIsDropdownOpen(!isDropdownOpen)} className={`rounded-md px-3 py-1 flex items-center cursor-pointer hover:opacity-90 transition-opacity ${coins[selectedCoin].bgColor}`}>
                 <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-2 ${coins[selectedCoin].color}`}>{selectedCoin[0]?.toUpperCase()}</div>

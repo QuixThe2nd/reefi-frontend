@@ -2,13 +2,13 @@
 import { useRef, useEffect, useCallback } from "react"
 import { Chains } from "../../config/contracts"
 import { WalletClient, PublicActions } from "viem"
-import { Contracts } from "../useContracts"
-import { Balances } from "../useBalances"
+import { UseContracts } from "../useContracts"
+import { UseBalances } from "../useBalances"
 import { UseSupplies } from "../useSupplies"
 
 interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined
-  balances: Balances
+  balances: UseBalances
   chain: Chains
   clients: Clients
   sendAmount: bigint
@@ -21,7 +21,7 @@ interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | u
   updateUnsubmittedWithdraws: () => void
   updateUserPendingWithdraws: () => void
   updateUserWithdrawable: () => void
-  writeContracts: Contracts<Clients>
+  writeContracts: UseContracts<Clients>
 }
 
 export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, balances, chain, clients, sendAmount, setConnectRequired, supplies, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, updateUnlockSchedule, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }: Props<Clients>): () => void => {
@@ -106,7 +106,7 @@ export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & Publ
     await writeContractsRef.current[chainRef.current].RMGP.write.startUnlock([sendAmountRef.current], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
     updateUnlockScheduleRef.current()
     suppliesRef.current.updateRMGP()
-    balancesRef.current.updateRMGP()
+    balancesRef.current.RMGP[1]()
     updateTotalLockedMGPRef.current()
     updateReefiLockedMGPRef.current()
     updateUserPendingWithdrawsRef.current()

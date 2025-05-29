@@ -1,20 +1,20 @@
 import { useRef, useEffect, useCallback } from "react"
 import { Chains } from "../../config/contracts"
 import { WalletClient, PublicActions } from "viem"
-import { Contracts } from "../useContracts"
-import { Allowances } from "../useAllowances"
-import { Balances } from "../useBalances"
+import { UseContracts } from "../useContracts"
+import { UseAllowances } from "../useAllowances"
+import { UseBalances } from "../useBalances"
 
 interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined
-  allowances: Allowances
-  balances: Balances
+  allowances: UseAllowances
+  balances: UseBalances
   chain: Chains
   clients: Clients
   sendAmount: bigint
   setConnectRequired: (_val: boolean) => void
   setError: (_val: string) => void
-  writeContracts: Contracts<Clients>
+  writeContracts: UseContracts<Clients>
 }
 
 export const useBuyMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, balances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }: Props<Clients>): () => void => {
@@ -66,10 +66,10 @@ export const useBuyMGP = <Clients extends Record<Chains, WalletClient & PublicAc
 
   const buyMGP = useCallback(async (): Promise<void> => {
     if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    if (allowancesRef.current.rmgpCurve < sendAmountRef.current) return setErrorRef.current('Allowance too low')
+    if (allowancesRef.current.curve.RMGP[0] < sendAmountRef.current) return setErrorRef.current('Allowance too low')
     await writeContractsRef.current[chainRef.current].CMGP.write.exchange([1n, 0n, sendAmountRef.current, 0n], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-    balancesRef.current.updateMGP()
-    balancesRef.current.updateRMGP()
+    balancesRef.current.MGP[1]()
+    balancesRef.current.RMGP[1]()
     balancesRef.current.updateMGPCurve()
     balancesRef.current.updateRMGPCurve()
   }, [])

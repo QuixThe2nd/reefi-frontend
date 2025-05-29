@@ -8,7 +8,7 @@ export const LockPage = memo((): ReactElement => {
   const { actions, rewards, balances, amounts, locked } = useGlobalContext()
   return <>
     <div className="bg-gray-700/50 p-5 rounded-lg">
-      <AmountInput label="Lock yMGP" token={{ symbol: 'yMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={balances.ymgp} value={amounts.send} onChange={amounts.setSend} />
+      <AmountInput label="Lock yMGP" token={{ symbol: 'yMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={balances.YMGP[0]} value={amounts.send} onChange={amounts.setSend} />
       <div className="mb-4 text-sm text-gray-400">
         <div className="flex justify-between mb-1">
           <span>Base APY</span>

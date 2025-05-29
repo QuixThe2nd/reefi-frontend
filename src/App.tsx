@@ -1,4 +1,5 @@
 // TODO: ERC4626 support
+// TODO: Coin logo
 import { useState, ReactElement } from 'react'
 import { type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods } from 'viem'
 import { TokenCards } from './components/TokenCards'
@@ -17,6 +18,7 @@ import { LockPage } from './pages/LockPage'
 import { UnlockPage } from './pages/UnlockPage'
 import { QASection } from './components/Questions';
 import { GlobalProvider } from './contexts/GlobalContext';
+import { ConvertPage } from './pages/ConvertPage'
 // import { Web3Provider } from '@ethersproject/providers';
 // import snapshot from '@snapshot-labs/snapshot.js';
 
@@ -58,6 +60,7 @@ const AppContent = (): ReactElement => {
             <YieldBadges />
             <Navbar page={page} setPage={setPage} />
             {page === 'deposit' && <DepositPage />}
+            {page === 'convert' && <ConvertPage />}
             {/* {page === 'buyVotes' && <BuyVotesPage sendAmount={amounts.send} ymgpAllowance={allowances.ymgp} ymgpAllowanceCurve={allowances.ymgpCurve} ymgpBalance={balances.ymgp} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} onApprove={approve} setSendAmount={amounts.setSend} />} */}
             {page === 'redeem' && <RedeemPage />}
             {page === 'supplyLiquidity' && <SupplyLiquidityPage />}

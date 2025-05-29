@@ -1,15 +1,15 @@
 import { useRef, useEffect, useCallback } from "react"
 import { Chains } from "../../config/contracts"
 import { WalletClient, PublicActions } from "viem"
-import { Contracts } from "../useContracts"
-import { Allowances } from "../useAllowances"
-import { Balances } from "../useBalances"
+import { UseContracts } from "../useContracts"
+import { UseAllowances } from "../useAllowances"
+import { UseBalances } from "../useBalances"
 import { UseSupplies } from "../useSupplies"
 
 interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined
-  allowances: Allowances
-  balances: Balances
+  allowances: UseAllowances
+  balances: UseBalances
   chain: Chains
   clients: Clients
   sendAmount: bigint
@@ -18,7 +18,7 @@ interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | u
   supplies: UseSupplies
   updateReefiLockedMGP: () => void
   updateTotalLockedMGP: () => void
-  writeContracts: Contracts<Clients>
+  writeContracts: UseContracts<Clients>
 }
 
 export const useDepositMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, balances, chain, clients, sendAmount, setConnectRequired, setError, supplies, updateReefiLockedMGP, updateTotalLockedMGP, writeContracts }: Props<Clients>): () => void => {
@@ -85,10 +85,10 @@ export const useDepositMGP = <Clients extends Record<Chains, WalletClient & Publ
 
   const depositMGP = useCallback(async (): Promise<void> => {
     if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    if (allowancesRef.current.mgp < sendAmountRef.current) return setErrorRef.current('Allowance too low')
+    if (allowancesRef.current.MGP[0] < sendAmountRef.current) return setErrorRef.current('Allowance too low')
     await writeContractsRef.current[chainRef.current].RMGP.write.deposit([sendAmountRef.current], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-    balancesRef.current.updateMGP()
-    balancesRef.current.updateRMGP()
+    balancesRef.current.MGP[1]()
+    balancesRef.current.RMGP[1]()
     suppliesRef.current.updateMGP()
     suppliesRef.current.updateRMGP()
     updateTotalLockedMGPRef.current()

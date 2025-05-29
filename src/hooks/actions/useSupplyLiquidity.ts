@@ -1,18 +1,18 @@
 import { useRef, useEffect, useCallback } from "react"
 import { Chains } from "../../config/contracts"
 import { WalletClient, PublicActions } from "viem"
-import { Contracts } from "../useContracts"
-import { Balances } from "../useBalances"
+import { UseContracts } from "../useContracts"
+import { UseBalances } from "../useBalances"
 
 interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined
-  balances: Balances
+  balances: UseBalances
   chain: Chains
   clients: Clients
   mgpLPAmount: bigint
   rmgpLPAmount: bigint
   setConnectRequired: (_val: boolean) => void
-  writeContracts: Contracts<Clients>
+  writeContracts: UseContracts<Clients>
   ymgpLPAmount: bigint
 }
 
@@ -66,10 +66,10 @@ export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient &
   const supplyLiquidity = useCallback(async (): Promise<void> => {
     if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
     await writeContractsRef.current[chainRef.current].CMGP.write.add_liquidity([[mgpLPAmountRef.current, rmgpLPAmountRef.current, ymgpLPAmountRef.current], 0n], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-    balancesRef.current.updateMGP()
-    balancesRef.current.updateRMGP()
-    balancesRef.current.updateYMGP()
-    balancesRef.current.updateCMGP()
+    balancesRef.current.MGP[1]()
+    balancesRef.current.RMGP[1]()
+    balancesRef.current.YMGP[1]()
+    balancesRef.current.CMGP[1]()
     balancesRef.current.updateMGPCurve()
     balancesRef.current.updateRMGPCurve()
     balancesRef.current.updateYMGPCurve()

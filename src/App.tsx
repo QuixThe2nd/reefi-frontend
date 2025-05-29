@@ -1,7 +1,6 @@
 // TODO: ERC4626 support
 
 import { useState, ReactElement } from 'react'
-import Diagram from '../public/diagram.svg'
 import { type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods } from 'viem'
 import { decimals, publicClients, contracts } from './config/contracts';
 import { TokenCards } from './components/TokenCards'
@@ -31,7 +30,7 @@ import { useWithdraws } from './hooks/useWithdraws'
 import { useAmounts } from './hooks/useAmounts'
 import { useLocked } from './hooks/useLocked'
 import { useContracts } from './hooks/useContracts';
-import { Governance } from './components/Governance';
+import { QASection } from './components/Questions';
 // import { Web3Provider } from '@ethersproject/providers';
 // import snapshot from '@snapshot-labs/snapshot.js';
 
@@ -59,7 +58,6 @@ export type Pages = 'deposit' | 'convert' | 'lock' | 'buyVotes' | 'supplyLiquidi
 
 const App = (): ReactElement => {
   const [page, setPage] = useState<Pages>('deposit')
-  const [showDiagram, setShowDiagram] = useState(false)
   const [error, setError] = useState('')
 
   const { chain, account, ens, connectRequired, connectWallet, isConnecting, setConnectRequired, setChain, clients } = useWallet({ setError })
@@ -68,12 +66,12 @@ const App = (): ReactElement => {
   const supplies = useSupplies({ chain })
   const prices = usePrices()
   const writeContracts = useContracts({ clients })
+  const locked = useLocked({ account, chain })
+  const exchangeRates = useExchangeRates({ reefiLockedMGP: locked.reefiMGP, account, chain, supplies })
   const { sendAmount, setSendAmount, mgpRmgpCurveAmount, rmgpMgpCurveAmount, rmgpYmgpCurveAmount, mgpLPAmount, setMGPLPAmount, rmgpLPAmount, setRMGPLPAmount, ymgpLPAmount, setYMGPLPAmount } = useAmounts({ account, chain })
   const { uncompoundedMGPYield, estimatedCompoundGasFee, mgpAPR, cmgpAPY, cmgpPoolAPY, unclaimedUserYield, pendingRewards, updatePendingRewards, updateUnclaimedUserYield } = useYield({ account, chain, prices, balances })
   const { userWithdrawable, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, userPendingWithdraws, unlockSchedule } = useWithdraws({ account, chain })
-  const locked = useLocked({ account, chain })
   const { approve, depositRMGP, buyYMGP, lockYMGP, unlockYMGP, depositMGP, buyRMGP, redeemRMGP, compoundRMGP, claimYMGPRewards, withdrawMGP, supplyLiquidity, buyMGP } = useActions({ page, sendAmount, setConnectRequired, setError, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, updatePendingRewards, updateUnclaimedUserYield, updateTotalLockedMGP: locked.updateMGP, updateReefiLockedMGP: locked.updateReefiMGP, updateTotalLockedYMGP: locked.updateYMGP, updateUserLockedYMGP: locked.updateUserYMGP, updateYMGPHoldings: balances.updateYMGPHoldings, clients, account, chain, balances, supplies, allowances, writeContracts })
-  const exchangeRates = useExchangeRates({ reefiLockedMGP: locked.reefiMGP, account, chain, supplies })
 
   return (
     <div className="flex h-screen bg-gray-900 text-white">
@@ -83,12 +81,6 @@ const App = (): ReactElement => {
         <div className="p-4 md:p-6">
           <Header account={account} decimals={decimals} mgpBalance={balances.mgp} rmgpBalance={balances.rmgp} ymgpBalance={balances.ymgp} cmgpBalance={balances.cmgp} userLockedYMGP={locked.userYMGP} ens={ens} chain={chain} isConnecting={isConnecting} connectWallet={connectWallet} setChain={setChain} />
           <TokenCards prices={prices} decimals={decimals} mgpSupply={supplies.mgp} totalLockedMGP={locked.mgp} rmgpSupply={supplies.rmgp} reefiLockedMGP={locked.reefiMGP} ymgpSupply={supplies.ymgp} totalLockedYMGP={locked.ymgp} mgpRMGPRate={exchangeRates.curve.mgpRMGP} rmgpYMGPRate={exchangeRates.curve.rmgpYMGP} />
-          <div className="flex flex-col justify-center mb-4 items-center">
-            <button type="button" className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors w-fit" onClick={() => setShowDiagram(!showDiagram)}>{showDiagram ? 'Hide Diagram' : 'Show Diagram'}</button>
-            {showDiagram && <div className="flex justify-center mt-4"><img src={Diagram} alt="Diagram" className="h-120" /></div>}
-          </div>
-          <h2 className="text-2xl text-red-400 text-center">VERY EARLY BETA</h2>
-          <p className="text-center mb-4">Reefi is in very early beta. Please deposit very small amounts that you are okay loosing as Reefi likely has unknown bugs. Curve/cMGP related features are only available on Arbitrum.</p>
           <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6">
             <YieldBadges mgpAPR={mgpAPR} cmgpAPY={cmgpAPY} cmgpPoolAPY={cmgpPoolAPY} reefiLockedMGP={locked.reefiMGP} totalLockedYMGP={locked.ymgp} mgpCurveBalance={balances.mgpCurve} rmgpCurveBalance={balances.rmgpCurve} ymgpCurveBalance={balances.ymgpCurve} mintRMGPRate={exchangeRates.mintRMGP} />
             <Navbar page={page} setPage={setPage} />
@@ -102,7 +94,7 @@ const App = (): ReactElement => {
           </div>
           <PendingRewards uncompoundedMGPYield={uncompoundedMGPYield} prices={prices} estimatedCompoundGasFee={estimatedCompoundGasFee} ymgpHoldings={balances.ymgpHoldings} ymgpSupply={supplies.ymgp} totalLockedYMGP={locked.ymgp} unclaimedUserYield={unclaimedUserYield} decimals={decimals} mgpRMGPRate={exchangeRates.mintRMGP} reefiLockedMGP={locked.reefiMGP} mgpAPR={mgpAPR} pendingRewards={pendingRewards} compoundRMGP={compoundRMGP} claimYMGPRewards={claimYMGPRewards} chain={chain} />
           <ConversionRates mgpRMGP={exchangeRates.curve.mgpRMGP} rmgpMGP={exchangeRates.curve.rmgpMGP} rmgpYMGP={exchangeRates.curve.rmgpYMGP} ymgpRMGP={exchangeRates.curve.ymgpRMGP} mintRMGP={exchangeRates.mintRMGP} />
-          <Governance />
+          <QASection />
           <Contracts contracts={contracts} publicClients={publicClients} chain={chain} />
         </div>
       </div>

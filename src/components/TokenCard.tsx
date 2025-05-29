@@ -1,13 +1,11 @@
 import { memo, type ReactElement } from 'react'
 import { formatNumber, formatEther } from '../utils'
 import { TokenStat } from './TokenStat'
-import { TokenFeatures } from './TokenFeatures'
 
 interface Props {
   readonly symbol: string,
   readonly decimals: number,
   readonly description: string,
-  readonly features?: Readonly<Record<string, string>>,
   readonly price?: number,
   readonly supply: bigint,
   readonly locked?: bigint,
@@ -17,7 +15,7 @@ interface Props {
   readonly underlyingSymbol?: string | undefined,
 }
 
-export const TokenCard = memo(({ symbol, decimals, description, features, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }: Props): ReactElement => {
+export const TokenCard = memo(({ symbol, decimals, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }: Props): ReactElement => {
   return <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
     <div className="grid grid-cols-3">
       <div className="flex justify-between items-start">
@@ -41,7 +39,6 @@ export const TokenCard = memo(({ symbol, decimals, description, features, price,
       </div>
     </div>
     <p className="text-gray-400 text-xs mt-2">{description}</p>
-    {features && <TokenFeatures features={features} />}
   </div>
 })
 TokenCard.displayName = 'TokenCard'

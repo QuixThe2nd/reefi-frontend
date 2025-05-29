@@ -1,6 +1,6 @@
 import { memo, type ReactElement } from 'react'
 import { formatNumber, formatEther, formatTime } from '../utils'
-import { Coins } from '../config/contracts'
+import { Chains, Coins, contracts } from '../config/contracts'
 
 interface Props {
   readonly uncompoundedMGPYield: number
@@ -15,11 +15,12 @@ interface Props {
   readonly reefiLockedMGP: bigint
   readonly mgpAPR: number
   readonly pendingRewards: Readonly<Record<Coins, { readonly address: `0x${string}`, readonly rewards: bigint }>> | undefined
+  readonly chain: Chains
   readonly compoundRMGP: () => void
   readonly claimYMGPRewards: () => void
 }
 
-export const PendingRewards = memo(({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, ymgpHoldings, ymgpSupply, totalLockedYMGP, unclaimedUserYield, decimals, mgpRMGPRate, reefiLockedMGP, mgpAPR, pendingRewards, compoundRMGP, claimYMGPRewards }: Props): ReactElement => {
+export const PendingRewards = memo(({ uncompoundedMGPYield, prices, estimatedCompoundGasFee, ymgpHoldings, ymgpSupply, totalLockedYMGP, unclaimedUserYield, decimals, mgpRMGPRate, reefiLockedMGP, mgpAPR, pendingRewards, compoundRMGP, claimYMGPRewards, chain }: Props): ReactElement => {
   return <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6">
     <h2 className="text-2xl font-bold mb-4">Pending Rewards</h2>
     <div className="grid grid-cols-2 gap-4">
@@ -52,6 +53,18 @@ export const PendingRewards = memo(({ uncompoundedMGPYield, prices, estimatedCom
         <p className="text-gray-400 text-xs mt-2">Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.</p>
         <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={claimYMGPRewards}>Claim Rewards</button>
       </div>
+    </div>
+    <div className="mt-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-green-700">
+      <h3 className="text-lg font-semibold mb-2 text-green-400">Developer Tip: Automate Compounding for Free Money</h3>
+      <p className="text-gray-300 text-sm mb-2">Compounding vlMGP yield is critical to Reefi&apos;s function. Anyone can trigger a compound, which compounds everyone&apos;s pending yield. By doing so, you receive 1% of all pending yield. You can automate this process and earn rewards with no investment.</p>
+      <ul className="list-disc list-inside text-gray-400 text-xs mb-2">
+        <li>Monitor the estimated profit and gas fee.</li>
+        <li>Trigger compounding when profit exceeds gas cost by calling <span className="font-mono bg-gray-800 px-1 py-0.5 rounded">{contracts[chain].RMGP.address}.claim()</span> whenever rewards are higher than gas fees.</li>
+        <li>This can be done using free cloud functions, GitHub Actions, or a serverless cron job.</li>
+      </ul>
+      <p className="text-gray-400 text-xs">
+        Example: Use <span className="font-mono bg-gray-800 px-1 py-0.5 rounded">Viem</span>, <span className="font-mono bg-gray-800 px-1 py-0.5 rounded">ethers.js</span> or <span className="font-mono bg-gray-800 px-1 py-0.5 rounded">web3.js</span> in a scheduled script to call the contract method and claim your reward automatically.
+      </p>
     </div>
   </div>
 })

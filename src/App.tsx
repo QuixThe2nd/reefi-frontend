@@ -31,6 +31,7 @@ import { useWithdraws } from './hooks/useWithdraws'
 import { useAmounts } from './hooks/useAmounts'
 import { useLocked } from './hooks/useLocked'
 import { useContracts } from './hooks/useContracts';
+import { Governance } from './components/Governance';
 // import { Web3Provider } from '@ethersproject/providers';
 // import snapshot from '@snapshot-labs/snapshot.js';
 
@@ -41,10 +42,8 @@ import { useContracts } from './hooks/useContracts';
 //   proposal: '0xc216cb43644422545e344f1fa004e5f90816dfc07f9a9c60eadde2ca685a402f',
 //   type: 'single-choice',
 //   choice: 1,
-//   reason: 'Choice 1 make lot of sense',
 //   app: 'my-app'
 // });
-// console.log(receipt)
 
 declare global {
   interface Window {
@@ -101,8 +100,9 @@ const App = (): ReactElement => {
             {page === 'lock' && <LockPage sendAmount={sendAmount} ymgpBalance={balances.ymgp} totalLockedYMGP={locked.ymgp} mgpAPR={mgpAPR} reefiLockedMGP={locked.reefiMGP} setSendAmount={setSendAmount} lockYMGP={lockYMGP} />}
             {page === 'unlock' && <UnlockPage ymgpBalance={balances.ymgp} sendAmount={sendAmount} setSendAmount={setSendAmount} unlockYMGP={unlockYMGP} />}
           </div>
-          <PendingRewards uncompoundedMGPYield={uncompoundedMGPYield} prices={prices} estimatedCompoundGasFee={estimatedCompoundGasFee} ymgpHoldings={balances.ymgpHoldings} ymgpSupply={supplies.ymgp} totalLockedYMGP={locked.ymgp} unclaimedUserYield={unclaimedUserYield} decimals={decimals} mgpRMGPRate={exchangeRates.mintRMGP} reefiLockedMGP={locked.reefiMGP} mgpAPR={mgpAPR} pendingRewards={pendingRewards} compoundRMGP={compoundRMGP} claimYMGPRewards={claimYMGPRewards} />
+          <PendingRewards uncompoundedMGPYield={uncompoundedMGPYield} prices={prices} estimatedCompoundGasFee={estimatedCompoundGasFee} ymgpHoldings={balances.ymgpHoldings} ymgpSupply={supplies.ymgp} totalLockedYMGP={locked.ymgp} unclaimedUserYield={unclaimedUserYield} decimals={decimals} mgpRMGPRate={exchangeRates.mintRMGP} reefiLockedMGP={locked.reefiMGP} mgpAPR={mgpAPR} pendingRewards={pendingRewards} compoundRMGP={compoundRMGP} claimYMGPRewards={claimYMGPRewards} chain={chain} />
           <ConversionRates mgpRMGP={exchangeRates.curve.mgpRMGP} rmgpMGP={exchangeRates.curve.rmgpMGP} rmgpYMGP={exchangeRates.curve.rmgpYMGP} ymgpRMGP={exchangeRates.curve.ymgpRMGP} mintRMGP={exchangeRates.mintRMGP} />
+          <Governance />
           <Contracts contracts={contracts} publicClients={publicClients} chain={chain} />
         </div>
       </div>

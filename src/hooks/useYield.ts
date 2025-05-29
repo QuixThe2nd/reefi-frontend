@@ -17,6 +17,7 @@ interface Yield {
   pendingRewards: Record<Coins, { address: `0x${string}`; rewards: bigint; }> | undefined
   unclaimedUserYield: bigint
   cmgpAPY: number
+  cmgpPoolAPY: number
   uncompoundedMGPYield: number
   estimatedCompoundGasFee: number
   updatePendingRewards: () => void
@@ -62,5 +63,5 @@ export const useYield = ({ chain, account, prices, balances }: Props): Yield => 
     return (): void => clearInterval(interval)
   }, [updatePendingRewards])
 
-  return { mgpAPR, pendingRewards, unclaimedUserYield, cmgpAPY, uncompoundedMGPYield, estimatedCompoundGasFee, updatePendingRewards, updateUnclaimedUserYield }
+  return { mgpAPR, pendingRewards, unclaimedUserYield, cmgpAPY, cmgpPoolAPY, uncompoundedMGPYield, estimatedCompoundGasFee, updatePendingRewards, updateUnclaimedUserYield }
 }

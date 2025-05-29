@@ -70,7 +70,7 @@ const App = (): ReactElement => {
   const prices = usePrices()
   const writeContracts = useContracts({ clients })
   const { sendAmount, setSendAmount, mgpRmgpCurveAmount, rmgpMgpCurveAmount, rmgpYmgpCurveAmount, mgpLPAmount, setMGPLPAmount, rmgpLPAmount, setRMGPLPAmount, ymgpLPAmount, setYMGPLPAmount } = useAmounts({ account, chain })
-  const { uncompoundedMGPYield, estimatedCompoundGasFee, mgpAPR, cmgpAPY, unclaimedUserYield, pendingRewards, updatePendingRewards, updateUnclaimedUserYield } = useYield({ account, chain, prices, balances })
+  const { uncompoundedMGPYield, estimatedCompoundGasFee, mgpAPR, cmgpAPY, cmgpPoolAPY, unclaimedUserYield, pendingRewards, updatePendingRewards, updateUnclaimedUserYield } = useYield({ account, chain, prices, balances })
   const { userWithdrawable, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, userPendingWithdraws, unlockSchedule } = useWithdraws({ account, chain })
   const locked = useLocked({ account, chain })
   const { approve, depositRMGP, buyYMGP, lockYMGP, unlockYMGP, depositMGP, buyRMGP, redeemRMGP, compoundRMGP, claimYMGPRewards, withdrawMGP, supplyLiquidity, buyMGP } = useActions({ page, sendAmount, setConnectRequired, setError, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, updateUserPendingWithdraws, updateUnsubmittedWithdraws, updateUserWithdrawable, updateUnlockSchedule, updatePendingRewards, updateUnclaimedUserYield, updateTotalLockedMGP: locked.updateMGP, updateReefiLockedMGP: locked.updateReefiMGP, updateTotalLockedYMGP: locked.updateYMGP, updateUserLockedYMGP: locked.updateUserYMGP, updateYMGPHoldings: balances.updateYMGPHoldings, clients, account, chain, balances, supplies, allowances, writeContracts })
@@ -91,7 +91,7 @@ const App = (): ReactElement => {
           <h2 className="text-2xl text-red-400 text-center">VERY EARLY BETA</h2>
           <p className="text-center mb-4">Reefi is in very early beta. Please deposit very small amounts that you are okay loosing as Reefi likely has unknown bugs. Curve/cMGP related features are only available on Arbitrum.</p>
           <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6">
-            <YieldBadges mgpAPR={mgpAPR} cmgpAPY={cmgpAPY} reefiLockedMGP={locked.reefiMGP} totalLockedYMGP={locked.ymgp} />
+            <YieldBadges mgpAPR={mgpAPR} cmgpAPY={cmgpAPY} cmgpPoolAPY={cmgpPoolAPY} reefiLockedMGP={locked.reefiMGP} totalLockedYMGP={locked.ymgp} mgpCurveBalance={balances.mgpCurve} rmgpCurveBalance={balances.rmgpCurve} ymgpCurveBalance={balances.ymgpCurve} mintRMGPRate={exchangeRates.mintRMGP} />
             <Navbar page={page} setPage={setPage} />
             {page === 'deposit' && <DepositPage sendAmount={sendAmount} mgpAllowance={allowances.mgp} mgpBalance={balances.mgp} mgpAllowanceCurve={allowances.mgpCurve} mgpRmgpCurveAmount={mgpRmgpCurveAmount} mgpRMGPRate={exchangeRates.mintRMGP} mgpAPR={mgpAPR} onApprove={approve} setSendAmount={setSendAmount} depositMGP={depositMGP} buyRMGP={buyRMGP} />}
             {page === 'convert' && <ConvertPage sendAmount={sendAmount} rmgpBalance={balances.rmgp} rmgpAllowance={allowances.rmgp} rmgpAllowanceCurve={allowances.rmgpCurve} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} onApprove={approve} setSendAmount={setSendAmount} depositRMGP={depositRMGP} buyYMGP={buyYMGP} />}

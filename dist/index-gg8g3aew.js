@@ -34119,7 +34119,7 @@ var UnlockPage = import_react46.memo(() => {
 UnlockPage.displayName = "UnlockPage";
 
 // public/diagram.svg
-var diagram_default = "./diagram-q74967cy.svg";
+var diagram_default = "./diagram-61tcs965.svg";
 
 // src/components/Questions.tsx
 var import_react47 = __toESM(require_react(), 1);

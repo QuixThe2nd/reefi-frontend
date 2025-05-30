@@ -17,7 +17,7 @@ export const BuyOnCurve = memo(({ sendAmount, curveAmount, allowanceCurve, rate,
   return <div>
     <TokenApproval sendAmount={sendAmount} allowance={allowanceCurve} onApprove={onApprove} tokenSymbol={tokenASymbol} curve={true} />
     <div className="relative">
-      <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={buy}>Buy on Curve ({formatEther(curveAmount)} {tokenBSymbol})</button>
+      <button type="submit" className="w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min" onClick={buy}>Buy on Curve ({formatEther(curveAmount).toFixed(4)} {tokenBSymbol})</button>
       {((): JSX.Element | undefined => {
         const directRate = formatEther(sendAmount) / rate;
         const premiumDiscount = ((formatEther(curveAmount) - directRate) / directRate) * 100;

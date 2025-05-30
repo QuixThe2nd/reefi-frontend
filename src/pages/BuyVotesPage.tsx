@@ -25,7 +25,7 @@ export const BuyVotesPage = memo(({ sendAmount, ymgpAllowance, ymgpAllowanceCurv
         <div className="grid grid-cols-2 gap-2">
           <div>
             <TokenApproval sendAmount={sendAmount} allowance={ymgpAllowance} onApprove={onApprove} tokenSymbol='yMGP' />
-            <button type="submit" className="w-full py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={() => depositYMGP()}>Mint ({formatEther(sendAmount)} vMGP)</button>
+            <button type="submit" className="w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min" onClick={() => depositYMGP()}>Mint ({formatEther(sendAmount)} vMGP)</button>
           </div>
           <BuyOnCurve sendAmount={sendAmount} curveAmount={ymgpVmgpCurveAmount} allowanceCurve={ymgpAllowanceCurve} rate={1} onApprove={onApprove} buy={() => buyVMGP()} tokenASymbol='yMGP' tokenBSymbol='vMGP' />
         </div>

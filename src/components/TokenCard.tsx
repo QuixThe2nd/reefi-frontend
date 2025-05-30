@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const TokenCard = memo(({ symbol, decimals, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }: Props): ReactElement => {
-  return <div className="bg-gray-800 p-4 rounded-xl border border-gray-700">
+  return <div className="bg-gray-800 p-2 rounded-xl border border-gray-700">
     <div className="grid grid-cols-3">
       <div className="flex justify-between items-start">
         <div>

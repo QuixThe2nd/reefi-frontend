@@ -34988,7 +34988,7 @@ var DepositPage = import_react37.memo(() => {
                 onClick: actions.depositMGP,
                 children: [
                   "Mint (",
-                  formatEther(BigInt(exchangeRates.mintRMGP * Number(amounts.send))).toFixed(4),
+                  formatEther(BigInt(Number(amounts.send) / exchangeRates.mintRMGP)).toFixed(4),
                   " rMGP)"
                 ]
               }, undefined, true, undefined, this)
@@ -34998,7 +34998,7 @@ var DepositPage = import_react37.memo(() => {
             sendAmount: amounts.send,
             curveAmount: amounts.mgpRmgpCurve,
             allowanceCurve: allowances.curve[selectedCoin][0],
-            rate: exchangeRates.curve.mgpRMGP,
+            rate: 1 / exchangeRates.curve.mgpRMGP,
             onApprove: actions.approve,
             buy: actions.buyRMGP,
             tokenASymbol: selectedCoin,
@@ -35253,7 +35253,7 @@ var RedeemPage = import_react40.memo(() => {
             onClick: actions.redeemRMGP,
             children: [
               "Redeem via Queue (",
-              (exchangeRates.curve.rmgpMGP * formatEther(amounts.send)).toFixed(4),
+              (1 / exchangeRates.mintRMGP * 0.9 * formatEther(amounts.send)).toFixed(4),
               " MGP)"
             ]
           }, undefined, true, undefined, this),
@@ -35261,7 +35261,7 @@ var RedeemPage = import_react40.memo(() => {
             sendAmount: amounts.send,
             curveAmount: amounts.rmgpMgpCurve,
             allowanceCurve: allowances.curve.RMGP[0],
-            rate: exchangeRates.curve.rmgpMGP,
+            rate: 1 / exchangeRates.mintMGP * 0.9,
             onApprove: actions.approve,
             buy: actions.buyMGP,
             tokenASymbol: "rMGP",

@@ -16,9 +16,9 @@ export const DepositPage = memo((): ReactElement => {
     {selectedCoin === 'MGP' ? <div className="grid grid-cols-2 gap-2">
       <div>
         <TokenApproval sendAmount={amounts.send} allowance={allowances[selectedCoin][0]} onApprove={actions.approve} tokenSymbol={selectedCoin} />
-        <button type="submit" className="py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full" onClick={actions.depositMGP}>Mint ({formatEther(BigInt(exchangeRates.mintRMGP*Number(amounts.send))).toFixed(4)} rMGP)</button>
+        <button type="submit" className="py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full" onClick={actions.depositMGP}>Mint ({formatEther(BigInt(Number(amounts.send)/exchangeRates.mintRMGP)).toFixed(4)} rMGP)</button>
       </div>
-      <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.mgpRmgpCurve} allowanceCurve={allowances.curve[selectedCoin][0]} rate={exchangeRates.curve.mgpRMGP} onApprove={actions.approve} buy={actions.buyRMGP} tokenASymbol={selectedCoin} tokenBSymbol='rMGP' />
+      <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.mgpRmgpCurve} allowanceCurve={allowances.curve[selectedCoin][0]} rate={1/exchangeRates.curve.mgpRMGP} onApprove={actions.approve} buy={actions.buyRMGP} tokenASymbol={selectedCoin} tokenBSymbol='rMGP' />
     </div> : <>
       <TokenApproval sendAmount={amounts.send} allowance={allowances.curve[selectedCoin][0]} onApprove={actions.approve} tokenSymbol={selectedCoin} />
       <button type="submit" className="py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full" onClick={actions.swapToMGP}>Swap to MGP</button>

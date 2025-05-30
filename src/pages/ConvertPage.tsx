@@ -18,7 +18,7 @@ export const ConvertPage = memo((): ReactElement => {
         <TokenApproval sendAmount={amounts.send} allowance={allowances.RMGP[0]} onApprove={actions.approve} tokenSymbol='RMGP' />
         <button type="submit" className="w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min" onClick={actions.depositRMGP}>Mint ({formatEther(amounts.send)} yMGP)</button>
       </div>}
-      <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.rmgpYmgpCurve} allowanceCurve={allowances.curve.RMGP[0]} rate={1} onApprove={actions.approve} buy={actions.buyYMGP} tokenASymbol='RMGP' tokenBSymbol='yMGP' />
+      <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.rmgpYmgpCurve} allowanceCurve={allowances.curve.RMGP[0]} nativeRate={1} onApprove={actions.approve} buy={actions.buyYMGP} tokenASymbol='RMGP' tokenBSymbol='yMGP' />
     </div> : <>
       <TokenApproval sendAmount={amounts.send} allowance={allowances.curve[selectedCoin][0]} onApprove={actions.approve} tokenSymbol={selectedCoin} />
       <button type="submit" className="py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full" onClick={actions.swapToMGP}>Swap to MGP</button>

@@ -18,7 +18,7 @@ export const RedeemPage = memo((): ReactElement => {
     <AmountInput label="Get MGP" token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={balances.RMGP[0]} value={amounts.send} onChange={amounts.setSend} />
     <div className="grid grid-cols-2 gap-2">
       <button type="submit" className="py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min" onClick={actions.redeemRMGP}>Redeem via Queue ({(exchangeRates.mintRMGP*0.9*formatEther(amounts.send)).toFixed(4)} MGP)</button>
-      <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.rmgpMgpCurve} allowanceCurve={allowances.curve.RMGP[0]} rate={exchangeRates.mintRMGP*0.9} onApprove={actions.approve} buy={actions.buyMGP} tokenASymbol='rMGP' tokenBSymbol='MGP' />
+      <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.rmgpMgpCurve} allowanceCurve={allowances.curve.RMGP[0]} nativeRate={exchangeRates.mintRMGP*0.9} onApprove={actions.approve} buy={actions.buyMGP} tokenASymbol='rMGP' tokenBSymbol='MGP' />
     </div>
     <div className="mt-4 text-sm text-gray-400 flex justify-between">
       <span>Native Redemption Rate</span>

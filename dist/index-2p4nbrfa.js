@@ -32278,7 +32278,7 @@ var arbContracts = {
   MGP: getContract({ address: "0xa61F74247455A40b01b0559ff6274441FAfa22A3", abi: erc20Abi, client: publicClients[42161] }),
   RMGP: getContract({ address: "0x3788c8791d826254bAbd49b602C93008468D5695", abi: ABIs.RMGP, client: publicClients[42161] }),
   YMGP: getContract({ address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9", abi: ABIs.YMGP, client: publicClients[42161] }),
-  CMGP: getContract({ address: "0xA24Daae84B8166Ab0C049880F4F8F3AdC4F0a421", abi: ABIs.CMGP, client: publicClients[42161] }),
+  CMGP: getContract({ address: "0xD1465c3489Aa7Eac0e7f9907F93a684840a2F934", abi: ABIs.CMGP, client: publicClients[42161] }),
   VLMGP: getContract({ address: "0x536599497Ce6a35FC65C7503232Fec71A84786b9", abi: ABIs.VLMGP, client: publicClients[42161] }),
   MASTERMGP: getContract({ address: "0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7", abi: ABIs.MASTERMGP, client: publicClients[42161] }),
   VLREWARDER: getContract({ address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45", abi: ABIs.VLREWARDER, client: publicClients[42161] }),
@@ -33949,7 +33949,7 @@ var useAmounts = ({ wallet }) => {
   const [mgpLP, setMGPLP] = import_react18.useState(0n);
   const [rmgpLP, setRMGPLP] = import_react18.useState(0n);
   const [ymgpLP, setYMGPLP] = import_react18.useState(0n);
-  const [mgpRmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([0n, 1n, send], { account: wallet.account }), [contracts, wallet.chain, send], "mgpRmgpCurveAmount", 0n);
+  const [mgpRmgpCurve] = useCachedUpdateable(() => send === 0 ? 0n : contracts[wallet.chain].CMGP.read.get_dy([0n, 1n, send], { account: wallet.account }), [contracts, wallet.chain, send], "mgpRmgpCurveAmount", 0n);
   const [rmgpMgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 0n, send], { account: wallet.account }), [contracts, wallet.chain, send], "rmgpMgpCurveAmount", 0n);
   const [rmgpYmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 2n, send], { account: wallet.account }), [contracts, wallet.chain, send], "rmgpYmgpCurveAmount", 0n);
   return { send, setSend, mgpRmgpCurve, rmgpMgpCurve, rmgpYmgpCurve, mgpLP, setMGPLP, rmgpLP, setRMGPLP, ymgpLP, setYMGPLP };
@@ -34862,7 +34862,7 @@ var BuyOnCurve = import_react35.memo(({ sendAmount, curveAmount, allowanceCurve,
             ]
           }, undefined, true, undefined, this),
           (() => {
-            const directRate = formatEther(sendAmount) / rate;
+            const directRate = formatEther(sendAmount) * rate;
             const premiumDiscount = (formatEther(curveAmount) - directRate) / directRate * 100;
             const isPremium = premiumDiscount > 0;
             return Math.abs(premiumDiscount) >= 0.01 ? /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("span", {
@@ -35253,7 +35253,7 @@ var RedeemPage = import_react40.memo(() => {
             onClick: actions.redeemRMGP,
             children: [
               "Redeem via Queue (",
-              (1 / exchangeRates.mintRMGP * 0.9 * formatEther(amounts.send)).toFixed(4),
+              (exchangeRates.mintRMGP * 0.9 * formatEther(amounts.send)).toFixed(4),
               " MGP)"
             ]
           }, undefined, true, undefined, this),
@@ -35261,7 +35261,7 @@ var RedeemPage = import_react40.memo(() => {
             sendAmount: amounts.send,
             curveAmount: amounts.rmgpMgpCurve,
             allowanceCurve: allowances.curve.RMGP[0],
-            rate: 1 / exchangeRates.mintMGP * 0.9,
+            rate: exchangeRates.mintRMGP * 0.9,
             onApprove: actions.approve,
             buy: actions.buyMGP,
             tokenASymbol: "rMGP",
@@ -35663,10 +35663,10 @@ var ConvertPage = import_react44.memo(() => {
         onChange: amounts.setSend,
         outputCoin: "YMGP"
       }, undefined, false, undefined, this),
-      selectedCoin === "RMGP" ? /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
-        className: "grid grid-cols-2 gap-2 mb-4",
+      selectedCoin === "MGP" || selectedCoin === "RMGP" ? /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
+        className: `${selectedCoin === "RMGP" ? "grid grid-cols-2" : ""} gap-2 mb-4`,
         children: [
-          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
+          selectedCoin === "RMGP" && /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
             children: [
               /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(TokenApproval, {
                 sendAmount: amounts.send,
@@ -35709,7 +35709,7 @@ var ConvertPage = import_react44.memo(() => {
             type: "submit",
             className: "py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full",
             onClick: actions.swapToMGP,
-            children: "Swap to rMGP"
+            children: "Swap to MGP"
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this)

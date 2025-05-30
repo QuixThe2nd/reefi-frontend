@@ -78,7 +78,7 @@ const arbContracts: ContractAddresses = {
   RMGP: getContract({ address: '0x3788c8791d826254bAbd49b602C93008468D5695' as `0x${string}`, abi: ABIs.RMGP, client: publicClients[42_161] }),
   YMGP: getContract({ address: '0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9' as `0x${string}`, abi: ABIs.YMGP, client: publicClients[42_161] }),
   // VMGP: getContract({ address: '0x0000000000000000000000000000000000000000' as `0x${string}`, abi: ABIs.VMGP, client: publicClients[42_161] }),
-  CMGP: getContract({ address: '0xA24Daae84B8166Ab0C049880F4F8F3AdC4F0a421' as `0x${string}`, abi: ABIs.CMGP, client: publicClients[42_161] }),
+  CMGP: getContract({ address: '0xD1465c3489Aa7Eac0e7f9907F93a684840a2F934' as `0x${string}`, abi: ABIs.CMGP, client: publicClients[42_161] }),
   VLMGP: getContract({ address: '0x536599497Ce6a35FC65C7503232Fec71A84786b9' as `0x${string}`, abi: ABIs.VLMGP, client: publicClients[42_161] }),
   MASTERMGP: getContract({ address: '0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7' as `0x${string}`, abi: ABIs.MASTERMGP, client: publicClients[42_161] }),
   VLREWARDER: getContract({ address: '0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45' as `0x${string}`, abi: ABIs.VLREWARDER, client: publicClients[42_161] }),

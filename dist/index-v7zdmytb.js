@@ -24605,7 +24605,7 @@ var TokenCard = import_react2.memo(({ symbol, decimals, description, price, supp
                   className: "text-2xl font-bold mt-2",
                   children: [
                     "$",
-                    price.toFixed(5)
+                    price.toFixed(4)
                   ]
                 }, undefined, true, undefined, this)
               ]
@@ -32303,6 +32303,781 @@ var import_react4 = __toESM(require_react(), 1);
 
 // src/hooks/useUpdateable.ts
 var import_react3 = __toESM(require_react(), 1);
+
+// node_modules/superjson/dist/double-indexed-kv.js
+class DoubleIndexedKV {
+  constructor() {
+    this.keyToValue = new Map;
+    this.valueToKey = new Map;
+  }
+  set(key, value) {
+    this.keyToValue.set(key, value);
+    this.valueToKey.set(value, key);
+  }
+  getByKey(key) {
+    return this.keyToValue.get(key);
+  }
+  getByValue(value) {
+    return this.valueToKey.get(value);
+  }
+  clear() {
+    this.keyToValue.clear();
+    this.valueToKey.clear();
+  }
+}
+
+// node_modules/superjson/dist/registry.js
+class Registry {
+  constructor(generateIdentifier) {
+    this.generateIdentifier = generateIdentifier;
+    this.kv = new DoubleIndexedKV;
+  }
+  register(value, identifier) {
+    if (this.kv.getByValue(value)) {
+      return;
+    }
+    if (!identifier) {
+      identifier = this.generateIdentifier(value);
+    }
+    this.kv.set(identifier, value);
+  }
+  clear() {
+    this.kv.clear();
+  }
+  getIdentifier(value) {
+    return this.kv.getByValue(value);
+  }
+  getValue(identifier) {
+    return this.kv.getByKey(identifier);
+  }
+}
+
+// node_modules/superjson/dist/class-registry.js
+class ClassRegistry extends Registry {
+  constructor() {
+    super((c) => c.name);
+    this.classToAllowedProps = new Map;
+  }
+  register(value, options) {
+    if (typeof options === "object") {
+      if (options.allowProps) {
+        this.classToAllowedProps.set(value, options.allowProps);
+      }
+      super.register(value, options.identifier);
+    } else {
+      super.register(value, options);
+    }
+  }
+  getAllowedProps(value) {
+    return this.classToAllowedProps.get(value);
+  }
+}
+
+// node_modules/superjson/dist/util.js
+function valuesOfObj(record) {
+  if ("values" in Object) {
+    return Object.values(record);
+  }
+  const values = [];
+  for (const key in record) {
+    if (record.hasOwnProperty(key)) {
+      values.push(record[key]);
+    }
+  }
+  return values;
+}
+function find(record, predicate) {
+  const values = valuesOfObj(record);
+  if ("find" in values) {
+    return values.find(predicate);
+  }
+  const valuesNotNever = values;
+  for (let i = 0;i < valuesNotNever.length; i++) {
+    const value = valuesNotNever[i];
+    if (predicate(value)) {
+      return value;
+    }
+  }
+  return;
+}
+function forEach(record, run) {
+  Object.entries(record).forEach(([key, value]) => run(value, key));
+}
+function includes(arr, value) {
+  return arr.indexOf(value) !== -1;
+}
+function findArr(record, predicate) {
+  for (let i = 0;i < record.length; i++) {
+    const value = record[i];
+    if (predicate(value)) {
+      return value;
+    }
+  }
+  return;
+}
+
+// node_modules/superjson/dist/custom-transformer-registry.js
+class CustomTransformerRegistry {
+  constructor() {
+    this.transfomers = {};
+  }
+  register(transformer) {
+    this.transfomers[transformer.name] = transformer;
+  }
+  findApplicable(v) {
+    return find(this.transfomers, (transformer) => transformer.isApplicable(v));
+  }
+  findByName(name) {
+    return this.transfomers[name];
+  }
+}
+
+// node_modules/superjson/dist/is.js
+var getType = (payload) => Object.prototype.toString.call(payload).slice(8, -1);
+var isUndefined = (payload) => typeof payload === "undefined";
+var isNull = (payload) => payload === null;
+var isPlainObject = (payload) => {
+  if (typeof payload !== "object" || payload === null)
+    return false;
+  if (payload === Object.prototype)
+    return false;
+  if (Object.getPrototypeOf(payload) === null)
+    return true;
+  return Object.getPrototypeOf(payload) === Object.prototype;
+};
+var isEmptyObject = (payload) => isPlainObject(payload) && Object.keys(payload).length === 0;
+var isArray = (payload) => Array.isArray(payload);
+var isString = (payload) => typeof payload === "string";
+var isNumber = (payload) => typeof payload === "number" && !isNaN(payload);
+var isBoolean = (payload) => typeof payload === "boolean";
+var isRegExp = (payload) => payload instanceof RegExp;
+var isMap = (payload) => payload instanceof Map;
+var isSet = (payload) => payload instanceof Set;
+var isSymbol = (payload) => getType(payload) === "Symbol";
+var isDate = (payload) => payload instanceof Date && !isNaN(payload.valueOf());
+var isError = (payload) => payload instanceof Error;
+var isNaNValue = (payload) => typeof payload === "number" && isNaN(payload);
+var isPrimitive = (payload) => isBoolean(payload) || isNull(payload) || isUndefined(payload) || isNumber(payload) || isString(payload) || isSymbol(payload);
+var isBigint = (payload) => typeof payload === "bigint";
+var isInfinite = (payload) => payload === Infinity || payload === -Infinity;
+var isTypedArray = (payload) => ArrayBuffer.isView(payload) && !(payload instanceof DataView);
+var isURL = (payload) => payload instanceof URL;
+
+// node_modules/superjson/dist/pathstringifier.js
+var escapeKey = (key) => key.replace(/\./g, "\\.");
+var stringifyPath = (path) => path.map(String).map(escapeKey).join(".");
+var parsePath = (string) => {
+  const result = [];
+  let segment = "";
+  for (let i = 0;i < string.length; i++) {
+    let char = string.charAt(i);
+    const isEscapedDot = char === "\\" && string.charAt(i + 1) === ".";
+    if (isEscapedDot) {
+      segment += ".";
+      i++;
+      continue;
+    }
+    const isEndOfSegment = char === ".";
+    if (isEndOfSegment) {
+      result.push(segment);
+      segment = "";
+      continue;
+    }
+    segment += char;
+  }
+  const lastSegment = segment;
+  result.push(lastSegment);
+  return result;
+};
+
+// node_modules/superjson/dist/transformer.js
+function simpleTransformation(isApplicable, annotation, transform, untransform) {
+  return {
+    isApplicable,
+    annotation,
+    transform,
+    untransform
+  };
+}
+var simpleRules = [
+  simpleTransformation(isUndefined, "undefined", () => null, () => {
+    return;
+  }),
+  simpleTransformation(isBigint, "bigint", (v) => v.toString(), (v) => {
+    if (typeof BigInt !== "undefined") {
+      return BigInt(v);
+    }
+    console.error("Please add a BigInt polyfill.");
+    return v;
+  }),
+  simpleTransformation(isDate, "Date", (v) => v.toISOString(), (v) => new Date(v)),
+  simpleTransformation(isError, "Error", (v, superJson) => {
+    const baseError = {
+      name: v.name,
+      message: v.message
+    };
+    superJson.allowedErrorProps.forEach((prop) => {
+      baseError[prop] = v[prop];
+    });
+    return baseError;
+  }, (v, superJson) => {
+    const e = new Error(v.message);
+    e.name = v.name;
+    e.stack = v.stack;
+    superJson.allowedErrorProps.forEach((prop) => {
+      e[prop] = v[prop];
+    });
+    return e;
+  }),
+  simpleTransformation(isRegExp, "regexp", (v) => "" + v, (regex) => {
+    const body = regex.slice(1, regex.lastIndexOf("/"));
+    const flags = regex.slice(regex.lastIndexOf("/") + 1);
+    return new RegExp(body, flags);
+  }),
+  simpleTransformation(isSet, "set", (v) => [...v.values()], (v) => new Set(v)),
+  simpleTransformation(isMap, "map", (v) => [...v.entries()], (v) => new Map(v)),
+  simpleTransformation((v) => isNaNValue(v) || isInfinite(v), "number", (v) => {
+    if (isNaNValue(v)) {
+      return "NaN";
+    }
+    if (v > 0) {
+      return "Infinity";
+    } else {
+      return "-Infinity";
+    }
+  }, Number),
+  simpleTransformation((v) => v === 0 && 1 / v === -Infinity, "number", () => {
+    return "-0";
+  }, Number),
+  simpleTransformation(isURL, "URL", (v) => v.toString(), (v) => new URL(v))
+];
+function compositeTransformation(isApplicable, annotation, transform, untransform) {
+  return {
+    isApplicable,
+    annotation,
+    transform,
+    untransform
+  };
+}
+var symbolRule = compositeTransformation((s, superJson) => {
+  if (isSymbol(s)) {
+    const isRegistered = !!superJson.symbolRegistry.getIdentifier(s);
+    return isRegistered;
+  }
+  return false;
+}, (s, superJson) => {
+  const identifier = superJson.symbolRegistry.getIdentifier(s);
+  return ["symbol", identifier];
+}, (v) => v.description, (_, a, superJson) => {
+  const value = superJson.symbolRegistry.getValue(a[1]);
+  if (!value) {
+    throw new Error("Trying to deserialize unknown symbol");
+  }
+  return value;
+});
+var constructorToName = [
+  Int8Array,
+  Uint8Array,
+  Int16Array,
+  Uint16Array,
+  Int32Array,
+  Uint32Array,
+  Float32Array,
+  Float64Array,
+  Uint8ClampedArray
+].reduce((obj, ctor) => {
+  obj[ctor.name] = ctor;
+  return obj;
+}, {});
+var typedArrayRule = compositeTransformation(isTypedArray, (v) => ["typed-array", v.constructor.name], (v) => [...v], (v, a) => {
+  const ctor = constructorToName[a[1]];
+  if (!ctor) {
+    throw new Error("Trying to deserialize unknown typed array");
+  }
+  return new ctor(v);
+});
+function isInstanceOfRegisteredClass(potentialClass, superJson) {
+  if (potentialClass?.constructor) {
+    const isRegistered = !!superJson.classRegistry.getIdentifier(potentialClass.constructor);
+    return isRegistered;
+  }
+  return false;
+}
+var classRule = compositeTransformation(isInstanceOfRegisteredClass, (clazz, superJson) => {
+  const identifier = superJson.classRegistry.getIdentifier(clazz.constructor);
+  return ["class", identifier];
+}, (clazz, superJson) => {
+  const allowedProps = superJson.classRegistry.getAllowedProps(clazz.constructor);
+  if (!allowedProps) {
+    return { ...clazz };
+  }
+  const result = {};
+  allowedProps.forEach((prop) => {
+    result[prop] = clazz[prop];
+  });
+  return result;
+}, (v, a, superJson) => {
+  const clazz = superJson.classRegistry.getValue(a[1]);
+  if (!clazz) {
+    throw new Error(`Trying to deserialize unknown class '${a[1]}' - check https://github.com/blitz-js/superjson/issues/116#issuecomment-773996564`);
+  }
+  return Object.assign(Object.create(clazz.prototype), v);
+});
+var customRule = compositeTransformation((value, superJson) => {
+  return !!superJson.customTransformerRegistry.findApplicable(value);
+}, (value, superJson) => {
+  const transformer = superJson.customTransformerRegistry.findApplicable(value);
+  return ["custom", transformer.name];
+}, (value, superJson) => {
+  const transformer = superJson.customTransformerRegistry.findApplicable(value);
+  return transformer.serialize(value);
+}, (v, a, superJson) => {
+  const transformer = superJson.customTransformerRegistry.findByName(a[1]);
+  if (!transformer) {
+    throw new Error("Trying to deserialize unknown custom value");
+  }
+  return transformer.deserialize(v);
+});
+var compositeRules = [classRule, symbolRule, customRule, typedArrayRule];
+var transformValue = (value, superJson) => {
+  const applicableCompositeRule = findArr(compositeRules, (rule) => rule.isApplicable(value, superJson));
+  if (applicableCompositeRule) {
+    return {
+      value: applicableCompositeRule.transform(value, superJson),
+      type: applicableCompositeRule.annotation(value, superJson)
+    };
+  }
+  const applicableSimpleRule = findArr(simpleRules, (rule) => rule.isApplicable(value, superJson));
+  if (applicableSimpleRule) {
+    return {
+      value: applicableSimpleRule.transform(value, superJson),
+      type: applicableSimpleRule.annotation
+    };
+  }
+  return;
+};
+var simpleRulesByAnnotation = {};
+simpleRules.forEach((rule) => {
+  simpleRulesByAnnotation[rule.annotation] = rule;
+});
+var untransformValue = (json, type, superJson) => {
+  if (isArray(type)) {
+    switch (type[0]) {
+      case "symbol":
+        return symbolRule.untransform(json, type, superJson);
+      case "class":
+        return classRule.untransform(json, type, superJson);
+      case "custom":
+        return customRule.untransform(json, type, superJson);
+      case "typed-array":
+        return typedArrayRule.untransform(json, type, superJson);
+      default:
+        throw new Error("Unknown transformation: " + type);
+    }
+  } else {
+    const transformation = simpleRulesByAnnotation[type];
+    if (!transformation) {
+      throw new Error("Unknown transformation: " + type);
+    }
+    return transformation.untransform(json, superJson);
+  }
+};
+
+// node_modules/superjson/dist/accessDeep.js
+var getNthKey = (value, n) => {
+  if (n > value.size)
+    throw new Error("index out of bounds");
+  const keys = value.keys();
+  while (n > 0) {
+    keys.next();
+    n--;
+  }
+  return keys.next().value;
+};
+function validatePath(path) {
+  if (includes(path, "__proto__")) {
+    throw new Error("__proto__ is not allowed as a property");
+  }
+  if (includes(path, "prototype")) {
+    throw new Error("prototype is not allowed as a property");
+  }
+  if (includes(path, "constructor")) {
+    throw new Error("constructor is not allowed as a property");
+  }
+}
+var getDeep = (object, path) => {
+  validatePath(path);
+  for (let i = 0;i < path.length; i++) {
+    const key = path[i];
+    if (isSet(object)) {
+      object = getNthKey(object, +key);
+    } else if (isMap(object)) {
+      const row = +key;
+      const type = +path[++i] === 0 ? "key" : "value";
+      const keyOfRow = getNthKey(object, row);
+      switch (type) {
+        case "key":
+          object = keyOfRow;
+          break;
+        case "value":
+          object = object.get(keyOfRow);
+          break;
+      }
+    } else {
+      object = object[key];
+    }
+  }
+  return object;
+};
+var setDeep = (object, path, mapper) => {
+  validatePath(path);
+  if (path.length === 0) {
+    return mapper(object);
+  }
+  let parent = object;
+  for (let i = 0;i < path.length - 1; i++) {
+    const key = path[i];
+    if (isArray(parent)) {
+      const index2 = +key;
+      parent = parent[index2];
+    } else if (isPlainObject(parent)) {
+      parent = parent[key];
+    } else if (isSet(parent)) {
+      const row = +key;
+      parent = getNthKey(parent, row);
+    } else if (isMap(parent)) {
+      const isEnd = i === path.length - 2;
+      if (isEnd) {
+        break;
+      }
+      const row = +key;
+      const type = +path[++i] === 0 ? "key" : "value";
+      const keyOfRow = getNthKey(parent, row);
+      switch (type) {
+        case "key":
+          parent = keyOfRow;
+          break;
+        case "value":
+          parent = parent.get(keyOfRow);
+          break;
+      }
+    }
+  }
+  const lastKey = path[path.length - 1];
+  if (isArray(parent)) {
+    parent[+lastKey] = mapper(parent[+lastKey]);
+  } else if (isPlainObject(parent)) {
+    parent[lastKey] = mapper(parent[lastKey]);
+  }
+  if (isSet(parent)) {
+    const oldValue = getNthKey(parent, +lastKey);
+    const newValue = mapper(oldValue);
+    if (oldValue !== newValue) {
+      parent.delete(oldValue);
+      parent.add(newValue);
+    }
+  }
+  if (isMap(parent)) {
+    const row = +path[path.length - 2];
+    const keyToRow = getNthKey(parent, row);
+    const type = +lastKey === 0 ? "key" : "value";
+    switch (type) {
+      case "key": {
+        const newKey = mapper(keyToRow);
+        parent.set(newKey, parent.get(keyToRow));
+        if (newKey !== keyToRow) {
+          parent.delete(keyToRow);
+        }
+        break;
+      }
+      case "value": {
+        parent.set(keyToRow, mapper(parent.get(keyToRow)));
+        break;
+      }
+    }
+  }
+  return object;
+};
+
+// node_modules/superjson/dist/plainer.js
+function traverse(tree, walker, origin = []) {
+  if (!tree) {
+    return;
+  }
+  if (!isArray(tree)) {
+    forEach(tree, (subtree, key) => traverse(subtree, walker, [...origin, ...parsePath(key)]));
+    return;
+  }
+  const [nodeValue, children] = tree;
+  if (children) {
+    forEach(children, (child, key) => {
+      traverse(child, walker, [...origin, ...parsePath(key)]);
+    });
+  }
+  walker(nodeValue, origin);
+}
+function applyValueAnnotations(plain, annotations, superJson) {
+  traverse(annotations, (type, path) => {
+    plain = setDeep(plain, path, (v) => untransformValue(v, type, superJson));
+  });
+  return plain;
+}
+function applyReferentialEqualityAnnotations(plain, annotations) {
+  function apply(identicalPaths, path) {
+    const object = getDeep(plain, parsePath(path));
+    identicalPaths.map(parsePath).forEach((identicalObjectPath) => {
+      plain = setDeep(plain, identicalObjectPath, () => object);
+    });
+  }
+  if (isArray(annotations)) {
+    const [root, other] = annotations;
+    root.forEach((identicalPath) => {
+      plain = setDeep(plain, parsePath(identicalPath), () => plain);
+    });
+    if (other) {
+      forEach(other, apply);
+    }
+  } else {
+    forEach(annotations, apply);
+  }
+  return plain;
+}
+var isDeep = (object, superJson) => isPlainObject(object) || isArray(object) || isMap(object) || isSet(object) || isInstanceOfRegisteredClass(object, superJson);
+function addIdentity(object, path, identities) {
+  const existingSet = identities.get(object);
+  if (existingSet) {
+    existingSet.push(path);
+  } else {
+    identities.set(object, [path]);
+  }
+}
+function generateReferentialEqualityAnnotations(identitites, dedupe) {
+  const result = {};
+  let rootEqualityPaths = undefined;
+  identitites.forEach((paths) => {
+    if (paths.length <= 1) {
+      return;
+    }
+    if (!dedupe) {
+      paths = paths.map((path) => path.map(String)).sort((a, b) => a.length - b.length);
+    }
+    const [representativePath, ...identicalPaths] = paths;
+    if (representativePath.length === 0) {
+      rootEqualityPaths = identicalPaths.map(stringifyPath);
+    } else {
+      result[stringifyPath(representativePath)] = identicalPaths.map(stringifyPath);
+    }
+  });
+  if (rootEqualityPaths) {
+    if (isEmptyObject(result)) {
+      return [rootEqualityPaths];
+    } else {
+      return [rootEqualityPaths, result];
+    }
+  } else {
+    return isEmptyObject(result) ? undefined : result;
+  }
+}
+var walker = (object, identities, superJson, dedupe, path = [], objectsInThisPath = [], seenObjects = new Map) => {
+  const primitive = isPrimitive(object);
+  if (!primitive) {
+    addIdentity(object, path, identities);
+    const seen = seenObjects.get(object);
+    if (seen) {
+      return dedupe ? {
+        transformedValue: null
+      } : seen;
+    }
+  }
+  if (!isDeep(object, superJson)) {
+    const transformed2 = transformValue(object, superJson);
+    const result2 = transformed2 ? {
+      transformedValue: transformed2.value,
+      annotations: [transformed2.type]
+    } : {
+      transformedValue: object
+    };
+    if (!primitive) {
+      seenObjects.set(object, result2);
+    }
+    return result2;
+  }
+  if (includes(objectsInThisPath, object)) {
+    return {
+      transformedValue: null
+    };
+  }
+  const transformationResult = transformValue(object, superJson);
+  const transformed = transformationResult?.value ?? object;
+  const transformedValue = isArray(transformed) ? [] : {};
+  const innerAnnotations = {};
+  forEach(transformed, (value, index2) => {
+    if (index2 === "__proto__" || index2 === "constructor" || index2 === "prototype") {
+      throw new Error(`Detected property ${index2}. This is a prototype pollution risk, please remove it from your object.`);
+    }
+    const recursiveResult = walker(value, identities, superJson, dedupe, [...path, index2], [...objectsInThisPath, object], seenObjects);
+    transformedValue[index2] = recursiveResult.transformedValue;
+    if (isArray(recursiveResult.annotations)) {
+      innerAnnotations[index2] = recursiveResult.annotations;
+    } else if (isPlainObject(recursiveResult.annotations)) {
+      forEach(recursiveResult.annotations, (tree, key) => {
+        innerAnnotations[escapeKey(index2) + "." + key] = tree;
+      });
+    }
+  });
+  const result = isEmptyObject(innerAnnotations) ? {
+    transformedValue,
+    annotations: transformationResult ? [transformationResult.type] : undefined
+  } : {
+    transformedValue,
+    annotations: transformationResult ? [transformationResult.type, innerAnnotations] : innerAnnotations
+  };
+  if (!primitive) {
+    seenObjects.set(object, result);
+  }
+  return result;
+};
+
+// node_modules/is-what/dist/index.js
+function getType2(payload) {
+  return Object.prototype.toString.call(payload).slice(8, -1);
+}
+function isArray2(payload) {
+  return getType2(payload) === "Array";
+}
+function isPlainObject2(payload) {
+  if (getType2(payload) !== "Object")
+    return false;
+  const prototype = Object.getPrototypeOf(payload);
+  return !!prototype && prototype.constructor === Object && prototype === Object.prototype;
+}
+function isNull2(payload) {
+  return getType2(payload) === "Null";
+}
+function isOneOf(a, b, c, d, e) {
+  return (value) => a(value) || b(value) || !!c && c(value) || !!d && d(value) || !!e && e(value);
+}
+function isUndefined2(payload) {
+  return getType2(payload) === "Undefined";
+}
+var isNullOrUndefined = isOneOf(isNull2, isUndefined2);
+
+// node_modules/copy-anything/dist/index.js
+function assignProp(carry, key, newVal, originalObject, includeNonenumerable) {
+  const propType = {}.propertyIsEnumerable.call(originalObject, key) ? "enumerable" : "nonenumerable";
+  if (propType === "enumerable")
+    carry[key] = newVal;
+  if (includeNonenumerable && propType === "nonenumerable") {
+    Object.defineProperty(carry, key, {
+      value: newVal,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    });
+  }
+}
+function copy(target, options = {}) {
+  if (isArray2(target)) {
+    return target.map((item) => copy(item, options));
+  }
+  if (!isPlainObject2(target)) {
+    return target;
+  }
+  const props = Object.getOwnPropertyNames(target);
+  const symbols = Object.getOwnPropertySymbols(target);
+  return [...props, ...symbols].reduce((carry, key) => {
+    if (isArray2(options.props) && !options.props.includes(key)) {
+      return carry;
+    }
+    const val = target[key];
+    const newVal = copy(val, options);
+    assignProp(carry, key, newVal, target, options.nonenumerable);
+    return carry;
+  }, {});
+}
+
+// node_modules/superjson/dist/index.js
+class SuperJSON {
+  constructor({ dedupe = false } = {}) {
+    this.classRegistry = new ClassRegistry;
+    this.symbolRegistry = new Registry((s) => s.description ?? "");
+    this.customTransformerRegistry = new CustomTransformerRegistry;
+    this.allowedErrorProps = [];
+    this.dedupe = dedupe;
+  }
+  serialize(object) {
+    const identities = new Map;
+    const output = walker(object, identities, this, this.dedupe);
+    const res = {
+      json: output.transformedValue
+    };
+    if (output.annotations) {
+      res.meta = {
+        ...res.meta,
+        values: output.annotations
+      };
+    }
+    const equalityAnnotations = generateReferentialEqualityAnnotations(identities, this.dedupe);
+    if (equalityAnnotations) {
+      res.meta = {
+        ...res.meta,
+        referentialEqualities: equalityAnnotations
+      };
+    }
+    return res;
+  }
+  deserialize(payload) {
+    const { json, meta } = payload;
+    let result = copy(json);
+    if (meta?.values) {
+      result = applyValueAnnotations(result, meta.values, this);
+    }
+    if (meta?.referentialEqualities) {
+      result = applyReferentialEqualityAnnotations(result, meta.referentialEqualities);
+    }
+    return result;
+  }
+  stringify(object) {
+    return JSON.stringify(this.serialize(object));
+  }
+  parse(string) {
+    return this.deserialize(JSON.parse(string));
+  }
+  registerClass(v, options) {
+    this.classRegistry.register(v, options);
+  }
+  registerSymbol(v, identifier) {
+    this.symbolRegistry.register(v, identifier);
+  }
+  registerCustom(transformer, name) {
+    this.customTransformerRegistry.register({
+      name,
+      ...transformer
+    });
+  }
+  allowErrorProps(...props) {
+    this.allowedErrorProps.push(...props);
+  }
+}
+SuperJSON.defaultInstance = new SuperJSON;
+SuperJSON.serialize = SuperJSON.defaultInstance.serialize.bind(SuperJSON.defaultInstance);
+SuperJSON.deserialize = SuperJSON.defaultInstance.deserialize.bind(SuperJSON.defaultInstance);
+SuperJSON.stringify = SuperJSON.defaultInstance.stringify.bind(SuperJSON.defaultInstance);
+SuperJSON.parse = SuperJSON.defaultInstance.parse.bind(SuperJSON.defaultInstance);
+SuperJSON.registerClass = SuperJSON.defaultInstance.registerClass.bind(SuperJSON.defaultInstance);
+SuperJSON.registerSymbol = SuperJSON.defaultInstance.registerSymbol.bind(SuperJSON.defaultInstance);
+SuperJSON.registerCustom = SuperJSON.defaultInstance.registerCustom.bind(SuperJSON.defaultInstance);
+SuperJSON.allowErrorProps = SuperJSON.defaultInstance.allowErrorProps.bind(SuperJSON.defaultInstance);
+var serialize = SuperJSON.serialize;
+var deserialize = SuperJSON.deserialize;
+var stringify3 = SuperJSON.stringify;
+var parse = SuperJSON.parse;
+var registerClass = SuperJSON.registerClass;
+var registerCustom = SuperJSON.registerCustom;
+var registerSymbol = SuperJSON.registerSymbol;
+var allowErrorProps = SuperJSON.allowErrorProps;
+
+// src/hooks/useUpdateable.ts
 var depUpdateLog = [];
 var manUpdateLog = [];
 function useUpdateable(factory, deps, label, initial) {
@@ -32311,7 +33086,8 @@ function useUpdateable(factory, deps, label, initial) {
   import_react3.useEffect(() => {
     (async () => {
       const newValue = await factory();
-      setValue(newValue);
+      if (newValue !== undefined)
+        setValue(newValue);
     })();
   }, [...deps, updateCount]);
   import_react3.useEffect(() => {
@@ -32329,12 +33105,23 @@ function useUpdateable(factory, deps, label, initial) {
   const update = () => setUpdateCount((c) => c + 1);
   return [value, update];
 }
+function useCachedUpdateable(factory, deps, label, initial) {
+  const item = localStorage.getItem(label);
+  if (item !== null)
+    initial = SuperJSON.parse(item);
+  const updateable = useUpdateable(factory, deps, label, initial);
+  import_react3.useEffect(() => {
+    if (updateable[0] !== undefined)
+      localStorage.setItem(label, SuperJSON.stringify(updateable[0]));
+  }, [updateable[0]]);
+  return updateable;
+}
 
 // src/hooks/useWallet.ts
 var useWallet = ({ setError }) => {
   const [clients, setClients] = import_react4.useState();
   const [chain, setChain] = import_react4.useState(42161);
-  const [account, updateAccount] = useUpdateable(async () => {
+  const [account, updateAccount] = useCachedUpdateable(async () => {
     if (!clients)
       return;
     const addresses = await clients[chain].requestAddresses();
@@ -32342,7 +33129,7 @@ var useWallet = ({ setError }) => {
   }, [clients], "account");
   const [isConnecting, setIsConnecting] = import_react4.useState(false);
   const [connectRequired, setConnectRequired] = import_react4.useState(false);
-  const [ens] = useUpdateable(async () => account === undefined ? undefined : await publicClients[1].getEnsName({ address: account }) ?? undefined, [account], "ens");
+  const [ens] = useCachedUpdateable(async () => account === undefined ? undefined : await publicClients[1].getEnsName({ address: account }) ?? undefined, [account], "ens");
   const connectWallet = import_react4.useCallback(() => {
     if (window.ethereum === undefined)
       return setError("No wallet found. Please install MetaMask to use Reefi.");
@@ -32373,38 +33160,38 @@ var useWallet = ({ setError }) => {
 
 // src/hooks/useBalances.ts
 var useBalances = ({ wallet }) => {
-  const MGP = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "mgp balance", 0n);
-  const RMGP2 = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "rmgp balance", 0n);
-  const YMGP2 = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "ymgp balance", 0n);
-  const CMGP2 = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CMGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "cmgp balance", 0n);
-  const CKP = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]), [contracts, wallet.account], "CKP balance", 0n);
-  const PNP = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].PNP.read.balanceOf([wallet.account]), [contracts, wallet.account], "PNP balance", 0n);
-  const EGP = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].EGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "EGP balance", 0n);
-  const LTP = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].LTP.read.balanceOf([wallet.account]), [contracts, wallet.account], "LTP balance", 0n);
-  const ETH = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].ETH.read.balanceOf([wallet.account]), [contracts, wallet.account], "ETH balance", 0n);
-  const BNB = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].BNB.read.balanceOf([wallet.account]), [contracts, wallet.account], "BNB balance", 0n);
-  const [mgpCurve, updateMGPCurve] = useUpdateable(() => contracts[wallet.chain].MGP.read.balanceOf([contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "mgpCurve balance", 0n);
-  const [rmgpCurve, updateRMGPCurve] = useUpdateable(() => contracts[wallet.chain].RMGP.read.balanceOf([contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "rmgpCurve balance", 0n);
-  const [ymgpCurve, updateYMGPCurve] = useUpdateable(() => contracts[wallet.chain].YMGP.read.balanceOf([contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "ymgpCurve balance", 0n);
-  const [ymgpHoldings, updateYMGPHoldings] = useUpdateable(() => contracts[wallet.chain].RMGP.read.balanceOf([contracts[wallet.chain].YMGP.address]), [contracts, wallet.chain, wallet.account], "ymgpHoldings balance", 0n);
+  const MGP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "mgp balance", 0n);
+  const RMGP2 = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "rmgp balance", 0n);
+  const YMGP2 = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "ymgp balance", 0n);
+  const CMGP2 = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CMGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "cmgp balance", 0n);
+  const CKP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]), [contracts, wallet.account], "CKP balance", 0n);
+  const PNP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].PNP.read.balanceOf([wallet.account]), [contracts, wallet.account], "PNP balance", 0n);
+  const EGP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].EGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "EGP balance", 0n);
+  const LTP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].LTP.read.balanceOf([wallet.account]), [contracts, wallet.account], "LTP balance", 0n);
+  const ETH = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].ETH.read.balanceOf([wallet.account]), [contracts, wallet.account], "ETH balance", 0n);
+  const BNB = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].BNB.read.balanceOf([wallet.account]), [contracts, wallet.account], "BNB balance", 0n);
+  const [mgpCurve, updateMGPCurve] = useCachedUpdateable(() => contracts[wallet.chain].MGP.read.balanceOf([contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "mgpCurve balance", 0n);
+  const [rmgpCurve, updateRMGPCurve] = useCachedUpdateable(() => contracts[wallet.chain].RMGP.read.balanceOf([contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "rmgpCurve balance", 0n);
+  const [ymgpCurve, updateYMGPCurve] = useCachedUpdateable(() => contracts[wallet.chain].YMGP.read.balanceOf([contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "ymgpCurve balance", 0n);
+  const [ymgpHoldings, updateYMGPHoldings] = useCachedUpdateable(() => contracts[wallet.chain].RMGP.read.balanceOf([contracts[wallet.chain].YMGP.address]), [contracts, wallet.chain, wallet.account], "ymgpHoldings balance", 0n);
   return { MGP, RMGP: RMGP2, YMGP: YMGP2, CMGP: CMGP2, CKP, PNP, EGP, LTP, ETH, BNB, mgpCurve, rmgpCurve, ymgpCurve, ymgpHoldings, updateMGPCurve, updateRMGPCurve, updateYMGPCurve, updateYMGPHoldings };
 };
 
 // src/hooks/useAllowances.ts
 var useAllowances = ({ wallet }) => {
-  const MGP = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].RMGP.address]), [contracts, wallet.chain, wallet.account], "mgp allowance", 0n);
-  const RMGP2 = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.allowance([wallet.account, contracts[wallet.chain].YMGP.address]), [contracts, wallet.chain, wallet.account], "rmgp allowance", 0n);
+  const MGP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].RMGP.address]), [contracts, wallet.chain, wallet.account], "mgp allowance", 0n);
+  const RMGP2 = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.allowance([wallet.account, contracts[wallet.chain].YMGP.address]), [contracts, wallet.chain, wallet.account], "rmgp allowance", 0n);
   const curve = {
-    MGP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "mgpCurve allowance", 0n),
-    RMGP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "rmgpCurve allowance", 0n),
-    YMGP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "ymgpCurve allowance", 0n),
-    CMGP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "CMGPCurve allowance", 0n),
-    CKP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CKP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "CKPCurve allowance", 0n),
-    PNP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].PNP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "PNPCurve allowance", 0n),
-    EGP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].EGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "EGPCurve allowance", 0n),
-    LTP: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].LTP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "LTPCurve allowance", 0n),
-    ETH: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].ETH.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "ETHCurve allowance", 0n),
-    BNB: useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].BNB.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "BNBCurve allowance", 0n)
+    MGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "mgpCurve allowance", 0n),
+    RMGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "rmgpCurve allowance", 0n),
+    YMGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "ymgpCurve allowance", 0n),
+    CMGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "CMGPCurve allowance", 0n),
+    CKP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CKP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "CKPCurve allowance", 0n),
+    PNP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].PNP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "PNPCurve allowance", 0n),
+    EGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].EGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "EGPCurve allowance", 0n),
+    LTP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].LTP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "LTPCurve allowance", 0n),
+    ETH: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].ETH.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "ETHCurve allowance", 0n),
+    BNB: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].BNB.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "BNBCurve allowance", 0n)
   };
   return { MGP, RMGP: RMGP2, curve };
 };
@@ -33162,9 +33949,9 @@ var useAmounts = ({ wallet }) => {
   const [mgpLP, setMGPLP] = import_react18.useState(0n);
   const [rmgpLP, setRMGPLP] = import_react18.useState(0n);
   const [ymgpLP, setYMGPLP] = import_react18.useState(0n);
-  const [mgpRmgpCurve] = useUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([0n, 1n, send], { account: wallet.account }), [contracts, wallet.chain, send], "mgpRmgpCurveAmount", 0n);
-  const [rmgpMgpCurve] = useUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 0n, send], { account: wallet.account }), [contracts, wallet.chain, send], "rmgpMgpCurveAmount", 0n);
-  const [rmgpYmgpCurve] = useUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 2n, send], { account: wallet.account }), [contracts, wallet.chain, send], "rmgpYmgpCurveAmount", 0n);
+  const [mgpRmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([0n, 1n, send], { account: wallet.account }), [contracts, wallet.chain, send], "mgpRmgpCurveAmount", 0n);
+  const [rmgpMgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 0n, send], { account: wallet.account }), [contracts, wallet.chain, send], "rmgpMgpCurveAmount", 0n);
+  const [rmgpYmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 2n, send], { account: wallet.account }), [contracts, wallet.chain, send], "rmgpYmgpCurveAmount", 0n);
   return { send, setSend, mgpRmgpCurve, rmgpMgpCurve, rmgpYmgpCurve, mgpLP, setMGPLP, rmgpLP, setRMGPLP, ymgpLP, setYMGPLP };
 };
 
@@ -33220,22 +34007,22 @@ function useExchangeRates({ locked, wallet, supplies }) {
   const mintRMGP = import_react20.useMemo(() => {
     return supplies.rmgp === 0n ? 1 : Number(locked.reefiMGP) / Number(supplies.rmgp);
   }, [supplies.rmgp, locked.reefiMGP]);
-  const [mgpRMGP] = useUpdateable(async () => {
+  const [mgpRMGP] = useCachedUpdateable(async () => {
     return Number(await contracts[wallet.chain].CMGP.read.get_dy([0n, 1n, parseEther(0.00001)], { account: wallet.account })) / Number(parseEther(0.00001));
   }, [contracts, wallet.chain], "mgpRMGP curve", 0);
-  const [mgpYMGP] = useUpdateable(async () => {
+  const [mgpYMGP] = useCachedUpdateable(async () => {
     return Number(await contracts[wallet.chain].CMGP.read.get_dy([0n, 2n, parseEther(0.00001)], { account: wallet.account })) / Number(parseEther(0.00001));
   }, [contracts, wallet.chain], "mgpYMGP curve", 0);
-  const [rmgpYMGP] = useUpdateable(async () => {
+  const [rmgpYMGP] = useCachedUpdateable(async () => {
     return Number(await contracts[wallet.chain].CMGP.read.get_dy([1n, 2n, parseEther(0.00001)], { account: wallet.account })) / Number(parseEther(0.00001));
   }, [contracts, wallet.chain], "rmgpYMGP curve", 0);
-  const [rmgpMGP] = useUpdateable(async () => {
+  const [rmgpMGP] = useCachedUpdateable(async () => {
     return Number(await contracts[wallet.chain].CMGP.read.get_dy([1n, 0n, parseEther(0.00001)], { account: wallet.account })) / Number(parseEther(0.00001));
   }, [contracts, wallet.chain], "rmgpMGP curve", 0);
-  const [ymgpRMGP] = useUpdateable(async () => {
+  const [ymgpRMGP] = useCachedUpdateable(async () => {
     return Number(await contracts[wallet.chain].CMGP.read.get_dy([2n, 1n, parseEther(0.00001)], { account: wallet.account })) / Number(parseEther(0.00001));
   }, [contracts, wallet.chain], "ymgpRMGP curve", 0);
-  const [ymgpMGP] = useUpdateable(async () => {
+  const [ymgpMGP] = useCachedUpdateable(async () => {
     return Number(await contracts[wallet.chain].CMGP.read.get_dy([2n, 0n, parseEther(0.00001)], { account: wallet.account })) / Number(parseEther(0.00001));
   }, [contracts, wallet.chain], "ymgpMGP curve", 0);
   return { mintRMGP, curve: { mgpRMGP, mgpYMGP, rmgpYMGP, rmgpMGP, ymgpRMGP, ymgpMGP } };
@@ -33244,16 +34031,16 @@ function useExchangeRates({ locked, wallet, supplies }) {
 // src/hooks/useLocked.ts
 var import_react21 = __toESM(require_react(), 1);
 var useLocked = ({ wallet }) => {
-  const [reefiMGP, updateReefiMGP] = useUpdateable(() => contracts[wallet.chain].VLMGP.read.getUserTotalLocked([contracts[wallet.chain].RMGP.address]), [contracts, wallet.account, wallet.chain], "reefiMGP locked", 0n);
-  const [mgpBSC, updateMGPBSC] = useUpdateable(() => contracts[56].VLMGP.read.totalLocked(), [contracts, wallet.account], "mgpBSC locked", 0n);
-  const [mgpARB, updateMGPARB] = useUpdateable(() => contracts[42161].VLMGP.read.totalLocked(), [contracts, wallet.account], "mgpARB locked", 0n);
+  const [reefiMGP, updateReefiMGP] = useCachedUpdateable(() => contracts[wallet.chain].VLMGP.read.getUserTotalLocked([contracts[wallet.chain].RMGP.address]), [contracts, wallet.account, wallet.chain], "reefiMGP locked", 0n);
+  const [mgpBSC, updateMGPBSC] = useCachedUpdateable(() => contracts[56].VLMGP.read.totalLocked(), [contracts, wallet.account], "mgpBSC locked", 0n);
+  const [mgpARB, updateMGPARB] = useCachedUpdateable(() => contracts[42161].VLMGP.read.totalLocked(), [contracts, wallet.account], "mgpARB locked", 0n);
   const mgp = import_react21.useMemo(() => mgpBSC + mgpARB, [mgpBSC, mgpARB]);
   const updateMGP = () => {
     updateMGPBSC();
     updateMGPARB();
   };
-  const [ymgp, updateYMGP] = useUpdateable(() => contracts[wallet.chain].YMGP.read.totalLocked(), [contracts, wallet.account], "ymgp locked", 0n);
-  const [userYMGP, updateUserYMGP] = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.lockedBalances([wallet.account]), [contracts, wallet.account], "userYMGP locked", 0n);
+  const [ymgp, updateYMGP] = useCachedUpdateable(() => contracts[wallet.chain].YMGP.read.totalLocked(), [contracts, wallet.account], "ymgp locked", 0n);
+  const [userYMGP, updateUserYMGP] = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.lockedBalances([wallet.account]), [contracts, wallet.account], "userYMGP locked", 0n);
   return { reefiMGP, ymgp, userYMGP, mgp, updateReefiMGP, updateYMGP, updateUserYMGP, updateMGP };
 };
 
@@ -33272,25 +34059,25 @@ var usePrices = () => {
 
 // src/hooks/useSupplies.ts
 var useSupplies = ({ wallet }) => {
-  const [mgp, updateMGP] = useUpdateable(() => contracts[56].MGP.read.totalSupply(), [contracts], "mgp supply", 0n);
-  const [rmgp, updateRMGP] = useUpdateable(() => contracts[wallet.chain].RMGP.read.totalSupply(), [contracts, wallet.chain], "rmgp supply", 0n);
-  const [ymgp, updateYMGP] = useUpdateable(() => contracts[wallet.chain].YMGP.read.totalSupply(), [contracts, wallet.chain], "ymgp supply", 0n);
+  const [mgp, updateMGP] = useCachedUpdateable(() => contracts[56].MGP.read.totalSupply(), [contracts], "mgp supply", 0n);
+  const [rmgp, updateRMGP] = useCachedUpdateable(() => contracts[wallet.chain].RMGP.read.totalSupply(), [contracts, wallet.chain], "rmgp supply", 0n);
+  const [ymgp, updateYMGP] = useCachedUpdateable(() => contracts[wallet.chain].YMGP.read.totalSupply(), [contracts, wallet.chain], "ymgp supply", 0n);
   return { mgp, rmgp, ymgp, updateMGP, updateRMGP, updateYMGP };
 };
 
 // src/hooks/useWithdraws.ts
 var useWithdraws = ({ wallet }) => {
-  const [userPendingWithdraws, updateUserPendingWithdraws] = useUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.getUserPendingWithdraws([wallet.account]), [contracts, wallet.account, wallet.chain], "userPendingWithdraws", 0n);
-  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useUpdateable(() => contracts[wallet.chain].RMGP.read.unsubmittedWithdraws(), [contracts, wallet.chain], "unsubmittedWithdraws", 0n);
-  const [userWithdrawable, updateUserWithdrawable] = useUpdateable(() => contracts[wallet.chain].RMGP.read.getUserWithdrawable(), [contracts, wallet.chain], "userWithdrawable", 0n);
-  const [unlockSchedule, updateUnlockSchedule] = useUpdateable(() => contracts[wallet.chain].VLMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].RMGP.address]), [contracts, wallet.chain], "unlockSchedule", []);
+  const [userPendingWithdraws, updateUserPendingWithdraws] = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.getUserPendingWithdraws([wallet.account]), [contracts, wallet.account, wallet.chain], "userPendingWithdraws", 0n);
+  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useCachedUpdateable(() => contracts[wallet.chain].RMGP.read.unsubmittedWithdraws(), [contracts, wallet.chain], "unsubmittedWithdraws", 0n);
+  const [userWithdrawable, updateUserWithdrawable] = useCachedUpdateable(() => contracts[wallet.chain].RMGP.read.getUserWithdrawable(), [contracts, wallet.chain], "userWithdrawable", 0n);
+  const [unlockSchedule, updateUnlockSchedule] = useCachedUpdateable(() => contracts[wallet.chain].VLMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].RMGP.address]), [contracts, wallet.chain], "unlockSchedule", []);
   return { userPendingWithdraws, updateUserPendingWithdraws, unsubmittedWithdraws, updateUnsubmittedWithdraws, userWithdrawable, updateUserWithdrawable, unlockSchedule, updateUnlockSchedule };
 };
 
 // src/hooks/useRewards.ts
 var import_react23 = __toESM(require_react(), 1);
 var useRewards = ({ wallet, prices, balances }) => {
-  const [cmgpPoolAPY] = useUpdateable(async () => {
+  const [cmgpPoolAPY] = useCachedUpdateable(async () => {
     const res = await fetch("https://api.curve.finance/api/getVolumes/arbitrum");
     const curveBody = await res.json();
     for (const pool of curveBody.data.pools)
@@ -33298,7 +34085,7 @@ var useRewards = ({ wallet, prices, balances }) => {
         return pool.latestWeeklyApyPcent / 100;
     return 0;
   }, [wallet.chain], "cMGP Pool APY", 0);
-  const [mgpAPR] = useUpdateable(async () => {
+  const [mgpAPR] = useCachedUpdateable(async () => {
     const res = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${wallet.chain}&rewarder=${contracts[wallet.chain].VLREWARDER.address}`);
     const body = await res.json();
     let apr = 0;
@@ -33311,12 +34098,12 @@ var useRewards = ({ wallet, prices, balances }) => {
     const underlyingYield = yieldBearingUnderlyingPercent * aprToApy(mgpAPR) * 0.9;
     return underlyingYield + cmgpPoolAPY;
   }, [cmgpPoolAPY, mgpAPR, balances.mgpCurve, balances.rmgpCurve, balances.ymgpCurve]);
-  const [unclaimedUserYield, updateUnclaimedUserYield] = useUpdateable(() => contracts[wallet.chain].YMGP.read.unclaimedUserYield(), [contracts, wallet.chain], "unclaimedUserYield", 0n);
-  const [compoundRMGPGas] = useUpdateable(async () => {
+  const [unclaimedUserYield, updateUnclaimedUserYield] = useCachedUpdateable(() => contracts[wallet.chain].YMGP.read.unclaimedUserYield(), [contracts, wallet.chain], "unclaimedUserYield", 0n);
+  const [compoundRMGPGas] = useCachedUpdateable(async () => {
     const [gasPrice, gas] = await Promise.all([publicClients[wallet.chain].getGasPrice(), wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.estimateGas.claim({ account: wallet.account })]);
     return gasPrice * gas;
   }, [wallet.account, wallet.chain], "Compound rMGP Gas", 0n);
-  const [pendingRewards, updatePendingRewards] = useUpdateable(async () => {
+  const [pendingRewards, updatePendingRewards] = useCachedUpdateable(async () => {
     const data = await contracts[wallet.chain].MASTERMGP.read.allPendingTokens([contracts[wallet.chain].VLMGP.address, contracts[wallet.chain].RMGP.address]);
     const newPendingRewards = { MGP: { address: contracts[wallet.chain].MGP.address, rewards: data[0] } };
     for (const i in data[2])
@@ -33326,7 +34113,7 @@ var useRewards = ({ wallet, prices, balances }) => {
   }, [wallet.chain], "Pending Rewards", {});
   const uncompoundedMGPYield = import_react23.useMemo(() => Object.keys(pendingRewards).length > 0 ? Object.keys(pendingRewards).map((symbol) => prices[symbol] * Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [pendingRewards, prices]);
   const estimatedCompoundGasFee = import_react23.useMemo(() => formatEther(compoundRMGPGas, decimals[publicClients[wallet.chain].chain.nativeCurrency.symbol]) * prices[publicClients[wallet.chain].chain.nativeCurrency.symbol], [wallet.chain, compoundRMGPGas, prices]);
-  const estimatedCompoundAmount = useUpdateable(async () => {
+  const estimatedCompoundAmount = useCachedUpdateable(async () => {
     if (wallet.clients === undefined || wallet.account === undefined)
       return;
     const simulation = await contracts[wallet.chain].RMGP.simulate.claim({ account: wallet.account, chain: wallet.clients[wallet.chain].chain });
@@ -33374,7 +34161,7 @@ var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
 var TokenCards = import_react25.memo(() => {
   const { prices, supplies, locked, exchangeRates } = useGlobalContext();
   return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
-    className: "grid grid-cols-4 gap-4 mb-4",
+    className: "grid grid-cols-4 gap-4",
     children: [
       /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(TokenCard, {
         symbol: "MGP",
@@ -33524,242 +34311,245 @@ var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
 var ConversionRates = import_react29.memo(() => {
   const { exchangeRates } = useGlobalContext();
   return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
-    className: "bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6 flex flex-col items-center",
-    children: [
-      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h2", {
-        className: "text-2xl font-bold mb-4",
-        children: "Conversion Rates"
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
-        className: "bg-gray-700/50 rounded-lg p-4",
-        children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("table", {
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("thead", {
-              children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("tr", {
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
-                      className: "text-lg font-bold mb-2"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
-                      className: "text-lg font-bold mb-2",
-                      children: "Mint"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
-                      className: "text-lg font-bold mb-2",
-                      children: "Market Buy"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
-                      className: "text-lg font-bold mb-2",
-                      children: "Market Sell"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
-                      className: "text-lg font-bold mb-2",
-                      children: "Burn"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("tbody", {
-              children: [
-                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("tr", {
+    className: "bg-gray-800 p-3 rounded-xl border border-gray-700 flex flex-col items-center",
+    children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+      className: "w-256 flex flex-col items-center",
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h2", {
+          className: "text-2xl font-bold mb-4",
+          children: "Conversion Rates"
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+          className: "bg-gray-700/50 rounded-lg p-4",
+          children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("table", {
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("thead", {
+                children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("tr", {
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm font-bold",
-                        children: "rMGP"
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
+                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
+                        className: "text-lg font-bold mb-2"
                       }, undefined, false, undefined, this)
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm",
-                        children: [
-                          formatNumber(exchangeRates.mintRMGP, 4),
-                          " MGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm",
-                        children: [
-                          formatNumber(exchangeRates.curve.mgpRMGP, 4),
-                          " MGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm",
-                        children: [
-                          formatNumber(exchangeRates.curve.rmgpMGP, 4),
-                          " MGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm",
-                        children: [
-                          formatNumber(exchangeRates.mintRMGP * 0.9, 4),
-                          " MGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this)
-                  ]
-                }, undefined, true, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("tr", {
-                  children: [
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm font-bold",
-                        children: "yMGP"
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
+                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
+                        className: "text-lg font-bold mb-2",
+                        children: "Mint"
                       }, undefined, false, undefined, this)
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm",
-                        children: "1 rMGP"
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
+                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
+                        className: "text-lg font-bold mb-2",
+                        children: "Market Buy"
                       }, undefined, false, undefined, this)
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm",
-                        children: [
-                          formatNumber(exchangeRates.curve.rmgpYMGP, 4),
-                          " rMGP"
-                        ]
-                      }, undefined, true, undefined, this)
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
+                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
+                        className: "text-lg font-bold mb-2",
+                        children: "Market Sell"
+                      }, undefined, false, undefined, this)
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm",
-                        children: [
-                          formatNumber(exchangeRates.curve.ymgpRMGP, 4),
-                          " rMGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                        className: "mx-4 my-1 text-sm",
-                        children: "0 rMGP"
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("th", {
+                      children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
+                        className: "text-lg font-bold mb-2",
+                        children: "Burn"
                       }, undefined, false, undefined, this)
                     }, undefined, false, undefined, this)
                   ]
                 }, undefined, true, undefined, this)
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("tbody", {
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("tr", {
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
+                        children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+                          className: "mx-4 my-1 text-sm font-bold",
+                          children: "rMGP"
+                        }, undefined, false, undefined, this)
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
+                        children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+                          className: "mx-4 my-1 text-sm",
+                          children: [
+                            formatNumber(exchangeRates.mintRMGP, 4),
+                            " MGP"
+                          ]
+                        }, undefined, true, undefined, this)
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
+                        children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+                          className: "mx-4 my-1 text-sm",
+                          children: [
+                            formatNumber(exchangeRates.curve.mgpRMGP, 4),
+                            " MGP"
+                          ]
+                        }, undefined, true, undefined, this)
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
+                        children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+                          className: "mx-4 my-1 text-sm",
+                          children: [
+                            formatNumber(exchangeRates.curve.rmgpMGP, 4),
+                            " MGP"
+                          ]
+                        }, undefined, true, undefined, this)
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
+                        children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+                          className: "mx-4 my-1 text-sm",
+                          children: [
+                            formatNumber(exchangeRates.mintRMGP * 0.9, 4),
+                            " MGP"
+                          ]
+                        }, undefined, true, undefined, this)
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("tr", {
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
+                        children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+                          className: "mx-4 my-1 text-sm font-bold",
+                          children: "yMGP"
+                        }, undefined, false, undefined, this)
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
+                        children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+                          className: "mx-4 my-1 text-sm",
+                          children: "1 rMGP"
+                        }, undefined, false, undefined, this)
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
+                        children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+                          className: "mx-4 my-1 text-sm",
+                          children: [
+                            formatNumber(exchangeRates.curve.rmgpYMGP, 4),
+                            " rMGP"
+                          ]
+                        }, undefined, true, undefined, this)
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
+                        children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+                          className: "mx-4 my-1 text-sm",
+                          children: [
+                            formatNumber(exchangeRates.curve.ymgpRMGP, 4),
+                            " rMGP"
+                          ]
+                        }, undefined, true, undefined, this)
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
+                        children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+                          className: "mx-4 my-1 text-sm",
+                          children: "0 rMGP"
+                        }, undefined, false, undefined, this)
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this)
+                ]
+              }, undefined, true, undefined, this)
+            ]
+          }, undefined, true, undefined, this)
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("ul", {
+          className: "text-gray-400 text-xs mt-4",
+          children: [
+            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
+              children: [
+                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
+                  className: "font-bold",
+                  children: "Mint"
+                }, undefined, false, undefined, this),
+                ": The native rate Reefi will fulfill mints at"
+              ]
+            }, undefined, true, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
+              children: [
+                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
+                  className: "font-bold",
+                  children: "Market Buy"
+                }, undefined, false, undefined, this),
+                ": The rate Curve will fulfill buys at"
+              ]
+            }, undefined, true, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
+              children: [
+                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
+                  className: "font-bold",
+                  children: "Market Sell"
+                }, undefined, false, undefined, this),
+                ": The rate Curve will fulfill sells at"
+              ]
+            }, undefined, true, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
+              children: [
+                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
+                  className: "font-bold",
+                  children: "Burn"
+                }, undefined, false, undefined, this),
+                ": The native rate Reefi will fulfill burns at"
+              ]
+            }, undefined, true, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+          className: "mt-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-green-700",
+          children: [
+            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
+              className: "text-lg font-semibold mb-2 text-green-400",
+              children: "Developer Tip: Arbitraging Conversion Rates"
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+              className: "text-gray-300 text-sm mb-2",
+              children: "rMGP can be minted for an only increasing amount of MGP and burnt for 90% the mint rate with a delay. When the market rate moves out of the mint-rate to burn-rate range, this can be arbitraged."
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("ul", {
+              className: "list-disc list-inside text-gray-400 text-xs mb-2",
+              children: [
+                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
+                  children: [
+                    "If rMGP becomes cheaper the burn rate, you can buy rMGP and natively burn it. This requires you to wait 60-120 days. ",
+                    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("strong", {
+                      children: "If you don't want to wait the burn period"
+                    }, undefined, false, undefined, this),
+                    ", you can indirectly arbitrage by buying rMGP and waiting for others to burn."
+                  ]
+                }, undefined, true, undefined, this),
+                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
+                  children: "If rMGP becomes more expensive than the mint rate, you can mint rMGP and swap back to MGP."
+                }, undefined, false, undefined, this)
+              ]
+            }, undefined, true, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+              className: "list-disc list-inside text-gray-400 text-xs mb-2",
+              children: "By arbitraging you help tighten the spread by maintaining the 90%-100% peg and increase liquidity through trading volume. This also increases revenue for cMGP holders through swap fees and for locked yMGP holders through withdrawal fees."
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
+              className: "text-gray-400 text-xs",
+              children: [
+                "Example: Use ",
+                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
+                  className: "font-mono bg-gray-800 px-1 py-0.5 rounded",
+                  children: "Viem"
+                }, undefined, false, undefined, this),
+                ", ",
+                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
+                  className: "font-mono bg-gray-800 px-1 py-0.5 rounded",
+                  children: "ethers.js"
+                }, undefined, false, undefined, this),
+                " or ",
+                /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
+                  className: "font-mono bg-gray-800 px-1 py-0.5 rounded",
+                  children: "web3.js"
+                }, undefined, false, undefined, this),
+                " in a scheduled script to call the contract method and claim your reward automatically."
               ]
             }, undefined, true, undefined, this)
           ]
         }, undefined, true, undefined, this)
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("ul", {
-        className: "text-gray-400 text-xs mt-4",
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
-                className: "font-bold",
-                children: "Mint"
-              }, undefined, false, undefined, this),
-              ": The native rate Reefi will fulfill mints at"
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
-                className: "font-bold",
-                children: "Market Buy"
-              }, undefined, false, undefined, this),
-              ": The rate Curve will fulfill buys at"
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
-                className: "font-bold",
-                children: "Market Sell"
-              }, undefined, false, undefined, this),
-              ": The rate Curve will fulfill sells at"
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
-                className: "font-bold",
-                children: "Burn"
-              }, undefined, false, undefined, this),
-              ": The native rate Reefi will fulfill burns at"
-            ]
-          }, undefined, true, undefined, this)
-        ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
-        className: "mt-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-green-700",
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h3", {
-            className: "text-lg font-semibold mb-2 text-green-400",
-            children: "Developer Tip: Arbitraging Conversion Rates"
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-            className: "text-gray-300 text-sm mb-2",
-            children: "rMGP can be minted for an only increasing amount of MGP and burnt for 90% the mint rate with a delay. When the market rate moves out of the mint-rate to burn-rate range, this can be arbitraged."
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("ul", {
-            className: "list-disc list-inside text-gray-400 text-xs mb-2",
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
-                children: [
-                  "If rMGP becomes cheaper the burn rate, you can buy rMGP and natively burn it. This requires you to wait 60-120 days. ",
-                  /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("strong", {
-                    children: "If you aren't willing to wait the burn period"
-                  }, undefined, false, undefined, this),
-                  ", you can still indirectly arbitrage this by simply buying rMGP and waiting for others to burn."
-                ]
-              }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("li", {
-                children: "If rMGP becomes more expensive than the mint rate, you can mint rMGP and swap back to MGP."
-              }, undefined, false, undefined, this)
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-            className: "list-disc list-inside text-gray-400 text-xs mb-2",
-            children: "By arbitraging you help tighten the spread by maintaining the 90%-100% peg and increase liquidity through trading volume. This also increases revenue for cMGP holders through swap fees and for locked yMGP holders through withdrawal fees."
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-            className: "text-gray-400 text-xs",
-            children: [
-              "Example: Use ",
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
-                className: "font-mono bg-gray-800 px-1 py-0.5 rounded",
-                children: "Viem"
-              }, undefined, false, undefined, this),
-              ", ",
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
-                className: "font-mono bg-gray-800 px-1 py-0.5 rounded",
-                children: "ethers.js"
-              }, undefined, false, undefined, this),
-              " or ",
-              /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("span", {
-                className: "font-mono bg-gray-800 px-1 py-0.5 rounded",
-                children: "web3.js"
-              }, undefined, false, undefined, this),
-              " in a scheduled script to call the contract method and claim your reward automatically."
-            ]
-          }, undefined, true, undefined, this)
-        ]
-      }, undefined, true, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
 });
 ConversionRates.displayName = "ConversionRates";
 
@@ -33776,7 +34566,7 @@ var Contracts = import_react30.memo(() => {
         children: "Contract Addresses"
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
-        className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 text-xs",
+        className: "grid grid-cols-2 md:grid-cols-3 gap-2 text-xs",
         children: Object.keys(contracts[wallet.chain]).map((contract) => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
             /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
@@ -33873,7 +34663,7 @@ var TokenApproval = import_react33.memo(({ allowance, sendAmount, onApprove, tok
     className,
     children: [
       /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
-        className: "flex items-center mt-2",
+        className: "flex items-center",
         children: [
           /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("input", {
             id: `approve-infinity-${tokenSymbol}`,
@@ -33948,7 +34738,7 @@ var SwapInput = import_react34.memo(({ label, selectedCoin, onCoinChange, balanc
             className: "text-sm text-gray-400",
             children: [
               "Balance: ",
-              formatEther(balance, decimals[selectedCoin]),
+              formatEther(balance, decimals[selectedCoin]).toFixed(4),
               " ",
               selectedCoin
             ]
@@ -34290,7 +35080,7 @@ var AmountInput = import_react38.memo(({ label, balance, value, onChange, token,
             className: "text-sm text-gray-400",
             children: [
               "Balance: ",
-              formatEther(balance, 18),
+              formatEther(balance, 18).toFixed(4),
               " ",
               token.symbol
             ]
@@ -34764,93 +35554,95 @@ var QASection = () => {
   const [openItems, setOpenItems] = import_react43.useState(new Set);
   const toggleItem = (index2) => {
     const newOpenItems = new Set(openItems);
-    if (newOpenItems.has(index2)) {
+    if (newOpenItems.has(index2))
       newOpenItems.delete(index2);
-    } else {
+    else
       newOpenItems.add(index2);
-    }
     setOpenItems(newOpenItems);
   };
   return /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
-    className: "bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6",
-    children: [
-      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
-        className: "mb-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-yellow-700",
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("h3", {
-            className: "text-lg font-semibold mb-2 text-yellow-400",
-            children: "⚠️ Important Notice"
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
-            className: "text-gray-300 text-sm",
-            children: [
-              "Reefi is in ",
-              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("strong", {
-                children: "very early beta"
-              }, undefined, false, undefined, this),
-              ". Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution"
-            ]
-          }, undefined, true, undefined, this)
-        ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("h2", {
-        className: "text-2xl font-bold mb-4",
-        children: "Frequently Asked Questions"
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
-        className: "space-y-2",
-        children: qaData.map((item, index2) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
-          className: "border border-gray-700 rounded-lg",
+    className: "bg-gray-800 p-3 rounded-xl border border-gray-700 flex justify-center",
+    children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+      className: "w-256",
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+          className: "mb-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-yellow-700",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("button", {
-              type: "button",
-              className: "w-full text-left p-4 flex justify-between items-center hover:bg-gray-700/30 transition-colors",
-              onClick: () => toggleItem(index2),
+            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("h3", {
+              className: "text-lg font-semibold mb-2 text-yellow-400",
+              children: "⚠️ Important Notice"
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
+              className: "text-gray-300 text-sm",
               children: [
-                /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("span", {
-                  className: "font-medium text-gray-200",
-                  children: item.question
+                "Reefi is in ",
+                /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("strong", {
+                  children: "very early beta"
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("svg", {
-                  className: `w-5 h-5 text-gray-400 transform transition-transform ${openItems.has(index2) ? "rotate-180" : ""}`,
-                  fill: "none",
-                  stroke: "currentColor",
-                  viewBox: "0 0 24 24",
-                  children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("path", {
-                    strokeLinecap: "round",
-                    strokeLinejoin: "round",
-                    strokeWidth: 2,
-                    d: "M19 9l-7 7-7-7"
+                ". Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution"
+              ]
+            }, undefined, true, undefined, this)
+          ]
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("h2", {
+          className: "text-2xl font-bold mb-4",
+          children: "Frequently Asked Questions"
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+          className: "space-y-2",
+          children: qaData.map((item, index2) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+            className: "border border-gray-700 rounded-lg",
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("button", {
+                type: "button",
+                className: "w-full text-left p-4 flex justify-between items-center hover:bg-gray-700/30 transition-colors",
+                onClick: () => toggleItem(index2),
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("span", {
+                    className: "font-medium text-gray-200",
+                    children: item.question
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("svg", {
+                    className: `w-5 h-5 text-gray-400 transform transition-transform ${openItems.has(index2) ? "rotate-180" : ""}`,
+                    fill: "none",
+                    stroke: "currentColor",
+                    viewBox: "0 0 24 24",
+                    children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("path", {
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      strokeWidth: 2,
+                      d: "M19 9l-7 7-7-7"
+                    }, undefined, false, undefined, this)
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              openItems.has(index2) && /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+                className: "px-4 pb-4",
+                children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+                  className: "pt-2 border-t border-gray-700",
+                  children: Array.isArray(item.answer) ? item.answer.map((paragraph, pIndex) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
+                    className: "text-gray-300 text-sm mb-2 last:mb-0",
+                    dangerouslySetInnerHTML: { __html: paragraph }
+                  }, pIndex, false, undefined, this)) : /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
+                    className: "text-gray-300 text-sm",
+                    dangerouslySetInnerHTML: { __html: item.answer }
                   }, undefined, false, undefined, this)
                 }, undefined, false, undefined, this)
-              ]
-            }, undefined, true, undefined, this),
-            openItems.has(index2) && /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
-              className: "px-4 pb-4",
-              children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
-                className: "pt-2 border-t border-gray-700",
-                children: Array.isArray(item.answer) ? item.answer.map((paragraph, pIndex) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
-                  className: "text-gray-300 text-sm mb-2 last:mb-0",
-                  dangerouslySetInnerHTML: { __html: paragraph }
-                }, pIndex, false, undefined, this)) : /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
-                  className: "text-gray-300 text-sm",
-                  dangerouslySetInnerHTML: { __html: item.answer }
-                }, undefined, false, undefined, this)
               }, undefined, false, undefined, this)
-            }, undefined, false, undefined, this)
-          ]
-        }, index2, true, undefined, this))
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
-        className: "flex justify-center my-4",
-        children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("img", {
-          src: diagram_default,
-          alt: "Diagram",
-          className: "h-120"
+            ]
+          }, index2, true, undefined, this))
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+          className: "flex justify-center my-4",
+          children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("img", {
+            src: diagram_default,
+            alt: "Diagram",
+            className: "w-full"
+          }, undefined, false, undefined, this)
         }, undefined, false, undefined, this)
-      }, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
 };
 
 // src/pages/ConvertPage.tsx
@@ -34996,20 +35788,20 @@ var CompoundYield = import_react46.memo(() => {
   return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Page, {
     info: "Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of rMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the button below, you will receive 1% of the pending yield.",
     children: [
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("h3", {
+        className: "text-md font-medium mb-1",
+        children: "Uncompounded Yield"
+      }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
-        className: "bg-gray-700/50 p-5 rounded-lg mt-4 p-2",
+        className: "bg-gray-700/50 p-5 rounded-lg p-2",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
-            className: "text-gray-400 text-sm",
-            children: "Uncompounded Yield"
-          }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
-            className: "flex items-center justify-between",
+            className: "flex items-center justify-between mb-2",
             children: [
               /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                 className: "font-medium text-lg",
                 children: [
-                  formatNumber(rewards.uncompoundedMGPYield, 6),
+                  formatNumber(rewards.uncompoundedMGPYield, 4),
                   " MGP"
                 ]
               }, undefined, true, undefined, this),
@@ -35017,21 +35809,18 @@ var CompoundYield = import_react46.memo(() => {
                 className: "font-medium text-lg",
                 children: [
                   "$",
-                  formatNumber(rewards.uncompoundedMGPYield * prices.MGP, 6)
+                  formatNumber(rewards.uncompoundedMGPYield * prices.MGP, 4)
                 ]
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
-            className: "bg-green-600 bg-opacity-75 w-full h-[0.5px] my-2"
-          }, undefined, false, undefined, this),
           Object.keys(rewards.pendingRewards).map((symbol) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
             className: "flex justify-between",
             children: [
               /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                 className: "font-small text-xs",
                 children: [
-                  formatNumber(formatEther(rewards.pendingRewards[symbol].rewards, decimals[symbol]), 6),
+                  formatNumber(formatEther(rewards.pendingRewards[symbol].rewards, decimals[symbol]), 4),
                   " ",
                   symbol
                 ]
@@ -35039,7 +35828,7 @@ var CompoundYield = import_react46.memo(() => {
               /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
                 className: "font-small text-xs",
                 children: [
-                  formatNumber(prices[symbol] * Number(formatEther(rewards.pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 6),
+                  formatNumber(prices[symbol] * Number(formatEther(rewards.pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 4),
                   " MGP"
                 ]
               }, undefined, true, undefined, this)
@@ -35057,53 +35846,66 @@ var CompoundYield = import_react46.memo(() => {
           " yMGP)"
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
-        className: "text-xs text-gray-400 mt-4",
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+        className: "mt-4 text-sm text-gray-400",
         children: [
-          "Estimated Payout: ",
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
-            className: "text-green-400",
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+            className: "flex justify-between mb-1",
             children: [
-              "$",
-              formatNumber(rewards.uncompoundedMGPYield * prices.MGP * 0.01, 6)
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                children: "Estimated Payout"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                children: [
+                  "$",
+                  formatNumber(rewards.uncompoundedMGPYield * prices.MGP * 0.01, 4)
+                ]
+              }, undefined, true, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+            className: "flex justify-between mb-1",
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                children: "Estimated Gas Fee"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                children: [
+                  "$",
+                  formatNumber(rewards.estimatedCompoundGasFee, 4)
+                ]
+              }, undefined, true, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+            className: "flex justify-between mb-1",
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                children: "Estimated Profit"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                className: `text-${rewards.uncompoundedMGPYield * prices.MGP * 0.01 > rewards.estimatedCompoundGasFee ? "green" : "red"}-400`,
+                children: [
+                  rewards.uncompoundedMGPYield * prices.MGP * 0.01 > rewards.estimatedCompoundGasFee ? "" : "-",
+                  "$",
+                  String(formatNumber(rewards.uncompoundedMGPYield * prices.MGP * 0.01 - rewards.estimatedCompoundGasFee, 6)).replace("-", "")
+                ]
+              }, undefined, true, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          rewards.uncompoundedMGPYield * prices.MGP * 0.01 < rewards.estimatedCompoundGasFee && /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+            className: "flex justify-between mb-1",
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                children: "ETA Till Profitable"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                children: formatTime(rewards.estimatedCompoundGasFee / prices.MGP / (formatEther(BigInt(rewards.mgpAPR * Number(locked.reefiMGP)), decimals.MGP) / (365 * 24 * 60 * 60)))
+              }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
-        className: "text-xs text-gray-400",
-        children: [
-          "Estimated Gas Fee: ",
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
-            className: "text-red-400",
-            children: [
-              "$",
-              formatNumber(rewards.estimatedCompoundGasFee, 6)
-            ]
-          }, undefined, true, undefined, this)
-        ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
-        className: "text-xs text-gray-400",
-        children: [
-          "Estimated Profit: ",
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
-            className: `text-${rewards.uncompoundedMGPYield * prices.MGP * 0.01 > rewards.estimatedCompoundGasFee ? "green" : "red"}-400`,
-            children: [
-              rewards.uncompoundedMGPYield * prices.MGP * 0.01 > rewards.estimatedCompoundGasFee ? "" : "-",
-              "$",
-              String(formatNumber(rewards.uncompoundedMGPYield * prices.MGP * 0.01 - rewards.estimatedCompoundGasFee, 6)).replace("-", "")
-            ]
-          }, undefined, true, undefined, this)
-        ]
-      }, undefined, true, undefined, this),
-      rewards.uncompoundedMGPYield * prices.MGP * 0.01 < rewards.estimatedCompoundGasFee ? /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
-        className: "text-gray-400 text-xs",
-        children: [
-          "ETA Till Profitable: ",
-          formatTime(rewards.estimatedCompoundGasFee / prices.MGP / (formatEther(BigInt(rewards.mgpAPR * Number(locked.reefiMGP)), decimals.MGP) / (365 * 24 * 60 * 60)))
-        ]
-      }, undefined, true, undefined, this) : "",
       /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
         className: "mt-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-green-700",
         children: [
@@ -35175,15 +35977,15 @@ var ClaimYield = import_react47.memo(() => {
   return /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(Page, {
     info: "Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.",
     children: [
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("h3", {
+        className: "text-md font-medium mb-1",
+        children: "Unclaimed Rewards"
+      }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
         className: "bg-gray-700/50 rounded-lg p-4",
         children: [
           /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
-            className: "text-gray-400 text-sm",
-            children: "Unclaimed Rewards"
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
-            className: "font-medium text-lg",
+            className: "font-medium text-lg mb-2",
             children: [
               formatNumber(formatEther(rewards.unclaimedUserYield, decimals.YMGP), 4),
               " rMGP"
@@ -35229,11 +36031,10 @@ var AppContent = () => {
         children: [
           /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Header, {}, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-            className: "mt-18 p-4 md:p-6 mx-28",
+            className: "mt-18 p-4 md:p-6 mx-28 flex flex-col gap-6",
             children: [
               /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(TokenCards, {}, undefined, false, undefined, this),
               /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-                className: "mb-6",
                 children: [
                   /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
                     className: "bg-gray-800 p-3 border border-gray-700 rounded-t-xl",

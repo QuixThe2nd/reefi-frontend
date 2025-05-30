@@ -44,7 +44,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
     <div className="mb-4">
       <div className="flex justify-between items-center mb-1">
         <h3 className="text-md font-medium">{label}</h3>
-        <div className="text-sm text-gray-400">Balance: {formatEther(balance, decimals[selectedCoin])} {selectedCoin}</div>
+        <div className="text-sm text-gray-400">Balance: {formatEther(balance, decimals[selectedCoin]).toFixed(4)} {selectedCoin}</div>
       </div>
       <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
         <input type="text" placeholder='0' className="bg-transparent outline-none text-xl w-3/4" value={value === 0n ? undefined : formatEther(value, decimals[selectedCoin])} onChange={e => onChange(BigInt(Math.round((Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)) * Number(10n ** BigInt(decimals[selectedCoin])))))} />

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, type Dispatch, type SetStateAction } 
 import { createWalletClient, custom, publicActions, type WalletClient, type PublicActions } from "viem"
 import { arbitrum, bsc } from 'viem/chains'
 import { publicClients, type Chains } from "../config/contracts"
-import { useUpdateable } from "./useUpdateable"
+import { useCachedUpdateable } from "./useUpdateable"
 
 export interface UseWallet {
   readonly clients: Record<Chains, WalletClient & PublicActions> | undefined,
@@ -19,14 +19,14 @@ export interface UseWallet {
 export const useWallet = ({ setError }: { readonly setError: (_msg: string) => void }): UseWallet => {
   const [clients, setClients] = useState<Record<Chains, WalletClient & PublicActions> | undefined>()
   const [chain, setChain] = useState<Chains>(42_161)
-  const [account, updateAccount] = useUpdateable(async () => {
+  const [account, updateAccount] = useCachedUpdateable(async () => {
     if (!clients) return
     const addresses = await clients[chain].requestAddresses()
     return addresses[0]
   }, [clients], 'account')
   const [isConnecting, setIsConnecting] = useState(false)
   const [connectRequired, setConnectRequired] = useState(false)
-  const [ens] = useUpdateable(async () => account === undefined ? undefined : (await publicClients[1].getEnsName({ address: account }) ?? undefined), [account], 'ens')
+  const [ens] = useCachedUpdateable(async () => account === undefined ? undefined : (await publicClients[1].getEnsName({ address: account }) ?? undefined), [account], 'ens')
 
   const connectWallet = useCallback((): void => {
     if (window.ethereum === undefined) return setError('No wallet found. Please install MetaMask to use Reefi.')

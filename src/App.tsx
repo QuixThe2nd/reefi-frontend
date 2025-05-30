@@ -58,9 +58,9 @@ const AppContent = (): ReactElement => {
       <ErrorCard error={error} setError={setError} />
       <div className="flex-grow overflow-auto">
         <Header />
-        <div className="mt-18 p-4 md:p-6 mx-28">
+        <div className="mt-18 p-4 md:p-6 mx-28 flex flex-col gap-6">
           <TokenCards />
-          <div className="mb-6">
+          <div>
             <div className="bg-gray-800 p-3 border border-gray-700 rounded-t-xl">
               <div className="flex justify-between">
                 <div className="bg-gray-700 p-1 rounded-lg flex">

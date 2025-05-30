@@ -24,7 +24,7 @@ export const TokenCard = memo(({ symbol, decimals, description, price, supply, u
             <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2">{symbol[0]?.toUpperCase()}</div>
             <p className="font-bold text-lg">${symbol}</p>
           </div>
-          {price !== undefined && <h2 className="text-2xl font-bold mt-2">${price.toFixed(5)}</h2>}
+          {price !== undefined && <h2 className="text-2xl font-bold mt-2">${price.toFixed(4)}</h2>}
         </div>
       </div>
       <div className="grid grid-cols-2 col-span-2 gap-2">

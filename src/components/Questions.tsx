@@ -122,52 +122,34 @@ export const QASection = (): ReactElement => {
 
   const toggleItem = (index: number): void => {
     const newOpenItems = new Set(openItems)
-    if (newOpenItems.has(index)) {
-      newOpenItems.delete(index)
-    } else {
-      newOpenItems.add(index)
-    }
+    if (newOpenItems.has(index)) newOpenItems.delete(index)
+    else newOpenItems.add(index)
     setOpenItems(newOpenItems)
   }
 
   return (
-    <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6">
-      <div className="mb-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-yellow-700">
-        <h3 className="text-lg font-semibold mb-2 text-yellow-400">⚠️ Important Notice</h3>
-        <p className="text-gray-300 text-sm">Reefi is in <strong>very early beta</strong>. Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution</p>
-      </div>
-      <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
-      <div className="space-y-2">
-        {qaData.map((item, index) => (
-          <div key={index} className="border border-gray-700 rounded-lg">
-            <button
-              type="button"
-              className="w-full text-left p-4 flex justify-between items-center hover:bg-gray-700/30 transition-colors"
-              onClick={() => toggleItem(index)}
-            >
+    <div className="bg-gray-800 p-3 rounded-xl border border-gray-700 flex justify-center">
+      <div className="w-256">
+        <div className="mb-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-yellow-700">
+          <h3 className="text-lg font-semibold mb-2 text-yellow-400">⚠️ Important Notice</h3>
+          <p className="text-gray-300 text-sm">Reefi is in <strong>very early beta</strong>. Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution</p>
+        </div>
+        <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+        <div className="space-y-2">
+          {qaData.map((item, index) => <div key={index} className="border border-gray-700 rounded-lg">
+            <button type="button" className="w-full text-left p-4 flex justify-between items-center hover:bg-gray-700/30 transition-colors" onClick={() => toggleItem(index)}>
               <span className="font-medium text-gray-200">{item.question}</span>
-              <svg
-                className={`w-5 h-5 text-gray-400 transform transition-transform ${
-                  openItems.has(index) ? 'rotate-180' : ''
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
+              <svg className={`w-5 h-5 text-gray-400 transform transition-transform ${openItems.has(index) ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
             </button>
-            {openItems.has(index) && (
-              <div className="px-4 pb-4">
-                <div className="pt-2 border-t border-gray-700">
-                  {Array.isArray(item.answer) ? (item.answer as string[]).map((paragraph, pIndex) => <p key={pIndex} className="text-gray-300 text-sm mb-2 last:mb-0" dangerouslySetInnerHTML={{ __html: paragraph }}/>) : <p className="text-gray-300 text-sm" dangerouslySetInnerHTML={{ __html: item.answer }} />}
-                </div>
+            {openItems.has(index) && <div className="px-4 pb-4">
+              <div className="pt-2 border-t border-gray-700">
+                {Array.isArray(item.answer) ? (item.answer as string[]).map((paragraph, pIndex) => <p key={pIndex} className="text-gray-300 text-sm mb-2 last:mb-0" dangerouslySetInnerHTML={{ __html: paragraph }}/>) : <p className="text-gray-300 text-sm" dangerouslySetInnerHTML={{ __html: item.answer }} />}
               </div>
-            )}
-          </div>
-        ))}
+            </div>}
+          </div>)}
+        </div>
+        <div className="flex justify-center my-4"><img src={Diagram} alt="Diagram" className="w-full" /></div>
       </div>
-      <div className="flex justify-center my-4"><img src={Diagram} alt="Diagram" className="h-120" /></div>
     </div>
   )
 }

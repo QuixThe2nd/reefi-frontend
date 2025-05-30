@@ -32440,7 +32440,7 @@ var TokenCards = import_react25.memo(() => {
         price: prices.MGP,
         decimals: decimals.MGP,
         supply: supplies.mgp,
-        locked: locked.reefiMGP,
+        locked: locked.mgp,
         description: "MGP is the underlying asset all derivatives rely on."
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(TokenCard, {

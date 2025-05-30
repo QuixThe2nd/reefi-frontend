@@ -6,10 +6,8 @@ import { useState, ReactElement } from 'react'
 import { type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods } from 'viem'
 import { TokenCards } from './components/TokenCards'
 import { Header } from './components/Header'
-import { YieldBadges } from './components/YieldBadges'
 import { ConversionRates } from './components/ConversionRates'
 import { Contracts } from './components/Contracts'
-import { PendingRewards } from './components/PendingRewards'
 import { ConnectWallet } from './components/ConnectWallet'
 import { ErrorCard } from './components/ErrorCard'
 import { DepositPage } from './pages/DepositPage'
@@ -20,8 +18,10 @@ import { UnlockPage } from './pages/UnlockPage'
 import { QASection } from './components/Questions';
 import { GlobalProvider, useGlobalContext } from './contexts/GlobalContext';
 import { ConvertPage } from './pages/ConvertPage'
-import { Badge, YieldBadge } from './components/YieldBadge'
+import { YieldBadge } from './components/YieldBadge'
 import { aprToApy } from './utils'
+import { CompoundYield } from './pages/CompoundYield'
+import { ClaimYield } from './pages/ClaimYield'
 // import { Web3Provider } from '@ethersproject/providers';
 // import snapshot from '@snapshot-labs/snapshot.js';
 
@@ -45,12 +45,12 @@ declare global {
   }
 }
 
-export type Pages = 'deposit' | 'convert' | 'lock' | 'buyVotes' | 'supplyLiquidity' | 'unlock' | 'redeem'
+export type Pages = 'deposit' | 'convert' | 'lock' | 'buyVotes' | 'supplyLiquidity' | 'unlock' | 'redeem' | 'compoundRMGP' | 'claimYMGP'
 
 const AppContent = (): ReactElement => {
   const [page, setPage] = useState<Pages | undefined>('deposit')
   const [error, setError] = useState('')
-  const { balances, exchangeRates, locked, rewards, supplies } = useGlobalContext()
+  const { balances, exchangeRates, locked, rewards } = useGlobalContext()
 
   return (
     <div className="flex h-screen bg-gray-900 text-white">
@@ -66,20 +66,18 @@ const AppContent = (): ReactElement => {
                 <div className="bg-gray-700 p-1 rounded-lg flex">
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'deposit' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'deposit' ? setPage(undefined) : setPage('deposit')}>Get rMGP</button>
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'redeem' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'redeem' ? setPage(undefined) : setPage('redeem')}>Redeem rMGP</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'compoundRMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'compoundRMGP' ? setPage(undefined) : setPage('compoundRMGP')}>Compound Yield</button>
                 </div>
                 <div className="flex flex-row-reverse h-min">
                   <div className="flex gap-1">
-                    <YieldBadge asset="MGP" apr={rewards.mgpAPR} breakdown={[
-                      { asset: 'Original vlMGP', apr: rewards.mgpAPR }
-                      ]} />
-                    <YieldBadge asset="rMGP" apy={aprToApy(rewards.mgpAPR)*0.9} breakdown={[
-                      { asset: 'vlMGP', apy: aprToApy(rewards.mgpAPR)*0.9 }
-                      ]} />
+                    <YieldBadge asset="MGP" apr={rewards.mgpAPR} breakdown={[{ asset: 'Original vlMGP', apr: rewards.mgpAPR }]} />
+                    <YieldBadge asset="rMGP" apy={aprToApy(rewards.mgpAPR)*0.9} breakdown={[{ asset: 'vlMGP', apy: aprToApy(rewards.mgpAPR)*0.9 }]} />
                   </div>
                 </div>
               </div>
               {page === 'deposit' && <DepositPage />}
               {page === 'redeem' && <RedeemPage />}
+              {page === 'compoundRMGP' && <CompoundYield />}
             </div>
             <div className="bg-gray-800 p-3 border border-gray-700">
               <div className="flex justify-between">
@@ -87,12 +85,11 @@ const AppContent = (): ReactElement => {
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'convert' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'convert' ? setPage(undefined) : setPage('convert')}>Get yMGP</button>
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'lock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'lock' ? setPage(undefined) : setPage('lock')}>Lock yMGP</button>
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'unlock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'unlock' ? setPage(undefined) : setPage('unlock')}>Unlock yMGP</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'claimYMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'claimYMGP' ? setPage(undefined) : setPage('claimYMGP')}>Claim Yield</button>
                 </div>
                 <div className="flex flex-row-reverse h-min">
                   <div className="flex gap-1">
-                    <YieldBadge asset="yMGP" apy={aprToApy(rewards.mgpAPR)*0.9} breakdown={[
-                      { asset: 'rMGP', apy: aprToApy(rewards.mgpAPR)*0.9 }
-                      ]} />
+                    <YieldBadge asset="yMGP" apy={aprToApy(rewards.mgpAPR)*0.9} breakdown={[{ asset: 'rMGP', apy: aprToApy(rewards.mgpAPR)*0.9 }]} />
                     <YieldBadge asset="Locked yMGP" apy={((Number(locked.reefiMGP)*aprToApy(rewards.mgpAPR)*0.05)/Number(locked.ymgp))+aprToApy(rewards.mgpAPR)*0.9} suffix='+' breakdown={[
                       { asset: 'Base vlMGP', apy: aprToApy(rewards.mgpAPR)*0.9 },
                       { asset: 'Boosted vlMGP', apr: ((Number(locked.reefiMGP)*rewards.mgpAPR*0.05)/Number(locked.ymgp)) },
@@ -104,6 +101,7 @@ const AppContent = (): ReactElement => {
               {page === 'convert' && <ConvertPage />}
               {page === 'lock' && <LockPage />}
               {page === 'unlock' && <UnlockPage />}
+              {page === 'claimYMGP' && <ClaimYield />}
             </div>
             <div className="bg-gray-800 p-3 border border-gray-700">
               <div className="flex justify-between">
@@ -133,9 +131,8 @@ const AppContent = (): ReactElement => {
               {page === 'supplyLiquidity' && <SupplyLiquidityPage />}
             </div>
           </div>
-          <PendingRewards />
-          <ConversionRates />
           <QASection />
+          <ConversionRates />
           <Contracts />
         </div>
       </div>

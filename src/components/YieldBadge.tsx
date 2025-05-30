@@ -13,17 +13,10 @@ type Yield = {
 
 type Props = Yield & { readonly breakdown: Yield[] }
 
-export const YieldBadge = memo(({ asset, apy, apr, suffix, breakdown }: Props): ReactElement => {
-  const yieldType = apy === undefined ? 'APR' : 'APY'
-  const yieldValue = apy ?? apr
-  const percentage = Math.round((yieldValue === 'variable' ? 0 : yieldValue)*10_000)/100
-  
-  return <div 
-    className="text-sm bg-gray-700 rounded-lg px-3 py-1 flex items-center relative group cursor-help"
-    title={`${asset} ${yieldType}: ${percentage}%${suffix ?? ''}`}
-  >
+export const Badge = memo(({ title, value, breakdown }: { title: string, value: string, readonly breakdown: Yield[] }): ReactElement => {
+  return <div className="text-sm bg-gray-700 rounded-lg px-3 py-1 flex items-center relative group cursor-help" title={`${title}: ${value}`}>
     <div className="w-2 h-2 rounded-full bg-green-400 mr-2" />
-    <span>{asset} {yieldType}: {percentage}%{suffix}</span>
+    <span>{title}: {value}</span>
     <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10">
       <div className="space-y-1">
         {breakdown.map((item, index) => <div key={index} className="flex justify-between gap-2">
@@ -33,5 +26,14 @@ export const YieldBadge = memo(({ asset, apy, apr, suffix, breakdown }: Props): 
       </div>
     </div>
   </div>
+})
+Badge.displayName = 'Badge'
+
+export const YieldBadge = memo(({ asset, apy, apr, suffix, breakdown }: Props): ReactElement => {
+  const yieldType = apy === undefined ? 'APR' : 'APY'
+  const yieldValue = apy ?? apr
+  const percentage = Math.round((yieldValue === 'variable' ? 0 : yieldValue)*10_000)/100
+  
+  return <Badge title={`${asset} ${yieldType}`} value={`${percentage}%${suffix ?? ''}`} breakdown={breakdown} />
 })
 YieldBadge.displayName = 'YieldBadge'

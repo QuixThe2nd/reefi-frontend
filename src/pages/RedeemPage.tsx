@@ -9,8 +9,8 @@ import { decimals } from '../config/contracts';
 export const RedeemPage = memo((): ReactElement => {
   const { actions, balances, amounts, allowances, exchangeRates, withdraws } = useGlobalContext()
   return <>
-    <div className="bg-gray-700/50 p-5 rounded-lg">
-      <AmountInput label="Redeem rMGP" token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={balances.RMGP[0]} value={amounts.send} onChange={amounts.setSend} />
+    <div className="bg-gray-700/50 p-5 rounded-lg mt-4">
+      <AmountInput label="Get MGP" token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={balances.RMGP[0]} value={amounts.send} onChange={amounts.setSend} />
       <div className="grid grid-cols-2 gap-2">
         <button type="submit" className="py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700" onClick={actions.redeemRMGP}>Redeem via Queue ({exchangeRates.curve.rmgpMGP*formatEther(amounts.send)} MGP)</button>
         <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.rmgpMgpCurve} allowanceCurve={allowances.curve.RMGP[0]} rate={exchangeRates.curve.rmgpMGP} onApprove={actions.approve} buy={actions.buyMGP} tokenASymbol='rMGP' tokenBSymbol='MGP' />

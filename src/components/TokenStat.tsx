@@ -8,7 +8,7 @@ interface Props {
 export const TokenStat = memo(({ title, detail }: Props): ReactElement => {
   return <div className="bg-gray-700/50 rounded-lg p-2">
     <p className="text-gray-400 text-xs">{title}</p>
-    <p className="font-medium">{detail}</p>
+    <p className="font-medium text-sm">{detail}</p>
   </div>
 })
 TokenStat.displayName = 'TokenStat'

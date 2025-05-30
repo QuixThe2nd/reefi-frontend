@@ -4,7 +4,7 @@ import { Coins, contracts, decimals } from '../config/contracts'
 import { useGlobalContext } from '../contexts/GlobalContext'
 
 export const PendingRewards = memo((): ReactElement => {
-  const { wallet, rewards, prices, locked, actions, supplies, balances, exchangeRates } = useGlobalContext()
+  const { wallet, rewards, prices, locked, actions, supplies, balances } = useGlobalContext()
 
   return <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 mb-6">
     <h2 className="text-2xl font-bold mb-4">Pending Rewards</h2>
@@ -27,7 +27,7 @@ export const PendingRewards = memo((): ReactElement => {
         <p className="text-xs text-gray-400">Estimated Gas Fee: <span className="text-red-400">${formatNumber(rewards.estimatedCompoundGasFee, 6)}</span></p>
         <p className="text-gray-400 mt-2">Estimated Profit: <span className={`text-${rewards.uncompoundedMGPYield*prices.MGP*0.01 > rewards.estimatedCompoundGasFee ? 'green' : 'red'}-400`}>{rewards.uncompoundedMGPYield*prices.MGP*0.01 > rewards.estimatedCompoundGasFee ? '' : '-'}${String(formatNumber(rewards.uncompoundedMGPYield*prices.MGP*0.01-rewards.estimatedCompoundGasFee, 6)).replace('-', '')}</span></p>
         {rewards.uncompoundedMGPYield*prices.MGP*0.01 < rewards.estimatedCompoundGasFee ? <p className="text-gray-400 text-xs">ETA Till Profitable: {formatTime((rewards.estimatedCompoundGasFee/prices.MGP) / (formatEther(BigInt(rewards.mgpAPR*Number(locked.reefiMGP)), decimals.MGP) / (365 * 24 * 60 * 60)))}</p> : ''}
-        <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={actions.compoundRMGP}>Compound Yield (Get ~{formatNumber(0.01*rewards.uncompoundedMGPYield*(1/exchangeRates.curve.mgpRMGP), 6)} yMGP)</button>
+        <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={actions.compoundRMGP}>Compound Yield (Get ~{rewards.estimatedCompoundAmount[0]/100} yMGP)</button>
       </div>
       <div>
         <div className="bg-gray-700/50 rounded-lg p-4">

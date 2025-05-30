@@ -2,6 +2,7 @@ import { memo, type ReactElement } from 'react'
 import { formatEther, formatNumber, formatTime } from '../utils'
 import { contracts, decimals, type Coins } from '../config/contracts'
 import { useGlobalContext } from '../contexts/GlobalContext'
+import { InfoCard } from '../components/InfoCard'
 
 export const CompoundYield = memo((): ReactElement => {
   const { actions, locked, prices, rewards, wallet } = useGlobalContext()
@@ -19,12 +20,12 @@ export const CompoundYield = memo((): ReactElement => {
         <p className="font-small text-xs">{formatNumber(prices[symbol]*Number(formatEther(rewards.pendingRewards[symbol].rewards, decimals[symbol]))/prices.MGP, 6)} MGP</p>
       </div>)}
     </div>
-    <p className="text-gray-400 text-xs mt-2">Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of rMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the button below, you will receive 1% of the pending yield.</p>
+    <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={actions.compoundRMGP}>Compound Yield (Get ~{(Number(rewards.estimatedCompoundAmount[0] ?? 0n))/100} yMGP)</button>
     <p className="text-xs text-gray-400 mt-4">Estimated Payout: <span className="text-green-400">${formatNumber(rewards.uncompoundedMGPYield*prices.MGP*0.01, 6)}</span></p>
     <p className="text-xs text-gray-400">Estimated Gas Fee: <span className="text-red-400">${formatNumber(rewards.estimatedCompoundGasFee, 6)}</span></p>
-    <p className="text-gray-400 mt-2">Estimated Profit: <span className={`text-${rewards.uncompoundedMGPYield*prices.MGP*0.01 > rewards.estimatedCompoundGasFee ? 'green' : 'red'}-400`}>{rewards.uncompoundedMGPYield*prices.MGP*0.01 > rewards.estimatedCompoundGasFee ? '' : '-'}${String(formatNumber(rewards.uncompoundedMGPYield*prices.MGP*0.01-rewards.estimatedCompoundGasFee, 6)).replace('-', '')}</span></p>
+    <p className="text-xs text-gray-400">Estimated Profit: <span className={`text-${rewards.uncompoundedMGPYield*prices.MGP*0.01 > rewards.estimatedCompoundGasFee ? 'green' : 'red'}-400`}>{rewards.uncompoundedMGPYield*prices.MGP*0.01 > rewards.estimatedCompoundGasFee ? '' : '-'}${String(formatNumber(rewards.uncompoundedMGPYield*prices.MGP*0.01-rewards.estimatedCompoundGasFee, 6)).replace('-', '')}</span></p>
     {rewards.uncompoundedMGPYield*prices.MGP*0.01 < rewards.estimatedCompoundGasFee ? <p className="text-gray-400 text-xs">ETA Till Profitable: {formatTime((rewards.estimatedCompoundGasFee/prices.MGP) / (formatEther(BigInt(rewards.mgpAPR*Number(locked.reefiMGP)), decimals.MGP) / (365 * 24 * 60 * 60)))}</p> : ''}
-    <button type="button" className="w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors" onClick={actions.compoundRMGP}>Compound Yield (Get ~{rewards.estimatedCompoundAmount[0]/100} yMGP)</button>
+    <InfoCard text="Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of rMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the button below, you will receive 1% of the pending yield." />
     <div className="mt-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-green-700">
       <h3 className="text-lg font-semibold mb-2 text-green-400">Developer Tip: Automate Compounding for Free Money</h3>
       <p className="text-gray-300 text-sm mb-2">Compounding vlMGP yield is critical to Reefi&apos;s function. Anyone can trigger a compound, which compounds everyone&apos;s pending yield. By doing so, you receive 1% of all pending yield. You can automate this process and earn rewards with no investment.</p>

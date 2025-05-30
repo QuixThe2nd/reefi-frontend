@@ -12,7 +12,7 @@ export const ConvertPage = memo((): ReactElement => {
   const [selectedCoin, setSelectedCoin] = useState<Coins>('RMGP')
 
   return <>
-    <div className="bg-gray-700/50 p-5 rounded-lg mt-4">
+    <div className="rounded-lg mt-4">
       <SwapInput label="Get yMGP" selectedCoin={selectedCoin} onCoinChange={setSelectedCoin} balance={balances[selectedCoin][0]} value={amounts.send} onChange={amounts.setSend} outputCoin='YMGP' />
       {selectedCoin === 'RMGP' ? <div className="grid grid-cols-2 gap-2 mb-4">
         <div>

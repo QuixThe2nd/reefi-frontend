@@ -45,7 +45,7 @@ declare global {
   }
 }
 
-export type Pages = 'deposit' | 'convert' | 'lock' | 'buyVotes' | 'supplyLiquidity' | 'unlock' | 'redeem' | 'compoundRMGP' | 'claimYMGP'
+export type Pages = 'deposit' | 'convert' | 'lock' | 'buyVotes' | 'supplyLiquidity' | 'unlock' | 'redeem' | 'compoundRMGP' | 'claimYMGP' | 'vote'
 
 const AppContent = (): ReactElement => {
   const [page, setPage] = useState<Pages | undefined>('deposit')
@@ -107,6 +107,7 @@ const AppContent = (): ReactElement => {
               <div className="flex justify-between">
                 <div className="bg-gray-700 p-1 rounded-lg flex">
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'buyVotes' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'buyVotes' ? setPage(undefined) : setPage('buyVotes')}>Get vMGP</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'vote' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'vote' ? setPage(undefined) : setPage('vote')}>Vote</button>
                 </div>
                 {/* <Badge title="Vote Multiplier" value={supplies.vmgp / supplies.rmgp} /> */}
               </div>

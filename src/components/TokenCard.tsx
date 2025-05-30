@@ -29,12 +29,12 @@ export const TokenCard = memo(({ symbol, decimals, description, price, supply, u
       </div>
       <div className="grid grid-cols-2 col-span-2 gap-2">
         <TokenStat title="Supply" detail={`${formatNumber(formatEther(supply, decimals), 3)} ${symbol}`} />
-        {underlying !== undefined && underlying !== supply && <TokenStat title="TVL" detail={`${formatNumber(formatEther(underlying), 4)} ${underlyingSymbol}`} />}
-        {underlying !== undefined && underlying !== supply && <TokenStat title="Mint Rate" detail={`${formatNumber(Number(underlying)/Number(supply), 6)} ${underlyingSymbol}`} />}
-        {marketRate !== undefined && <TokenStat title="Market Rate" detail={`${formatNumber(Number(marketRate), 5)} ${underlyingSymbol}`} />}
+        {underlying !== undefined && underlying !== supply && <TokenStat title="TVL" detail={`${formatNumber(formatEther(underlying), 2)} ${underlyingSymbol}`} />}
+        {underlying !== undefined && underlying !== supply && <TokenStat title="Mint Rate" detail={`${formatNumber(Number(underlying)/Number(supply), 4)} ${underlyingSymbol}`} />}
+        {marketRate !== undefined && <TokenStat title="Market Rate" detail={`${formatNumber(Number(marketRate), 3)} ${underlyingSymbol}`} />}
         {locked !== undefined && <TokenStat title="Locked" detail={`${formatNumber(Math.round(formatEther(locked, decimals)))} ${symbol}`} />}
         {locked !== undefined && <TokenStat title="Lock Rate" detail={`${Math.round(10_000*Number(locked)/Number(supply))/100}%`} />}
-        {price !== undefined && <TokenStat title="FDV" detail={`${formatNumber(price*formatEther(supply, decimals))}`} />}
+        {price !== undefined && <TokenStat title="FDV" detail={`$${formatNumber(price*formatEther(supply, decimals))}`} />}
         {voteMultiplier !== undefined && <TokenStat title="Vote Multiplier" detail={`${formatNumber(voteMultiplier)}`} />}
       </div>
     </div>

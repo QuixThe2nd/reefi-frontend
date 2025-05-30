@@ -19,7 +19,7 @@ interface Props {
 
 export const BuyVotesPage = memo(({ sendAmount, ymgpAllowance, ymgpAllowanceCurve, ymgpBalance, ymgpVmgpCurveAmount, onApprove, setSendAmount, depositYMGP, buyVMGP }: Props): ReactElement => {
   return <>
-    <div className="bg-gray-700/50 p-5 rounded-lg">
+    <div className="rounded-lg">
       <AmountInput label="Get vMGP" token={{ symbol: 'yMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={ymgpBalance} value={sendAmount} onChange={setSendAmount} />
       <div className="grid grid-cols-1 gap-2 mb-4">
         <div className="grid grid-cols-2 gap-2">

@@ -7,7 +7,7 @@ import { useGlobalContext } from '../contexts/GlobalContext'
 export const SupplyLiquidityPage = memo((): ReactElement => {
   const { actions, amounts, balances } = useGlobalContext()
   return <>
-    <div className="bg-gray-700/50 p-5 rounded-lg mt-4">
+    <div className="rounded-lg mt-4">
       <AmountInput label="Supply MGP" balance={balances.MGP[0]} value={amounts.mgpLP} onChange={amounts.setMGPLP} token={{ symbol: 'MGP', color: 'bg-blue-400', bgColor: 'bg-blue-600' }} placeholder={((): string => {
         const mgpTarget = Number(balances.mgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve + balances.ymgpCurve)
         const totalRecommendedLP = amounts.rmgpLP === 0n ? Number(amounts.ymgpLP) / (Number(balances.ymgpCurve) / Number(balances.rmgpCurve + balances.ymgpCurve)) : (amounts.ymgpLP === 0n ? Number(amounts.rmgpLP) / (Number(balances.rmgpCurve) / Number(balances.rmgpCurve + balances.ymgpCurve)) : Number(amounts.rmgpLP + amounts.ymgpLP))

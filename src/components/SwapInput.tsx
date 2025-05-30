@@ -31,8 +31,8 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
   const estimatedOutput = (): string | undefined => {
     if (value === 0n) return undefined
     const inputAmount = formatEther(value, decimals[selectedCoin])
-    if (selectedCoin === 'RMGP' && outputCoin === 'YMGP') return `${inputAmount} ${outputCoin}`
-    if (selectedCoin === 'MGP' && outputCoin === 'RMGP') return (inputAmount * exchangeRates.curve.mgpRMGP).toFixed(6) + ' ' + outputCoin
+    if (selectedCoin === 'RMGP' && outputCoin === 'YMGP') return undefined
+    if (selectedCoin === 'MGP' && outputCoin === 'RMGP') return undefined
     else if (selectedCoin === 'YMGP' && outputCoin === 'MGP') return (inputAmount / exchangeRates.curve.ymgpMGP).toFixed(6) + ' ' + outputCoin
     else if (outputCoin === 'RMGP') {
       const mgpAmount = (inputAmount * prices[selectedCoin]) / prices.MGP

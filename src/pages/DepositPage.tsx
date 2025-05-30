@@ -1,7 +1,7 @@
 import { memo, type ReactElement, useState } from 'react'
 import { TokenApproval } from '../components/TokenApproval'
 import { SwapInput } from '../components/SwapInput'
-import { aprToApy } from '../utils'
+import { aprToApy, formatEther } from '../utils'
 import { InfoCard } from '../components/InfoCard'
 import { BuyOnCurve } from '../components/BuyOnCurve'
 import { type Coins } from '../config/contracts'
@@ -12,12 +12,12 @@ export const DepositPage = memo((): ReactElement => {
   const [selectedCoin, setSelectedCoin] = useState<Coins>('MGP')
 
   return <>
-    <div className="bg-gray-700/50 p-5 rounded-lg mt-4">
+    <div className="rounded-lg mt-4">
       <SwapInput label="Get rMGP" selectedCoin={selectedCoin} onCoinChange={setSelectedCoin} balance={balances[selectedCoin][0]} value={amounts.send} onChange={amounts.setSend} outputCoin='RMGP' />
       {selectedCoin === 'MGP' ? <div className="grid grid-cols-2 gap-2">
         <div>
           <TokenApproval sendAmount={amounts.send} allowance={allowances[selectedCoin][0]} onApprove={actions.approve} tokenSymbol={selectedCoin} />
-          <button type="submit" className="py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 w-full" onClick={actions.depositMGP}>Mint rMGP)</button>
+          <button type="submit" className="py-3 rounded-lg transition-colors bg-green-600 hover:bg-green-700 w-full" onClick={actions.depositMGP}>Mint ({formatEther(BigInt(exchangeRates.mintRMGP*Number(amounts.send)))} rMGP)</button>
         </div>
         <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.mgpRmgpCurve} allowanceCurve={allowances.curve[selectedCoin][0]} rate={exchangeRates.curve.mgpRMGP} onApprove={actions.approve} buy={actions.buyRMGP} tokenASymbol={selectedCoin} tokenBSymbol='rMGP' />
       </div> : <>
@@ -35,7 +35,7 @@ export const DepositPage = memo((): ReactElement => {
         </div>
       </div>
     </div>
-    <InfoCard text={selectedCoin === 'MGP' ? "MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards and half the withdrawal fees." : `${selectedCoin} will be swapped to MGP and then converted to rMGP to earn auto compounded yield. Other coins support coming soon.`} />
+    <InfoCard text={selectedCoin === 'MGP' ? "MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards." : `${selectedCoin} will be swapped to MGP and then converted to rMGP to earn auto compounded yield. Other coins support coming soon.`} />
   </>
 })
 DepositPage.displayName = 'DepositPage'

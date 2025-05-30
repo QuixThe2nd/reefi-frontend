@@ -115,7 +115,7 @@ const qaData: readonly QAItem[] = [
       "Yields are variable and depend on protocol usage and external factors."
     ]
   }
-]
+] as const
 
 export const QASection = (): ReactElement => {
   const [openItems, setOpenItems] = useState<Set<number>>(new Set())
@@ -160,20 +160,7 @@ export const QASection = (): ReactElement => {
             {openItems.has(index) && (
               <div className="px-4 pb-4">
                 <div className="pt-2 border-t border-gray-700">
-                  {Array.isArray(item.answer) ? (
-                    item.answer.map((paragraph, pIndex) => (
-                      <p
-                        key={pIndex}
-                        className="text-gray-300 text-sm mb-2 last:mb-0"
-                        dangerouslySetInnerHTML={{ __html: paragraph }}
-                      />
-                    ))
-                  ) : (
-                    <p
-                      className="text-gray-300 text-sm"
-                      dangerouslySetInnerHTML={{ __html: item.answer }}
-                    />
-                  )}
+                  {Array.isArray(item.answer) ? (item.answer as string[]).map((paragraph, pIndex) => <p key={pIndex} className="text-gray-300 text-sm mb-2 last:mb-0" dangerouslySetInnerHTML={{ __html: paragraph }}/>) : <p className="text-gray-300 text-sm" dangerouslySetInnerHTML={{ __html: item.answer }} />}
                 </div>
               </div>
             )}

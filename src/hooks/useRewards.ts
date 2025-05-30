@@ -60,7 +60,11 @@ export const useRewards = ({ wallet, prices, balances }: Props): UseRewards => {
   }, [wallet.chain], 'Pending Rewards', {})
   const uncompoundedMGPYield = useMemo(() => Object.keys(pendingRewards).length > 0 ? (Object.keys(pendingRewards) as Coins[]).map(symbol => prices[symbol]*Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0)/prices.MGP : 0, [pendingRewards, prices])
   const estimatedCompoundGasFee = useMemo(() => formatEther(compoundRMGPGas, decimals[publicClients[wallet.chain].chain.nativeCurrency.symbol])*prices[publicClients[wallet.chain].chain.nativeCurrency.symbol], [wallet.chain, compoundRMGPGas, prices])
-  const estimatedCompoundAmount = useUpdateable(async () => wallet.clients === undefined || wallet.account === undefined ? undefined : (await contracts[wallet.chain].RMGP.simulate.claim({ account: wallet.account, chain: wallet.clients[wallet.chain].chain })).result, [wallet.clients, wallet.chain, wallet.account], 'estimatedCompoundReward')
+  const estimatedCompoundAmount = useUpdateable(async () => {
+    if (wallet.clients === undefined || wallet.account === undefined) return
+    const simulation = await contracts[wallet.chain].RMGP.simulate.claim({ account: wallet.account, chain: wallet.clients[wallet.chain].chain })
+    return simulation.result
+  }, [wallet.clients, wallet.chain, wallet.account], 'estimatedCompoundReward')
 
   useCallback(() => {
     const interval = setInterval(() => { updatePendingRewards() }, 30_000)

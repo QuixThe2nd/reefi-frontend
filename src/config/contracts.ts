@@ -42,6 +42,18 @@ export const publicClients = {
   42_161: createPublicClient({ chain: arbitrum, transport: http('https://arb1.arbitrum.io/rpc', { retryDelay: 1000, batch: { wait: 150 }, onFetchRequest: onRPCRequest }) })
 }
 
+export const coins: Record<Coins, { symbol: string; color: string; bgColor: string }> = {
+  MGP: { symbol: 'MGP', color: 'bg-blue-400', bgColor: 'bg-blue-600' },
+  RMGP: { symbol: 'RMGP', color: 'bg-green-400', bgColor: 'bg-green-600' },
+  YMGP: { symbol: 'YMGP', color: 'bg-green-400', bgColor: 'bg-green-600' },
+  CMGP: { symbol: 'CMGP', color: 'bg-indigo-400', bgColor: 'bg-indigo-600' },
+  CKP: { symbol: 'CKP', color: 'bg-pink-400', bgColor: 'bg-pink-600' },
+  PNP: { symbol: 'PNP', color: 'bg-orange-400', bgColor: 'bg-orange-600' },
+  EGP: { symbol: 'EGP', color: 'bg-red-400', bgColor: 'bg-red-600' },
+  LTP: { symbol: 'LTP', color: 'bg-teal-400', bgColor: 'bg-teal-600' },
+  ETH: { symbol: 'ETH', color: 'bg-gray-400', bgColor: 'bg-gray-600' },
+  BNB: { symbol: 'BNB', color: 'bg-yellow-400', bgColor: 'bg-yellow-600' }
+} as const
 
 const bscContracts: ContractAddresses = {
   MGP: getContract({ address: '0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa' as `0x${string}`, abi: erc20Abi, client: publicClients[56] }),

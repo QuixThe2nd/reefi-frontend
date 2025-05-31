@@ -6,7 +6,7 @@ import { BuyOnCurve } from "./BuyOnCurve"
 import { SwapInput } from "./SwapInput"
 import { TokenApproval } from "./TokenApproval"
 
-export const SwapToken = ({ originalTokenIn, tokenOut, nativeRate, curveAmount, buy, nativeSwap, label = "Mint" }: { originalTokenIn: Coins, tokenOut: Coins, nativeRate: number, curveAmount: bigint, buy: () => void, nativeSwap: () => void, label: string }): ReactElement => {
+export const SwapToken = ({ originalTokenIn, tokenOut, nativeRate, curveAmount, buy, nativeSwap, label }: { originalTokenIn: Coins, tokenOut: Coins, nativeRate: number, curveAmount: bigint, buy: () => void, nativeSwap?: () => void, label?: string }): ReactElement => {
   const { actions, allowances, amounts, balances, wallet } = useGlobalContext()
   const [tokenIn, setTokenIn] = useState<Coins>(originalTokenIn)
 

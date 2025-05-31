@@ -14,7 +14,6 @@ export const CompoundYield = memo((): ReactElement => {
         <p className="font-medium text-lg">{formatNumber(rewards.uncompoundedMGPYield, 4)} MGP</p>
         <p className="font-medium text-lg">${formatNumber(rewards.uncompoundedMGPYield*prices.MGP, 4)}</p>
       </div>
-
       {(Object.keys(rewards.pendingRewards) as Coins[]).map(symbol => <div key={symbol} className="flex justify-between">
         <p className="font-small text-xs">{formatNumber(formatEther(rewards.pendingRewards[symbol].rewards, decimals[symbol]), 4)} {symbol}</p>
         <p className="font-small text-xs">{formatNumber(prices[symbol]*Number(formatEther(rewards.pendingRewards[symbol].rewards, decimals[symbol]))/prices.MGP, 4)} MGP</p>

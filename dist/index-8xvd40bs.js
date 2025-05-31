@@ -24509,7 +24509,7 @@ var init_call = __esm(() => {
 var import_client = __toESM(require_client(), 1);
 
 // src/App.tsx
-var import_react51 = __toESM(require_react(), 1);
+var import_react52 = __toESM(require_react(), 1);
 
 // src/components/TokenCards.tsx
 var import_react26 = __toESM(require_react(), 1);
@@ -35031,7 +35031,7 @@ SwapInput.displayName = "SwapInput";
 
 // src/components/SwapToken.tsx
 var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
-var SwapToken = ({ originalTokenIn, tokenOut, nativeRate, curveAmount, buy, nativeSwap, label = "Mint" }) => {
+var SwapToken = ({ originalTokenIn, tokenOut, nativeRate, curveAmount, buy, nativeSwap, label }) => {
   const { actions, allowances, amounts, balances, wallet } = useGlobalContext();
   const [tokenIn, setTokenIn] = import_react38.useState(originalTokenIn);
   return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
@@ -35996,28 +35996,55 @@ var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
 var ClaimYield = import_react49.memo(() => {
   const { actions, balances, locked, supplies, rewards } = useGlobalContext();
   return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Page, {
-    info: "Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.",
+    info: ["Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.", "To claim pending MGP yield, compound rMGP yield."],
     children: [
       /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("h3", {
         className: "text-md font-medium mb-1",
         children: "Unclaimed Rewards"
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-        className: "bg-gray-700/50 rounded-lg p-4",
+        className: "bg-gray-700/50 rounded-lg p-4 flex justify-between",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
-            className: "font-medium text-lg mb-2",
+          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+            className: "flex flex-col",
             children: [
-              formatNumber(formatEther(rewards.unclaimedUserYield, decimals.YMGP), 4),
-              " rMGP"
+              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
+                className: "font-medium text-lg",
+                children: [
+                  "You: ",
+                  formatNumber(formatEther(rewards.unclaimedUserYield, decimals.YMGP), 4),
+                  " rMGP"
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
+                className: "text-sm text-gray-400",
+                children: [
+                  "+",
+                  formatNumber(0.05 * rewards.uncompoundedMGPYield * (Number(locked.userYMGP) / Number(locked.ymgp)), 4),
+                  " MGP"
+                ]
+              }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
-            className: "font-small text-xs",
+          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+            className: "flex flex-col text-right",
             children: [
-              "Total: ",
-              formatNumber(formatEther(balances.ymgpHoldings - supplies.ymgp - locked.ymgp, decimals.YMGP), 4),
-              " rMGP"
+              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
+                className: "font-medium text-lg",
+                children: [
+                  "Total: ",
+                  formatNumber(formatEther(balances.ymgpHoldings - supplies.ymgp - locked.ymgp, decimals.YMGP), 4),
+                  " rMGP"
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
+                className: "text-sm text-gray-400",
+                children: [
+                  "+",
+                  formatNumber(rewards.uncompoundedMGPYield * 0.05, 4),
+                  " MGP"
+                ]
+              }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this)
         ]
@@ -36053,70 +36080,126 @@ var NotificationCard = ({ notification, setNotification }) => {
   }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(jsx_dev_runtime29.Fragment, {}, undefined, false, undefined, this);
 };
 
-// src/App.tsx
+// src/pages/GetMGPPage.tsx
+var import_react51 = __toESM(require_react(), 1);
 var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
+var GetMGPPage = import_react51.memo(() => {
+  const { actions, amounts, rewards, wallet } = useGlobalContext();
+  return /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(Page, {
+    info: "MGP is Magpie's governance token. All Reefi derivatives are built around MGP.",
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(SwapToken, {
+        originalTokenIn: wallet.clients?.[wallet.chain].chain?.nativeCurrency.symbol,
+        tokenOut: "MGP",
+        nativeRate: 0,
+        curveAmount: amounts.mgpRmgpCurve,
+        buy: actions.buyRMGP
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+        className: "mt-4 text-sm text-gray-400",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+            className: "flex justify-between mb-1",
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
+                children: "Original APR"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
+                children: "0%"
+              }, undefined, false, undefined, this)
+            ]
+          }, undefined, true, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+            className: "flex justify-between mb-1",
+            children: [
+              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
+                children: "Locked APR"
+              }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
+                children: [
+                  Math.round(1e4 * rewards.mgpAPR) / 100,
+                  "%"
+                ]
+              }, undefined, true, undefined, this)
+            ]
+          }, undefined, true, undefined, this)
+        ]
+      }, undefined, true, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+});
+GetMGPPage.displayName = "GetMGPPage";
+
+// src/App.tsx
+var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
 var AppContent = () => {
-  const [page, setPage] = import_react51.useState("deposit");
-  const [error, setError] = import_react51.useState("");
+  const [page, setPage] = import_react52.useState("deposit");
+  const [error, setError] = import_react52.useState("");
   const { balances, exchangeRates, locked, rewards } = useGlobalContext();
-  return /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
     className: "flex h-screen bg-gray-900 text-white",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ConnectWallet, {}, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ErrorCard, {
+      /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(ConnectWallet, {}, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(ErrorCard, {
         error,
         setError
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
         className: "flex-grow overflow-auto",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(Header, {}, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(Header, {}, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
             className: "mt-18 p-4 md:p-6 mx-28 flex flex-col gap-6",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(TokenCards, {}, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(TokenCards, {}, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                     className: "bg-gray-800 p-3 border border-gray-700 rounded-t-xl",
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                         className: "flex justify-between",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                             className: "bg-gray-700 p-1 rounded-lg flex",
                             children: [
-                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("button", {
+                                type: "button",
+                                className: `px-2 py-1 rounded-md transition-colors ${page === "getMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                                onClick: () => page === "getMGP" ? setPage(undefined) : setPage("getMGP"),
+                                children: "Get MGP"
+                              }, undefined, false, undefined, this),
+                              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "deposit" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "deposit" ? setPage(undefined) : setPage("deposit"),
                                 children: "Get rMGP"
                               }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
-                                type: "button",
-                                className: `px-2 py-1 rounded-md transition-colors ${page === "redeem" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                                onClick: () => page === "redeem" ? setPage(undefined) : setPage("redeem"),
-                                children: "Redeem rMGP"
-                              }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "compoundRMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "compoundRMGP" ? setPage(undefined) : setPage("compoundRMGP"),
                                 children: "Compound Yield"
+                              }, undefined, false, undefined, this),
+                              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("button", {
+                                type: "button",
+                                className: `px-2 py-1 rounded-md transition-colors ${page === "redeem" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                                onClick: () => page === "redeem" ? setPage(undefined) : setPage("redeem"),
+                                children: "Redeem rMGP"
                               }, undefined, false, undefined, this)
                             ]
                           }, undefined, true, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                             className: "flex flex-row-reverse h-min",
-                            children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                            children: /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                               className: "flex gap-1",
                               children: [
-                                /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(YieldBadge, {
+                                /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(YieldBadge, {
                                   asset: "MGP",
                                   apr: rewards.mgpAPR,
                                   breakdown: [{ asset: "Original vlMGP", apr: rewards.mgpAPR }]
                                 }, undefined, false, undefined, this),
-                                /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(YieldBadge, {
+                                /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(YieldBadge, {
                                   asset: "rMGP",
                                   apy: aprToApy(rewards.mgpAPR) * 0.9,
                                   breakdown: [{ asset: "vlMGP", apy: aprToApy(rewards.mgpAPR) * 0.9 }]
@@ -36126,57 +36209,58 @@ var AppContent = () => {
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      page === "deposit" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(DepositPage, {}, undefined, false, undefined, this),
-                      page === "redeem" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(RedeemPage, {}, undefined, false, undefined, this),
-                      page === "compoundRMGP" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(CompoundYield, {}, undefined, false, undefined, this)
+                      page === "getMGP" && /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(GetMGPPage, {}, undefined, false, undefined, this),
+                      page === "deposit" && /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(DepositPage, {}, undefined, false, undefined, this),
+                      page === "compoundRMGP" && /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(CompoundYield, {}, undefined, false, undefined, this),
+                      page === "redeem" && /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(RedeemPage, {}, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                     className: "bg-gray-800 p-3 border border-gray-700",
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                         className: "flex justify-between",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                             className: "bg-gray-700 p-1 rounded-lg flex",
                             children: [
-                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "convert" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "convert" ? setPage(undefined) : setPage("convert"),
                                 children: "Get yMGP"
                               }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "lock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "lock" ? setPage(undefined) : setPage("lock"),
                                 children: "Lock yMGP"
                               }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
-                                type: "button",
-                                className: `px-2 py-1 rounded-md transition-colors ${page === "unlock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                                onClick: () => page === "unlock" ? setPage(undefined) : setPage("unlock"),
-                                children: "Unlock yMGP"
-                              }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "claimYMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "claimYMGP" ? setPage(undefined) : setPage("claimYMGP"),
                                 children: "Claim Yield"
+                              }, undefined, false, undefined, this),
+                              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("button", {
+                                type: "button",
+                                className: `px-2 py-1 rounded-md transition-colors ${page === "unlock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                                onClick: () => page === "unlock" ? setPage(undefined) : setPage("unlock"),
+                                children: "Unlock yMGP"
                               }, undefined, false, undefined, this)
                             ]
                           }, undefined, true, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                             className: "flex flex-row-reverse h-min",
-                            children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                            children: /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                               className: "flex gap-1",
                               children: [
-                                /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(YieldBadge, {
+                                /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(YieldBadge, {
                                   asset: "yMGP",
                                   apy: aprToApy(rewards.mgpAPR) * 0.9,
                                   breakdown: [{ asset: "rMGP", apy: aprToApy(rewards.mgpAPR) * 0.9 }]
                                 }, undefined, false, undefined, this),
-                                /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(YieldBadge, {
+                                /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(YieldBadge, {
                                   asset: "Locked yMGP",
                                   apy: Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.ymgp) + aprToApy(rewards.mgpAPR) * 0.9,
                                   suffix: "+",
@@ -36191,26 +36275,26 @@ var AppContent = () => {
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      page === "convert" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ConvertPage, {}, undefined, false, undefined, this),
-                      page === "lock" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(LockPage, {}, undefined, false, undefined, this),
-                      page === "unlock" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(UnlockPage, {}, undefined, false, undefined, this),
-                      page === "claimYMGP" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ClaimYield, {}, undefined, false, undefined, this)
+                      page === "convert" && /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(ConvertPage, {}, undefined, false, undefined, this),
+                      page === "lock" && /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(LockPage, {}, undefined, false, undefined, this),
+                      page === "claimYMGP" && /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(ClaimYield, {}, undefined, false, undefined, this),
+                      page === "unlock" && /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(UnlockPage, {}, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                     className: "bg-gray-800 p-3 border border-gray-700",
-                    children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                    children: /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                       className: "flex justify-between",
-                      children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                      children: /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                         className: "bg-gray-700 p-1 rounded-lg flex",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
+                          /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("button", {
                             type: "button",
                             className: `px-2 py-1 rounded-md transition-colors ${page === "buyVotes" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                             onClick: () => page === "buyVotes" ? setPage(undefined) : setPage("buyVotes"),
                             children: "Get vMGP"
                           }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
+                          /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("button", {
                             type: "button",
                             className: `px-2 py-1 rounded-md transition-colors ${page === "vote" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                             onClick: () => page === "vote" ? setPage(undefined) : setPage("vote"),
@@ -36220,26 +36304,26 @@ var AppContent = () => {
                       }, undefined, true, undefined, this)
                     }, undefined, false, undefined, this)
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                     className: "bg-gray-800 p-3 border border-gray-700 rounded-b-xl",
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                         className: "flex justify-between",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                             className: "bg-gray-700 p-1 rounded-lg flex",
-                            children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
+                            children: /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("button", {
                               type: "button",
                               className: `px-2 py-1 rounded-md transition-colors ${page === "supplyLiquidity" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                               onClick: () => page === "supplyLiquidity" ? setPage(undefined) : setPage("supplyLiquidity"),
                               children: "Supply Liquidity"
                             }, undefined, false, undefined, this)
                           }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                             className: "flex flex-row-reverse h-min",
-                            children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                            children: /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
                               className: "flex gap-1",
-                              children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(YieldBadge, {
+                              children: /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(YieldBadge, {
                                 asset: "cMGP",
                                 apy: rewards.cmgpAPY,
                                 breakdown: [
@@ -36253,14 +36337,14 @@ var AppContent = () => {
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      page === "supplyLiquidity" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(SupplyLiquidityPage, {}, undefined, false, undefined, this)
+                      page === "supplyLiquidity" && /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(SupplyLiquidityPage, {}, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(QASection, {}, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ConversionRates, {}, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(Contracts, {}, undefined, false, undefined, this)
+              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(QASection, {}, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(ConversionRates, {}, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(Contracts, {}, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this)
         ]
@@ -36269,28 +36353,28 @@ var AppContent = () => {
   }, undefined, true, undefined, this);
 };
 var App = () => {
-  const [error, setError] = import_react51.useState("");
-  const [notification, setNotification] = import_react51.useState("");
-  const [page] = import_react51.useState("deposit");
-  return /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(GlobalProvider, {
+  const [error, setError] = import_react52.useState("");
+  const [notification, setNotification] = import_react52.useState("");
+  const [page] = import_react52.useState("deposit");
+  return /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(GlobalProvider, {
     setError,
     setNotification,
     page,
     children: [
-      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ErrorCard, {
+      /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(ErrorCard, {
         error,
         setError
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(NotificationCard, {
+      /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(NotificationCard, {
         notification,
         setNotification
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(AppContent, {}, undefined, false, undefined, this)
+      /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(AppContent, {}, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
 var App_default = App;
 
 // src/index.tsx
-var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
-import_client.default.createRoot(document.querySelector("#root")).render(/* @__PURE__ */ jsx_dev_runtime31.jsxDEV(App_default, {}, undefined, false, undefined, this));
+var jsx_dev_runtime32 = __toESM(require_jsx_dev_runtime(), 1);
+import_client.default.createRoot(document.querySelector("#root")).render(/* @__PURE__ */ jsx_dev_runtime32.jsxDEV(App_default, {}, undefined, false, undefined, this));

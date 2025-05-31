@@ -23,6 +23,7 @@ import { aprToApy } from './utils'
 import { CompoundYield } from './pages/CompoundYield'
 import { ClaimYield } from './pages/ClaimYield'
 import { NotificationCard } from './components/NotificationCard'
+import { GetMGPPage } from './pages/GetMGPPage'
 // import { Web3Provider } from '@ethersproject/providers';
 // import snapshot from '@snapshot-labs/snapshot.js';
 
@@ -46,7 +47,7 @@ declare global {
   }
 }
 
-export type Pages = 'deposit' | 'convert' | 'lock' | 'buyVotes' | 'supplyLiquidity' | 'unlock' | 'redeem' | 'compoundRMGP' | 'claimYMGP' | 'vote'
+export type Pages = 'getMGP' | 'deposit' | 'convert' | 'lock' | 'buyVotes' | 'supplyLiquidity' | 'unlock' | 'redeem' | 'compoundRMGP' | 'claimYMGP' | 'vote'
 
 const AppContent = (): ReactElement => {
   const [page, setPage] = useState<Pages | undefined>('deposit')
@@ -65,9 +66,10 @@ const AppContent = (): ReactElement => {
             <div className="bg-gray-800 p-3 border border-gray-700 rounded-t-xl">
               <div className="flex justify-between">
                 <div className="bg-gray-700 p-1 rounded-lg flex">
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'getMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'getMGP' ? setPage(undefined) : setPage('getMGP')}>Get MGP</button>
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'deposit' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'deposit' ? setPage(undefined) : setPage('deposit')}>Get rMGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'redeem' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'redeem' ? setPage(undefined) : setPage('redeem')}>Redeem rMGP</button>
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'compoundRMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'compoundRMGP' ? setPage(undefined) : setPage('compoundRMGP')}>Compound Yield</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'redeem' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'redeem' ? setPage(undefined) : setPage('redeem')}>Redeem rMGP</button>
                 </div>
                 <div className="flex flex-row-reverse h-min">
                   <div className="flex gap-1">
@@ -76,17 +78,18 @@ const AppContent = (): ReactElement => {
                   </div>
                 </div>
               </div>
+              {page === 'getMGP' && <GetMGPPage />}
               {page === 'deposit' && <DepositPage />}
-              {page === 'redeem' && <RedeemPage />}
               {page === 'compoundRMGP' && <CompoundYield />}
+              {page === 'redeem' && <RedeemPage />}
             </div>
             <div className="bg-gray-800 p-3 border border-gray-700">
               <div className="flex justify-between">
                 <div className="bg-gray-700 p-1 rounded-lg flex">
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'convert' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'convert' ? setPage(undefined) : setPage('convert')}>Get yMGP</button>
+                <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'convert' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'convert' ? setPage(undefined) : setPage('convert')}>Get yMGP</button>
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'lock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'lock' ? setPage(undefined) : setPage('lock')}>Lock yMGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'unlock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'unlock' ? setPage(undefined) : setPage('unlock')}>Unlock yMGP</button>
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'claimYMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'claimYMGP' ? setPage(undefined) : setPage('claimYMGP')}>Claim Yield</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'unlock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'unlock' ? setPage(undefined) : setPage('unlock')}>Unlock yMGP</button>
                 </div>
                 <div className="flex flex-row-reverse h-min">
                   <div className="flex gap-1">
@@ -101,8 +104,8 @@ const AppContent = (): ReactElement => {
               </div>
               {page === 'convert' && <ConvertPage />}
               {page === 'lock' && <LockPage />}
-              {page === 'unlock' && <UnlockPage />}
               {page === 'claimYMGP' && <ClaimYield />}
+              {page === 'unlock' && <UnlockPage />}
             </div>
             <div className="bg-gray-800 p-3 border border-gray-700">
               <div className="flex justify-between">
@@ -110,9 +113,8 @@ const AppContent = (): ReactElement => {
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'buyVotes' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'buyVotes' ? setPage(undefined) : setPage('buyVotes')}>Get vMGP</button>
                   <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'vote' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'vote' ? setPage(undefined) : setPage('vote')}>Vote</button>
                 </div>
-                {/* <Badge title="Vote Multiplier" value={supplies.vmgp / supplies.rmgp} /> */}
               </div>
-              {/* {page === 'buyVotes' && <BuyVotesPage sendAmount={amounts.send} ymgpAllowance={allowances.ymgp} ymgpAllowanceCurve={allowances.ymgpCurve} ymgpBalance={balances.ymgp} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} onApprove={approve} setSendAmount={amounts.setSend} />} */}
+              {/* <Badge title="Vote Multiplier" value={supplies.vmgp / supplies.rmgp} /> */}
             </div>
             <div className="bg-gray-800 p-3 border border-gray-700 rounded-b-xl">
               <div className="flex justify-between">
@@ -131,6 +133,7 @@ const AppContent = (): ReactElement => {
                 </div>
               </div>
               {page === 'supplyLiquidity' && <SupplyLiquidityPage />}
+              {/* {page === 'buyVotes' && <BuyVotesPage sendAmount={amounts.send} ymgpAllowance={allowances.ymgp} ymgpAllowanceCurve={allowances.ymgpCurve} ymgpBalance={balances.ymgp} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} onApprove={approve} setSendAmount={amounts.setSend} />} */}
             </div>
           </div>
           <QASection />

@@ -22,6 +22,7 @@ import { YieldBadge } from './components/YieldBadge'
 import { aprToApy } from './utils'
 import { CompoundYield } from './pages/CompoundYield'
 import { ClaimYield } from './pages/ClaimYield'
+import { NotificationCard } from './components/NotificationCard'
 // import { Web3Provider } from '@ethersproject/providers';
 // import snapshot from '@snapshot-labs/snapshot.js';
 
@@ -143,11 +144,13 @@ const AppContent = (): ReactElement => {
 
 const App = (): ReactElement => {
   const [error, setError] = useState('')
+  const [notification, setNotification] = useState('')
   const [page] = useState<Pages>('deposit')
 
   return (
-    <GlobalProvider setError={setError} page={page} >
+    <GlobalProvider setError={setError} setNotification={setNotification} page={page} >
       <ErrorCard error={error} setError={setError} />
+      <NotificationCard notification={notification} setNotification={setNotification} />
       <AppContent />
     </GlobalProvider>
   )

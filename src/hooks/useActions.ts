@@ -21,10 +21,13 @@ import { UseWallet } from "./useWallet"
 import { UseWithdraws } from "./useWithdraws"
 import { UseContracts } from "./useContracts"
 import { Pages } from "../App"
+import { useSwap } from "./actions/useSwap"
+import { Coins } from "../config/contracts"
 
 interface Props<W extends UseWallet> {
   page: Pages
   setError: (_msg: string) => void
+  setNotification: (_msg: string) => void
   wallet: W
   balances: UseBalances
   allowances: UseAllowances
@@ -37,7 +40,7 @@ interface Props<W extends UseWallet> {
 }
 
 export interface UseActions {
-  approve: () => void
+  approve: (_contract: 'RMGP' | 'YMGP' | 'CMGP' | 'ODOSRouter', _coin: Coins, _infinity: boolean) => void
   depositMGP: () => void
   buyRMGP: () => void
   buyYMGP: () => void
@@ -50,9 +53,10 @@ export interface UseActions {
   compoundRMGP: () => void
   claimYMGPRewards: () => void
   supplyLiquidity: () => void
+  swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void
 }
 
-export const useActions = <W extends UseWallet>({ page, setError, wallet, balances, allowances, supplies, writeContracts, locked, amounts, withdraws, rewards }: Props<W>): UseActions => {
+export const useActions = <W extends UseWallet>({ page, setError, setNotification, wallet, balances, allowances, supplies, writeContracts, locked, amounts, withdraws, rewards }: Props<W>): UseActions => {
   const approve = useApprove({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, page, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, writeContracts })
   const depositMGP = useDepositMGP({ account: wallet.account, allowances, balances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, supplies, updateReefiLockedMGP: locked.updateReefiMGP, updateTotalLockedMGP: locked.updateMGP, writeContracts })
   const buyRMGP = useBuyRMGP({ account: wallet.account, allowances, balances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts })
@@ -66,6 +70,7 @@ export const useActions = <W extends UseWallet>({ page, setError, wallet, balanc
   const compoundRMGP = useCompoundRMGP({ account: wallet.account, balances, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, supplies, updatePendingRewards: rewards.updatePendingRewards, updateReefiLockedMGP: locked.updateReefiMGP, updateTotalLockedMGP: locked.updateMGP, updateUnclaimedUserYield: rewards.updateUnclaimedUserYield, writeContracts })
   const claimYMGPRewards = useClaimYMGPRewards({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateUnclaimedUserYield: rewards.updateUnclaimedUserYield, writeContracts })
   const supplyLiquidity = useSupplyLiquidity({ account: wallet.account, balances, chain: wallet.chain, clients: wallet.clients, mgpLPAmount: amounts.mgpLP, rmgpLPAmount: amounts.rmgpLP, setConnectRequired: wallet.setConnectRequired, writeContracts, ymgpLPAmount: amounts.ymgpLP })
+  const swap = useSwap({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, setNotification })
 
-  return { approve, depositMGP, buyRMGP, buyYMGP, buyMGP, depositRMGP, lockYMGP, unlockYMGP, redeemRMGP, withdrawMGP, compoundRMGP, claimYMGPRewards, supplyLiquidity }
+  return { approve, depositMGP, buyRMGP, buyYMGP, buyMGP, depositRMGP, lockYMGP, unlockYMGP, redeemRMGP, withdrawMGP, compoundRMGP, claimYMGPRewards, supplyLiquidity, swap }
 }

@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback } from "react"
-import { Chains, contracts } from "../../config/contracts"
+import { Chains, Coins, contracts } from "../../config/contracts"
 import { WalletClient, PublicActions } from "viem"
 import { Pages } from "../../App"
 import { UseContracts } from "../useContracts"
@@ -16,7 +16,7 @@ interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | u
   writeContracts: UseContracts<Clients>
 }
 
-export const useApprove = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, page, sendAmount, setConnectRequired, writeContracts }: Props<Clients>): () => void => {
+export const useApprove = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, page, sendAmount, setConnectRequired, writeContracts }: Props<Clients>): (_contract: 'RMGP' | 'YMGP' | 'CMGP' | 'ODOSRouter', _coin: Coins, _infinity: boolean) => void => {
   const accountRef = useRef(account)
   const allowancesRef = useRef(allowances)
   const chainRef = useRef(chain)
@@ -58,19 +58,13 @@ export const useApprove = <Clients extends Record<Chains, WalletClient & PublicA
     writeContractsRef.current = writeContracts
   }, [writeContracts])
 
-  const approve = useCallback(async (infinity = false, curve = false): Promise<void> => {
+  const approve = useCallback(async (contract: 'RMGP' | 'YMGP' | 'CMGP' | 'ODOSRouter', coin: Coins, infinity: boolean): Promise<void> => {
     if (clientsRef.current === undefined || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    if (pageRef.current === 'deposit') {
-      const amount = infinity ? 2n ** 256n - 1n : sendAmountRef.current;
-      await writeContractsRef.current[chainRef.current].MGP.write.approve([curve ? contracts[chainRef.current].CMGP.address : contracts[chainRef.current].RMGP.address, amount], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-      if (curve) allowancesRef.current.curve.MGP[1]()
-      else allowancesRef.current.MGP[1]()
-    } else if (pageRef.current === 'convert' || pageRef.current === 'redeem') {
-      const amount = infinity ? 2n ** 256n - 1n : sendAmountRef.current;
-      await writeContractsRef.current[chainRef.current].RMGP.write.approve([curve ? contracts[chainRef.current].CMGP.address : contracts[chainRef.current].YMGP.address, amount], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-      if (curve) allowancesRef.current.curve.RMGP[1]()
-      else allowancesRef.current.RMGP[1]()
-    }
+    const amount = infinity ? 2n ** 256n - 1n : sendAmountRef.current;
+    await writeContractsRef.current[chainRef.current][coin].write.approve([contracts[chainRef.current][contract].address, amount], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
+    if (contract === 'CMGP') allowancesRef.current.curve[coin][1]()
+    else if (contract === 'ODOSRouter') allowancesRef.current.odos[coin][1]()
+    else allowancesRef.current.curve[coin][1]()
   }, [])
 
   return approve

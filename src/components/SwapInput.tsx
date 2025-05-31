@@ -14,10 +14,10 @@ interface Props {
 }
 
 export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin }: Props): ReactElement => {
-  const { exchangeRates, prices } = useGlobalContext()
+  const { exchangeRates, prices, wallet } = useGlobalContext()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const excludeCoins = new Set([ outputCoin, 'CMGP' ])
+  const excludeCoins = new Set([ outputCoin, 'CMGP', wallet.chain === 56 ? 'ETH' : 'BNB' ])
   const availableCoins = (Object.keys(coins) as Coins[]).filter(coin => !excludeCoins.has(coin))
   
   useEffect(() => {
@@ -44,7 +44,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
     <div className="mb-4">
       <div className="flex justify-between items-center mb-1">
         <h3 className="text-md font-medium">{label}</h3>
-        <div className="text-sm text-gray-400">Balance: {formatEther(balance, decimals[selectedCoin]).toFixed(4)} {selectedCoin}</div>
+        <div className="text-sm text-gray-400">Balance: {formatEther(balance, decimals[selectedCoin]).toFixed(4)} {selectedCoin === 'ETH' || selectedCoin === 'BNB' ? `W${selectedCoin}` : selectedCoin}</div>
       </div>
       <div className="bg-gray-900 rounded-lg p-4 flex items-center justify-between">
         <input type="text" placeholder='0' className="bg-transparent outline-none text-xl w-3/4" value={value === 0n ? undefined : formatEther(value, decimals[selectedCoin])} onChange={e => onChange(BigInt(Math.round((Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)) * Number(10n ** BigInt(decimals[selectedCoin])))))} />
@@ -53,7 +53,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
           <div className="relative" ref={dropdownRef}>
             <button type="button" onClick={() => setIsDropdownOpen(!isDropdownOpen)} className={`rounded-md px-3 py-1 flex items-center cursor-pointer hover:opacity-90 transition-opacity ${coins[selectedCoin].bgColor}`}>
               <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-2 ${coins[selectedCoin].color}`}>{selectedCoin[0]?.toUpperCase()}</div>
-              <span className="mr-2">{selectedCoin}</span>
+              <span className="mr-2">{selectedCoin === 'ETH' || selectedCoin === 'BNB' ? `W${selectedCoin}` : selectedCoin}</span>
               <svg className={`w-4 h-4 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
             </button>
             {isDropdownOpen && <div className="absolute top-full mt-1 right-0 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50 min-w-32">
@@ -62,7 +62,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
                 setIsDropdownOpen(false)
               }}>
                 <div className={`w-5 h-5 rounded-full flex items-center justify-center mr-2 ${coins[coin].color}`}>{coin[0]?.toUpperCase()}</div>
-                <span>{coin}</span>
+                <span>{coin === 'ETH' || coin === 'BNB' ? `W${coin}` : coin}</span>
               </button>)}
             </div>}
           </div>

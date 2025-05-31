@@ -3,7 +3,7 @@ import { type ReactElement, memo, useState } from 'react'
 interface TokenApprovalProps {
   readonly allowance: bigint
   readonly sendAmount: bigint
-  readonly onApprove: (_infinity: boolean, _curve: boolean) => void
+  readonly onApprove: (_infinity: boolean) => void
   readonly tokenSymbol: string
   readonly curve?: boolean
   readonly className?: string
@@ -15,7 +15,7 @@ export const TokenApproval = memo(({ allowance, sendAmount, onApprove, tokenSymb
 
   const handleApprove = (): void => {
     setIsApproving(true)
-    onApprove(approveInfinity, curve)
+    onApprove(approveInfinity)
   }
 
   if (allowance >= sendAmount) return

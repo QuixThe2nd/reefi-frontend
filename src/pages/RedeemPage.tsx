@@ -1,13 +1,12 @@
 import { memo, type ReactElement } from 'react'
-import { AmountInput } from '../components/AmountInput';
 import { formatTime, formatEther } from '../utils';
-import { BuyOnCurve } from '../components/BuyOnCurve';
 import { useGlobalContext } from '../contexts/GlobalContext';
 import { decimals } from '../config/contracts';
 import { Page } from '../components/Page';
+import { SwapToken } from '../components/SwapToken';
 
 export const RedeemPage = memo((): ReactElement => {
-  const { actions, balances, amounts, allowances, exchangeRates, withdraws } = useGlobalContext()
+  const { actions, amounts, exchangeRates, withdraws } = useGlobalContext()
   return <Page info={[
     "rMGP can be redeemed for the underlying MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate via Curve.",
     "The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.",
@@ -15,11 +14,7 @@ export const RedeemPage = memo((): ReactElement => {
     "With the 10% withdrawal fee, rMGP depegs under 90% of the underlying value always recover as they can be arbitraged by people willing to wait for withdrawals to be processed.",
     "Half of the withdrawal fee (5% of withdrawal) is redistributed to yMGP holders as yield, with the other half sent to the Reefi treasury."
   ]}>
-    <AmountInput label="Get MGP" token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={balances.RMGP[0]} value={amounts.send} onChange={amounts.setSend} />
-    <div className="grid grid-cols-2 gap-2">
-      <button type="submit" className="py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min" onClick={actions.redeemRMGP}>Redeem via Queue ({(exchangeRates.mintRMGP*0.9*formatEther(amounts.send)).toFixed(4)} MGP)</button>
-      <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.rmgpMgpCurve} allowanceCurve={allowances.curve.RMGP[0]} nativeRate={exchangeRates.mintRMGP*0.9} onApprove={actions.approve} buy={actions.buyMGP} tokenASymbol='rMGP' tokenBSymbol='MGP' />
-    </div>
+    <SwapToken originalTokenIn="RMGP" tokenOut="MGP" nativeRate={0.9*exchangeRates.mintRMGP} curveAmount={amounts.rmgpMgpCurve} buy={actions.buyMGP} nativeSwap={actions.redeemRMGP} label="Redeem via Queue" />
     <div className="mt-4 text-sm text-gray-400 flex justify-between">
       <span>Native Redemption Rate</span>
       <span>{exchangeRates.curve.rmgpMGP} MGP to rMGP</span>

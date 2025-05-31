@@ -1,28 +1,13 @@
-import { memo, type ReactElement, useState } from 'react'
-import { TokenApproval } from '../components/TokenApproval'
-import { SwapInput } from '../components/SwapInput'
-import { aprToApy, formatEther } from '../utils'
-import { BuyOnCurve } from '../components/BuyOnCurve'
-import { type Coins } from '../config/contracts'
+import { memo, type ReactElement } from 'react'
+import { aprToApy } from '../utils'
 import { useGlobalContext } from '../contexts/GlobalContext'
 import { Page } from '../components/Page'
+import { SwapToken } from '../components/SwapToken'
 
 export const DepositPage = memo((): ReactElement => {
-  const { actions, allowances, amounts, balances, exchangeRates, rewards } = useGlobalContext()
-  const [selectedCoin, setSelectedCoin] = useState<Coins>('MGP')
-
-  return <Page info={selectedCoin === 'MGP' ? "MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards." : `${selectedCoin} will be swapped to MGP and then converted to rMGP to earn auto compounded yield. Other coins support coming soon.`}>
-    <SwapInput label="Get rMGP" selectedCoin={selectedCoin} onCoinChange={setSelectedCoin} balance={balances[selectedCoin][0]} value={amounts.send} onChange={amounts.setSend} outputCoin='RMGP' />
-    {selectedCoin === 'MGP' ? <div className="grid grid-cols-2 gap-2">
-      <div>
-        <TokenApproval sendAmount={amounts.send} allowance={allowances[selectedCoin][0]} onApprove={actions.approve} tokenSymbol={selectedCoin} />
-        <button type="submit" className="py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full" onClick={actions.depositMGP}>Mint ({formatEther(BigInt(Number(amounts.send)/exchangeRates.mintRMGP)).toFixed(4)} rMGP)</button>
-      </div>
-      <BuyOnCurve sendAmount={amounts.send} curveAmount={amounts.mgpRmgpCurve} allowanceCurve={allowances.curve[selectedCoin][0]} nativeRate={exchangeRates.mintRMGP} onApprove={actions.approve} buy={actions.buyRMGP} tokenASymbol={selectedCoin} tokenBSymbol='rMGP' />
-    </div> : <>
-      <TokenApproval sendAmount={amounts.send} allowance={allowances.curve[selectedCoin][0]} onApprove={actions.approve} tokenSymbol={selectedCoin} />
-      <button type="submit" className="py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full" onClick={actions.swapToMGP}>Swap to MGP</button>
-    </>}
+  const { actions, amounts, rewards, exchangeRates } = useGlobalContext()
+  return <Page info="MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.">
+    <SwapToken originalTokenIn="MGP" tokenOut="RMGP" nativeRate={1/exchangeRates.mintRMGP} curveAmount={amounts.mgpRmgpCurve} buy={actions.buyRMGP} label="Mint" nativeSwap={actions.depositMGP} />
     <div className="mt-4 text-sm text-gray-400">
       <div className="flex justify-between mb-1">
         <span>Original APR</span>

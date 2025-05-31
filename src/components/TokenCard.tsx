@@ -6,6 +6,7 @@ interface Props {
   readonly symbol: string,
   readonly decimals: number,
   readonly description: string,
+  readonly color: 'green' | 'blue'
   readonly price?: number,
   readonly supply: bigint,
   readonly locked?: bigint,
@@ -15,13 +16,13 @@ interface Props {
   readonly underlyingSymbol?: string | undefined,
 }
 
-export const TokenCard = memo(({ symbol, decimals, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }: Props): ReactElement => {
+export const TokenCard = memo(({ symbol, decimals, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate, color = "green" }: Props): ReactElement => {
   return <div className="bg-gray-800 p-2 rounded-xl border border-gray-700">
     <div className="grid grid-cols-3">
       <div className="flex justify-between items-start">
         <div>
           <div className="flex items-center">
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2">{symbol[0]?.toUpperCase()}</div>
+            <div className={`w-8 h-8 rounded-full bg-${color}-500 flex items-center justify-center mr-2`}>{symbol[0]?.toUpperCase()}</div>
             <p className="font-bold text-lg">${symbol}</p>
           </div>
           {price !== undefined && <h2 className="text-2xl font-bold mt-2">${price.toFixed(4)}</h2>}

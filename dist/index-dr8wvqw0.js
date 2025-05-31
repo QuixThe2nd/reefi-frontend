@@ -24509,10 +24509,10 @@ var init_call = __esm(() => {
 var import_client = __toESM(require_client(), 1);
 
 // src/App.tsx
-var import_react48 = __toESM(require_react(), 1);
+var import_react51 = __toESM(require_react(), 1);
 
 // src/components/TokenCards.tsx
-var import_react25 = __toESM(require_react(), 1);
+var import_react26 = __toESM(require_react(), 1);
 
 // src/components/TokenCard.tsx
 var import_react2 = __toESM(require_react(), 1);
@@ -24574,7 +24574,7 @@ TokenStat.displayName = "TokenStat";
 
 // src/components/TokenCard.tsx
 var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenCard = import_react2.memo(({ symbol, decimals, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }) => {
+var TokenCard = import_react2.memo(({ symbol, decimals, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate, color = "green" }) => {
   return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
     className: "bg-gray-800 p-2 rounded-xl border border-gray-700",
     children: [
@@ -24589,7 +24589,7 @@ var TokenCard = import_react2.memo(({ symbol, decimals, description, price, supp
                   className: "flex items-center",
                   children: [
                     /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-                      className: "w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-2",
+                      className: `w-8 h-8 rounded-full bg-${color}-500 flex items-center justify-center mr-2`,
                       children: symbol[0]?.toUpperCase()
                     }, undefined, false, undefined, this),
                     /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("p", {
@@ -32200,6 +32200,9 @@ var VLREWARDER = [{ inputs: [{ internalType: "address", name: "_logic", type: "a
 // src/config/ABIs/CMGP.ts
 var CMGP = [{ name: "Transfer", inputs: [{ name: "sender", type: "address", indexed: true }, { name: "receiver", type: "address", indexed: true }, { name: "value", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "Approval", inputs: [{ name: "owner", type: "address", indexed: true }, { name: "spender", type: "address", indexed: true }, { name: "value", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "TokenExchange", inputs: [{ name: "buyer", type: "address", indexed: true }, { name: "sold_id", type: "uint256", indexed: false }, { name: "tokens_sold", type: "uint256", indexed: false }, { name: "bought_id", type: "uint256", indexed: false }, { name: "tokens_bought", type: "uint256", indexed: false }, { name: "fee", type: "uint256", indexed: false }, { name: "packed_price_scale", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "AddLiquidity", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amounts", type: "uint256[3]", indexed: false }, { name: "fee", type: "uint256", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }, { name: "packed_price_scale", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RemoveLiquidity", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amounts", type: "uint256[3]", indexed: false }, { name: "token_supply", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RemoveLiquidityOne", inputs: [{ name: "provider", type: "address", indexed: true }, { name: "token_amount", type: "uint256", indexed: false }, { name: "coin_index", type: "uint256", indexed: false }, { name: "coin_amount", type: "uint256", indexed: false }, { name: "approx_fee", type: "uint256", indexed: false }, { name: "packed_price_scale", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "NewParameters", inputs: [{ name: "mid_fee", type: "uint256", indexed: false }, { name: "out_fee", type: "uint256", indexed: false }, { name: "fee_gamma", type: "uint256", indexed: false }, { name: "allowed_extra_profit", type: "uint256", indexed: false }, { name: "adjustment_step", type: "uint256", indexed: false }, { name: "ma_time", type: "uint256", indexed: false }, { name: "xcp_ma_time", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "RampAgamma", inputs: [{ name: "initial_A", type: "uint256", indexed: false }, { name: "future_A", type: "uint256", indexed: false }, { name: "initial_gamma", type: "uint256", indexed: false }, { name: "future_gamma", type: "uint256", indexed: false }, { name: "initial_time", type: "uint256", indexed: false }, { name: "future_time", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "StopRampA", inputs: [{ name: "current_A", type: "uint256", indexed: false }, { name: "current_gamma", type: "uint256", indexed: false }, { name: "time", type: "uint256", indexed: false }], anonymous: false, type: "event" }, { name: "ClaimAdminFee", inputs: [{ name: "admin", type: "address", indexed: true }, { name: "tokens", type: "uint256[3]", indexed: false }], anonymous: false, type: "event" }, { stateMutability: "nonpayable", type: "constructor", inputs: [{ name: "_name", type: "string" }, { name: "_symbol", type: "string" }, { name: "_coins", type: "address[3]" }, { name: "_math", type: "address" }, { name: "_weth", type: "address" }, { name: "_salt", type: "bytes32" }, { name: "__packed_precisions", type: "uint256" }, { name: "packed_A_gamma", type: "uint256" }, { name: "packed_fee_params", type: "uint256" }, { name: "packed_rebalancing_params", type: "uint256" }, { name: "packed_prices", type: "uint256" }], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "exchange", inputs: [{ name: "i", type: "uint256" }, { name: "j", type: "uint256" }, { name: "dx", type: "uint256" }, { name: "min_dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange", inputs: [{ name: "i", type: "uint256" }, { name: "j", type: "uint256" }, { name: "dx", type: "uint256" }, { name: "min_dy", type: "uint256" }, { name: "receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange_received", inputs: [{ name: "i", type: "uint256" }, { name: "j", type: "uint256" }, { name: "dx", type: "uint256" }, { name: "min_dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "exchange_received", inputs: [{ name: "i", type: "uint256" }, { name: "j", type: "uint256" }, { name: "dx", type: "uint256" }, { name: "min_dy", type: "uint256" }, { name: "receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "add_liquidity", inputs: [{ name: "amounts", type: "uint256[3]" }, { name: "min_mint_amount", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "add_liquidity", inputs: [{ name: "amounts", type: "uint256[3]" }, { name: "min_mint_amount", type: "uint256" }, { name: "receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity", inputs: [{ name: "_amount", type: "uint256" }, { name: "min_amounts", type: "uint256[3]" }], outputs: [{ name: "", type: "uint256[3]" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity", inputs: [{ name: "_amount", type: "uint256" }, { name: "min_amounts", type: "uint256[3]" }, { name: "receiver", type: "address" }], outputs: [{ name: "", type: "uint256[3]" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_one_coin", inputs: [{ name: "token_amount", type: "uint256" }, { name: "i", type: "uint256" }, { name: "min_amount", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "remove_liquidity_one_coin", inputs: [{ name: "token_amount", type: "uint256" }, { name: "i", type: "uint256" }, { name: "min_amount", type: "uint256" }, { name: "receiver", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "nonpayable", type: "function", name: "transferFrom", inputs: [{ name: "_from", type: "address" }, { name: "_to", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "transfer", inputs: [{ name: "_to", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "approve", inputs: [{ name: "_spender", type: "address" }, { name: "_value", type: "uint256" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "nonpayable", type: "function", name: "permit", inputs: [{ name: "_owner", type: "address" }, { name: "_spender", type: "address" }, { name: "_value", type: "uint256" }, { name: "_deadline", type: "uint256" }, { name: "_v", type: "uint8" }, { name: "_r", type: "bytes32" }, { name: "_s", type: "bytes32" }], outputs: [{ name: "", type: "bool" }] }, { stateMutability: "view", type: "function", name: "fee_receiver", inputs: [], outputs: [{ name: "", type: "address" }] }, { stateMutability: "view", type: "function", name: "admin", inputs: [], outputs: [{ name: "", type: "address" }] }, { stateMutability: "view", type: "function", name: "calc_token_amount", inputs: [{ name: "amounts", type: "uint256[3]" }, { name: "deposit", type: "bool" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_dy", inputs: [{ name: "i", type: "uint256" }, { name: "j", type: "uint256" }, { name: "dx", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_dx", inputs: [{ name: "i", type: "uint256" }, { name: "j", type: "uint256" }, { name: "dy", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "lp_price", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "get_virtual_price", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "price_oracle", inputs: [{ name: "k", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "xcp_oracle", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "last_prices", inputs: [{ name: "k", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "price_scale", inputs: [{ name: "k", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "fee", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "calc_withdraw_one_coin", inputs: [{ name: "token_amount", type: "uint256" }, { name: "i", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "calc_token_fee", inputs: [{ name: "amounts", type: "uint256[3]" }, { name: "xp", type: "uint256[3]" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "A", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "gamma", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "mid_fee", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "out_fee", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "fee_gamma", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "allowed_extra_profit", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "adjustment_step", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "ma_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "precisions", inputs: [], outputs: [{ name: "", type: "uint256[3]" }] }, { stateMutability: "view", type: "function", name: "fee_calc", inputs: [{ name: "xp", type: "uint256[3]" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "DOMAIN_SEPARATOR", inputs: [], outputs: [{ name: "", type: "bytes32" }] }, { stateMutability: "nonpayable", type: "function", name: "ramp_A_gamma", inputs: [{ name: "future_A", type: "uint256" }, { name: "future_gamma", type: "uint256" }, { name: "future_time", type: "uint256" }], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "stop_ramp_A_gamma", inputs: [], outputs: [] }, { stateMutability: "nonpayable", type: "function", name: "apply_new_parameters", inputs: [{ name: "_new_mid_fee", type: "uint256" }, { name: "_new_out_fee", type: "uint256" }, { name: "_new_fee_gamma", type: "uint256" }, { name: "_new_allowed_extra_profit", type: "uint256" }, { name: "_new_adjustment_step", type: "uint256" }, { name: "_new_ma_time", type: "uint256" }, { name: "_new_xcp_ma_time", type: "uint256" }], outputs: [] }, { stateMutability: "view", type: "function", name: "MATH", inputs: [], outputs: [{ name: "", type: "address" }] }, { stateMutability: "view", type: "function", name: "coins", inputs: [{ name: "arg0", type: "uint256" }], outputs: [{ name: "", type: "address" }] }, { stateMutability: "view", type: "function", name: "factory", inputs: [], outputs: [{ name: "", type: "address" }] }, { stateMutability: "view", type: "function", name: "last_timestamp", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "last_xcp", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "xcp_ma_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "initial_A_gamma", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "initial_A_gamma_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "future_A_gamma", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "future_A_gamma_time", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "balances", inputs: [{ name: "arg0", type: "uint256" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "D", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "xcp_profit", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "xcp_profit_a", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "virtual_price", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "packed_rebalancing_params", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "packed_fee_params", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "ADMIN_FEE", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "name", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "symbol", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "decimals", inputs: [], outputs: [{ name: "", type: "uint8" }] }, { stateMutability: "view", type: "function", name: "version", inputs: [], outputs: [{ name: "", type: "string" }] }, { stateMutability: "view", type: "function", name: "balanceOf", inputs: [{ name: "arg0", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "allowance", inputs: [{ name: "arg0", type: "address" }, { name: "arg1", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "totalSupply", inputs: [], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "nonces", inputs: [{ name: "arg0", type: "address" }], outputs: [{ name: "", type: "uint256" }] }, { stateMutability: "view", type: "function", name: "salt", inputs: [], outputs: [{ name: "", type: "bytes32" }] }];
 
+// src/config/ABIs/ODOSRouter.ts
+var ODOSRouter = [{ inputs: [], stateMutability: "nonpayable", type: "constructor" }, { anonymous: false, inputs: [{ indexed: true, internalType: "address", name: "previousOwner", type: "address" }, { indexed: true, internalType: "address", name: "newOwner", type: "address" }], name: "OwnershipTransferred", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "sender", type: "address" }, { indexed: false, internalType: "uint256", name: "inputAmount", type: "uint256" }, { indexed: false, internalType: "address", name: "inputToken", type: "address" }, { indexed: false, internalType: "uint256", name: "amountOut", type: "uint256" }, { indexed: false, internalType: "address", name: "outputToken", type: "address" }, { indexed: false, internalType: "int256", name: "slippage", type: "int256" }, { indexed: false, internalType: "uint32", name: "referralCode", type: "uint32" }], name: "Swap", type: "event" }, { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "sender", type: "address" }, { indexed: false, internalType: "uint256[]", name: "amountsIn", type: "uint256[]" }, { indexed: false, internalType: "address[]", name: "tokensIn", type: "address[]" }, { indexed: false, internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }, { indexed: false, internalType: "address[]", name: "tokensOut", type: "address[]" }, { indexed: false, internalType: "uint32", name: "referralCode", type: "uint32" }], name: "SwapMulti", type: "event" }, { inputs: [], name: "FEE_DENOM", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [], name: "REFERRAL_WITH_FEE_THRESHOLD", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "addressList", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint32", name: "", type: "uint32" }], name: "referralLookup", outputs: [{ internalType: "uint64", name: "referralFee", type: "uint64" }, { internalType: "address", name: "beneficiary", type: "address" }, { internalType: "bool", name: "registered", type: "bool" }], stateMutability: "view", type: "function" }, { inputs: [{ internalType: "uint32", name: "_referralCode", type: "uint32" }, { internalType: "uint64", name: "_referralFee", type: "uint64" }, { internalType: "address", name: "_beneficiary", type: "address" }], name: "registerReferralCode", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "uint256", name: "_swapMultiFee", type: "uint256" }], name: "setSwapMultiFee", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ components: [{ internalType: "address", name: "inputToken", type: "address" }, { internalType: "uint256", name: "inputAmount", type: "uint256" }, { internalType: "address", name: "inputReceiver", type: "address" }, { internalType: "address", name: "outputToken", type: "address" }, { internalType: "uint256", name: "outputQuote", type: "uint256" }, { internalType: "uint256", name: "outputMin", type: "uint256" }, { internalType: "address", name: "outputReceiver", type: "address" }], internalType: "struct OdosRouterV2.swapTokenInfo", name: "tokenInfo", type: "tuple" }, { internalType: "bytes", name: "pathDefinition", type: "bytes" }, { internalType: "address", name: "executor", type: "address" }, { internalType: "uint32", name: "referralCode", type: "uint32" }], name: "swap", outputs: [{ internalType: "uint256", name: "amountOut", type: "uint256" }], stateMutability: "payable", type: "function" }, { inputs: [], name: "swapCompact", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "payable", type: "function" }, { inputs: [{ components: [{ internalType: "address", name: "tokenAddress", type: "address" }, { internalType: "uint256", name: "amountIn", type: "uint256" }, { internalType: "address", name: "receiver", type: "address" }], internalType: "struct OdosRouterV2.inputTokenInfo[]", name: "inputs", type: "tuple[]" }, { components: [{ internalType: "address", name: "tokenAddress", type: "address" }, { internalType: "uint256", name: "relativeValue", type: "uint256" }, { internalType: "address", name: "receiver", type: "address" }], internalType: "struct OdosRouterV2.outputTokenInfo[]", name: "outputs", type: "tuple[]" }, { internalType: "uint256", name: "valueOutMin", type: "uint256" }, { internalType: "bytes", name: "pathDefinition", type: "bytes" }, { internalType: "address", name: "executor", type: "address" }, { internalType: "uint32", name: "referralCode", type: "uint32" }], name: "swapMulti", outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }], stateMutability: "payable", type: "function" }, { inputs: [], name: "swapMultiCompact", outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }], stateMutability: "payable", type: "function" }, { inputs: [], name: "swapMultiFee", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }, { inputs: [{ components: [{ internalType: "address", name: "contractAddress", type: "address" }, { internalType: "uint256", name: "nonce", type: "uint256" }, { internalType: "uint256", name: "deadline", type: "uint256" }, { internalType: "bytes", name: "signature", type: "bytes" }], internalType: "struct OdosRouterV2.permit2Info", name: "permit2", type: "tuple" }, { components: [{ internalType: "address", name: "tokenAddress", type: "address" }, { internalType: "uint256", name: "amountIn", type: "uint256" }, { internalType: "address", name: "receiver", type: "address" }], internalType: "struct OdosRouterV2.inputTokenInfo[]", name: "inputs", type: "tuple[]" }, { components: [{ internalType: "address", name: "tokenAddress", type: "address" }, { internalType: "uint256", name: "relativeValue", type: "uint256" }, { internalType: "address", name: "receiver", type: "address" }], internalType: "struct OdosRouterV2.outputTokenInfo[]", name: "outputs", type: "tuple[]" }, { internalType: "uint256", name: "valueOutMin", type: "uint256" }, { internalType: "bytes", name: "pathDefinition", type: "bytes" }, { internalType: "address", name: "executor", type: "address" }, { internalType: "uint32", name: "referralCode", type: "uint32" }], name: "swapMultiPermit2", outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }], stateMutability: "payable", type: "function" }, { inputs: [{ components: [{ internalType: "address", name: "contractAddress", type: "address" }, { internalType: "uint256", name: "nonce", type: "uint256" }, { internalType: "uint256", name: "deadline", type: "uint256" }, { internalType: "bytes", name: "signature", type: "bytes" }], internalType: "struct OdosRouterV2.permit2Info", name: "permit2", type: "tuple" }, { components: [{ internalType: "address", name: "inputToken", type: "address" }, { internalType: "uint256", name: "inputAmount", type: "uint256" }, { internalType: "address", name: "inputReceiver", type: "address" }, { internalType: "address", name: "outputToken", type: "address" }, { internalType: "uint256", name: "outputQuote", type: "uint256" }, { internalType: "uint256", name: "outputMin", type: "uint256" }, { internalType: "address", name: "outputReceiver", type: "address" }], internalType: "struct OdosRouterV2.swapTokenInfo", name: "tokenInfo", type: "tuple" }, { internalType: "bytes", name: "pathDefinition", type: "bytes" }, { internalType: "address", name: "executor", type: "address" }, { internalType: "uint32", name: "referralCode", type: "uint32" }], name: "swapPermit2", outputs: [{ internalType: "uint256", name: "amountOut", type: "uint256" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ components: [{ internalType: "address", name: "tokenAddress", type: "address" }, { internalType: "uint256", name: "amountIn", type: "uint256" }, { internalType: "address", name: "receiver", type: "address" }], internalType: "struct OdosRouterV2.inputTokenInfo[]", name: "inputs", type: "tuple[]" }, { components: [{ internalType: "address", name: "tokenAddress", type: "address" }, { internalType: "uint256", name: "relativeValue", type: "uint256" }, { internalType: "address", name: "receiver", type: "address" }], internalType: "struct OdosRouterV2.outputTokenInfo[]", name: "outputs", type: "tuple[]" }, { internalType: "uint256", name: "valueOutMin", type: "uint256" }, { internalType: "bytes", name: "pathDefinition", type: "bytes" }, { internalType: "address", name: "executor", type: "address" }], name: "swapRouterFunds", outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "tokens", type: "address[]" }, { internalType: "uint256[]", name: "amounts", type: "uint256[]" }, { internalType: "address", name: "dest", type: "address" }], name: "transferRouterFunds", outputs: [], stateMutability: "nonpayable", type: "function" }, { inputs: [{ internalType: "address[]", name: "addresses", type: "address[]" }], name: "writeAddressList", outputs: [], stateMutability: "nonpayable", type: "function" }, { stateMutability: "payable", type: "receive" }];
+
 // src/config/ABIs/abis.ts
 var ABIs = {
   MGP: erc20Abi,
@@ -32215,7 +32218,8 @@ var ABIs = {
   EGP: erc20Abi,
   LTP: erc20Abi,
   ETH: erc20Abi,
-  BNB: erc20Abi
+  BNB: erc20Abi,
+  ODOSRouter
 };
 
 // src/config/contracts.ts
@@ -32269,10 +32273,11 @@ var bscContracts = {
   ETH: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.ETH, client: publicClients[56] }),
   BNB: getContract({ address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", abi: ABIs.BNB, client: publicClients[56] }),
   PNP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.PNP, client: publicClients[56] }),
-  VMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.VMGP, client: publicClients[42161] }),
-  CKP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.CKP, client: publicClients[42161] }),
-  EGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.EGP, client: publicClients[42161] }),
-  LTP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.LTP, client: publicClients[42161] })
+  VMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.VMGP, client: publicClients[56] }),
+  CKP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.CKP, client: publicClients[56] }),
+  EGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.EGP, client: publicClients[56] }),
+  LTP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.LTP, client: publicClients[56] }),
+  ODOSRouter: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.ODOSRouter, client: publicClients[56] })
 };
 var arbContracts = {
   MGP: getContract({ address: "0xa61F74247455A40b01b0559ff6274441FAfa22A3", abi: erc20Abi, client: publicClients[42161] }),
@@ -32288,7 +32293,8 @@ var arbContracts = {
   VMGP: getContract({ address: "0x0000000000000000000000000000000000000000", abi: ABIs.VMGP, client: publicClients[42161] }),
   CKP: getContract({ address: "0x346Af1954e3d6be46B96dA713a1f7fD2d1928F1d", abi: ABIs.CKP, client: publicClients[42161] }),
   EGP: getContract({ address: "0x7E7a7C916c19a45769f6BDAF91087f93c6C12F78", abi: ABIs.EGP, client: publicClients[42161] }),
-  LTP: getContract({ address: "0xa73959804651eEd0D4bd04293A675cB832c20454", abi: ABIs.LTP, client: publicClients[42161] })
+  LTP: getContract({ address: "0xa73959804651eEd0D4bd04293A675cB832c20454", abi: ABIs.LTP, client: publicClients[42161] }),
+  ODOSRouter: getContract({ address: "0xa669e7A0d4b3e4Fa48af2dE86BD4CD7126Be4e13", abi: ABIs.ODOSRouter, client: publicClients[42161] })
 };
 var contracts = {
   56: bscContracts,
@@ -32296,7 +32302,7 @@ var contracts = {
 };
 
 // src/contexts/GlobalContext.tsx
-var import_react24 = __toESM(require_react(), 1);
+var import_react25 = __toESM(require_react(), 1);
 
 // src/hooks/useWallet.ts
 var import_react4 = __toESM(require_react(), 1);
@@ -33185,15 +33191,21 @@ var useAllowances = ({ wallet }) => {
     MGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "mgpCurve allowance", 0n),
     RMGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.chain, wallet.account], "rmgpCurve allowance", 0n),
     YMGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "ymgpCurve allowance", 0n),
-    CMGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "CMGPCurve allowance", 0n),
-    CKP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CKP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "CKPCurve allowance", 0n),
-    PNP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].PNP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "PNPCurve allowance", 0n),
-    EGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].EGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "EGPCurve allowance", 0n),
-    LTP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].LTP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "LTPCurve allowance", 0n),
-    ETH: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].ETH.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "ETHCurve allowance", 0n),
-    BNB: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].BNB.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "BNBCurve allowance", 0n)
+    CMGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CMGP.read.allowance([wallet.account, contracts[wallet.chain].CMGP.address]), [contracts, wallet.account], "CMGPCurve allowance", 0n)
   };
-  return { MGP, RMGP: RMGP2, curve };
+  const odos = {
+    MGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]), [contracts, wallet.chain, wallet.account], "mgp ODOS allowance", 0n),
+    RMGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].RMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]), [contracts, wallet.chain, wallet.account], "rmgp ODOS allowance", 0n),
+    YMGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]), [contracts, wallet.account], "ymgp ODOS allowance", 0n),
+    CMGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]), [contracts, wallet.account], "CMGP ODOS allowance", 0n),
+    CKP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CKP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]), [contracts, wallet.account], "CKP ODOS allowance", 0n),
+    PNP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].PNP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]), [contracts, wallet.account], "PNP ODOS allowance", 0n),
+    EGP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].EGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]), [contracts, wallet.account], "EGP ODOS allowance", 0n),
+    LTP: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].LTP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]), [contracts, wallet.account], "LTP ODOS allowance", 0n),
+    ETH: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].ETH.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]), [contracts, wallet.account], "ETH ODOS allowance", 0n),
+    BNB: useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].BNB.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]), [contracts, wallet.account], "BNB ODOS allowance", 0n)
+  };
+  return { MGP, RMGP: RMGP2, curve, odos };
 };
 
 // src/hooks/actions/useApprove.ts
@@ -33231,24 +33243,17 @@ var useApprove = ({ account, allowances, chain, clients, page, sendAmount, setCo
   import_react5.useEffect(() => {
     writeContractsRef.current = writeContracts;
   }, [writeContracts]);
-  const approve = import_react5.useCallback(async (infinity = false, curve = false) => {
+  const approve = import_react5.useCallback(async (contract, coin, infinity) => {
     if (clientsRef.current === undefined || !writeContractsRef.current || accountRef.current === undefined)
       return setConnectRequiredRef.current(true);
-    if (pageRef.current === "deposit") {
-      const amount = infinity ? 2n ** 256n - 1n : sendAmountRef.current;
-      await writeContractsRef.current[chainRef.current].MGP.write.approve([curve ? contracts[chainRef.current].CMGP.address : contracts[chainRef.current].RMGP.address, amount], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain });
-      if (curve)
-        allowancesRef.current.curve.MGP[1]();
-      else
-        allowancesRef.current.MGP[1]();
-    } else if (pageRef.current === "convert" || pageRef.current === "redeem") {
-      const amount = infinity ? 2n ** 256n - 1n : sendAmountRef.current;
-      await writeContractsRef.current[chainRef.current].RMGP.write.approve([curve ? contracts[chainRef.current].CMGP.address : contracts[chainRef.current].YMGP.address, amount], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain });
-      if (curve)
-        allowancesRef.current.curve.RMGP[1]();
-      else
-        allowancesRef.current.RMGP[1]();
-    }
+    const amount = infinity ? 2n ** 256n - 1n : sendAmountRef.current;
+    await writeContractsRef.current[chainRef.current][coin].write.approve([contracts[chainRef.current][contract].address, amount], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain });
+    if (contract === "CMGP")
+      allowancesRef.current.curve[coin][1]();
+    else if (contract === "ODOSRouter")
+      allowancesRef.current.odos[coin][1]();
+    else
+      allowancesRef.current.curve[coin][1]();
   }, []);
   return approve;
 };
@@ -33924,8 +33929,71 @@ var useWithdrawMGP = ({ account, balances, chain, clients, setConnectRequired, u
   return withdrawMGP;
 };
 
+// src/hooks/actions/useSwap.ts
+var import_react18 = __toESM(require_react(), 1);
+var useSwap = ({ account, allowances, chain, clients, sendAmount, setConnectRequired, setError, setNotification }) => {
+  const accountRef = import_react18.useRef(account);
+  const allowancesRef = import_react18.useRef(allowances);
+  const chainRef = import_react18.useRef(chain);
+  const clientsRef = import_react18.useRef(clients);
+  const sendAmountRef = import_react18.useRef(sendAmount);
+  const setConnectRequiredRef = import_react18.useRef(setConnectRequired);
+  const setErrorRef = import_react18.useRef(setError);
+  const setNotificationRef = import_react18.useRef(setNotification);
+  import_react18.useEffect(() => {
+    accountRef.current = account;
+  }, [account]);
+  import_react18.useEffect(() => {
+    allowancesRef.current = allowances;
+  }, [allowances]);
+  import_react18.useEffect(() => {
+    chainRef.current = chain;
+  }, [chain]);
+  import_react18.useEffect(() => {
+    clientsRef.current = clients;
+  }, [clients]);
+  import_react18.useEffect(() => {
+    sendAmountRef.current = sendAmount;
+  }, [sendAmount]);
+  import_react18.useEffect(() => {
+    setConnectRequiredRef.current = setConnectRequired;
+  }, [setConnectRequired]);
+  import_react18.useEffect(() => {
+    setErrorRef.current = setError;
+  }, [setError]);
+  import_react18.useEffect(() => {
+    setNotificationRef.current = setNotification;
+  }, [setNotification]);
+  const buyRMGP = import_react18.useCallback(async (tokenIn, tokenOut) => {
+    if (!clientsRef.current || accountRef.current === undefined)
+      return setConnectRequiredRef.current(true);
+    if (allowancesRef.current.curve.MGP[0] < sendAmountRef.current)
+      return setErrorRef.current("Allowance too low");
+    setNotificationRef.current("Fetching swap route");
+    const quoteRequestBody = {
+      chainId: chainRef.current,
+      inputTokens: [{ tokenAddress: tokenIn, amount: String(sendAmountRef.current) }],
+      outputTokens: [{ tokenAddress: tokenOut, proportion: 1 }],
+      userAddr: accountRef.current,
+      slippageLimitPercent: 5,
+      referralCode: 0,
+      disableRFQs: true,
+      compact: true
+    };
+    const response = await fetch("https://api.odos.xyz/sor/quote/v2", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(quoteRequestBody) });
+    if (!response.ok)
+      return setError("Failed to find route");
+    setNotificationRef.current("Assembling transaction");
+    const assembleRequestBody = { userAddr: accountRef.current, pathId: (await response.json()).pathId, simulate: false };
+    const response2 = await fetch("https://api.odos.xyz/sor/assemble", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(assembleRequestBody) });
+    const { transaction } = await response2.json();
+    await clientsRef.current[chainRef.current].sendTransaction({ ...transaction, account: accountRef.current, chain: undefined, gas: BigInt(Math.max(transaction.gas, 0)) });
+  }, []);
+  return buyRMGP;
+};
+
 // src/hooks/useActions.ts
-var useActions = ({ page, setError, wallet, balances, allowances, supplies, writeContracts, locked, amounts, withdraws, rewards }) => {
+var useActions = ({ page, setError, setNotification, wallet, balances, allowances, supplies, writeContracts, locked, amounts, withdraws, rewards }) => {
   const approve = useApprove({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, page, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, writeContracts });
   const depositMGP = useDepositMGP({ account: wallet.account, allowances, balances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, supplies, updateReefiLockedMGP: locked.updateReefiMGP, updateTotalLockedMGP: locked.updateMGP, writeContracts });
   const buyRMGP = useBuyRMGP({ account: wallet.account, allowances, balances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts });
@@ -33939,16 +34007,17 @@ var useActions = ({ page, setError, wallet, balances, allowances, supplies, writ
   const compoundRMGP = useCompoundRMGP({ account: wallet.account, balances, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, supplies, updatePendingRewards: rewards.updatePendingRewards, updateReefiLockedMGP: locked.updateReefiMGP, updateTotalLockedMGP: locked.updateMGP, updateUnclaimedUserYield: rewards.updateUnclaimedUserYield, writeContracts });
   const claimYMGPRewards = useClaimYMGPRewards({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateUnclaimedUserYield: rewards.updateUnclaimedUserYield, writeContracts });
   const supplyLiquidity = useSupplyLiquidity({ account: wallet.account, balances, chain: wallet.chain, clients: wallet.clients, mgpLPAmount: amounts.mgpLP, rmgpLPAmount: amounts.rmgpLP, setConnectRequired: wallet.setConnectRequired, writeContracts, ymgpLPAmount: amounts.ymgpLP });
-  return { approve, depositMGP, buyRMGP, buyYMGP, buyMGP, depositRMGP, lockYMGP, unlockYMGP, redeemRMGP, withdrawMGP, compoundRMGP, claimYMGPRewards, supplyLiquidity };
+  const swap = useSwap({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, setNotification });
+  return { approve, depositMGP, buyRMGP, buyYMGP, buyMGP, depositRMGP, lockYMGP, unlockYMGP, redeemRMGP, withdrawMGP, compoundRMGP, claimYMGPRewards, supplyLiquidity, swap };
 };
 
 // src/hooks/useAmounts.ts
-var import_react18 = __toESM(require_react(), 1);
+var import_react19 = __toESM(require_react(), 1);
 var useAmounts = ({ wallet }) => {
-  const [send, setSend] = import_react18.useState(parseEther(1));
-  const [mgpLP, setMGPLP] = import_react18.useState(0n);
-  const [rmgpLP, setRMGPLP] = import_react18.useState(0n);
-  const [ymgpLP, setYMGPLP] = import_react18.useState(0n);
+  const [send, setSend] = import_react19.useState(parseEther(1));
+  const [mgpLP, setMGPLP] = import_react19.useState(0n);
+  const [rmgpLP, setRMGPLP] = import_react19.useState(0n);
+  const [ymgpLP, setYMGPLP] = import_react19.useState(0n);
   const [mgpRmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([0n, 1n, send], { account: wallet.account }), [contracts, wallet.chain, send], "mgpRmgpCurveAmount", 0n);
   const [rmgpMgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 0n, send], { account: wallet.account }), [contracts, wallet.chain, send], "rmgpMgpCurveAmount", 0n);
   const [rmgpYmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 2n, send], { account: wallet.account }), [contracts, wallet.chain, send], "rmgpYmgpCurveAmount", 0n);
@@ -33956,9 +34025,9 @@ var useAmounts = ({ wallet }) => {
 };
 
 // src/hooks/useContracts.ts
-var import_react19 = __toESM(require_react(), 1);
+var import_react20 = __toESM(require_react(), 1);
 var useContracts = ({ wallet }) => {
-  const writeContracts = import_react19.useMemo(() => {
+  const writeContracts = import_react20.useMemo(() => {
     if (!wallet.clients)
       return;
     return {
@@ -34002,9 +34071,9 @@ var useContracts = ({ wallet }) => {
 };
 
 // src/hooks/useExchangeRates.ts
-var import_react20 = __toESM(require_react(), 1);
+var import_react21 = __toESM(require_react(), 1);
 function useExchangeRates({ locked, wallet, supplies }) {
-  const mintRMGP = import_react20.useMemo(() => {
+  const mintRMGP = import_react21.useMemo(() => {
     return supplies.rmgp === 0n ? 1 : Number(locked.reefiMGP) / Number(supplies.rmgp);
   }, [supplies.rmgp, locked.reefiMGP]);
   const [mgpRMGP] = useCachedUpdateable(async () => {
@@ -34029,12 +34098,12 @@ function useExchangeRates({ locked, wallet, supplies }) {
 }
 
 // src/hooks/useLocked.ts
-var import_react21 = __toESM(require_react(), 1);
+var import_react22 = __toESM(require_react(), 1);
 var useLocked = ({ wallet }) => {
   const [reefiMGP, updateReefiMGP] = useCachedUpdateable(() => contracts[wallet.chain].VLMGP.read.getUserTotalLocked([contracts[wallet.chain].RMGP.address]), [contracts, wallet.account, wallet.chain], "reefiMGP locked", 0n);
   const [mgpBSC, updateMGPBSC] = useCachedUpdateable(() => contracts[56].VLMGP.read.totalLocked(), [contracts, wallet.account], "mgpBSC locked", 0n);
   const [mgpARB, updateMGPARB] = useCachedUpdateable(() => contracts[42161].VLMGP.read.totalLocked(), [contracts, wallet.account], "mgpARB locked", 0n);
-  const mgp = import_react21.useMemo(() => mgpBSC + mgpARB, [mgpBSC, mgpARB]);
+  const mgp = import_react22.useMemo(() => mgpBSC + mgpARB, [mgpBSC, mgpARB]);
   const updateMGP = () => {
     updateMGPBSC();
     updateMGPARB();
@@ -34045,10 +34114,10 @@ var useLocked = ({ wallet }) => {
 };
 
 // src/hooks/usePrices.ts
-var import_react22 = __toESM(require_react(), 1);
+var import_react23 = __toESM(require_react(), 1);
 var usePrices = () => {
-  const [prices, setPrices] = import_react22.useState({ MGP: 0, RMGP: 0, YMGP: 0, CMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 });
-  import_react22.useEffect(() => {
+  const [prices, setPrices] = import_react23.useState({ MGP: 0, RMGP: 0, YMGP: 0, CMGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, ETH: 0, BNB: 0 });
+  import_react23.useEffect(() => {
     (async () => {
       const res = await fetch("https://api.magpiexyz.io/getalltokenprice");
       res.json().then((body) => setPrices(body.data.AllPrice));
@@ -34075,7 +34144,7 @@ var useWithdraws = ({ wallet }) => {
 };
 
 // src/hooks/useRewards.ts
-var import_react23 = __toESM(require_react(), 1);
+var import_react24 = __toESM(require_react(), 1);
 var useRewards = ({ wallet, prices, balances }) => {
   const [cmgpPoolAPY] = useCachedUpdateable(async () => {
     const res = await fetch("https://api.curve.finance/api/getVolumes/arbitrum");
@@ -34093,7 +34162,7 @@ var useRewards = ({ wallet, prices, balances }) => {
       apr += token.apr;
     return apr;
   }, [], "MGP APR", 0);
-  const cmgpAPY = import_react23.useMemo(() => {
+  const cmgpAPY = import_react24.useMemo(() => {
     const yieldBearingUnderlyingPercent = Number(balances.rmgpCurve + balances.ymgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve + balances.ymgpCurve);
     const underlyingYield = yieldBearingUnderlyingPercent * aprToApy(mgpAPR) * 0.9;
     return underlyingYield + cmgpPoolAPY;
@@ -34111,15 +34180,15 @@ var useRewards = ({ wallet, prices, balances }) => {
         newPendingRewards[data[2][i].replace("Bridged ", "").toUpperCase()] = { rewards: data[3][i], address: data[1][i] };
     return newPendingRewards;
   }, [wallet.chain], "Pending Rewards", {});
-  const uncompoundedMGPYield = import_react23.useMemo(() => Object.keys(pendingRewards).length > 0 ? Object.keys(pendingRewards).map((symbol) => prices[symbol] * Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [pendingRewards, prices]);
-  const estimatedCompoundGasFee = import_react23.useMemo(() => formatEther(compoundRMGPGas, decimals[publicClients[wallet.chain].chain.nativeCurrency.symbol]) * prices[publicClients[wallet.chain].chain.nativeCurrency.symbol], [wallet.chain, compoundRMGPGas, prices]);
+  const uncompoundedMGPYield = import_react24.useMemo(() => Object.keys(pendingRewards).length > 0 ? Object.keys(pendingRewards).map((symbol) => prices[symbol] * Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [pendingRewards, prices]);
+  const estimatedCompoundGasFee = import_react24.useMemo(() => formatEther(compoundRMGPGas, decimals[publicClients[wallet.chain].chain.nativeCurrency.symbol]) * prices[publicClients[wallet.chain].chain.nativeCurrency.symbol], [wallet.chain, compoundRMGPGas, prices]);
   const estimatedCompoundAmount = useCachedUpdateable(async () => {
     if (wallet.clients === undefined || wallet.account === undefined)
       return;
     const simulation = await contracts[wallet.chain].RMGP.simulate.claim({ account: wallet.account, chain: wallet.clients[wallet.chain].chain });
     return simulation.result;
   }, [wallet.clients, wallet.chain, wallet.account], "estimatedCompoundReward");
-  import_react23.useCallback(() => {
+  import_react24.useCallback(() => {
     const interval = setInterval(() => {
       updatePendingRewards();
     }, 30000);
@@ -34130,8 +34199,8 @@ var useRewards = ({ wallet, prices, balances }) => {
 
 // src/contexts/GlobalContext.tsx
 var jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime(), 1);
-var GlobalContext = import_react24.createContext(undefined);
-var GlobalProvider = ({ children, page, setError }) => {
+var GlobalContext = import_react25.createContext(undefined);
+var GlobalProvider = ({ children, page, setError, setNotification }) => {
   const wallet = useWallet({ setError });
   const balances = useBalances({ wallet });
   const allowances = useAllowances({ wallet });
@@ -34143,14 +34212,14 @@ var GlobalProvider = ({ children, page, setError }) => {
   const withdraws = useWithdraws({ wallet });
   const exchangeRates = useExchangeRates({ wallet, locked, supplies });
   const rewards = useRewards({ wallet, prices, balances });
-  const actions = useActions({ page, setError, wallet, balances, allowances, supplies, writeContracts, locked, amounts, withdraws, rewards });
+  const actions = useActions({ page, setError, setNotification, wallet, balances, allowances, supplies, writeContracts, locked, amounts, withdraws, rewards });
   return /* @__PURE__ */ jsx_dev_runtime3.jsxDEV(GlobalContext.Provider, {
     value: { wallet, balances, allowances, supplies, prices, writeContracts, locked, exchangeRates, amounts, rewards, withdraws, actions },
     children
   }, undefined, false, undefined, this);
 };
 var useGlobalContext = () => {
-  const context = import_react24.useContext(GlobalContext);
+  const context = import_react25.useContext(GlobalContext);
   if (context === undefined)
     throw new Error("useGlobalContext must be used within a GlobalProvider");
   return context;
@@ -34158,13 +34227,14 @@ var useGlobalContext = () => {
 
 // src/components/TokenCards.tsx
 var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenCards = import_react25.memo(() => {
+var TokenCards = import_react26.memo(() => {
   const { prices, supplies, locked, exchangeRates } = useGlobalContext();
   return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
     className: "grid grid-cols-4 gap-4",
     children: [
       /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(TokenCard, {
         symbol: "MGP",
+        color: "blue",
         price: prices.MGP,
         decimals: decimals.MGP,
         supply: supplies.mgp,
@@ -34196,15 +34266,15 @@ var TokenCards = import_react25.memo(() => {
 TokenCards.displayName = "TokenCards";
 
 // src/components/Header.tsx
-var import_react28 = __toESM(require_react(), 1);
+var import_react29 = __toESM(require_react(), 1);
 
 // src/components/TokenBalances.tsx
-var import_react27 = __toESM(require_react(), 1);
+var import_react28 = __toESM(require_react(), 1);
 
 // src/components/TokenBalance.tsx
-var import_react26 = __toESM(require_react(), 1);
+var import_react27 = __toESM(require_react(), 1);
 var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenBalance = import_react26.memo(({ symbol, balance, decimals: decimals2 }) => {
+var TokenBalance = import_react27.memo(({ symbol, balance, decimals: decimals2 }) => {
   return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
     className: "bg-gray-700 rounded-lg px-3 py-2 text-sm",
     children: [
@@ -34218,7 +34288,7 @@ TokenBalance.displayName = "TokenBalance";
 
 // src/components/TokenBalances.tsx
 var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenBalances = import_react27.memo(() => {
+var TokenBalances = import_react28.memo(() => {
   const { balances } = useGlobalContext();
   return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
     children: [
@@ -34249,7 +34319,7 @@ TokenBalances.displayName = "TokenBalance";
 
 // src/components/Header.tsx
 var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
-var Header = import_react28.memo(() => {
+var Header = import_react29.memo(() => {
   const { wallet } = useGlobalContext();
   return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
     className: "fixed w-full bg-gray-800 p-4 flex justify-between items-center z-1",
@@ -34306,9 +34376,9 @@ var Header = import_react28.memo(() => {
 Header.displayName = "Header";
 
 // src/components/ConversionRates.tsx
-var import_react29 = __toESM(require_react(), 1);
+var import_react30 = __toESM(require_react(), 1);
 var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
-var ConversionRates = import_react29.memo(() => {
+var ConversionRates = import_react30.memo(() => {
   const { exchangeRates } = useGlobalContext();
   return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
     className: "bg-gray-800 p-3 rounded-xl border border-gray-700 flex flex-col items-center",
@@ -34554,9 +34624,9 @@ var ConversionRates = import_react29.memo(() => {
 ConversionRates.displayName = "ConversionRates";
 
 // src/components/Contracts.tsx
-var import_react30 = __toESM(require_react(), 1);
+var import_react31 = __toESM(require_react(), 1);
 var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
-var Contracts = import_react30.memo(() => {
+var Contracts = import_react31.memo(() => {
   const { wallet } = useGlobalContext();
   return /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
     className: "bg-gray-800 p-4 rounded-xl border border-gray-700 mb-6",
@@ -34590,9 +34660,9 @@ var Contracts = import_react30.memo(() => {
 Contracts.displayName = "Contracts";
 
 // src/components/ConnectWallet.tsx
-var import_react31 = __toESM(require_react(), 1);
+var import_react32 = __toESM(require_react(), 1);
 var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
-var ConnectWallet = import_react31.memo(() => {
+var ConnectWallet = import_react32.memo(() => {
   const { wallet } = useGlobalContext();
   return wallet.connectRequired ? /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
     className: "absolute w-full h-full bg-black z-1 flex items-center justify-center",
@@ -34617,17 +34687,17 @@ var ConnectWallet = import_react31.memo(() => {
 ConnectWallet.displayName = "ConnectWallet";
 
 // src/components/ErrorCard.tsx
-var import_react32 = __toESM(require_react(), 1);
+var import_react33 = __toESM(require_react(), 1);
 var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
 var ErrorCard = ({ error, setError }) => {
-  import_react32.useEffect(() => {
+  import_react33.useEffect(() => {
     if (error.length > 0)
       setTimeout(() => {
         setError("");
       }, 2000);
   }, [error, setError]);
   return error.length > 0 ? /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
-    className: "absolute z-1 top-2 right-2",
+    className: "absolute z-2 top-2 right-2",
     children: /* @__PURE__ */ jsx_dev_runtime11.jsxDEV("div", {
       className: "bg-red-700 p-4 rounded-lg text-center",
       children: [
@@ -34645,41 +34715,120 @@ var ErrorCard = ({ error, setError }) => {
 };
 
 // src/pages/DepositPage.tsx
-var import_react37 = __toESM(require_react(), 1);
+var import_react39 = __toESM(require_react(), 1);
+
+// src/components/InfoCard.tsx
+var import_react34 = __toESM(require_react(), 1);
+var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
+var InfoCard = import_react34.memo(({ text }) => {
+  const lines = Array.isArray(text) ? text : [text];
+  return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+    className: "bg-indigo-900/20 border border-green-800/30 rounded-lg p-2 text-sm flex items-start w-full",
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+        className: "p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5",
+        children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("svg", {
+          xmlns: "http://www.w3.org/2000/svg",
+          width: "16",
+          height: "16",
+          viewBox: "0 0 24 24",
+          fill: "none",
+          stroke: "currentColor",
+          strokeWidth: "2",
+          strokeLinecap: "round",
+          strokeLinejoin: "round",
+          className: "text-indigo-400",
+          children: [
+            /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("title", {
+              children: "Info"
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("circle", {
+              cx: "12",
+              cy: "12",
+              r: "10"
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("path", {
+              d: "M12 16v-4"
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("path", {
+              d: "M12 8h.01"
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("span", {
+            className: "font-medium text-indigo-300 text-sm",
+            children: "About"
+          }, undefined, false, undefined, this),
+          lines.map((line, idx) => /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("p", {
+            className: "text-gray-300 mt-0.5 text-xs",
+            dangerouslySetInnerHTML: { __html: line }
+          }, idx, false, undefined, this))
+        ]
+      }, undefined, true, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+});
+InfoCard.displayName = "InfoCard";
+
+// src/components/Page.tsx
+var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
+var Page = ({ children, info }) => {
+  return /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+    className: "flex flex-col items-center gap-8 mt-8",
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+        className: "w-192",
+        children
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(InfoCard, {
+        text: info
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+};
+
+// src/components/SwapToken.tsx
+var import_react38 = __toESM(require_react(), 1);
+
+// src/components/BuyOnCurve.tsx
+var import_react36 = __toESM(require_react(), 1);
 
 // src/components/TokenApproval.tsx
-var import_react33 = __toESM(require_react(), 1);
-var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenApproval = import_react33.memo(({ allowance, sendAmount, onApprove, tokenSymbol, curve = false, className = "w-full" }) => {
-  const [approveInfinity, setApproveInfinity] = import_react33.useState(false);
-  const [isApproving, setIsApproving] = import_react33.useState(false);
+var import_react35 = __toESM(require_react(), 1);
+var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
+var TokenApproval = import_react35.memo(({ allowance, sendAmount, onApprove, tokenSymbol, curve = false, className = "w-full" }) => {
+  const [approveInfinity, setApproveInfinity] = import_react35.useState(false);
+  const [isApproving, setIsApproving] = import_react35.useState(false);
   const handleApprove = () => {
     setIsApproving(true);
-    onApprove(approveInfinity, curve);
+    onApprove(approveInfinity);
   };
   if (allowance >= sendAmount)
     return;
-  return /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
     className,
     children: [
-      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
         className: "flex items-center",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("input", {
+          /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("input", {
             id: `approve-infinity-${tokenSymbol}`,
             type: "checkbox",
             className: "mr-2",
             checked: approveInfinity,
             onChange: () => setApproveInfinity((v) => !v)
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("label", {
+          /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("label", {
             htmlFor: `approve-infinity-${tokenSymbol}`,
             className: "text-sm text-gray-300 select-none cursor-pointer",
             children: "Approve Infinity"
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("button", {
+      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("button", {
         type: "submit",
         className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min mt-2 disabled:opacity-50 disabled:cursor-not-allowed mb-2",
         onClick: handleApprove,
@@ -34691,16 +34840,63 @@ var TokenApproval = import_react33.memo(({ allowance, sendAmount, onApprove, tok
 });
 TokenApproval.displayName = "TokenApproval";
 
+// src/components/BuyOnCurve.tsx
+var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
+var BuyOnCurve = import_react36.memo(({ sendAmount, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenASymbol, tokenBSymbol }) => {
+  return /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV(TokenApproval, {
+        sendAmount,
+        allowance: allowanceCurve,
+        onApprove,
+        tokenSymbol: tokenASymbol,
+        curve: true
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
+        className: "relative",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("button", {
+            type: "submit",
+            className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min",
+            onClick: buy,
+            children: [
+              "Buy on Curve (",
+              formatEther(curveAmount).toFixed(4),
+              " ",
+              tokenBSymbol,
+              ")"
+            ]
+          }, undefined, true, undefined, this),
+          (() => {
+            const directRate = formatEther(sendAmount) * nativeRate;
+            const premiumDiscount = (formatEther(curveAmount) - directRate) / directRate * 100;
+            const isPremium = premiumDiscount > 0;
+            return Math.abs(premiumDiscount) >= 0.01 ? /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("span", {
+              className: `absolute -top-2 right-2 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
+              children: [
+                isPremium ? "+" : "",
+                premiumDiscount.toFixed(2),
+                "%"
+              ]
+            }, undefined, true, undefined, this) : undefined;
+          })()
+        ]
+      }, undefined, true, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+});
+BuyOnCurve.displayName = "BuyOnCurve";
+
 // src/components/SwapInput.tsx
-var import_react34 = __toESM(require_react(), 1);
-var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
-var SwapInput = import_react34.memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin }) => {
-  const { exchangeRates, prices } = useGlobalContext();
-  const [isDropdownOpen, setIsDropdownOpen] = import_react34.useState(false);
-  const dropdownRef = import_react34.useRef(null);
-  const excludeCoins = new Set([outputCoin, "CMGP"]);
+var import_react37 = __toESM(require_react(), 1);
+var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
+var SwapInput = import_react37.memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin }) => {
+  const { exchangeRates, prices, wallet } = useGlobalContext();
+  const [isDropdownOpen, setIsDropdownOpen] = import_react37.useState(false);
+  const dropdownRef = import_react37.useRef(null);
+  const excludeCoins = new Set([outputCoin, "CMGP", wallet.chain === 56 ? "ETH" : "BNB"]);
   const availableCoins = Object.keys(coins).filter((coin) => !excludeCoins.has(coin));
-  import_react34.useEffect(() => {
+  import_react37.useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target))
         setIsDropdownOpen(false);
@@ -34724,69 +34920,69 @@ var SwapInput = import_react34.memo(({ label, selectedCoin, onCoinChange, balanc
     } else
       return;
   };
-  return /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
     className: "mb-4",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
         className: "flex justify-between items-center mb-1",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("h3", {
+          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("h3", {
             className: "text-md font-medium",
             children: label
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
             className: "text-sm text-gray-400",
             children: [
               "Balance: ",
               formatEther(balance, decimals[selectedCoin]).toFixed(4),
               " ",
-              selectedCoin
+              selectedCoin === "ETH" || selectedCoin === "BNB" ? `W${selectedCoin}` : selectedCoin
             ]
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
         className: "bg-gray-900 rounded-lg p-4 flex items-center justify-between",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("input", {
+          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("input", {
             type: "text",
             placeholder: "0",
             className: "bg-transparent outline-none text-xl w-3/4",
             value: value === 0n ? undefined : formatEther(value, decimals[selectedCoin]),
             onChange: (e) => onChange(BigInt(Math.round((Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)) * Number(10n ** BigInt(decimals[selectedCoin])))))
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
             className: "flex items-center space-x-2",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("button", {
+              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("button", {
                 type: "button",
                 className: "text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded",
                 onClick: () => onChange(balance),
                 children: "MAX"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
                 className: "relative",
                 ref: dropdownRef,
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("button", {
+                  /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("button", {
                     type: "button",
                     onClick: () => setIsDropdownOpen(!isDropdownOpen),
                     className: `rounded-md px-3 py-1 flex items-center cursor-pointer hover:opacity-90 transition-opacity ${coins[selectedCoin].bgColor}`,
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
                         className: `w-5 h-5 rounded-full flex items-center justify-center mr-2 ${coins[selectedCoin].color}`,
                         children: selectedCoin[0]?.toUpperCase()
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("span", {
+                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
                         className: "mr-2",
-                        children: selectedCoin
+                        children: selectedCoin === "ETH" || selectedCoin === "BNB" ? `W${selectedCoin}` : selectedCoin
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("svg", {
+                      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("svg", {
                         className: `w-4 h-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`,
                         fill: "none",
                         stroke: "currentColor",
                         viewBox: "0 0 24 24",
-                        children: /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("path", {
+                        children: /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("path", {
                           strokeLinecap: "round",
                           strokeLinejoin: "round",
                           strokeWidth: 2,
@@ -34795,9 +34991,9 @@ var SwapInput = import_react34.memo(({ label, selectedCoin, onCoinChange, balanc
                       }, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this),
-                  isDropdownOpen && /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+                  isDropdownOpen && /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
                     className: "absolute top-full mt-1 right-0 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50 min-w-32",
-                    children: availableCoins.map((coin) => /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("button", {
+                    children: availableCoins.map((coin) => /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("button", {
                       className: `w-full px-3 py-2 flex items-center hover:bg-gray-700 transition-colors first:rounded-t-lg last:rounded-b-lg ${selectedCoin === coin ? "bg-gray-700" : ""}`,
                       type: "button",
                       onClick: () => {
@@ -34805,12 +35001,12 @@ var SwapInput = import_react34.memo(({ label, selectedCoin, onCoinChange, balanc
                         setIsDropdownOpen(false);
                       },
                       children: [
-                        /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+                        /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
                           className: `w-5 h-5 rounded-full flex items-center justify-center mr-2 ${coins[coin].color}`,
                           children: coin[0]?.toUpperCase()
                         }, undefined, false, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("span", {
-                          children: coin
+                        /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
+                          children: coin === "ETH" || coin === "BNB" ? `W${coin}` : coin
                         }, undefined, false, undefined, this)
                       ]
                     }, coin, true, undefined, this))
@@ -34821,7 +35017,7 @@ var SwapInput = import_react34.memo(({ label, selectedCoin, onCoinChange, balanc
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      estimatedOutput() !== undefined && /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
+      estimatedOutput() !== undefined && /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
         className: "mt-2 text-sm text-gray-400 text-center",
         children: [
           "≈",
@@ -34833,204 +35029,105 @@ var SwapInput = import_react34.memo(({ label, selectedCoin, onCoinChange, balanc
 });
 SwapInput.displayName = "SwapInput";
 
-// src/components/BuyOnCurve.tsx
-var import_react35 = __toESM(require_react(), 1);
-var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
-var BuyOnCurve = import_react35.memo(({ sendAmount, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenASymbol, tokenBSymbol }) => {
-  return /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
-    children: [
-      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV(TokenApproval, {
-        sendAmount,
-        allowance: allowanceCurve,
-        onApprove,
-        tokenSymbol: tokenASymbol,
-        curve: true
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
-        className: "relative",
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("button", {
-            type: "submit",
-            className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min",
-            onClick: buy,
-            children: [
-              "Buy on Curve (",
-              formatEther(curveAmount).toFixed(4),
-              " ",
-              tokenBSymbol,
-              ")"
-            ]
-          }, undefined, true, undefined, this),
-          (() => {
-            const directRate = formatEther(sendAmount) * nativeRate;
-            const premiumDiscount = (formatEther(curveAmount) - directRate) / directRate * 100;
-            const isPremium = premiumDiscount > 0;
-            return Math.abs(premiumDiscount) >= 0.01 ? /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("span", {
-              className: `absolute -top-2 right-2 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
-              children: [
-                isPremium ? "+" : "",
-                premiumDiscount.toFixed(2),
-                "%"
-              ]
-            }, undefined, true, undefined, this) : undefined;
-          })()
-        ]
-      }, undefined, true, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-});
-BuyOnCurve.displayName = "BuyOnCurve";
-
-// src/components/InfoCard.tsx
-var import_react36 = __toESM(require_react(), 1);
-var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
-var InfoCard = import_react36.memo(({ text }) => {
-  const lines = Array.isArray(text) ? text : [text];
-  return /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
-    className: "bg-indigo-900/20 border border-green-800/30 rounded-lg p-2 text-sm flex items-start w-full",
-    children: [
-      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
-        className: "p-1 bg-indigo-800/30 rounded-full mr-3 mt-0.5",
-        children: /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("svg", {
-          xmlns: "http://www.w3.org/2000/svg",
-          width: "16",
-          height: "16",
-          viewBox: "0 0 24 24",
-          fill: "none",
-          stroke: "currentColor",
-          strokeWidth: "2",
-          strokeLinecap: "round",
-          strokeLinejoin: "round",
-          className: "text-indigo-400",
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("title", {
-              children: "Info"
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("circle", {
-              cx: "12",
-              cy: "12",
-              r: "10"
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("path", {
-              d: "M12 16v-4"
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("path", {
-              d: "M12 8h.01"
-            }, undefined, false, undefined, this)
-          ]
-        }, undefined, true, undefined, this)
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("span", {
-            className: "font-medium text-indigo-300 text-sm",
-            children: "About"
-          }, undefined, false, undefined, this),
-          lines.map((line, idx) => /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("p", {
-            className: "text-gray-300 mt-0.5 text-xs",
-            dangerouslySetInnerHTML: { __html: line }
-          }, idx, false, undefined, this))
-        ]
-      }, undefined, true, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-});
-InfoCard.displayName = "InfoCard";
-
-// src/components/Page.tsx
-var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
-var Page = ({ children, info }) => {
-  return /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-    className: "flex flex-col items-center gap-8 mt-8",
-    children: [
-      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
-        className: "w-192",
-        children
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(InfoCard, {
-        text: info
-      }, undefined, false, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
-};
-
-// src/pages/DepositPage.tsx
+// src/components/SwapToken.tsx
 var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
-var DepositPage = import_react37.memo(() => {
-  const { actions, allowances, amounts, balances, exchangeRates, rewards } = useGlobalContext();
-  const [selectedCoin, setSelectedCoin] = import_react37.useState("MGP");
-  return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Page, {
-    info: selectedCoin === "MGP" ? "MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards." : `${selectedCoin} will be swapped to MGP and then converted to rMGP to earn auto compounded yield. Other coins support coming soon.`,
+var SwapToken = ({ originalTokenIn, tokenOut, nativeRate, curveAmount, buy, nativeSwap, label = "Mint" }) => {
+  const { actions, allowances, amounts, balances, wallet } = useGlobalContext();
+  const [tokenIn, setTokenIn] = import_react38.useState(originalTokenIn);
+  return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(SwapInput, {
-        label: "Get rMGP",
-        selectedCoin,
-        onCoinChange: setSelectedCoin,
-        balance: balances[selectedCoin][0],
+        label: `Get ${tokenOut}`,
+        selectedCoin: tokenIn,
+        onCoinChange: setTokenIn,
+        balance: balances[tokenIn][0],
         value: amounts.send,
         onChange: amounts.setSend,
-        outputCoin: "RMGP"
+        outputCoin: tokenOut
       }, undefined, false, undefined, this),
-      selectedCoin === "MGP" ? /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+      tokenIn === "MGP" && tokenOut === "RMGP" || tokenIn === "RMGP" && tokenOut === "YMGP" || tokenIn === "RMGP" && tokenOut === "MGP" ? /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
         className: "grid grid-cols-2 gap-2",
         children: [
           /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
             children: [
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(TokenApproval, {
+              tokenOut !== "MGP" && /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(TokenApproval, {
                 sendAmount: amounts.send,
-                allowance: allowances[selectedCoin][0],
-                onApprove: actions.approve,
-                tokenSymbol: selectedCoin
+                allowance: allowances[tokenIn][0],
+                onApprove: (infinity) => actions.approve(tokenOut, tokenIn, infinity),
+                tokenSymbol: tokenIn
               }, undefined, false, undefined, this),
               /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
                 type: "submit",
                 className: "py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full",
-                onClick: actions.depositMGP,
+                onClick: nativeSwap,
                 children: [
-                  "Mint (",
-                  formatEther(BigInt(Number(amounts.send) / exchangeRates.mintRMGP)).toFixed(4),
-                  " rMGP)"
+                  label,
+                  " (",
+                  formatEther(BigInt(Number(amounts.send) * nativeRate)).toFixed(4),
+                  " ",
+                  tokenOut,
+                  ")"
                 ]
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(BuyOnCurve, {
             sendAmount: amounts.send,
-            curveAmount: amounts.mgpRmgpCurve,
-            allowanceCurve: allowances.curve[selectedCoin][0],
-            nativeRate: exchangeRates.mintRMGP,
-            onApprove: actions.approve,
-            buy: actions.buyRMGP,
-            tokenASymbol: selectedCoin,
-            tokenBSymbol: "rMGP"
+            curveAmount,
+            allowanceCurve: allowances.curve[tokenIn][0],
+            nativeRate,
+            onApprove: (infinity) => actions.approve("CMGP", tokenIn, infinity),
+            buy,
+            tokenASymbol: tokenIn,
+            tokenBSymbol: tokenOut
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(jsx_dev_runtime17.Fragment, {
         children: [
           /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(TokenApproval, {
             sendAmount: amounts.send,
-            allowance: allowances.curve[selectedCoin][0],
-            onApprove: actions.approve,
-            tokenSymbol: selectedCoin
+            allowance: allowances.odos[tokenIn][0],
+            onApprove: (infinity) => actions.approve("ODOSRouter", tokenIn, infinity),
+            tokenSymbol: tokenIn
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
             type: "submit",
             className: "py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full",
-            onClick: actions.swapToMGP,
+            onClick: () => actions.swap(contracts[wallet.chain][tokenIn].address, contracts[wallet.chain].MGP.address),
             children: "Swap to MGP"
           }, undefined, false, undefined, this)
         ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+      }, undefined, true, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+};
+
+// src/pages/DepositPage.tsx
+var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
+var DepositPage = import_react39.memo(() => {
+  const { actions, amounts, rewards, exchangeRates } = useGlobalContext();
+  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(Page, {
+    info: "MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.",
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(SwapToken, {
+        originalTokenIn: "MGP",
+        tokenOut: "RMGP",
+        nativeRate: 1 / exchangeRates.mintRMGP,
+        curveAmount: amounts.mgpRmgpCurve,
+        buy: actions.buyRMGP,
+        label: "Mint",
+        nativeSwap: actions.depositMGP
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
         className: "mt-4 text-sm text-gray-400",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
             className: "flex justify-between mb-1",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
                 children: "Original APR"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
                 children: [
                   Math.round(1e4 * rewards.mgpAPR) / 100,
                   "%"
@@ -35038,13 +35135,13 @@ var DepositPage = import_react37.memo(() => {
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
             className: "flex justify-between mb-1",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
                 children: "Reward APY"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
                 children: [
                   Math.round(1e4 * aprToApy(rewards.mgpAPR) * 0.9) / 100,
                   "%"
@@ -35060,23 +35157,23 @@ var DepositPage = import_react37.memo(() => {
 DepositPage.displayName = "DepositPage";
 
 // src/pages/SupplyLiquidityPage.tsx
-var import_react39 = __toESM(require_react(), 1);
+var import_react41 = __toESM(require_react(), 1);
 
 // src/components/AmountInput.tsx
-var import_react38 = __toESM(require_react(), 1);
-var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
-var AmountInput = import_react38.memo(({ label, balance, value, onChange, token, placeholder }) => {
-  return /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+var import_react40 = __toESM(require_react(), 1);
+var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
+var AmountInput = import_react40.memo(({ label, balance, value, onChange, token, placeholder }) => {
+  return /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
     className: "mb-4",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
         className: "flex justify-between items-center mb-1",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("h3", {
+          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("h3", {
             className: "text-md font-medium",
             children: label
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
             className: "text-sm text-gray-400",
             children: [
               "Balance: ",
@@ -35087,33 +35184,33 @@ var AmountInput = import_react38.memo(({ label, balance, value, onChange, token,
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
         className: "bg-gray-900 rounded-lg p-4 flex items-center justify-between",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("input", {
+          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("input", {
             type: "text",
             placeholder: placeholder ?? "0",
             className: "bg-transparent outline-none text-xl w-3/4",
             value: value === 0n ? undefined : formatEther(value),
             onChange: (e) => onChange(parseEther(Number.isNaN(Number.parseFloat(e.target.value)) ? 0 : Number.parseFloat(e.target.value)))
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
             className: "flex items-center space-x-2",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("button", {
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("button", {
                 type: "button",
                 className: "text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded",
                 onClick: () => onChange(balance),
                 children: "MAX"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
                 className: `rounded-md px-3 py-1 flex items-center ${token.bgColor}`,
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
                     className: `w-5 h-5 rounded-full flex items-center justify-center mr-2 ${token.color}`,
                     children: token.symbol[0]?.toUpperCase()
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
                     children: token.symbol
                   }, undefined, false, undefined, this)
                 ]
@@ -35128,13 +35225,13 @@ var AmountInput = import_react38.memo(({ label, balance, value, onChange, token,
 AmountInput.displayName = "AmountInput";
 
 // src/pages/SupplyLiquidityPage.tsx
-var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
-var SupplyLiquidityPage = import_react39.memo(() => {
+var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
+var SupplyLiquidityPage = import_react41.memo(() => {
   const { actions, amounts, balances } = useGlobalContext();
-  return /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(Page, {
+  return /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(Page, {
     info: 'Supply liquidity to the cMGP Curve pool (MGP/rMGP/yMGP). You can supply liquidity at any ratio of MGP:rMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use <a href="https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/" className="text-blue-400">Curve</a>.',
     children: [
-      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(AmountInput, {
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(AmountInput, {
         label: "Supply MGP",
         balance: balances.MGP[0],
         value: amounts.mgpLP,
@@ -35146,13 +35243,13 @@ var SupplyLiquidityPage = import_react39.memo(() => {
           return formatEther(BigInt(totalRecommendedLP * mgpTarget / (1 - mgpTarget))).toString();
         })()
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
         className: "mb-4 text-sm text-gray-400 flex justify-between",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
             children: "Target"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
             children: [
               (100 * Number(balances.mgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve + balances.ymgpCurve)).toFixed(0),
               "%"
@@ -35160,7 +35257,7 @@ var SupplyLiquidityPage = import_react39.memo(() => {
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(AmountInput, {
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(AmountInput, {
         label: "Supply rMGP",
         balance: balances.RMGP[0],
         value: amounts.rmgpLP,
@@ -35172,13 +35269,13 @@ var SupplyLiquidityPage = import_react39.memo(() => {
           return formatEther(BigInt(totalRecommendedLP * rmgpTarget / (1 - rmgpTarget))).toString();
         })()
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
         className: "mb-4 text-sm text-gray-400 flex justify-between",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
             children: "Target"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
             children: [
               (100 * Number(balances.rmgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve + balances.ymgpCurve)).toFixed(0),
               "%"
@@ -35186,7 +35283,7 @@ var SupplyLiquidityPage = import_react39.memo(() => {
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(AmountInput, {
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(AmountInput, {
         label: "Supply yMGP",
         balance: balances.YMGP[0],
         value: amounts.ymgpLP,
@@ -35198,13 +35295,13 @@ var SupplyLiquidityPage = import_react39.memo(() => {
           return formatEther(BigInt(totalRecommendedLP * ymgpTarget / (1 - ymgpTarget))).toString();
         })()
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
         className: "mb-4 text-sm text-gray-400 flex justify-between",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
             children: "Target"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("span", {
+          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
             children: [
               (100 * Number(balances.ymgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve + balances.ymgpCurve)).toFixed(0),
               "%"
@@ -35212,7 +35309,7 @@ var SupplyLiquidityPage = import_react39.memo(() => {
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("button", {
+      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("button", {
         type: "submit",
         className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min}",
         onClick: actions.supplyLiquidity,
@@ -35224,11 +35321,11 @@ var SupplyLiquidityPage = import_react39.memo(() => {
 SupplyLiquidityPage.displayName = "SupplyLiquidityPage";
 
 // src/pages/RedeemPage.tsx
-var import_react40 = __toESM(require_react(), 1);
-var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
-var RedeemPage = import_react40.memo(() => {
-  const { actions, balances, amounts, allowances, exchangeRates, withdraws } = useGlobalContext();
-  return /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(Page, {
+var import_react42 = __toESM(require_react(), 1);
+var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
+var RedeemPage = import_react42.memo(() => {
+  const { actions, amounts, exchangeRates, withdraws } = useGlobalContext();
+  return /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(Page, {
     info: [
       "rMGP can be redeemed for the underlying MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate via Curve.",
       "The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.",
@@ -35237,45 +35334,22 @@ var RedeemPage = import_react40.memo(() => {
       "Half of the withdrawal fee (5% of withdrawal) is redistributed to yMGP holders as yield, with the other half sent to the Reefi treasury."
     ],
     children: [
-      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(AmountInput, {
-        label: "Get MGP",
-        token: { symbol: "rMGP", color: "bg-green-400", bgColor: "bg-green-600" },
-        balance: balances.RMGP[0],
-        value: amounts.send,
-        onChange: amounts.setSend
+      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(SwapToken, {
+        originalTokenIn: "RMGP",
+        tokenOut: "MGP",
+        nativeRate: 0.9 * exchangeRates.mintRMGP,
+        curveAmount: amounts.rmgpMgpCurve,
+        buy: actions.buyMGP,
+        nativeSwap: actions.redeemRMGP,
+        label: "Redeem via Queue"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
-        className: "grid grid-cols-2 gap-2",
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("button", {
-            type: "submit",
-            className: "py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min",
-            onClick: actions.redeemRMGP,
-            children: [
-              "Redeem via Queue (",
-              (exchangeRates.mintRMGP * 0.9 * formatEther(amounts.send)).toFixed(4),
-              " MGP)"
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(BuyOnCurve, {
-            sendAmount: amounts.send,
-            curveAmount: amounts.rmgpMgpCurve,
-            allowanceCurve: allowances.curve.RMGP[0],
-            nativeRate: exchangeRates.mintRMGP * 0.9,
-            onApprove: actions.approve,
-            buy: actions.buyMGP,
-            tokenASymbol: "rMGP",
-            tokenBSymbol: "MGP"
-          }, undefined, false, undefined, this)
-        ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
         className: "mt-4 text-sm text-gray-400 flex justify-between",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
             children: "Native Redemption Rate"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("span", {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
             children: [
               exchangeRates.curve.rmgpMGP,
               " MGP to rMGP"
@@ -35283,43 +35357,43 @@ var RedeemPage = import_react40.memo(() => {
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      withdraws.userPendingWithdraws > 0n ? /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+      withdraws.userPendingWithdraws > 0n ? /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
         children: [
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("h3", {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("h3", {
             className: "text-md font-medium mt-4",
             children: "Pending Withdraws"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
             children: [
               formatEther(withdraws.userPendingWithdraws, decimals.MGP),
               " MGP"
             ]
           }, undefined, true, undefined, this),
-          withdraws.unlockSchedule[0] ? /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
+          withdraws.unlockSchedule[0] ? /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
             children: [
               "Unlock available in: ",
               formatTime(Number(withdraws.unlockSchedule[0].endTime) - Date.now() / 1000),
               " to ",
               formatTime(Number(withdraws.unlockSchedule.at(-1)?.endTime) + 60 * 60 * 24 * 60 - Date.now() / 1000)
             ]
-          }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
+          }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
             children: "N/A"
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this) : "",
-      withdraws.userWithdrawable > 0n ? /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
+      withdraws.userWithdrawable > 0n ? /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
         children: [
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("h3", {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("h3", {
             className: "text-md font-medium mt-4",
             children: "Available To Withdraw"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("p", {
             children: [
               formatEther(withdraws.userWithdrawable, decimals.MGP),
               " MGP"
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("button", {
+          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("button", {
             type: "submit",
             className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min}",
             onClick: actions.withdrawMGP,
@@ -35333,39 +35407,39 @@ var RedeemPage = import_react40.memo(() => {
 RedeemPage.displayName = "RedeemPage";
 
 // src/pages/LockPage.tsx
-var import_react41 = __toESM(require_react(), 1);
-var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
-var LockPage = import_react41.memo(() => {
+var import_react43 = __toESM(require_react(), 1);
+var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
+var LockPage = import_react43.memo(() => {
   const { actions, rewards, balances, amounts, locked } = useGlobalContext();
-  return /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(Page, {
+  return /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(Page, {
     info: [
       "yMGP can be locked to earn additional yield paid in rMGP. 5% of protocol yield and half of rMGP withdrawal fees are paid to yMGP lockers.",
       "Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi's vlMGP."
     ],
     children: [
-      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(AmountInput, {
+      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(AmountInput, {
         label: "Lock yMGP",
         token: { symbol: "yMGP", color: "bg-green-400", bgColor: "bg-green-600" },
         balance: balances.YMGP[0],
         value: amounts.send,
         onChange: amounts.setSend
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("button", {
+      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("button", {
         type: "submit",
         className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min",
         onClick: actions.lockYMGP,
         children: "Lock yMGP"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
         className: "mt-4 text-sm text-gray-400",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
             className: "flex justify-between mb-1",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
                 children: "Base APY"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
                 children: [
                   Math.round(1e4 * aprToApy(rewards.mgpAPR) * 0.9) / 100,
                   "%"
@@ -35373,13 +35447,13 @@ var LockPage = import_react41.memo(() => {
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
             className: "flex justify-between mb-1",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
                 children: "Additional APY"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
                 children: [
                   Math.round(1e4 * (Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.ymgp))) / 100,
                   "%+"
@@ -35387,13 +35461,13 @@ var LockPage = import_react41.memo(() => {
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
             className: "flex justify-between mb-1",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
                 children: "Total APY"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime21.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("span", {
                 children: [
                   Math.round(1e4 * (Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.ymgp) + aprToApy(rewards.mgpAPR) * 0.9)) / 100,
                   "%+"
@@ -35409,21 +35483,21 @@ var LockPage = import_react41.memo(() => {
 LockPage.displayName = "LockPage";
 
 // src/pages/UnlockPage.tsx
-var import_react42 = __toESM(require_react(), 1);
-var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
-var UnlockPage = import_react42.memo(() => {
+var import_react44 = __toESM(require_react(), 1);
+var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
+var UnlockPage = import_react44.memo(() => {
   const { balances, amounts, actions } = useGlobalContext();
-  return /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(Page, {
+  return /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(Page, {
     info: ["yMGP can be unlocked instantly. Unlocked yMGP earns the underlying rMGP yield, but forfeits the additional yield."],
     children: [
-      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(AmountInput, {
+      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(AmountInput, {
         label: "Get yMGP",
         balance: balances.YMGP[0],
         value: amounts.send,
         onChange: amounts.setSend,
         token: { symbol: "yMGP", color: "bg-green-400", bgColor: "bg-green-600" }
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("button", {
+      /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("button", {
         type: "submit",
         className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min",
         onClick: actions.unlockYMGP,
@@ -35438,8 +35512,8 @@ UnlockPage.displayName = "UnlockPage";
 var diagram_default = "./diagram-61tcs965.svg";
 
 // src/components/Questions.tsx
-var import_react43 = __toESM(require_react(), 1);
-var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
+var import_react45 = __toESM(require_react(), 1);
+var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
 var qaData = [
   {
     question: "What is Reefi and how does it work?",
@@ -35551,7 +35625,7 @@ var qaData = [
   }
 ];
 var QASection = () => {
-  const [openItems, setOpenItems] = import_react43.useState(new Set);
+  const [openItems, setOpenItems] = import_react45.useState(new Set);
   const toggleItem = (index2) => {
     const newOpenItems = new Set(openItems);
     if (newOpenItems.has(index2))
@@ -35560,23 +35634,23 @@ var QASection = () => {
       newOpenItems.add(index2);
     setOpenItems(newOpenItems);
   };
-  return /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
     className: "bg-gray-800 p-3 rounded-xl border border-gray-700 flex justify-center",
-    children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+    children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
       className: "w-256",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
           className: "mb-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-yellow-700",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("h3", {
+            /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("h3", {
               className: "text-lg font-semibold mb-2 text-yellow-400",
               children: "⚠️ Important Notice"
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
+            /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
               className: "text-gray-300 text-sm",
               children: [
                 "Reefi is in ",
-                /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("strong", {
+                /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("strong", {
                   children: "very early beta"
                 }, undefined, false, undefined, this),
                 ". Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution"
@@ -35584,30 +35658,30 @@ var QASection = () => {
             }, undefined, true, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("h2", {
+        /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("h2", {
           className: "text-2xl font-bold mb-4",
           children: "Frequently Asked Questions"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
           className: "space-y-2",
-          children: qaData.map((item, index2) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+          children: qaData.map((item, index2) => /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
             className: "border border-gray-700 rounded-lg",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("button", {
+              /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("button", {
                 type: "button",
                 className: "w-full text-left p-4 flex justify-between items-center hover:bg-gray-700/30 transition-colors",
                 onClick: () => toggleItem(index2),
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("span", {
                     className: "font-medium text-gray-200",
                     children: item.question
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("svg", {
+                  /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("svg", {
                     className: `w-5 h-5 text-gray-400 transform transition-transform ${openItems.has(index2) ? "rotate-180" : ""}`,
                     fill: "none",
                     stroke: "currentColor",
                     viewBox: "0 0 24 24",
-                    children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("path", {
+                    children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("path", {
                       strokeLinecap: "round",
                       strokeLinejoin: "round",
                       strokeWidth: 2,
@@ -35616,14 +35690,14 @@ var QASection = () => {
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              openItems.has(index2) && /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+              openItems.has(index2) && /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
                 className: "px-4 pb-4",
-                children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+                children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
                   className: "pt-2 border-t border-gray-700",
-                  children: Array.isArray(item.answer) ? item.answer.map((paragraph, pIndex) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
+                  children: Array.isArray(item.answer) ? item.answer.map((paragraph, pIndex) => /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
                     className: "text-gray-300 text-sm mb-2 last:mb-0",
                     dangerouslySetInnerHTML: { __html: paragraph }
-                  }, pIndex, false, undefined, this)) : /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("p", {
+                  }, pIndex, false, undefined, this)) : /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
                     className: "text-gray-300 text-sm",
                     dangerouslySetInnerHTML: { __html: item.answer }
                   }, undefined, false, undefined, this)
@@ -35632,9 +35706,9 @@ var QASection = () => {
             ]
           }, index2, true, undefined, this))
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
           className: "flex justify-center my-4",
-          children: /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("img", {
+          children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("img", {
             src: diagram_default,
             alt: "Diagram",
             className: "w-full"
@@ -35646,115 +35720,62 @@ var QASection = () => {
 };
 
 // src/pages/ConvertPage.tsx
-var import_react44 = __toESM(require_react(), 1);
-var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
-var ConvertPage = import_react44.memo(() => {
-  const { actions, allowances, amounts, balances } = useGlobalContext();
-  const [selectedCoin, setSelectedCoin] = import_react44.useState("RMGP");
-  return /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(Page, {
-    info: selectedCoin === "RMGP" ? "yMGP is backed 1:1 by rMGP. This process can not be undone. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield." : `${selectedCoin} will be swapped to MGP, then converted to rMGP, then converted to yMGP. Other coins support coming soon.`,
-    children: [
-      /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(SwapInput, {
-        label: "Get yMGP",
-        selectedCoin,
-        onCoinChange: setSelectedCoin,
-        balance: balances[selectedCoin][0],
-        value: amounts.send,
-        onChange: amounts.setSend,
-        outputCoin: "YMGP"
-      }, undefined, false, undefined, this),
-      selectedCoin === "MGP" || selectedCoin === "RMGP" ? /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
-        className: `${selectedCoin === "RMGP" ? "grid grid-cols-2" : ""} gap-2 mb-4`,
-        children: [
-          selectedCoin === "RMGP" && /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(TokenApproval, {
-                sendAmount: amounts.send,
-                allowance: allowances.RMGP[0],
-                onApprove: actions.approve,
-                tokenSymbol: "RMGP"
-              }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("button", {
-                type: "submit",
-                className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min",
-                onClick: actions.depositRMGP,
-                children: [
-                  "Mint (",
-                  formatEther(amounts.send),
-                  " yMGP)"
-                ]
-              }, undefined, true, undefined, this)
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(BuyOnCurve, {
-            sendAmount: amounts.send,
-            curveAmount: amounts.rmgpYmgpCurve,
-            allowanceCurve: allowances.curve.RMGP[0],
-            nativeRate: 1,
-            onApprove: actions.approve,
-            buy: actions.buyYMGP,
-            tokenASymbol: "RMGP",
-            tokenBSymbol: "yMGP"
-          }, undefined, false, undefined, this)
-        ]
-      }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(jsx_dev_runtime24.Fragment, {
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(TokenApproval, {
-            sendAmount: amounts.send,
-            allowance: allowances.curve[selectedCoin][0],
-            onApprove: actions.approve,
-            tokenSymbol: selectedCoin
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("button", {
-            type: "submit",
-            className: "py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full",
-            onClick: actions.swapToMGP,
-            children: "Swap to MGP"
-          }, undefined, false, undefined, this)
-        ]
-      }, undefined, true, undefined, this)
-    ]
-  }, undefined, true, undefined, this);
+var import_react46 = __toESM(require_react(), 1);
+var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
+var ConvertPage = import_react46.memo(() => {
+  const { actions, amounts } = useGlobalContext();
+  return /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(Page, {
+    info: "yMGP is backed 1:1 by rMGP. This process can not be undone. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield.",
+    children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(SwapToken, {
+      originalTokenIn: "RMGP",
+      tokenOut: "YMGP",
+      nativeRate: 1,
+      curveAmount: amounts.rmgpYmgpCurve,
+      buy: actions.buyYMGP,
+      nativeSwap: actions.depositRMGP,
+      label: "Mint"
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this);
 });
 ConvertPage.displayName = "ConvertPage";
 
 // src/components/YieldBadge.tsx
-var import_react45 = __toESM(require_react(), 1);
-var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
-var Badge = import_react45.memo(({ title, value, breakdown }) => {
-  return /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+var import_react47 = __toESM(require_react(), 1);
+var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
+var Badge = import_react47.memo(({ title, value, breakdown }) => {
+  return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
     className: "text-sm bg-gray-700 rounded-lg px-3 py-1 flex items-center relative group cursor-help",
     title: `${title}: ${value}`,
     children: [
-      /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
         className: "w-2 h-2 rounded-full bg-green-400 mr-2"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("span", {
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
         children: [
           title,
           ": ",
           value
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
         className: "absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 text-xs text-white bg-black rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10",
-        children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+        children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
           className: "space-y-1",
-          children: breakdown.map((item, index2) => /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
+          children: breakdown.map((item, index2) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
             className: "flex justify-between gap-2",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
                 children: [
                   item.asset,
                   ":"
                 ]
               }, undefined, true, undefined, this),
-              item.apy === undefined ? /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("span", {
+              item.apy === undefined ? /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
                 children: [
                   item.apr === "variable" ? "Variable" : `${Math.round(item.apr * 1e4) / 100}%`,
                   " APR"
                 ]
-              }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("span", {
+              }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
                 children: [
                   item.apy === "variable" ? "Variable" : `${Math.round(item.apy * 1e4) / 100}%`,
                   " APY"
@@ -35768,11 +35789,11 @@ var Badge = import_react45.memo(({ title, value, breakdown }) => {
   }, undefined, true, undefined, this);
 });
 Badge.displayName = "Badge";
-var YieldBadge = import_react45.memo(({ asset, apy, apr, suffix, breakdown }) => {
+var YieldBadge = import_react47.memo(({ asset, apy, apr, suffix, breakdown }) => {
   const yieldType = apy === undefined ? "APR" : "APY";
   const yieldValue = apy ?? apr;
   const percentage = Math.round((yieldValue === "variable" ? 0 : yieldValue) * 1e4) / 100;
-  return /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(Badge, {
+  return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Badge, {
     title: `${asset} ${yieldType}`,
     value: `${percentage}%${suffix ?? ""}`,
     breakdown
@@ -35781,31 +35802,31 @@ var YieldBadge = import_react45.memo(({ asset, apy, apr, suffix, breakdown }) =>
 YieldBadge.displayName = "YieldBadge";
 
 // src/pages/CompoundYield.tsx
-var import_react46 = __toESM(require_react(), 1);
-var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
-var CompoundYield = import_react46.memo(() => {
+var import_react48 = __toESM(require_react(), 1);
+var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
+var CompoundYield = import_react48.memo(() => {
   const { actions, locked, prices, rewards, wallet } = useGlobalContext();
-  return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Page, {
+  return /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(Page, {
     info: "Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of rMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the button below, you will receive 1% of the pending yield.",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("h3", {
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("h3", {
         className: "text-md font-medium mb-1",
         children: "Uncompounded Yield"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
         className: "bg-gray-700/50 p-5 rounded-lg p-2",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
             className: "flex items-center justify-between mb-2",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                 className: "font-medium text-lg",
                 children: [
                   formatNumber(rewards.uncompoundedMGPYield, 4),
                   " MGP"
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                 className: "font-medium text-lg",
                 children: [
                   "$",
@@ -35814,10 +35835,10 @@ var CompoundYield = import_react46.memo(() => {
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          Object.keys(rewards.pendingRewards).map((symbol) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          Object.keys(rewards.pendingRewards).map((symbol) => /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
             className: "flex justify-between",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                 className: "font-small text-xs",
                 children: [
                   formatNumber(formatEther(rewards.pendingRewards[symbol].rewards, decimals[symbol]), 4),
@@ -35825,7 +35846,7 @@ var CompoundYield = import_react46.memo(() => {
                   symbol
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
                 className: "font-small text-xs",
                 children: [
                   formatNumber(prices[symbol] * Number(formatEther(rewards.pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 4),
@@ -35836,7 +35857,7 @@ var CompoundYield = import_react46.memo(() => {
           }, symbol, true, undefined, this))
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("button", {
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("button", {
         type: "button",
         className: "w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors",
         onClick: actions.compoundRMGP,
@@ -35846,16 +35867,16 @@ var CompoundYield = import_react46.memo(() => {
           " yMGP)"
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
         className: "mt-4 text-sm text-gray-400",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
             className: "flex justify-between mb-1",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                 children: "Estimated Payout"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                 children: [
                   "$",
                   formatNumber(rewards.uncompoundedMGPYield * prices.MGP * 0.01, 4)
@@ -35863,13 +35884,13 @@ var CompoundYield = import_react46.memo(() => {
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
             className: "flex justify-between mb-1",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                 children: "Estimated Gas Fee"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                 children: [
                   "$",
                   formatNumber(rewards.estimatedCompoundGasFee, 4)
@@ -35877,13 +35898,13 @@ var CompoundYield = import_react46.memo(() => {
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
             className: "flex justify-between mb-1",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                 children: "Estimated Profit"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                 className: `text-${rewards.uncompoundedMGPYield * prices.MGP * 0.01 > rewards.estimatedCompoundGasFee ? "green" : "red"}-400`,
                 children: [
                   rewards.uncompoundedMGPYield * prices.MGP * 0.01 > rewards.estimatedCompoundGasFee ? "" : "-",
@@ -35893,40 +35914,40 @@ var CompoundYield = import_react46.memo(() => {
               }, undefined, true, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          rewards.uncompoundedMGPYield * prices.MGP * 0.01 < rewards.estimatedCompoundGasFee && /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          rewards.uncompoundedMGPYield * prices.MGP * 0.01 < rewards.estimatedCompoundGasFee && /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
             className: "flex justify-between mb-1",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                 children: "ETA Till Profitable"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                 children: formatTime(rewards.estimatedCompoundGasFee / prices.MGP / (formatEther(BigInt(rewards.mgpAPR * Number(locked.reefiMGP)), decimals.MGP) / (365 * 24 * 60 * 60)))
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
         className: "mt-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-green-700",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("h3", {
+          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("h3", {
             className: "text-lg font-semibold mb-2 text-green-400",
             children: "Developer Tip: Automate Compounding for Free Money"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
             className: "text-gray-300 text-sm mb-2",
             children: "Compounding vlMGP yield is critical to Reefi's function. Anyone can trigger a compound, which compounds everyone's pending yield. By doing so, you receive 1% of all pending yield. You can automate this process and earn rewards with no investment."
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("ul", {
+          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("ul", {
             className: "list-disc list-inside text-gray-400 text-xs mb-2",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("li", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("li", {
                 children: "Monitor the estimated profit and gas fee."
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("li", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("li", {
                 children: [
                   "Trigger compounding when profit exceeds gas cost by calling ",
-                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                     className: "font-mono bg-gray-800 px-1 py-0.5 rounded",
                     children: [
                       contracts[wallet.chain].RMGP.address,
@@ -35936,26 +35957,26 @@ var CompoundYield = import_react46.memo(() => {
                   " whenever rewards are higher than gas fees."
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("li", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("li", {
                 children: "This can be done using free cloud functions, GitHub Actions, or a serverless cron job."
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
             className: "text-gray-400 text-xs",
             children: [
               "Example: Use ",
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                 className: "font-mono bg-gray-800 px-1 py-0.5 rounded",
                 children: "Viem"
               }, undefined, false, undefined, this),
               ", ",
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                 className: "font-mono bg-gray-800 px-1 py-0.5 rounded",
                 children: "ethers.js"
               }, undefined, false, undefined, this),
               " or ",
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
                 className: "font-mono bg-gray-800 px-1 py-0.5 rounded",
                 children: "web3.js"
               }, undefined, false, undefined, this),
@@ -35970,28 +35991,28 @@ var CompoundYield = import_react46.memo(() => {
 CompoundYield.displayName = "CompoundYield";
 
 // src/pages/ClaimYield.tsx
-var import_react47 = __toESM(require_react(), 1);
-var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
-var ClaimYield = import_react47.memo(() => {
+var import_react49 = __toESM(require_react(), 1);
+var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
+var ClaimYield = import_react49.memo(() => {
   const { actions, balances, locked, supplies, rewards } = useGlobalContext();
-  return /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(Page, {
+  return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Page, {
     info: "Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("h3", {
+      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("h3", {
         className: "text-md font-medium mb-1",
         children: "Unclaimed Rewards"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
         className: "bg-gray-700/50 rounded-lg p-4",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
             className: "font-medium text-lg mb-2",
             children: [
               formatNumber(formatEther(rewards.unclaimedUserYield, decimals.YMGP), 4),
               " rMGP"
             ]
           }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
             className: "font-small text-xs",
             children: [
               "Total: ",
@@ -36001,7 +36022,7 @@ var ClaimYield = import_react47.memo(() => {
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("button", {
+      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
         type: "button",
         className: "w-full mt-4 bg-green-600 hover:bg-green-700 py-3 rounded-lg transition-colors",
         onClick: actions.claimYMGPRewards,
@@ -36012,52 +36033,72 @@ var ClaimYield = import_react47.memo(() => {
 });
 ClaimYield.displayName = "ClaimYield";
 
+// src/components/NotificationCard.tsx
+var import_react50 = __toESM(require_react(), 1);
+var jsx_dev_runtime29 = __toESM(require_jsx_dev_runtime(), 1);
+var NotificationCard = ({ notification, setNotification }) => {
+  import_react50.useEffect(() => {
+    if (notification.length > 0)
+      setTimeout(() => setNotification(""), 2000);
+  }, [notification, setNotification]);
+  return notification.length > 0 ? /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
+    className: "absolute z-2 top-2 right-2",
+    children: /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
+      className: "bg-blue-700 p-4 rounded-lg text-center",
+      children: /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("p", {
+        className: "text-sm text-white",
+        children: notification
+      }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
+  }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(jsx_dev_runtime29.Fragment, {}, undefined, false, undefined, this);
+};
+
 // src/App.tsx
-var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
 var AppContent = () => {
-  const [page, setPage] = import_react48.useState("deposit");
-  const [error, setError] = import_react48.useState("");
+  const [page, setPage] = import_react51.useState("deposit");
+  const [error, setError] = import_react51.useState("");
   const { balances, exchangeRates, locked, rewards } = useGlobalContext();
-  return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
     className: "flex h-screen bg-gray-900 text-white",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(ConnectWallet, {}, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(ErrorCard, {
+      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ConnectWallet, {}, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ErrorCard, {
         error,
         setError
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
         className: "flex-grow overflow-auto",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Header, {}, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(Header, {}, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
             className: "mt-18 p-4 md:p-6 mx-28 flex flex-col gap-6",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(TokenCards, {}, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(TokenCards, {}, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                     className: "bg-gray-800 p-3 border border-gray-700 rounded-t-xl",
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                         className: "flex justify-between",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                             className: "bg-gray-700 p-1 rounded-lg flex",
                             children: [
-                              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "deposit" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "deposit" ? setPage(undefined) : setPage("deposit"),
                                 children: "Get rMGP"
                               }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "redeem" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "redeem" ? setPage(undefined) : setPage("redeem"),
                                 children: "Redeem rMGP"
                               }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "compoundRMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "compoundRMGP" ? setPage(undefined) : setPage("compoundRMGP"),
@@ -36065,17 +36106,17 @@ var AppContent = () => {
                               }, undefined, false, undefined, this)
                             ]
                           }, undefined, true, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                             className: "flex flex-row-reverse h-min",
-                            children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                            children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                               className: "flex gap-1",
                               children: [
-                                /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(YieldBadge, {
+                                /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(YieldBadge, {
                                   asset: "MGP",
                                   apr: rewards.mgpAPR,
                                   breakdown: [{ asset: "Original vlMGP", apr: rewards.mgpAPR }]
                                 }, undefined, false, undefined, this),
-                                /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(YieldBadge, {
+                                /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(YieldBadge, {
                                   asset: "rMGP",
                                   apy: aprToApy(rewards.mgpAPR) * 0.9,
                                   breakdown: [{ asset: "vlMGP", apy: aprToApy(rewards.mgpAPR) * 0.9 }]
@@ -36085,39 +36126,39 @@ var AppContent = () => {
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      page === "deposit" && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(DepositPage, {}, undefined, false, undefined, this),
-                      page === "redeem" && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(RedeemPage, {}, undefined, false, undefined, this),
-                      page === "compoundRMGP" && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(CompoundYield, {}, undefined, false, undefined, this)
+                      page === "deposit" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(DepositPage, {}, undefined, false, undefined, this),
+                      page === "redeem" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(RedeemPage, {}, undefined, false, undefined, this),
+                      page === "compoundRMGP" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(CompoundYield, {}, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                     className: "bg-gray-800 p-3 border border-gray-700",
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                         className: "flex justify-between",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                             className: "bg-gray-700 p-1 rounded-lg flex",
                             children: [
-                              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "convert" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "convert" ? setPage(undefined) : setPage("convert"),
                                 children: "Get yMGP"
                               }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "lock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "lock" ? setPage(undefined) : setPage("lock"),
                                 children: "Lock yMGP"
                               }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "unlock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "unlock" ? setPage(undefined) : setPage("unlock"),
                                 children: "Unlock yMGP"
                               }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+                              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
                                 type: "button",
                                 className: `px-2 py-1 rounded-md transition-colors ${page === "claimYMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "claimYMGP" ? setPage(undefined) : setPage("claimYMGP"),
@@ -36125,17 +36166,17 @@ var AppContent = () => {
                               }, undefined, false, undefined, this)
                             ]
                           }, undefined, true, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                             className: "flex flex-row-reverse h-min",
-                            children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                            children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                               className: "flex gap-1",
                               children: [
-                                /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(YieldBadge, {
+                                /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(YieldBadge, {
                                   asset: "yMGP",
                                   apy: aprToApy(rewards.mgpAPR) * 0.9,
                                   breakdown: [{ asset: "rMGP", apy: aprToApy(rewards.mgpAPR) * 0.9 }]
                                 }, undefined, false, undefined, this),
-                                /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(YieldBadge, {
+                                /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(YieldBadge, {
                                   asset: "Locked yMGP",
                                   apy: Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.ymgp) + aprToApy(rewards.mgpAPR) * 0.9,
                                   suffix: "+",
@@ -36150,26 +36191,26 @@ var AppContent = () => {
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      page === "convert" && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(ConvertPage, {}, undefined, false, undefined, this),
-                      page === "lock" && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(LockPage, {}, undefined, false, undefined, this),
-                      page === "unlock" && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(UnlockPage, {}, undefined, false, undefined, this),
-                      page === "claimYMGP" && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(ClaimYield, {}, undefined, false, undefined, this)
+                      page === "convert" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ConvertPage, {}, undefined, false, undefined, this),
+                      page === "lock" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(LockPage, {}, undefined, false, undefined, this),
+                      page === "unlock" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(UnlockPage, {}, undefined, false, undefined, this),
+                      page === "claimYMGP" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ClaimYield, {}, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                     className: "bg-gray-800 p-3 border border-gray-700",
-                    children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                    children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                       className: "flex justify-between",
-                      children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                      children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                         className: "bg-gray-700 p-1 rounded-lg flex",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
                             type: "button",
                             className: `px-2 py-1 rounded-md transition-colors ${page === "buyVotes" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                             onClick: () => page === "buyVotes" ? setPage(undefined) : setPage("buyVotes"),
                             children: "Get vMGP"
                           }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
                             type: "button",
                             className: `px-2 py-1 rounded-md transition-colors ${page === "vote" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                             onClick: () => page === "vote" ? setPage(undefined) : setPage("vote"),
@@ -36179,26 +36220,26 @@ var AppContent = () => {
                       }, undefined, true, undefined, this)
                     }, undefined, false, undefined, this)
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                     className: "bg-gray-800 p-3 border border-gray-700 rounded-b-xl",
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                         className: "flex justify-between",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                             className: "bg-gray-700 p-1 rounded-lg flex",
-                            children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+                            children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
                               type: "button",
                               className: `px-2 py-1 rounded-md transition-colors ${page === "supplyLiquidity" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                               onClick: () => page === "supplyLiquidity" ? setPage(undefined) : setPage("supplyLiquidity"),
                               children: "Supply Liquidity"
                             }, undefined, false, undefined, this)
                           }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                             className: "flex flex-row-reverse h-min",
-                            children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+                            children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
                               className: "flex gap-1",
-                              children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(YieldBadge, {
+                              children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(YieldBadge, {
                                 asset: "cMGP",
                                 apy: rewards.cmgpAPY,
                                 breakdown: [
@@ -36212,14 +36253,14 @@ var AppContent = () => {
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      page === "supplyLiquidity" && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(SupplyLiquidityPage, {}, undefined, false, undefined, this)
+                      page === "supplyLiquidity" && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(SupplyLiquidityPage, {}, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(QASection, {}, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(ConversionRates, {}, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Contracts, {}, undefined, false, undefined, this)
+              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(QASection, {}, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ConversionRates, {}, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(Contracts, {}, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this)
         ]
@@ -36228,22 +36269,28 @@ var AppContent = () => {
   }, undefined, true, undefined, this);
 };
 var App = () => {
-  const [error, setError] = import_react48.useState("");
-  const [page] = import_react48.useState("deposit");
-  return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(GlobalProvider, {
+  const [error, setError] = import_react51.useState("");
+  const [notification, setNotification] = import_react51.useState("");
+  const [page] = import_react51.useState("deposit");
+  return /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(GlobalProvider, {
     setError,
+    setNotification,
     page,
     children: [
-      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(ErrorCard, {
+      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(ErrorCard, {
         error,
         setError
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(AppContent, {}, undefined, false, undefined, this)
+      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(NotificationCard, {
+        notification,
+        setNotification
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(AppContent, {}, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
 var App_default = App;
 
 // src/index.tsx
-var jsx_dev_runtime29 = __toESM(require_jsx_dev_runtime(), 1);
-import_client.default.createRoot(document.querySelector("#root")).render(/* @__PURE__ */ jsx_dev_runtime29.jsxDEV(App_default, {}, undefined, false, undefined, this));
+var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
+import_client.default.createRoot(document.querySelector("#root")).render(/* @__PURE__ */ jsx_dev_runtime31.jsxDEV(App_default, {}, undefined, false, undefined, this));

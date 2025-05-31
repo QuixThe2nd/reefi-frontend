@@ -32,11 +32,12 @@ interface GlobalProviderProps {
   readonly children: ReactNode
   readonly page: Pages
   readonly setError: (_msg: string) => void
+  readonly setNotification: (_msg: string) => void
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined)
 
-export const GlobalProvider = ({ children, page, setError }: GlobalProviderProps): ReactElement => {
+export const GlobalProvider = ({ children, page, setError, setNotification }: GlobalProviderProps): ReactElement => {
   const wallet = useWallet({ setError })
   const balances = useBalances({ wallet })
   const allowances = useAllowances({ wallet })
@@ -48,7 +49,7 @@ export const GlobalProvider = ({ children, page, setError }: GlobalProviderProps
   const withdraws = useWithdraws({ wallet })
   const exchangeRates = useExchangeRates({ wallet, locked, supplies })
   const rewards = useRewards({ wallet, prices, balances })
-  const actions = useActions({ page, setError, wallet, balances, allowances, supplies, writeContracts, locked, amounts, withdraws, rewards })
+  const actions = useActions({ page, setError, setNotification, wallet, balances, allowances, supplies, writeContracts, locked, amounts, withdraws, rewards })
   return <GlobalContext.Provider value={{ wallet, balances, allowances, supplies, prices, writeContracts, locked, exchangeRates, amounts, rewards, withdraws, actions }}>{children}</GlobalContext.Provider>
 }
 

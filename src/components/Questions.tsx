@@ -114,6 +114,14 @@ const qaData: readonly QAItem[] = [
       "<strong>cMGP APY</strong>: Weighted average of underlying token yields + Curve swap fees",
       "Yields are variable and depend on protocol usage and external factors."
     ]
+  },
+  {
+    question: "Why is vMGP backed by yMGP instead of rMGP?",
+    answer: [
+      "vMGP strengthens yMGP's peg because it is minted 1:1 for yMGP that is burnt forever.",
+      "By burning yMGP, the yield on locked yMGP increases as a smaller portion of yMGP is locked.",
+      "It is important that yMGP receives this boost over rMGP, as rMGP is hard-pegged while yMGP isn't."
+    ]
   }
 ] as const
 

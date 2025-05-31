@@ -24,6 +24,7 @@ import { CompoundYield } from './pages/CompoundYield'
 import { ClaimYield } from './pages/ClaimYield'
 import { NotificationCard } from './components/NotificationCard'
 import { GetMGPPage } from './pages/GetMGPPage'
+import { Features } from './pages/Features'
 // import { Web3Provider } from '@ethersproject/providers';
 // import snapshot from '@snapshot-labs/snapshot.js';
 
@@ -62,6 +63,7 @@ const AppContent = (): ReactElement => {
         <Header />
         <div className="p-4 md:p-6 md:mx-16 lg:mx-22 xl:mx-28 flex flex-col gap-6">
           <TokenCards />
+          <Features />
           <div>
             <div className="bg-gray-800 p-3 border border-gray-700 rounded-t-xl">
               <div className="flex flex-col-reverse gap-2 lg:flex-row justify-between">

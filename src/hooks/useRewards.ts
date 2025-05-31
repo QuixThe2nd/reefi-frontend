@@ -5,13 +5,15 @@ import { useCachedUpdateable } from "./useUpdateable"
 import { UseBalances } from "./useBalances"
 import { UsePrices } from "./usePrices"
 import { UseWallet } from "./useWallet"
+import { UseLocked } from "./useLocked"
 
 type PendingRewards = Record<Coins, { address: `0x${string}`; rewards: bigint; }> | Record<string, never>
 
 interface Props {
   readonly wallet: UseWallet
-  readonly prices: UsePrices,
+  readonly prices: UsePrices
   readonly balances: UseBalances
+  readonly locked: UseLocked
 }
 
 export interface UseRewards {
@@ -19,6 +21,7 @@ export interface UseRewards {
   pendingRewards: PendingRewards
   unclaimedUserYield: bigint
   cmgpAPY: number
+  lockedYmgpAPY: number
   cmgpPoolAPY: number
   uncompoundedMGPYield: number
   estimatedCompoundGasFee: number
@@ -27,7 +30,7 @@ export interface UseRewards {
   updateUnclaimedUserYield: () => void
 }  
 
-export const useRewards = ({ wallet, prices, balances }: Props): UseRewards => {
+export const useRewards = ({ wallet, prices, balances, locked }: Props): UseRewards => {
   const [cmgpPoolAPY] = useCachedUpdateable(async (): Promise<number> => {
     const res = await fetch('https://api.curve.finance/api/getVolumes/arbitrum')
     const curveBody = await res.json() as { data: { pools: { address: `0x${string}`, latestWeeklyApyPcent: number }[] }}
@@ -60,6 +63,7 @@ export const useRewards = ({ wallet, prices, balances }: Props): UseRewards => {
   }, [wallet.chain], 'Pending Rewards', {})
   const uncompoundedMGPYield = useMemo(() => Object.keys(pendingRewards).length > 0 ? (Object.keys(pendingRewards) as Coins[]).map(symbol => prices[symbol]*Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0)/prices.MGP : 0, [pendingRewards, prices])
   const estimatedCompoundGasFee = useMemo(() => formatEther(compoundRMGPGas, decimals['WETH'])*prices['WETH'], [wallet.chain, compoundRMGPGas, prices])
+  const lockedYmgpAPY = useMemo(() => ((Number(locked.reefiMGP)*aprToApy(mgpAPR)*0.05)/Number(locked.ymgp))+aprToApy(mgpAPR)*0.9, [locked.reefiMGP, mgpAPR, locked.ymgp])
   const estimatedCompoundAmount = useCachedUpdateable(async () => {
     if (wallet.clients === undefined || wallet.account === undefined) return
     const simulation = await contracts[wallet.chain].rMGP.simulate.claim({ account: wallet.account, chain: wallet.clients[wallet.chain].chain })
@@ -71,5 +75,5 @@ export const useRewards = ({ wallet, prices, balances }: Props): UseRewards => {
     return (): void => clearInterval(interval)
   }, [updatePendingRewards])
 
-  return { mgpAPR, pendingRewards, unclaimedUserYield, cmgpAPY, cmgpPoolAPY, uncompoundedMGPYield, estimatedCompoundGasFee, updatePendingRewards, updateUnclaimedUserYield, estimatedCompoundAmount }
+  return { mgpAPR, pendingRewards, unclaimedUserYield, cmgpAPY, cmgpPoolAPY, uncompoundedMGPYield, estimatedCompoundGasFee, updatePendingRewards, updateUnclaimedUserYield, estimatedCompoundAmount, lockedYmgpAPY }
 }

@@ -15,6 +15,7 @@ export interface UseExchangeRates {
     readonly rmgpMGP: number
     readonly ymgpRMGP: number
     readonly ymgpMGP: number
+    readonly vmgpMGP: number
   }
 }
 
@@ -32,5 +33,6 @@ export function useExchangeRates({ locked, wallet, supplies }: Props): UseExchan
   const [rmgpMGP] = useCachedUpdateable(async () => { return Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, parseEther(0.000_01)], { account: wallet.account }))/Number(parseEther(0.000_01)) }, [contracts, wallet.chain], 'rmgpMGP curve', 0)
   const [ymgpRMGP] = useCachedUpdateable(async () => { return Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, parseEther(0.000_01)], { account: wallet.account }))/Number(parseEther(0.000_01)) }, [contracts, wallet.chain], 'ymgpRMGP curve', 0)
   const [ymgpMGP] = useCachedUpdateable(async () => { return Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, parseEther(0.000_01)], { account: wallet.account }))/Number(parseEther(0.000_01)) }, [contracts, wallet.chain], 'ymgpMGP curve', 0)
-  return { mintRMGP, curve: { mgpRMGP, mgpYMGP, rmgpYMGP, rmgpMGP, ymgpRMGP, ymgpMGP } }
+  const vmgpMGP = 0.8
+  return { mintRMGP, curve: { mgpRMGP, mgpYMGP, rmgpYMGP, rmgpMGP, ymgpRMGP, ymgpMGP, vmgpMGP } }
 }

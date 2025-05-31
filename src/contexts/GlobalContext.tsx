@@ -48,7 +48,7 @@ export const GlobalProvider = ({ children, page, setError, setNotification }: Gl
   const amounts = useAmounts({ wallet })
   const withdraws = useWithdraws({ wallet })
   const exchangeRates = useExchangeRates({ wallet, locked, supplies })
-  const rewards = useRewards({ wallet, prices, balances })
+  const rewards = useRewards({ wallet, prices, balances, locked })
   const actions = useActions({ page, setError, setNotification, wallet, balances, allowances, supplies, writeContracts, locked, amounts, withdraws, rewards })
   return <GlobalContext.Provider value={{ wallet, balances, allowances, supplies, prices, writeContracts, locked, exchangeRates, amounts, rewards, withdraws, actions }}>{children}</GlobalContext.Provider>
 }

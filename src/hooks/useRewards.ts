@@ -59,7 +59,7 @@ export const useRewards = ({ wallet, prices, balances }: Props): UseRewards => {
     return newPendingRewards
   }, [wallet.chain], 'Pending Rewards', {})
   const uncompoundedMGPYield = useMemo(() => Object.keys(pendingRewards).length > 0 ? (Object.keys(pendingRewards) as Coins[]).map(symbol => prices[symbol]*Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0)/prices.MGP : 0, [pendingRewards, prices])
-  const estimatedCompoundGasFee = useMemo(() => formatEther(compoundRMGPGas, decimals[`W${publicClients[wallet.chain].chain.nativeCurrency.symbol}`])*prices[`W${publicClients[wallet.chain].chain.nativeCurrency.symbol}`], [wallet.chain, compoundRMGPGas, prices])
+  const estimatedCompoundGasFee = useMemo(() => formatEther(compoundRMGPGas, decimals['WETH'])*prices['WETH'], [wallet.chain, compoundRMGPGas, prices])
   const estimatedCompoundAmount = useCachedUpdateable(async () => {
     if (wallet.clients === undefined || wallet.account === undefined) return
     const simulation = await contracts[wallet.chain].rMGP.simulate.claim({ account: wallet.account, chain: wallet.clients[wallet.chain].chain })

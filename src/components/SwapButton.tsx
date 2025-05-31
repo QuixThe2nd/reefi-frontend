@@ -8,7 +8,7 @@ import { TokenApproval } from "./TokenApproval"
 export const SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut }: { buy: () => void, nativeSwap: undefined | (() => void), label: string | undefined, tokenIn: Coins | 'ETH', tokenOut: Coins }): ReactElement => {
   const { actions, allowances, amounts, wallet, exchangeRates } = useGlobalContext()
   if ((tokenIn === 'MGP' && tokenOut ==='rMGP') || (tokenIn === 'rMGP' && tokenOut ==='yMGP') || (tokenIn === 'rMGP' && tokenOut ==='MGP')) {
-    const nativeRate = tokenIn === 'MGP' && tokenOut ==='rMGP' ? exchangeRates.mintRMGP : (tokenIn === 'rMGP' && tokenOut ==='MGP' ? (1/exchangeRates.mintRMGP)*0.9 : 1)
+    const nativeRate = tokenIn === 'MGP' && tokenOut ==='rMGP' ? exchangeRates.mintRMGP : (tokenIn === 'rMGP' && tokenOut ==='MGP' ? (exchangeRates.mintRMGP)*0.9 : 1)
     return <div className="grid grid-cols-2 gap-2">
       <div>
         {tokenOut !=='MGP' && <TokenApproval sendAmount={amounts.send} allowance={allowances[tokenIn][0]} onApprove={infinity => actions.approve(tokenOut, tokenIn, infinity)} tokenSymbol={tokenIn} />}

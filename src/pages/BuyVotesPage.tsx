@@ -11,7 +11,7 @@ interface Props {
   readonly ymgpAllowanceCurve: bigint,
   readonly ymgpBalance: bigint,
   readonly ymgpVmgpCurveAmount: bigint,
-  readonly onApprove: (_infinity: boolean, _curve: boolean) => Promise<void>
+  readonly onApprove: (_infinity: boolean) => Promise<void>
   readonly setSendAmount: (_value: bigint) => void
   readonly depositYMGP: () => Promise<void>
   readonly buyVMGP: () => Promise<void>

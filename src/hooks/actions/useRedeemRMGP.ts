@@ -103,10 +103,10 @@ export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & Publ
 
   const redeemRMGP = useCallback(async (): Promise<void> => {
     if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    await writeContractsRef.current[chainRef.current].RMGP.write.startUnlock([sendAmountRef.current], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
+    await writeContractsRef.current[chainRef.current].rMGP.write.startUnlock([sendAmountRef.current], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
     updateUnlockScheduleRef.current()
     suppliesRef.current.updateRMGP()
-    balancesRef.current.RMGP[1]()
+    balancesRef.current.rMGP[1]()
     updateTotalLockedMGPRef.current()
     updateReefiLockedMGPRef.current()
     updateUserPendingWithdrawsRef.current()

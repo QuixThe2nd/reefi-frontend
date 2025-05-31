@@ -10,7 +10,7 @@ export const LockPage = memo((): ReactElement => {
     "yMGP can be locked to earn additional yield paid in rMGP. 5% of protocol yield and half of rMGP withdrawal fees are paid to yMGP lockers.",
     "Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi's vlMGP."
   ]}>
-    <AmountInput label="Lock yMGP" token={{ symbol: 'yMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={balances.YMGP[0]} value={amounts.send} onChange={amounts.setSend} />
+    <AmountInput label="Lock yMGP" token={{ symbol: 'yMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} balance={balances.yMGP[0]} value={amounts.send} onChange={amounts.setSend} />
     <button type="submit" className="w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min" onClick={actions.lockYMGP}>Lock yMGP</button>
     <div className="mt-4 text-sm text-gray-400">
       <div className="flex justify-between mb-1">

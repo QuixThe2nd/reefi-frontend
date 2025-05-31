@@ -23,11 +23,8 @@ export const useAmounts = ({ wallet }: { readonly wallet: UseWallet }): UseAmoun
   const [mgpLP, setMGPLP] = useState(0n)
   const [rmgpLP, setRMGPLP] = useState(0n)
   const [ymgpLP, setYMGPLP] = useState(0n)
-  const [mgpRmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([0n, 1n, send], { account: wallet.account }), [contracts, wallet.chain, send], 'mgpRmgpCurveAmount', 0n)
-  const [rmgpMgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 0n, send], { account: wallet.account }), [contracts, wallet.chain, send], 'rmgpMgpCurveAmount', 0n)
-  const [rmgpYmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].CMGP.read.get_dy([1n, 2n, send], { account: wallet.account }), [contracts, wallet.chain, send], 'rmgpYmgpCurveAmount', 0n)
+  const [mgpRmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, send], { account: wallet.account }), [contracts, wallet.chain, send], 'mgpRmgpCurveAmount', 0n)
+  const [rmgpMgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, send], { account: wallet.account }), [contracts, wallet.chain, send], 'rmgpMgpCurveAmount', 0n)
+  const [rmgpYmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, send], { account: wallet.account }), [contracts, wallet.chain, send], 'rmgpYmgpCurveAmount', 0n)
   return { send, setSend, mgpRmgpCurve, rmgpMgpCurve, rmgpYmgpCurve, mgpLP, setMGPLP, rmgpLP, setRMGPLP, ymgpLP, setYMGPLP }
 }
-
-// 0x5b41b908000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000de0b6b3a76400000000000000000000000000000000000000000000000000000000000000000000
-// 0x3df02124000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000de0b6b3a76400000000000000000000000000000000000000000000000000000000000000000000

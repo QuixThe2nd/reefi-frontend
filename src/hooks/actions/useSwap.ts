@@ -73,7 +73,6 @@ export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActi
     };
     const response = await fetch('https://api.odos.xyz/sor/quote/v2', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(quoteRequestBody) });
     if (!response.ok) return setError('Failed to find route')
-
     setNotificationRef.current('Assembling transaction')
     const assembleRequestBody = { userAddr: accountRef.current, pathId: (await response.json() as { pathId: string }).pathId, simulate: false };
     const response2 = await fetch('https://api.odos.xyz/sor/assemble', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(assembleRequestBody)});

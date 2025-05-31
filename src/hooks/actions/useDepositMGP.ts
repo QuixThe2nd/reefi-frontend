@@ -86,9 +86,9 @@ export const useDepositMGP = <Clients extends Record<Chains, WalletClient & Publ
   const depositMGP = useCallback(async (): Promise<void> => {
     if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
     if (allowancesRef.current.MGP[0] < sendAmountRef.current) return setErrorRef.current('Allowance too low')
-    await writeContractsRef.current[chainRef.current].RMGP.write.deposit([sendAmountRef.current], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
+    await writeContractsRef.current[chainRef.current].rMGP.write.deposit([sendAmountRef.current], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
     balancesRef.current.MGP[1]()
-    balancesRef.current.RMGP[1]()
+    balancesRef.current.rMGP[1]()
     suppliesRef.current.updateMGP()
     suppliesRef.current.updateRMGP()
     updateTotalLockedMGPRef.current()

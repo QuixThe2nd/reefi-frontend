@@ -65,11 +65,11 @@ export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient &
 
   const supplyLiquidity = useCallback(async (): Promise<void> => {
     if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    await writeContractsRef.current[chainRef.current].CMGP.write.add_liquidity([[mgpLPAmountRef.current, rmgpLPAmountRef.current, ymgpLPAmountRef.current], 0n], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
+    await writeContractsRef.current[chainRef.current].cMGP.write.add_liquidity([[mgpLPAmountRef.current, rmgpLPAmountRef.current, ymgpLPAmountRef.current], 0n], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
     balancesRef.current.MGP[1]()
-    balancesRef.current.RMGP[1]()
-    balancesRef.current.YMGP[1]()
-    balancesRef.current.CMGP[1]()
+    balancesRef.current.rMGP[1]()
+    balancesRef.current.yMGP[1]()
+    balancesRef.current.cMGP[1]()
     balancesRef.current.updateMGPCurve()
     balancesRef.current.updateRMGPCurve()
     balancesRef.current.updateYMGPCurve()

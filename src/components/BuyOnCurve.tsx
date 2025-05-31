@@ -7,7 +7,7 @@ interface Props {
   readonly curveAmount: bigint
   readonly allowanceCurve: bigint
   readonly nativeRate: number
-  readonly onApprove: (_infinity: boolean, _curve: boolean) => void
+  readonly onApprove: (_infinity: boolean) => void
   readonly buy: () => void
   readonly tokenASymbol: string
   readonly tokenBSymbol: string

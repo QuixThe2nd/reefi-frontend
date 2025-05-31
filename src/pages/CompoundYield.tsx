@@ -43,7 +43,7 @@ export const CompoundYield = memo((): ReactElement => {
       <p className="text-gray-300 text-sm mb-2">Compounding vlMGP yield is critical to Reefi&apos;s function. Anyone can trigger a compound, which compounds everyone&apos;s pending yield. By doing so, you receive 1% of all pending yield. You can automate this process and earn rewards with no investment.</p>
       <ul className="list-disc list-inside text-gray-400 text-xs mb-2">
         <li>Monitor the estimated profit and gas fee.</li>
-        <li>Trigger compounding when profit exceeds gas cost by calling <span className="font-mono bg-gray-800 px-1 py-0.5 rounded">{contracts[wallet.chain].RMGP.address}.claim()</span> whenever rewards are higher than gas fees.</li>
+        <li>Trigger compounding when profit exceeds gas cost by calling <span className="font-mono bg-gray-800 px-1 py-0.5 rounded">{contracts[wallet.chain].rMGP.address}.claim()</span> whenever rewards are higher than gas fees.</li>
         <li>This can be done using free cloud functions, GitHub Actions, or a serverless cron job.</li>
       </ul>
       <p className="text-gray-400 text-xs">

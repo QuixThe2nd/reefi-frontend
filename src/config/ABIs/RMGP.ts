@@ -1,4 +1,4 @@
-export const RMGP = [
+export const rMGP = [
 	{
 		"inputs": [
 			{

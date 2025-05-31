@@ -23,6 +23,7 @@ import { UseContracts } from "./useContracts"
 import { Pages } from "../App"
 import { useSwap } from "./actions/useSwap"
 import { Coins } from "../config/contracts"
+import { useMintWETH } from "./actions/useMintWETH"
 
 interface Props<W extends UseWallet> {
   page: Pages
@@ -40,7 +41,7 @@ interface Props<W extends UseWallet> {
 }
 
 export interface UseActions {
-  approve: (_contract: 'RMGP' | 'YMGP' | 'CMGP' | 'ODOSRouter', _coin: Coins, _infinity: boolean) => void
+  approve: (_contract: 'rMGP' | 'yMGP' | 'cMGP' | 'ODOSRouter', _coin: Coins, _infinity: boolean) => void
   depositMGP: () => void
   buyRMGP: () => void
   buyYMGP: () => void
@@ -54,6 +55,7 @@ export interface UseActions {
   claimYMGPRewards: () => void
   supplyLiquidity: () => void
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void
+  mintWETH: () => void
 }
 
 export const useActions = <W extends UseWallet>({ page, setError, setNotification, wallet, balances, allowances, supplies, writeContracts, locked, amounts, withdraws, rewards }: Props<W>): UseActions => {
@@ -71,6 +73,7 @@ export const useActions = <W extends UseWallet>({ page, setError, setNotificatio
   const claimYMGPRewards = useClaimYMGPRewards({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateUnclaimedUserYield: rewards.updateUnclaimedUserYield, writeContracts })
   const supplyLiquidity = useSupplyLiquidity({ account: wallet.account, balances, chain: wallet.chain, clients: wallet.clients, mgpLPAmount: amounts.mgpLP, rmgpLPAmount: amounts.rmgpLP, setConnectRequired: wallet.setConnectRequired, writeContracts, ymgpLPAmount: amounts.ymgpLP })
   const swap = useSwap({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, setNotification })
+  const mintWETH = useMintWETH({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts })
 
-  return { approve, depositMGP, buyRMGP, buyYMGP, buyMGP, depositRMGP, lockYMGP, unlockYMGP, redeemRMGP, withdrawMGP, compoundRMGP, claimYMGPRewards, supplyLiquidity, swap }
+  return { approve, depositMGP, buyRMGP, buyYMGP, buyMGP, depositRMGP, lockYMGP, unlockYMGP, redeemRMGP, withdrawMGP, compoundRMGP, claimYMGPRewards, supplyLiquidity, swap, mintWETH }
 }

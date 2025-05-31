@@ -65,7 +65,7 @@ export const useUnlockYMGP = <Clients extends Record<Chains, WalletClient & Publ
 
   const unlockYMGP = useCallback(async (): Promise<void> => {
     if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    await writeContractsRef.current[chainRef.current].YMGP.write.unlock([sendAmountRef.current], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
+    await writeContractsRef.current[chainRef.current].yMGP.write.unlock([sendAmountRef.current], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
     suppliesRef.current.updateYMGP()
     updateTotalLockedYMGPRef.current()
     updateUserLockedYMGPRef.current()

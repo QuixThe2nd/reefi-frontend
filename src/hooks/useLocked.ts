@@ -15,7 +15,7 @@ export interface UseLocked {
 }
 
 export const useLocked = ({ wallet }: { readonly wallet: UseWallet }): UseLocked => {
-  const [reefiMGP, updateReefiMGP] = useCachedUpdateable(() => contracts[wallet.chain].VLMGP.read.getUserTotalLocked([contracts[wallet.chain].RMGP.address]), [contracts, wallet.account, wallet.chain], 'reefiMGP locked', 0n)
+  const [reefiMGP, updateReefiMGP] = useCachedUpdateable(() => contracts[wallet.chain].VLMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]), [contracts, wallet.account, wallet.chain], 'reefiMGP locked', 0n)
   const [mgpBSC, updateMGPBSC] = useCachedUpdateable(() => contracts[56].VLMGP.read.totalLocked(), [contracts, wallet.account], 'mgpBSC locked', 0n)
   const [mgpARB, updateMGPARB] = useCachedUpdateable(() => contracts[42_161].VLMGP.read.totalLocked(), [contracts, wallet.account], 'mgpARB locked', 0n)
   const mgp = useMemo(() => mgpBSC + mgpARB, [mgpBSC, mgpARB])
@@ -23,8 +23,8 @@ export const useLocked = ({ wallet }: { readonly wallet: UseWallet }): UseLocked
     updateMGPBSC()
     updateMGPARB()
   }
-  const [ymgp, updateYMGP] = useCachedUpdateable(() => contracts[wallet.chain].YMGP.read.totalLocked(), [contracts, wallet.account], 'ymgp locked', 0n)
-  const [userYMGP, updateUserYMGP] = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].YMGP.read.lockedBalances([wallet.account]), [contracts, wallet.account], 'userYMGP locked', 0n)
+  const [ymgp, updateYMGP] = useCachedUpdateable(() => contracts[wallet.chain].yMGP.read.totalLocked(), [contracts, wallet.account], 'ymgp locked', 0n)
+  const [userYMGP, updateUserYMGP] = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]), [contracts, wallet.account], 'userYMGP locked', 0n)
 
   return { reefiMGP, ymgp, userYMGP, mgp, updateReefiMGP, updateYMGP, updateUserYMGP, updateMGP }
 }

@@ -14,7 +14,7 @@ export const RedeemPage = memo((): ReactElement => {
     "With the 10% withdrawal fee, rMGP depegs under 90% of the underlying value always recover as they can be arbitraged by people willing to wait for withdrawals to be processed.",
     "Half of the withdrawal fee (5% of withdrawal) is redistributed to yMGP holders as yield, with the other half sent to the Reefi treasury."
   ]}>
-    <SwapToken originalTokenIn="RMGP" tokenOut="MGP" nativeRate={0.9*exchangeRates.mintRMGP} curveAmount={amounts.rmgpMgpCurve} buy={actions.buyMGP} nativeSwap={actions.redeemRMGP} label="Redeem via Queue" />
+    <SwapToken originalTokenIn="rMGP" tokenOut="MGP" nativeRate={0.9*exchangeRates.mintRMGP} curveAmount={amounts.rmgpMgpCurve} buy={actions.buyMGP} nativeSwap={actions.redeemRMGP} label="Redeem via Queue" />
     <div className="mt-4 text-sm text-gray-400 flex justify-between">
       <span>Native Redemption Rate</span>
       <span>{exchangeRates.curve.rmgpMGP} MGP to rMGP</span>

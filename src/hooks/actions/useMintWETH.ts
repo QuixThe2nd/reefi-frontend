@@ -1,7 +1,6 @@
 import { useRef, useEffect, useCallback } from "react"
-import { Chains, Coins, contracts } from "../../config/contracts"
+import { Chains } from "../../config/contracts"
 import { WalletClient, PublicActions } from "viem"
-import { Pages } from "../../App"
 import { UseContracts } from "../useContracts"
 import { UseAllowances } from "../useAllowances"
 
@@ -10,20 +9,20 @@ interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | u
   allowances: UseAllowances
   chain: Chains
   clients: Clients
-  page: Pages
   sendAmount: bigint
   setConnectRequired: (_val: boolean) => void
+  setError: (_val: string) => void
   writeContracts: UseContracts<Clients>
 }
 
-export const useApprove = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, page, sendAmount, setConnectRequired, writeContracts }: Props<Clients>): (_contract: 'rMGP' | 'yMGP' | 'cMGP' | 'ODOSRouter', _coin: Coins, _infinity: boolean) => void => {
+export const useMintWETH = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }: Props<Clients>): () => void => {
   const accountRef = useRef(account)
   const allowancesRef = useRef(allowances)
   const chainRef = useRef(chain)
   const clientsRef = useRef(clients)
-  const pageRef = useRef(page)
   const sendAmountRef = useRef(sendAmount)
   const setConnectRequiredRef = useRef(setConnectRequired)
+  const setErrorRef = useRef(setError)
   const writeContractsRef = useRef(writeContracts)
 
   useEffect(() => {
@@ -43,10 +42,6 @@ export const useApprove = <Clients extends Record<Chains, WalletClient & PublicA
   }, [clients])
 
   useEffect(() => {
-    pageRef.current = page
-  }, [page])
-
-  useEffect(() => {
     sendAmountRef.current = sendAmount
   }, [sendAmount])
 
@@ -55,17 +50,18 @@ export const useApprove = <Clients extends Record<Chains, WalletClient & PublicA
   }, [setConnectRequired])
 
   useEffect(() => {
+    setErrorRef.current = setError
+  }, [setError])
+
+  useEffect(() => {
     writeContractsRef.current = writeContracts
   }, [writeContracts])
 
-  const approve = useCallback(async (contract: 'rMGP' | 'yMGP' | 'cMGP' | 'ODOSRouter', coin: Coins, infinity: boolean): Promise<void> => {
-    if (clientsRef.current === undefined || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    const amount = infinity ? 2n ** 256n - 1n : sendAmountRef.current;
-    await writeContractsRef.current[chainRef.current][coin].write.approve([contracts[chainRef.current][contract].address, amount], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-    if (contract === 'cMGP') allowancesRef.current.curve[coin][1]()
-    else if (contract === 'ODOSRouter') allowancesRef.current.odos[coin][1]()
-    else allowancesRef.current.curve[coin][1]()
+  const depositMGP = useCallback(async (): Promise<void> => {
+    if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
+    if (allowancesRef.current.MGP[0] < sendAmountRef.current) return setErrorRef.current('Allowance too low')
+    await writeContractsRef.current[chainRef.current].WETH.write.deposit({ value: sendAmountRef.current, account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
   }, [])
 
-  return approve
+  return depositMGP
 }

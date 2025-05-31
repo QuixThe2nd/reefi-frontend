@@ -46,7 +46,7 @@ export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient 
 
   const claimYMGPRewards = useCallback(async (): Promise<void> => {
     if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    await writeContractsRef.current[chainRef.current].YMGP.write.claim({ account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
+    await writeContractsRef.current[chainRef.current].yMGP.write.claim({ account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
     updateUnclaimedUserYieldRef.current()
   }, [])
 

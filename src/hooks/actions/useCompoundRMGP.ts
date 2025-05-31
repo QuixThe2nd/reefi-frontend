@@ -78,11 +78,11 @@ export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & Pu
 
   const compoundRMGP = useCallback(async (): Promise<void> => {
     if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    await writeContractsRef.current[chainRef.current].RMGP.write.claim({ account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
+    await writeContractsRef.current[chainRef.current].rMGP.write.claim({ account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
     updatePendingRewardsRef.current()
     updateUnclaimedUserYieldRef.current()
     suppliesRef.current.updateRMGP()
-    balancesRef.current.RMGP[1]()
+    balancesRef.current.rMGP[1]()
     updateTotalLockedMGPRef.current()
     updateReefiLockedMGPRef.current()
   }, [])

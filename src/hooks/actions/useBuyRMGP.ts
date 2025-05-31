@@ -67,9 +67,9 @@ export const useBuyRMGP = <Clients extends Record<Chains, WalletClient & PublicA
   const buyRMGP = useCallback(async (): Promise<void> => {
     if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
     if (allowancesRef.current.curve.MGP[0] < sendAmountRef.current) return setErrorRef.current('Allowance too low')
-    await writeContractsRef.current[chainRef.current].CMGP.write.exchange([0n, 1n, sendAmountRef.current, 0n], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
+    await writeContractsRef.current[chainRef.current].cMGP.write.exchange([0n, 1n, sendAmountRef.current, 0n], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
     balancesRef.current.MGP[1]()
-    balancesRef.current.RMGP[1]()
+    balancesRef.current.rMGP[1]()
     balancesRef.current.updateMGPCurve()
     balancesRef.current.updateRMGPCurve()
   }, [])

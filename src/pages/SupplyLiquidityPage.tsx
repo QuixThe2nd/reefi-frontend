@@ -16,7 +16,7 @@ export const SupplyLiquidityPage = memo((): ReactElement => {
       <span>Target</span>
       <span>{(100*Number(balances.mgpCurve)/Number(balances.mgpCurve+balances.rmgpCurve+balances.ymgpCurve)).toFixed(0)}%</span>
     </div>
-    <AmountInput label="Supply rMGP" balance={balances.RMGP[0]} value={amounts.rmgpLP} onChange={amounts.setRMGPLP} token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} placeholder={((): string => {
+    <AmountInput label="Supply rMGP" balance={balances.rMGP[0]} value={amounts.rmgpLP} onChange={amounts.setRMGPLP} token={{ symbol: 'rMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} placeholder={((): string => {
       const rmgpTarget = Number(balances.rmgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve + balances.ymgpCurve)
       const totalRecommendedLP = amounts.mgpLP === 0n ? Number(amounts.ymgpLP) / (Number(balances.ymgpCurve) / Number(balances.mgpCurve + balances.ymgpCurve)) : (amounts.ymgpLP === 0n ? Number(amounts.mgpLP) / (Number(balances.mgpCurve) / Number(balances.mgpCurve + balances.ymgpCurve)) : Number(amounts.mgpLP + amounts.ymgpLP))
       return formatEther(BigInt(totalRecommendedLP * rmgpTarget / (1 - rmgpTarget))).toString()
@@ -25,7 +25,7 @@ export const SupplyLiquidityPage = memo((): ReactElement => {
       <span>Target</span>
       <span>{(100*Number(balances.rmgpCurve)/Number(balances.mgpCurve+balances.rmgpCurve+balances.ymgpCurve)).toFixed(0)}%</span>
     </div>
-    <AmountInput label="Supply yMGP" balance={balances.YMGP[0]} value={amounts.ymgpLP} onChange={amounts.setYMGPLP} token={{ symbol: 'yMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} placeholder={((): string => {
+    <AmountInput label="Supply yMGP" balance={balances.yMGP[0]} value={amounts.ymgpLP} onChange={amounts.setYMGPLP} token={{ symbol: 'yMGP', color: 'bg-green-400', bgColor: 'bg-green-600' }} placeholder={((): string => {
       const ymgpTarget = Number(balances.ymgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve + balances.ymgpCurve)
       const totalRecommendedLP = amounts.mgpLP === 0n ? Number(amounts.rmgpLP) / (Number(balances.rmgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve)) : (amounts.rmgpLP === 0n ? Number(amounts.mgpLP) / (Number(balances.mgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve)) : Number(amounts.mgpLP + amounts.rmgpLP))
       return formatEther(BigInt(totalRecommendedLP * ymgpTarget / (1 - ymgpTarget))).toString()

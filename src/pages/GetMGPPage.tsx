@@ -4,9 +4,9 @@ import { Page } from '../components/Page'
 import { SwapToken } from '../components/SwapToken'
 
 export const GetMGPPage = memo((): ReactElement => {
-  const { actions, amounts, rewards, wallet } = useGlobalContext()
+  const { actions, amounts, rewards } = useGlobalContext()
   return <Page info="MGP is Magpie's governance token. All Reefi derivatives are built around MGP.">
-    <SwapToken originalTokenIn={wallet.clients?.[wallet.chain].chain?.nativeCurrency.symbol as 'ETH'| 'BNB'} tokenOut="MGP" nativeRate={0} curveAmount={amounts.mgpRmgpCurve} buy={actions.buyRMGP} />
+    <SwapToken originalTokenIn='WETH' tokenOut="MGP" nativeRate={0} curveAmount={amounts.mgpRmgpCurve} buy={actions.buyRMGP} />
     <div className="mt-4 text-sm text-gray-400">
       <div className="flex justify-between mb-1">
         <span>Original APR</span>

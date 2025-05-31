@@ -7,7 +7,7 @@ import { SwapToken } from '../components/SwapToken'
 export const DepositPage = memo((): ReactElement => {
   const { actions, amounts, rewards, exchangeRates } = useGlobalContext()
   return <Page info="MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.">
-    <SwapToken originalTokenIn="MGP" tokenOut="RMGP" nativeRate={1/exchangeRates.mintRMGP} curveAmount={amounts.mgpRmgpCurve} buy={actions.buyRMGP} label="Mint" nativeSwap={actions.depositMGP} />
+    <SwapToken originalTokenIn="MGP" tokenOut="rMGP" nativeRate={1/exchangeRates.mintRMGP} curveAmount={amounts.mgpRmgpCurve} buy={actions.buyRMGP} label="Mint" nativeSwap={actions.depositMGP} />
     <div className="mt-4 text-sm text-gray-400">
       <div className="flex justify-between mb-1">
         <span>Original APR</span>

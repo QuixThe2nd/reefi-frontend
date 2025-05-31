@@ -11,11 +11,11 @@ export const ClaimYield = memo((): ReactElement => {
     <h3 className="text-md font-medium mb-1">Unclaimed Rewards</h3>
     <div className="bg-gray-700/50 rounded-lg p-4 flex justify-between">
       <div className="flex flex-col">
-        <p className="font-medium text-lg">You: {formatNumber(formatEther(rewards.unclaimedUserYield, decimals.YMGP), 4)} rMGP</p>
+        <p className="font-medium text-lg">You: {formatNumber(formatEther(rewards.unclaimedUserYield, decimals.yMGP), 4)} rMGP</p>
         <p className="text-sm text-gray-400">+{formatNumber(0.05*rewards.uncompoundedMGPYield*(Number(locked.userYMGP)/Number(locked.ymgp)), 4)} MGP</p>
       </div>
       <div className="flex flex-col text-right">
-        <p className="font-medium text-lg">Total: {formatNumber(formatEther(balances.ymgpHoldings-supplies.ymgp-locked.ymgp, decimals.YMGP), 4)} rMGP</p>
+        <p className="font-medium text-lg">Total: {formatNumber(formatEther(balances.ymgpHoldings-supplies.ymgp-locked.ymgp, decimals.yMGP), 4)} rMGP</p>
         <p className="text-sm text-gray-400">+{formatNumber(rewards.uncompoundedMGPYield*0.05, 4)} MGP</p>
       </div>
     </div>

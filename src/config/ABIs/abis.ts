@@ -1,27 +1,28 @@
 import { erc20Abi } from "viem"
-import { RMGP } from './RMGP'
-import { YMGP } from './YMGP'
-import { VMGP } from './VMGP'
+import { rMGP } from './RMGP'
+import { yMGP } from './YMGP'
+import { vMGP } from './VMGP'
+import { cMGP } from './CMGP'
 import { VLMGP } from './VLMGP'
 import { MASTERMGP } from './MASTERMGP'
 import { VLREWARDER } from './VLREWARDER'
-import { CMGP } from './CMGP'
 import { ODOSRouter } from "./ODOSRouter"
+import { WETH } from "./WETH"
 
 export const ABIs = {
   MGP: erc20Abi,
-  RMGP,
-  YMGP,
-  VMGP,
+  rMGP,
+  yMGP,
+  vMGP,
   VLMGP,
   MASTERMGP,
   VLREWARDER,
-  CMGP,
+  cMGP,
   CKP: erc20Abi,
   PNP: erc20Abi,
   EGP: erc20Abi,
   LTP: erc20Abi,
-  ETH: erc20Abi,
-  BNB: erc20Abi,
+  WETH,
+  WBNB: erc20Abi,
   ODOSRouter
 } as const

@@ -24579,7 +24579,7 @@ var TokenCard = import_react2.memo(({ symbol, decimals, description, price, supp
     className: "bg-gray-800 p-2 rounded-xl border border-gray-700",
     children: [
       /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-        className: "grid grid-cols-3",
+        className: "xl:grid xl:grid-cols-3",
         children: [
           /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
             className: "flex justify-between items-start",
@@ -24612,7 +24612,7 @@ var TokenCard = import_react2.memo(({ symbol, decimals, description, price, supp
             }, undefined, true, undefined, this)
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-            className: "grid grid-cols-2 col-span-2 gap-2",
+            className: "mt-2 xl:mt-0 grid grid-cols-1 sm:grid-cols-2 col-span-2 gap-2",
             children: [
               /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(TokenStat, {
                 title: "Supply",
@@ -34390,7 +34390,7 @@ var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
 var TokenCards = import_react29.memo(() => {
   const { prices, supplies, locked, exchangeRates } = useGlobalContext();
   return /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
-    className: "grid grid-cols-4 gap-4",
+    className: "grid grid-cols-2 md:grid-cols-4 gap-4",
     children: [
       /* @__PURE__ */ jsx_dev_runtime4.jsxDEV(TokenCard, {
         symbol: "MGP",
@@ -34452,7 +34452,8 @@ TokenBalance.displayName = "TokenBalance";
 var jsx_dev_runtime6 = __toESM(require_jsx_dev_runtime(), 1);
 var TokenBalances = import_react31.memo(() => {
   const { balances } = useGlobalContext();
-  return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(jsx_dev_runtime6.Fragment, {
+  return /* @__PURE__ */ jsx_dev_runtime6.jsxDEV("div", {
+    className: "hidden md:flex items-center space-x-2",
     children: [
       /* @__PURE__ */ jsx_dev_runtime6.jsxDEV(TokenBalance, {
         symbol: "MGP",
@@ -34484,7 +34485,7 @@ var jsx_dev_runtime7 = __toESM(require_jsx_dev_runtime(), 1);
 var Header = import_react32.memo(() => {
   const { wallet } = useGlobalContext();
   return /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
-    className: "fixed w-full bg-gray-800 p-4 flex justify-between items-center z-1",
+    className: "sticky top-0 w-full bg-gray-800 p-4 flex justify-between items-center z-1",
     children: [
       /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
         className: "flex items-center gap-4",
@@ -34494,6 +34495,7 @@ var Header = import_react32.memo(() => {
             children: "REEFI"
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("p", {
+            className: "hidden lg:block",
             children: "Refinance Magpie Yield and Governance"
           }, undefined, false, undefined, this)
         ]
@@ -34545,14 +34547,14 @@ var ConversionRates = import_react33.memo(() => {
   return /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
     className: "bg-gray-800 p-3 rounded-xl border border-gray-700 flex flex-col items-center",
     children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
-      className: "w-256 flex flex-col items-center",
+      className: "w-full max-w-256 flex flex-col items-center",
       children: [
         /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h2", {
           className: "text-2xl font-bold mb-4",
           children: "Conversion Rates"
         }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
-          className: "bg-gray-700/50 rounded-lg p-4",
+          className: "bg-gray-700/50 rounded-lg p-1 sm:p-4",
           children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("table", {
             children: [
               /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("thead", {
@@ -34596,13 +34598,13 @@ var ConversionRates = import_react33.memo(() => {
                     children: [
                       /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
                         children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                          className: "mx-4 my-1 text-sm font-bold",
+                          className: "mx-2 sm:mx-4 my-1 text-sm font-bold",
                           children: "rMGP"
                         }, undefined, false, undefined, this)
                       }, undefined, false, undefined, this),
                       /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
                         children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                          className: "mx-4 my-1 text-sm",
+                          className: "mx-2 sm:mx-4 my-1 text-sm",
                           children: [
                             formatNumber(exchangeRates.mintRMGP, 4),
                             " MGP"
@@ -34611,7 +34613,7 @@ var ConversionRates = import_react33.memo(() => {
                       }, undefined, false, undefined, this),
                       /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
                         children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                          className: "mx-4 my-1 text-sm",
+                          className: "mx-2 sm:mx-4 my-1 text-sm",
                           children: [
                             formatNumber(exchangeRates.curve.mgpRMGP, 4),
                             " MGP"
@@ -34620,7 +34622,7 @@ var ConversionRates = import_react33.memo(() => {
                       }, undefined, false, undefined, this),
                       /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
                         children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                          className: "mx-4 my-1 text-sm",
+                          className: "mx-2 sm:mx-4 my-1 text-sm",
                           children: [
                             formatNumber(exchangeRates.curve.rmgpMGP, 4),
                             " MGP"
@@ -34629,7 +34631,7 @@ var ConversionRates = import_react33.memo(() => {
                       }, undefined, false, undefined, this),
                       /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
                         children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                          className: "mx-4 my-1 text-sm",
+                          className: "mx-2 sm:mx-4 my-1 text-sm",
                           children: [
                             formatNumber(exchangeRates.mintRMGP * 0.9, 4),
                             " MGP"
@@ -34642,19 +34644,19 @@ var ConversionRates = import_react33.memo(() => {
                     children: [
                       /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
                         children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                          className: "mx-4 my-1 text-sm font-bold",
+                          className: "mx-2 sm:mx-4 my-1 text-sm font-bold",
                           children: "yMGP"
                         }, undefined, false, undefined, this)
                       }, undefined, false, undefined, this),
                       /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
                         children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                          className: "mx-4 my-1 text-sm",
+                          className: "mx-2 sm:mx-4 my-1 text-sm",
                           children: "1 rMGP"
                         }, undefined, false, undefined, this)
                       }, undefined, false, undefined, this),
                       /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
                         children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                          className: "mx-4 my-1 text-sm",
+                          className: "mx-2 sm:mx-4 my-1 text-sm",
                           children: [
                             formatNumber(exchangeRates.curve.rmgpYMGP, 4),
                             " rMGP"
@@ -34663,7 +34665,7 @@ var ConversionRates = import_react33.memo(() => {
                       }, undefined, false, undefined, this),
                       /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
                         children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                          className: "mx-4 my-1 text-sm",
+                          className: "mx-2 sm:mx-4 my-1 text-sm",
                           children: [
                             formatNumber(exchangeRates.curve.ymgpRMGP, 4),
                             " rMGP"
@@ -34672,7 +34674,7 @@ var ConversionRates = import_react33.memo(() => {
                       }, undefined, false, undefined, this),
                       /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("td", {
                         children: /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
-                          className: "mx-4 my-1 text-sm",
+                          className: "mx-2 sm:mx-4 my-1 text-sm",
                           children: "0 rMGP"
                         }, undefined, false, undefined, this)
                       }, undefined, false, undefined, this)
@@ -34798,7 +34800,7 @@ var Contracts = import_react34.memo(() => {
         children: "Contract Addresses"
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
-        className: "grid grid-cols-2 md:grid-cols-3 gap-2 text-xs",
+        className: "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2 text-xs",
         children: Object.keys(contracts[wallet.chain]).map((contract) => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
           children: [
             /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
@@ -34939,10 +34941,10 @@ InfoCard.displayName = "InfoCard";
 var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
 var Page = ({ children, info }) => {
   return /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
-    className: "flex flex-col items-center gap-16 mt-16",
+    className: "flex flex-col items-center gap-8 mt-8 lg:gap-12 lg:mt-12 xl:gap-16 xl:mt-16",
     children: [
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
-        className: "w-192",
+        className: "max-w-192 w-full",
         children
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(InfoCard, {
@@ -35156,7 +35158,7 @@ var TokenApproval = import_react39.memo(({ allowance, sendAmount, onApprove, tok
       }, undefined, true, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("button", {
         type: "submit",
-        className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min mt-2 disabled:opacity-50 disabled:cursor-not-allowed mb-2",
+        className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min mt-2 disabled:opacity-50 disabled:cursor-not-allowed mb-2 text-xs md:text-md",
         onClick: handleApprove,
         disabled: isApproving,
         children: isApproving ? "Approving..." : `Approve ${tokenSymbol}${curve ? ` on Curve` : ""}`
@@ -35183,7 +35185,7 @@ var BuyOnCurve = import_react40.memo(({ sendAmount, curveAmount, allowanceCurve,
         children: [
           /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("button", {
             type: "submit",
-            className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min",
+            className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min text-xs md:text-md",
             onClick: buy,
             children: [
               "Buy on Curve (",
@@ -35198,7 +35200,7 @@ var BuyOnCurve = import_react40.memo(({ sendAmount, curveAmount, allowanceCurve,
             const premiumDiscount = (formatEther(curveAmount) - directRate) / directRate * 100;
             const isPremium = premiumDiscount > 0;
             return Math.abs(premiumDiscount) >= 0.01 ? /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("span", {
-              className: `absolute -top-2 right-2 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
+              className: `absolute text-xs md:text-md -top-4 md:-top-2 right-2 text-xs px-2 py-1 rounded ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`,
               children: [
                 isPremium ? "+" : "",
                 premiumDiscount.toFixed(2),
@@ -35232,7 +35234,7 @@ var SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut }) => {
             }, undefined, false, undefined, this),
             /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
               type: "submit",
-              className: "py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full",
+              className: "py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full text-xs md:text-md",
               onClick: nativeSwap,
               children: [
                 label,
@@ -35294,7 +35296,7 @@ var SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut }) => {
   if (tokenIn === "ETH")
     return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
       type: "submit",
-      className: "py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full",
+      className: "py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full text-xs md:text-md",
       onClick: () => actions.mintWETH(),
       children: "Mint WETH"
     }, undefined, false, undefined, this);
@@ -35308,7 +35310,7 @@ var SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut }) => {
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
         type: "submit",
-        className: "py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full",
+        className: "py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full text-xs md:text-md",
         onClick: () => actions.swap(contracts[wallet.chain][tokenIn].address, contracts[wallet.chain].MGP.address),
         children: "Swap to MGP With Odos"
       }, undefined, false, undefined, this)
@@ -35882,7 +35884,7 @@ var QASection = () => {
   return /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
     className: "bg-gray-800 p-3 rounded-xl border border-gray-700 flex justify-center",
     children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
-      className: "w-256",
+      className: "max-w-256",
       children: [
         /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
           className: "mb-6 bg-gray-900/80 rounded-xl p-4 border border-dashed border-yellow-700",
@@ -36396,7 +36398,7 @@ var AppContent = () => {
         children: [
           /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(Header, {}, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
-            className: "mt-18 p-4 md:p-6 mx-28 flex flex-col gap-6",
+            className: "p-4 md:p-6 md:mx-16 lg:mx-22 xl:mx-28 flex flex-col gap-6",
             children: [
               /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(TokenCards, {}, undefined, false, undefined, this),
               /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
@@ -36405,32 +36407,32 @@ var AppContent = () => {
                     className: "bg-gray-800 p-3 border border-gray-700 rounded-t-xl",
                     children: [
                       /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
-                        className: "flex justify-between",
+                        className: "flex flex-col-reverse gap-2 lg:flex-row justify-between",
                         children: [
                           /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
                             className: "bg-gray-700 p-1 rounded-lg flex",
                             children: [
                               /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
                                 type: "button",
-                                className: `px-2 py-1 rounded-md transition-colors ${page === "getMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                                className: `px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === "getMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "getMGP" ? setPage(undefined) : setPage("getMGP"),
                                 children: "Get MGP"
                               }, undefined, false, undefined, this),
                               /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
                                 type: "button",
-                                className: `px-2 py-1 rounded-md transition-colors ${page === "deposit" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                                className: `px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === "deposit" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "deposit" ? setPage(undefined) : setPage("deposit"),
                                 children: "Get rMGP"
                               }, undefined, false, undefined, this),
                               /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
                                 type: "button",
-                                className: `px-2 py-1 rounded-md transition-colors ${page === "compoundRMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                                className: `px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === "compoundRMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "compoundRMGP" ? setPage(undefined) : setPage("compoundRMGP"),
                                 children: "Compound Yield"
                               }, undefined, false, undefined, this),
                               /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
                                 type: "button",
-                                className: `px-2 py-1 rounded-md transition-colors ${page === "redeem" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                                className: `px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === "redeem" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "redeem" ? setPage(undefined) : setPage("redeem"),
                                 children: "Redeem rMGP"
                               }, undefined, false, undefined, this)
@@ -36466,32 +36468,32 @@ var AppContent = () => {
                     className: "bg-gray-800 p-3 border border-gray-700",
                     children: [
                       /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
-                        className: "flex justify-between",
+                        className: "flex flex-col-reverse gap-2 lg:flex-row justify-between",
                         children: [
                           /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
                             className: "bg-gray-700 p-1 rounded-lg flex",
                             children: [
                               /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
                                 type: "button",
-                                className: `px-2 py-1 rounded-md transition-colors ${page === "convert" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                                className: `px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === "convert" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "convert" ? setPage(undefined) : setPage("convert"),
                                 children: "Get yMGP"
                               }, undefined, false, undefined, this),
                               /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
                                 type: "button",
-                                className: `px-2 py-1 rounded-md transition-colors ${page === "lock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                                className: `px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === "lock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "lock" ? setPage(undefined) : setPage("lock"),
                                 children: "Lock yMGP"
                               }, undefined, false, undefined, this),
                               /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
                                 type: "button",
-                                className: `px-2 py-1 rounded-md transition-colors ${page === "claimYMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                                className: `px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === "claimYMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "claimYMGP" ? setPage(undefined) : setPage("claimYMGP"),
                                 children: "Claim Yield"
                               }, undefined, false, undefined, this),
                               /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
                                 type: "button",
-                                className: `px-2 py-1 rounded-md transition-colors ${page === "unlock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                                className: `px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === "unlock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                                 onClick: () => page === "unlock" ? setPage(undefined) : setPage("unlock"),
                                 children: "Unlock yMGP"
                               }, undefined, false, undefined, this)
@@ -36531,19 +36533,19 @@ var AppContent = () => {
                   /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
                     className: "bg-gray-800 p-3 border border-gray-700",
                     children: /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
-                      className: "flex justify-between",
+                      className: "flex flex-col-reverse gap-2 lg:flex-row justify-between",
                       children: /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
                         className: "bg-gray-700 p-1 rounded-lg flex",
                         children: [
                           /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
                             type: "button",
-                            className: `px-2 py-1 rounded-md transition-colors ${page === "buyVotes" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            className: `px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === "buyVotes" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                             onClick: () => page === "buyVotes" ? setPage(undefined) : setPage("buyVotes"),
                             children: "Get vMGP"
                           }, undefined, false, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
                             type: "button",
-                            className: `px-2 py-1 rounded-md transition-colors ${page === "vote" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            className: `px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === "vote" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                             onClick: () => page === "vote" ? setPage(undefined) : setPage("vote"),
                             children: "Vote"
                           }, undefined, false, undefined, this)
@@ -36555,13 +36557,13 @@ var AppContent = () => {
                     className: "bg-gray-800 p-3 border border-gray-700 rounded-b-xl",
                     children: [
                       /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
-                        className: "flex justify-between",
+                        className: "flex flex-col-reverse gap-2 lg:flex-row justify-between",
                         children: [
                           /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
                             className: "bg-gray-700 p-1 rounded-lg flex",
                             children: /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
                               type: "button",
-                              className: `px-2 py-1 rounded-md transition-colors ${page === "supplyLiquidity" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                              className: `px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === "supplyLiquidity" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
                               onClick: () => page === "supplyLiquidity" ? setPage(undefined) : setPage("supplyLiquidity"),
                               children: "Supply Liquidity"
                             }, undefined, false, undefined, this)

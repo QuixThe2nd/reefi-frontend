@@ -4,10 +4,10 @@ import { useGlobalContext } from '../contexts/GlobalContext'
 
 export const Header = memo((): ReactElement => {
   const { wallet } = useGlobalContext()
-  return <div className="fixed w-full bg-gray-800 p-4 flex justify-between items-center z-1">
+  return <div className="sticky top-0 w-full bg-gray-800 p-4 flex justify-between items-center z-1">
     <div className="flex items-center gap-4">
       <h1 className="text-xl font-bold">REEFI</h1>
-      <p>Refinance Magpie Yield and Governance</p>
+      <p className="hidden lg:block">Refinance Magpie Yield and Governance</p>
     </div>
     {wallet.account === undefined ? <button type="button" className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors" onClick={wallet.connectWallet} disabled={wallet.isConnecting}>{wallet.isConnecting ? 'Connecting...' : 'Connect Wallet'}</button> : <div className="flex items-center space-x-4">
       <TokenBalances />

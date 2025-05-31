@@ -60,16 +60,16 @@ const AppContent = (): ReactElement => {
       <ErrorCard error={error} setError={setError} />
       <div className="flex-grow overflow-auto">
         <Header />
-        <div className="mt-18 p-4 md:p-6 mx-28 flex flex-col gap-6">
+        <div className="p-4 md:p-6 md:mx-16 lg:mx-22 xl:mx-28 flex flex-col gap-6">
           <TokenCards />
           <div>
             <div className="bg-gray-800 p-3 border border-gray-700 rounded-t-xl">
-              <div className="flex justify-between">
+              <div className="flex flex-col-reverse gap-2 lg:flex-row justify-between">
                 <div className="bg-gray-700 p-1 rounded-lg flex">
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'getMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'getMGP' ? setPage(undefined) : setPage('getMGP')}>Get MGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'deposit' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'deposit' ? setPage(undefined) : setPage('deposit')}>Get rMGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'compoundRMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'compoundRMGP' ? setPage(undefined) : setPage('compoundRMGP')}>Compound Yield</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'redeem' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'redeem' ? setPage(undefined) : setPage('redeem')}>Redeem rMGP</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'getMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'getMGP' ? setPage(undefined) : setPage('getMGP')}>Get MGP</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'deposit' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'deposit' ? setPage(undefined) : setPage('deposit')}>Get rMGP</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'compoundRMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'compoundRMGP' ? setPage(undefined) : setPage('compoundRMGP')}>Compound Yield</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'redeem' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'redeem' ? setPage(undefined) : setPage('redeem')}>Redeem rMGP</button>
                 </div>
                 <div className="flex flex-row-reverse h-min">
                   <div className="flex gap-1">
@@ -84,12 +84,12 @@ const AppContent = (): ReactElement => {
               {page === 'redeem' && <RedeemPage />}
             </div>
             <div className="bg-gray-800 p-3 border border-gray-700">
-              <div className="flex justify-between">
+            <div className="flex flex-col-reverse gap-2 lg:flex-row justify-between">
                 <div className="bg-gray-700 p-1 rounded-lg flex">
-                <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'convert' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'convert' ? setPage(undefined) : setPage('convert')}>Get yMGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'lock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'lock' ? setPage(undefined) : setPage('lock')}>Lock yMGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'claimYMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'claimYMGP' ? setPage(undefined) : setPage('claimYMGP')}>Claim Yield</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'unlock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'unlock' ? setPage(undefined) : setPage('unlock')}>Unlock yMGP</button>
+                <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'convert' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'convert' ? setPage(undefined) : setPage('convert')}>Get yMGP</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'lock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'lock' ? setPage(undefined) : setPage('lock')}>Lock yMGP</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'claimYMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'claimYMGP' ? setPage(undefined) : setPage('claimYMGP')}>Claim Yield</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'unlock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'unlock' ? setPage(undefined) : setPage('unlock')}>Unlock yMGP</button>
                 </div>
                 <div className="flex flex-row-reverse h-min">
                   <div className="flex gap-1">
@@ -108,18 +108,18 @@ const AppContent = (): ReactElement => {
               {page === 'unlock' && <UnlockPage />}
             </div>
             <div className="bg-gray-800 p-3 border border-gray-700">
-              <div className="flex justify-between">
+              <div className="flex flex-col-reverse gap-2 lg:flex-row justify-between">
                 <div className="bg-gray-700 p-1 rounded-lg flex">
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'buyVotes' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'buyVotes' ? setPage(undefined) : setPage('buyVotes')}>Get vMGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'vote' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'vote' ? setPage(undefined) : setPage('vote')}>Vote</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'buyVotes' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'buyVotes' ? setPage(undefined) : setPage('buyVotes')}>Get vMGP</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'vote' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'vote' ? setPage(undefined) : setPage('vote')}>Vote</button>
                 </div>
               </div>
               {/* <Badge title="Vote Multiplier" value={supplies.vmgp / supplies.rmgp} /> */}
             </div>
             <div className="bg-gray-800 p-3 border border-gray-700 rounded-b-xl">
-              <div className="flex justify-between">
+              <div className="flex flex-col-reverse gap-2 lg:flex-row justify-between">
                 <div className="bg-gray-700 p-1 rounded-lg flex">
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors ${page === 'supplyLiquidity' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'supplyLiquidity' ? setPage(undefined) : setPage('supplyLiquidity')}>Supply Liquidity</button>
+                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'supplyLiquidity' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'supplyLiquidity' ? setPage(undefined) : setPage('supplyLiquidity')}>Supply Liquidity</button>
                 </div>
                 <div className="flex flex-row-reverse h-min">
                   <div className="flex gap-1">

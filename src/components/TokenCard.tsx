@@ -18,7 +18,7 @@ interface Props {
 
 export const TokenCard = memo(({ symbol, decimals, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate, color = "green" }: Props): ReactElement => {
   return <div className="bg-gray-800 p-2 rounded-xl border border-gray-700">
-    <div className="grid grid-cols-3">
+    <div className="xl:grid xl:grid-cols-3">
       <div className="flex justify-between items-start">
         <div>
           <div className="flex items-center">
@@ -28,7 +28,7 @@ export const TokenCard = memo(({ symbol, decimals, description, price, supply, u
           {price !== undefined && <h2 className="text-2xl font-bold mt-2">${price.toFixed(4)}</h2>}
         </div>
       </div>
-      <div className="grid grid-cols-2 col-span-2 gap-2">
+      <div className="mt-2 xl:mt-0 grid grid-cols-1 sm:grid-cols-2 col-span-2 gap-2">
         <TokenStat title="Supply" detail={`${formatNumber(formatEther(supply, decimals), 3)} ${symbol}`} />
         {underlying !== undefined && underlying !== supply && <TokenStat title="TVL" detail={`${formatNumber(formatEther(underlying), 2)} ${underlyingSymbol}`} />}
         {underlying !== undefined && underlying !== supply && <TokenStat title="Mint Rate" detail={`${formatNumber(Number(underlying)/Number(supply), 4)} ${underlyingSymbol}`} />}

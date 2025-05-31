@@ -24,6 +24,8 @@ import { Pages } from "../App"
 import { useSwap } from "./actions/useSwap"
 import { Coins } from "../config/contracts"
 import { useMintWETH } from "./actions/useMintWETH"
+import { useSellRMGP } from "./actions/useSellRMGP"
+import { useConvertMGP } from "./actions/useConvertMGP"
 
 interface Props<W extends UseWallet> {
   page: Pages
@@ -45,6 +47,7 @@ export interface UseActions {
   depositMGP: () => void
   buyRMGP: () => void
   buyYMGP: () => void
+  convertMGP: () => void
   buyMGP: () => void
   depositRMGP: () => void
   lockYMGP: () => void
@@ -56,13 +59,16 @@ export interface UseActions {
   supplyLiquidity: () => void
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void
   mintWETH: () => void
+  sellYMGP: () => void
 }
 
 export const useActions = <W extends UseWallet>({ page, setError, setNotification, wallet, balances, allowances, supplies, writeContracts, locked, amounts, withdraws, rewards }: Props<W>): UseActions => {
   const approve = useApprove({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, page, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, writeContracts })
   const depositMGP = useDepositMGP({ account: wallet.account, allowances, balances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, supplies, updateReefiLockedMGP: locked.updateReefiMGP, updateTotalLockedMGP: locked.updateMGP, writeContracts })
   const buyRMGP = useBuyRMGP({ account: wallet.account, allowances, balances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts })
+  const sellYMGP = useSellRMGP({ account: wallet.account, allowances, balances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts })
   const buyYMGP = useBuyYMGP({ account: wallet.account, allowances, balances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts })
+  const convertMGP = useConvertMGP({ account: wallet.account, allowances, balances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts })
   const buyMGP = useBuyMGP({ account: wallet.account, allowances, balances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts })
   const depositRMGP = useDepositRMGP({ account: wallet.account, allowances, balances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, supplies, updateYMGPHoldings: balances.updateYMGPHoldings, writeContracts })
   const lockYMGP = useLockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, supplies, updateTotalLockedYMGP: locked.updateMGP, updateUserLockedYMGP: locked.updateUserYMGP, writeContracts })
@@ -75,5 +81,5 @@ export const useActions = <W extends UseWallet>({ page, setError, setNotificatio
   const swap = useSwap({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, setNotification })
   const mintWETH = useMintWETH({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts })
 
-  return { approve, depositMGP, buyRMGP, buyYMGP, buyMGP, depositRMGP, lockYMGP, unlockYMGP, redeemRMGP, withdrawMGP, compoundRMGP, claimYMGPRewards, supplyLiquidity, swap, mintWETH }
+  return { approve, depositMGP, buyRMGP, buyYMGP, buyMGP, sellYMGP, depositRMGP, lockYMGP, unlockYMGP, redeemRMGP, withdrawMGP, convertMGP, compoundRMGP, claimYMGPRewards, supplyLiquidity, swap, mintWETH }
 }

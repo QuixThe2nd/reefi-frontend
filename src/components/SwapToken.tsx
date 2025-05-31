@@ -1,26 +1,14 @@
 import { ReactElement, useState } from "react"
-import { formatEther } from "../utils"
-import { Coins, contracts } from "../config/contracts"
+import { Coins } from "../config/contracts"
 import { useGlobalContext } from "../contexts/GlobalContext"
-import { BuyOnCurve } from "./BuyOnCurve"
 import { SwapInput } from "./SwapInput"
-import { TokenApproval } from "./TokenApproval"
+import { SwapButton } from "./SwapButton"
 
-export const SwapToken = ({ originalTokenIn, tokenOut, nativeRate, curveAmount, buy, nativeSwap, label }: { originalTokenIn: Coins, tokenOut: Coins, nativeRate: number, curveAmount: bigint, buy: () => void, nativeSwap?: () => void, label?: string }): ReactElement => {
-  const { actions, allowances, amounts, balances, wallet } = useGlobalContext()
+export const SwapToken = ({ originalTokenIn, tokenOut, nativeRate, buy, nativeSwap, label, excludeCoins }: { originalTokenIn: Coins, tokenOut: Coins, nativeRate: number, curveAmount: bigint, buy: () => void, nativeSwap?: () => void, label?: string, excludeCoins: Coins[] }): ReactElement => {
+  const { amounts, balances } = useGlobalContext()
   const [tokenIn, setTokenIn] = useState<Coins | 'ETH'>(originalTokenIn)
-
   return <>
-    <SwapInput label={`Get ${tokenOut}`} selectedCoin={tokenIn} onCoinChange={setTokenIn} balance={balances[tokenIn][0]} value={amounts.send} onChange={amounts.setSend} outputCoin={tokenOut} />
-    {(tokenIn === 'MGP' && tokenOut ==='rMGP') || (tokenIn === 'rMGP' && tokenOut ==='yMGP') || (tokenIn === 'rMGP' && tokenOut ==='MGP') ? <div className="grid grid-cols-2 gap-2">
-      <div>
-        {tokenOut !=='MGP' && <TokenApproval sendAmount={amounts.send} allowance={allowances[tokenIn][0]} onApprove={infinity => actions.approve(tokenOut, tokenIn, infinity)} tokenSymbol={tokenIn} />}
-        <button type="submit" className="py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full" onClick={nativeSwap}>{label} ({formatEther(BigInt(Number(amounts.send)*nativeRate)).toFixed(4)} {tokenOut})</button>
-      </div>
-      <BuyOnCurve sendAmount={amounts.send} curveAmount={curveAmount} allowanceCurve={allowances.curve[tokenIn][0]} nativeRate={nativeRate} onApprove={infinity => actions.approve('cMGP', tokenIn, infinity)} buy={buy} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />
-    </div> : (tokenIn === 'ETH' ? <button type="submit" className="py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full" onClick={() => actions.mintWETH()}>Mint WETH</button> : <>
-      <TokenApproval sendAmount={amounts.send} allowance={allowances.odos[tokenIn][0]} onApprove={infinity => actions.approve('ODOSRouter', tokenIn, infinity)} tokenSymbol={tokenIn} />
-      <button type="submit" className="py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min w-full" onClick={() => actions.swap(contracts[wallet.chain][tokenIn].address, contracts[wallet.chain].MGP.address)}>Swap to MGP</button>
-    </>)}
+    <SwapInput label={`Get ${tokenOut}`} selectedCoin={tokenIn} onCoinChange={setTokenIn} balance={balances[tokenIn][0]} value={amounts.send} onChange={amounts.setSend} outputCoin={tokenOut} excludeCoins={excludeCoins} />
+    <SwapButton nativeRate={nativeRate} buy={buy} nativeSwap={nativeSwap} label={label} tokenIn={tokenIn} tokenOut={tokenOut} />
   </>
 }

@@ -11,14 +11,15 @@ interface Props {
   readonly value: bigint
   readonly onChange: (_value: bigint) => void
   readonly outputCoin: Coins
+  readonly excludeCoins: Coins[]
 }
 
-export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin }: Props): ReactElement => {
-  const { exchangeRates, prices, wallet } = useGlobalContext()
+export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin, excludeCoins }: Props): ReactElement => {
+  const { exchangeRates, prices } = useGlobalContext()
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
-  const excludeCoins = new Set([ outputCoin, 'CMGP', wallet.chain === 56 ? 'WETH' : 'WBNB' ])
-  const availableCoins = (Object.keys(coins) as Coins[]).filter(coin => !excludeCoins.has(coin))
+  excludeCoins = [ outputCoin, 'cMGP', ...excludeCoins ]
+  const availableCoins = (Object.keys(coins) as Coins[]).filter(coin => !excludeCoins.includes(coin))
   
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -33,6 +34,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
     const inputAmount = formatEther(value, decimals[selectedCoin])
     if (selectedCoin === 'rMGP' && outputCoin === 'yMGP') return undefined
     if (selectedCoin === 'MGP' && outputCoin === 'rMGP') return undefined
+    if (selectedCoin === 'yMGP' && outputCoin === 'rMGP') return undefined
     else if (selectedCoin === 'yMGP' && outputCoin === 'MGP') return (inputAmount / exchangeRates.curve.ymgpMGP).toFixed(6) + ' ' + outputCoin
     else if (outputCoin === 'rMGP') return (((inputAmount * prices[selectedCoin === 'ETH' ? `W${selectedCoin}` as 'WETH' : selectedCoin]) / prices.MGP) / exchangeRates.curve.mgpRMGP).toFixed(6) + ' ' + outputCoin
     else return undefined

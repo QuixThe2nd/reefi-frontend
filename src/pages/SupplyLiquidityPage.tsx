@@ -11,7 +11,7 @@ export const SupplyLiquidityPage = memo((): ReactElement => {
     <AmountInput
       balance={balances.MGP[0]}
       label="Supply MGP"
-      onChange={amounts.setMGPLP}
+      onChange={amounts.setMgpLP}
       placeholder={((): string => {
         const mgpTarget = Number(balances.mgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve + balances.ymgpCurve);
         const getTotalRecommendedLP = (): number => {
@@ -33,7 +33,7 @@ export const SupplyLiquidityPage = memo((): ReactElement => {
     <AmountInput
       balance={balances.rMGP[0]}
       label="Supply rMGP"
-      onChange={amounts.setRMGPLP}
+      onChange={amounts.setRmgpLP}
       placeholder={((): string => {
         const rmgpTarget = Number(balances.rmgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve + balances.ymgpCurve);
         const getTotalRecommendedLP = (): number => {
@@ -55,7 +55,7 @@ export const SupplyLiquidityPage = memo((): ReactElement => {
     <AmountInput
       balance={balances.yMGP[0]}
       label="Supply yMGP"
-      onChange={amounts.setYMGPLP}
+      onChange={amounts.setYmgpLP}
       placeholder={((): string => {
         const ymgpTarget = Number(balances.ymgpCurve) / Number(balances.mgpCurve + balances.rmgpCurve + balances.ymgpCurve);
         const getTotalRecommendedLP = (): number => {

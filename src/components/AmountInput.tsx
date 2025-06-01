@@ -1,7 +1,6 @@
 import { formatEther, parseEther } from "../utilities";
 import { memo, ReactElement } from "react";
 
-
 interface AmountInputProperties {
   readonly label: string;
   readonly balance: bigint;

@@ -18,14 +18,14 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
 }
 
 export const useMintWETH = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }: Properties<Clients>): () => void => {
-  const accountReference = useRef(account),
-    allowancesReference = useRef(allowances),
-    chainReference = useRef(chain),
-    clientsReference = useRef(clients),
-    sendAmountReference = useRef(sendAmount),
-    setConnectRequiredReference = useRef(setConnectRequired),
-    setErrorReference = useRef(setError),
-    writeContractsReference = useRef(writeContracts);
+  const accountReference = useRef(account);
+  const allowancesReference = useRef(allowances);
+  const chainReference = useRef(chain);
+  const clientsReference = useRef(clients);
+  const sendAmountReference = useRef(sendAmount);
+  const setConnectRequiredReference = useRef(setConnectRequired);
+  const setErrorReference = useRef(setError);
+  const writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
     accountReference.current = account;

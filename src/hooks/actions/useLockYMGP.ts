@@ -19,15 +19,15 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
 }
 
 export const useLockYMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, sendAmount, setConnectRequired, supplies, updateTotalLockedYMGP, updateUserLockedYMGP, writeContracts }: Properties<Clients>): () => void => {
-  const accountReference = useRef(account),
-    chainReference = useRef(chain),
-    clientsReference = useRef(clients),
-    sendAmountReference = useRef(sendAmount),
-    setConnectRequiredReference = useRef(setConnectRequired),
-    suppliesReference = useRef(supplies),
-    updateTotalLockedYMGPReference = useRef(updateTotalLockedYMGP),
-    updateUserLockedYMGPReference = useRef(updateUserLockedYMGP),
-    writeContractsReference = useRef(writeContracts);
+  const accountReference = useRef(account);
+  const chainReference = useRef(chain);
+  const clientsReference = useRef(clients);
+  const sendAmountReference = useRef(sendAmount);
+  const setConnectRequiredReference = useRef(setConnectRequired);
+  const suppliesReference = useRef(supplies);
+  const updateTotalLockedYMGPReference = useRef(updateTotalLockedYMGP);
+  const updateUserLockedYMGPReference = useRef(updateUserLockedYMGP);
+  const writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
     accountReference.current = account;
@@ -65,16 +65,11 @@ export const useLockYMGP = <Clients extends Record<Chains, WalletClient & Public
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
 
-  const lockYMGP = useCallback(async (): Promise<void> => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
-      setConnectRequiredReference.current(true); return;
-    }
-    await writeContractsReference.current[chainReference.current].yMGP.write.lock([sendAmountReference.current], { account: accountReference.current,
-      chain: clientsReference.current[chainReference.current].chain });
+  return useCallback(async (): Promise<void> => {
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
+    await writeContractsReference.current[chainReference.current].yMGP.write.lock([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     suppliesReference.current.updateYMGP();
     updateTotalLockedYMGPReference.current();
     updateUserLockedYMGPReference.current();
   }, []);
-
-  return lockYMGP;
 };

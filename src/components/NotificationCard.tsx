@@ -4,9 +4,12 @@ import { useEffect, ReactElement } from "react";
 export const NotificationCard = ({ notification, setNotification }: Readonly<{ notification: string;
   setNotification: (_error: string) => void; }>): ReactElement | undefined => {
   useEffect(() => {
-    if (notification.length > 0) setTimeout(() => {
-      setNotification("");
-    }, 2000);
+    if (notification.length > 0) {
+      const timeout = setTimeout(() => {
+        setNotification("");
+      }, 2000);
+      return () => clearTimeout(timeout);
+    }
   }, [notification, setNotification]);
 
   return notification.length > 0 ? <div className="absolute right-2 top-2 z-20">

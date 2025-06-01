@@ -31,7 +31,6 @@ export const BuyVotesPage = memo(({ sendAmount, ymgpAllowance, ymgpAllowanceCurv
       </div>
     </div>
   </div>
-
   <InfoCard text="vMGP is backed 1:1 by yMGP. This process can not be undone. vMGP is used to vote on Magpie proposals with Reefi's underlying vlMGP." />
 </>);
 BuyVotesPage.displayName = "BuyVotesPage";

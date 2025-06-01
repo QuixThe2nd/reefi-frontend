@@ -55,6 +55,5 @@ export const useContracts = ({ wallet }: { wallet: UseWallet }): UseContracts<ty
       }
     };
   }, [wallet.clients]);
-
   return writeContracts;
 };

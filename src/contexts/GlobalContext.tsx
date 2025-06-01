@@ -1,4 +1,4 @@
-import { createContext, useContext, type ReactElement, type ReactNode } from "react";
+import { createContext, use, useMemo, type ReactElement, type ReactNode } from "react";
 import { useActions, UseActions } from "../hooks/useActions";
 import { useAllowances, type UseAllowances } from "../hooks/useAllowances";
 import { useAmounts, UseAmounts } from "../hooks/useAmounts";
@@ -34,6 +34,7 @@ interface GlobalProviderProperties {
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
+GlobalContext.displayName = "GlobalContext";
 
 export const GlobalProvider = ({ children, setError, setNotification }: GlobalProviderProperties): ReactElement => {
   const wallet = useWallet({ setError });
@@ -48,11 +49,12 @@ export const GlobalProvider = ({ children, setError, setNotification }: GlobalPr
   const exchangeRates = useExchangeRates({ locked, supplies, wallet });
   const rewards = useRewards({ balances, locked, prices, wallet });
   const actions = useActions({ allowances, amounts, balances, locked, rewards, setError, setNotification, supplies, wallet, withdraws, writeContracts });
-  return <GlobalContext.Provider value={{ actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, wallet, withdraws, writeContracts }}>{children}</GlobalContext.Provider>;
+  const value = useMemo(() => ({ actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, wallet, withdraws, writeContracts }), [actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, wallet, withdraws, writeContracts]);
+  return <GlobalContext value={value}>{children}</GlobalContext>;
 };
 
 export const useGlobalContext = (): GlobalContextType => {
-  const context = useContext(GlobalContext);
+  const context = use(GlobalContext);
   if (context === undefined) throw new Error("useGlobalContext must be used within a GlobalProvider");
   return context;
 };

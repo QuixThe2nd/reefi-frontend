@@ -1,7 +1,6 @@
 import { contracts, Chains, Coins } from "../../config/contracts";
 import { useCallback, useEffect, useRef } from "react";
 
-import { Pages } from "../../App";
 import { UseAllowances } from "../useAllowances";
 import { UseContracts } from "../useContracts";
 
@@ -18,13 +17,13 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
 }
 
 export const useApprove = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, sendAmount, setConnectRequired, writeContracts }: Properties<Clients>): (_contract: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _coin: Coins, _infinity: boolean) => void => {
-  const accountReference = useRef(account),
-    allowancesReference = useRef(allowances),
-    chainReference = useRef(chain),
-    clientsReference = useRef(clients),
-    sendAmountReference = useRef(sendAmount),
-    setConnectRequiredReference = useRef(setConnectRequired),
-    writeContractsReference = useRef(writeContracts);
+  const accountReference = useRef(account);
+  const allowancesReference = useRef(allowances);
+  const chainReference = useRef(chain);
+  const clientsReference = useRef(clients);
+  const sendAmountReference = useRef(sendAmount);
+  const setConnectRequiredReference = useRef(setConnectRequired);
+  const writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
     accountReference.current = account;

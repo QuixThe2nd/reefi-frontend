@@ -19,7 +19,7 @@
 		"noPropertyAccessFromIndexSignature": true,
 		"forceConsistentCasingInFileNames": true,
 		"module": "esnext",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"noEmit": false,
@@ -29,6 +29,9 @@
 		"noEmitOnError": true,
 		"strictNullChecks": true
 	},
-	"include": ["src"],
+  "include": [
+    "src/**/*",
+    "eslint.config.ts"
+  ],
 	"exclude": ["node_modules", "dist", "build"]
 }

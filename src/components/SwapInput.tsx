@@ -1,6 +1,6 @@
 import { coins, decimals, type Coins } from "../config/contracts";
 import { formatEther } from "../utilities";
-import { memo, useEffect, useRef, useState, type ReactElement } from "react";
+import { memo, useEffect, useRef, useState, Fragment, type ReactElement } from "react";
 import { useGlobalContext } from "../contexts/GlobalContext";
 
 interface Properties {
@@ -15,34 +15,27 @@ interface Properties {
 }
 
 export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin, excludeCoins }: Properties): ReactElement => {
-  const { exchangeRates, prices } = useGlobalContext(),
-    [isDropdownOpen, setIsDropdownOpen] = useState(false),
-    dropdownReference = useRef<HTMLDivElement>(null);
+  const { exchangeRates, prices } = useGlobalContext();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownReference = useRef<HTMLDivElement>(null);
   excludeCoins.push(outputCoin, "cMGP");
   const availableCoins = (Object.keys(coins) as Coins[]).filter(coin => !excludeCoins.includes(coin));
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
       if (dropdownReference.current && !dropdownReference.current.contains(event.target as Node)) setIsDropdownOpen(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return (): void => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return (): void => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const estimatedOutput = (): string | undefined => {
     if (value === 0n) return undefined;
-
     const inputAmount = formatEther(value, decimals[selectedCoin]);
     if (selectedCoin === "rMGP" && outputCoin === "yMGP") return undefined;
-
     if (selectedCoin === "MGP" && outputCoin === "rMGP") return undefined;
-
     if (selectedCoin === "yMGP" && outputCoin === "rMGP") return undefined;
     else if (selectedCoin === "yMGP" && outputCoin === "MGP") return `${(inputAmount / exchangeRates.curve.ymgpMGP).toFixed(6)} ${outputCoin}`;
     else if (outputCoin === "rMGP") return `${(inputAmount * prices[selectedCoin === "ETH" ? `W${selectedCoin}` as "WETH" : selectedCoin] / prices.MGP / exchangeRates.curve.mgpRMGP).toFixed(6)} ${outputCoin}`;
-
     return undefined;
   };
 
@@ -56,91 +49,32 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
       <h3 className="font-medium">{label}</h3>
       <span className="text-sm text-gray-400">Balance: {formatEther(balance, decimals[selectedCoin]).toFixed(4)} {selectedCoin}</span>
     </div>
-
     <div className="flex items-center justify-between rounded-lg bg-gray-900 p-4">
       <input className="w-3/4 bg-transparent text-xl outline-none" onChange={event => onChange(BigInt(Math.round((Number.isNaN(Number.parseFloat(event.target.value)) ? 0 : Number.parseFloat(event.target.value)) * Number(10n ** BigInt(decimals[selectedCoin])))))} placeholder='0' type="text" value={value === 0n ? undefined : formatEther(value, decimals[selectedCoin])} />
-
       <div className="flex items-center space-x-2">
-        <button
-          className="rounded bg-gray-700 px-2 py-1 text-xs hover:bg-gray-600"
-          onClick={() => {
-            onChange(balance);
-          }}
-          type="button"
-        >
-          MAX
-        </button>
-
-        <div
-          className="relative"
-          ref={dropdownReference}
-        >
-          <button
-            className={`flex cursor-pointer items-center rounded-md px-3 py-1 transition-opacity hover:opacity-90 ${coins[selectedCoin === "ETH" ? `W${selectedCoin}` as "WETH" : selectedCoin].bgColor}`}
-            onClick={() => {
-              setIsDropdownOpen(!isDropdownOpen);
-            }}
-            type="button"
-          >
-            <div className={`mr-2 flex size-5 items-center justify-center rounded-full ${coins[selectedCoin === "ETH" ? `W${selectedCoin}` as "WETH" : selectedCoin].color}`}>
-              {selectedCoin[0]?.toUpperCase()}
-            </div>
-
-            <span className="mr-2">
-              {selectedCoin}
-            </span>
-
-            <svg
-              className={`size-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M19 9l-7 7-7-7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            </svg>
+        <button className="rounded bg-gray-700 px-2 py-1 text-xs hover:bg-gray-600" onClick={() => onChange(balance)} type="button">MAX</button>
+        <div className="relative" ref={dropdownReference}>
+          <button className={`flex cursor-pointer items-center rounded-md px-3 py-1 transition-opacity hover:opacity-90 ${coins[selectedCoin === "ETH" ? `W${selectedCoin}` as "WETH" : selectedCoin].bgColor}`} onClick={() => setIsDropdownOpen(!isDropdownOpen)} type="button">
+            <div className={`mr-2 flex size-5 items-center justify-center rounded-full ${coins[selectedCoin === "ETH" ? `W${selectedCoin}` as "WETH" : selectedCoin].color}`}>{selectedCoin[0]?.toUpperCase()}</div>
+            <span className="mr-2">{selectedCoin}</span>
+            <svg className={`size-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>
           </button>
-
           {isDropdownOpen ? <div className="absolute right-0 top-full z-50 mt-1 min-w-32 rounded-lg border border-gray-700 bg-gray-800 shadow-xl">
-            {availableCoins.map(coin => <>
-              <button
-                className={`flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin ? "bg-gray-700" : ""}`}
-                key={coin}
-                onClick={() => handleCoinChange(coin)}
-                type="button"
-              >
-                <div className={`mr-2 flex size-5 items-center justify-center rounded-full ${coins[coin].color}`}>
-                  {coin[0]?.toUpperCase()}
-                </div>
-
-                <span>
-                  {coin}
-                </span>
+            {availableCoins.map(coin => <Fragment key={coin}>
+              <button className={`flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin ? "bg-gray-700" : ""}`} key={coin} onClick={() => handleCoinChange(coin)} type="button">
+                <div className={`mr-2 flex size-5 items-center justify-center rounded-full ${coins[coin].color}`}>{coin[0]?.toUpperCase()}</div>
+                <span>{coin}</span>
               </button>
-
               {coin === "WETH" && <button className={`flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin.replace("W", "") ? "bg-gray-700" : ""}`} key={coin} onClick={() => handleCoinChange(coin)} type="button">
-                <div className={`mr-2 flex size-5 items-center justify-center rounded-full ${coins[coin].color}`}>
-                  {coin[1]?.toUpperCase()}
-                </div>
-
-                <span>
-                  {coin.replace("W", "")}
-                </span>
+                <div className={`mr-2 flex size-5 items-center justify-center rounded-full ${coins[coin].color}`}>{coin[1]?.toUpperCase()}</div>
+                <span>{coin.replace("W", "")}</span>
               </button>}
-            </>)}
+            </Fragment>)}
           </div> : undefined}
         </div>
       </div>
     </div>
-
-    {estimatedOutput() !== undefined && <div className="mt-2 text-center text-sm text-gray-400">
-      ≈
-      {estimatedOutput()}
-    </div>}
+    {estimatedOutput() !== undefined && <div className="mt-2 text-center text-sm text-gray-400">≈{estimatedOutput()}</div>}
   </div>;
 });
 

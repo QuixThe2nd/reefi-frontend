@@ -17,32 +17,31 @@ export interface UseWallet {
 }
 
 export const useWallet = ({ setError }: Readonly<{ setError: (_message: string) => void }>): UseWallet => {
-  const [clients, setClients] = useState<Record<Chains, WalletClient & PublicActions> | undefined>(),
-    [chain, setChain] = useState<Chains>(42_161),
-    [account, updateAccount] = useCachedUpdateable(async () => {
-      if (!clients) return;
+  const [clients, setClients] = useState<Record<Chains, WalletClient & PublicActions> | undefined>();
+  const [chain, setChain] = useState<Chains>(42_161);
+  const [account, updateAccount] = useCachedUpdateable(async () => {
+    if (!clients) return;
+    const addresses = await clients[chain].requestAddresses();
+    return addresses[0];
+  }, [clients], "account");
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectRequired, setConnectRequired] = useState(false);
+  const [ens] = useCachedUpdateable(async () => account === undefined ? undefined : await publicClients[1].getEnsName({ address: account }) ?? undefined, [account], "ens");
 
-      const addresses = await clients[chain].requestAddresses();
-      return addresses[0];
-    }, [clients], "account"),
-    [isConnecting, setIsConnecting] = useState(false),
-    [connectRequired, setConnectRequired] = useState(false),
-    [ens] = useCachedUpdateable(async () => account === undefined ? undefined : await publicClients[1].getEnsName({ address: account }) ?? undefined, [account], "ens"),
-
-    connectWallet = useCallback((): void => {
-      if (globalThis.ethereum === undefined) {
-        setError("No wallet found. Please install MetaMask to use Reefi."); return;
-      }
-      setIsConnecting(true);
-      const walletClients = {
-        42_161: createWalletClient({ chain: arbitrum, transport: custom(globalThis.ethereum) }).extend(publicActions),
-        56: createWalletClient({ chain: bsc, transport: custom(globalThis.ethereum) }).extend(publicActions)
-      } as const;
-      setClients(walletClients);
-      updateAccount();
-      setIsConnecting(false);
-      setConnectRequired(false);
-    }, []);
+  const connectWallet = useCallback((): void => {
+    if (globalThis.ethereum === undefined) {
+      setError("No wallet found. Please install MetaMask to use Reefi."); return;
+    }
+    setIsConnecting(true);
+    const walletClients = {
+      42_161: createWalletClient({ chain: arbitrum, transport: custom(globalThis.ethereum) }).extend(publicActions),
+      56: createWalletClient({ chain: bsc, transport: custom(globalThis.ethereum) }).extend(publicActions)
+    } as const;
+    setClients(walletClients);
+    updateAccount();
+    setIsConnecting(false);
+    setConnectRequired(false);
+  }, []);
 
   useEffect(() => {
     if (globalThis.ethereum) connectWallet();

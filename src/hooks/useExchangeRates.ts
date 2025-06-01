@@ -35,17 +35,5 @@ export const useExchangeRates = ({ locked, wallet, supplies }: Properties): UseE
   const [ymgpRMGP] = useCachedUpdateable(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, parseEther(0.000_01)], { account: wallet.account })) / Number(parseEther(0.000_01)), [contracts, wallet.chain], "ymgpRMGP curve", 0);
   const [ymgpMGP] = useCachedUpdateable(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, parseEther(0.000_01)], { account: wallet.account })) / Number(parseEther(0.000_01)), [contracts, wallet.chain], "ymgpMGP curve", 0);
   const vmgpMGP = 0.8;
-  return {
-
-    curve: {
-      mgpRMGP,
-      mgpYMGP,
-      rmgpMGP,
-      rmgpYMGP,
-      vmgpMGP,
-      ymgpMGP,
-      ymgpRMGP
-    },
-    mintRMGP
-  };
+  return { curve: { mgpRMGP, mgpYMGP, rmgpMGP, rmgpYMGP, vmgpMGP, ymgpMGP, ymgpRMGP }, mintRMGP };
 };

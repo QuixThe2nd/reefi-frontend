@@ -19,15 +19,15 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
 }
 
 export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, balances, chain, clients, mgpLPAmount, rmgpLPAmount, setConnectRequired, writeContracts, ymgpLPAmount }: Properties<Clients>): () => void => {
-  const accountReference = useRef(account),
-    balancesReference = useRef(balances),
-    chainReference = useRef(chain),
-    clientsReference = useRef(clients),
-    mgpLPAmountReference = useRef(mgpLPAmount),
-    rmgpLPAmountReference = useRef(rmgpLPAmount),
-    setConnectRequiredReference = useRef(setConnectRequired),
-    writeContractsReference = useRef(writeContracts),
-    ymgpLPAmountReference = useRef(ymgpLPAmount);
+  const accountReference = useRef(account);
+  const balancesReference = useRef(balances);
+  const chainReference = useRef(chain);
+  const clientsReference = useRef(clients);
+  const mgpLPAmountReference = useRef(mgpLPAmount);
+  const rmgpLPAmountReference = useRef(rmgpLPAmount);
+  const setConnectRequiredReference = useRef(setConnectRequired);
+  const writeContractsReference = useRef(writeContracts);
+  const ymgpLPAmountReference = useRef(ymgpLPAmount);
 
   useEffect(() => {
     accountReference.current = account;
@@ -65,12 +65,9 @@ export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient &
     ymgpLPAmountReference.current = ymgpLPAmount;
   }, [ymgpLPAmount]);
 
-  const supplyLiquidity = useCallback(async (): Promise<void> => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
-      setConnectRequiredReference.current(true); return;
-    }
-    await writeContractsReference.current[chainReference.current].cMGP.write.add_liquidity([[mgpLPAmountReference.current, rmgpLPAmountReference.current, ymgpLPAmountReference.current], 0n], { account: accountReference.current,
-      chain: clientsReference.current[chainReference.current].chain });
+  return useCallback(async (): Promise<void> => {
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
+    await writeContractsReference.current[chainReference.current].cMGP.write.add_liquidity([[mgpLPAmountReference.current, rmgpLPAmountReference.current, ymgpLPAmountReference.current], 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     balancesReference.current.MGP[1]();
     balancesReference.current.rMGP[1]();
     balancesReference.current.yMGP[1]();
@@ -79,6 +76,4 @@ export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient &
     balancesReference.current.updateRMGPCurve();
     balancesReference.current.updateYMGPCurve();
   }, []);
-
-  return supplyLiquidity;
 };

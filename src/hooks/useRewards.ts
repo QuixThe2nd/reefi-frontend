@@ -87,17 +87,5 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
     return (): void => clearInterval(interval);
   }, [updatePendingRewards]);
 
-  return {
-    cmgpAPY,
-    cmgpPoolAPY,
-    estimatedCompoundAmount,
-    estimatedCompoundGasFee,
-    lockedYmgpAPY,
-    mgpAPR,
-    pendingRewards,
-    unclaimedUserYield,
-    uncompoundedMGPYield,
-    updatePendingRewards,
-    updateUnclaimedUserYield
-  };
+  return { cmgpAPY, cmgpPoolAPY, estimatedCompoundAmount, estimatedCompoundGasFee, lockedYmgpAPY, mgpAPR, pendingRewards, unclaimedUserYield, uncompoundedMGPYield, updatePendingRewards, updateUnclaimedUserYield };
 };

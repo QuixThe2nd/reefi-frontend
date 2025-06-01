@@ -51,68 +51,27 @@ export const Features = memo((): ReactElement => {
   return <div className="flex flex-col items-center">
     <div className="mb-4 grid w-full grid-cols-2 gap-4 md:grid-cols-4">
       <div className="rounded-lg border border-green-600/30 bg-gradient-to-r from-green-600/20 to-blue-600/20 p-3 text-center">
-        <div className="text-lg font-bold text-green-400">
-          {(100 * aprToApy(rewards.mgpAPR)).toFixed(2)}
-          %+
-        </div>
-
-        <div className="text-xs text-gray-400">
-          Average Reefi Yield
-        </div>
+        <div className="text-lg font-bold text-green-400">{(100 * aprToApy(rewards.mgpAPR)).toFixed(2)}%+</div>
+        <div className="text-xs text-gray-400">Average Reefi Yield</div>
       </div>
-
       <div className="rounded-lg border border-green-600/30 bg-gradient-to-r from-green-600/20 to-blue-600/20 p-3 text-center">
-        <div className="text-lg font-bold text-green-400">
-          {(100 * rewards.mgpAPR).toFixed(2)}
-          %
-        </div>
-
-        <div className="text-xs text-gray-400">
-          Base Magpie Yield
-        </div>
+        <div className="text-lg font-bold text-green-400">{(100 * rewards.mgpAPR).toFixed(2)}%</div>
+        <div className="text-xs text-gray-400">Base Magpie Yield</div>
       </div>
-
       <div className="rounded-lg border border-orange-600/30 bg-gradient-to-r from-orange-600/20 to-red-600/20 p-3 text-center">
-        <div className="text-lg font-bold text-orange-400">
-          {boost.toFixed(2)}
-          x+
-        </div>
-
-        <div className="text-xs text-gray-400">
-          Yield Boost
-        </div>
+        <div className="text-lg font-bold text-orange-400">{boost.toFixed(2)}x+</div>
+        <div className="text-xs text-gray-400">Yield Boost</div>
       </div>
-
       <div className="rounded-lg border border-green-600/30 bg-gradient-to-r from-green-600/20 to-blue-600/20 p-3 text-center">
-        <div className="text-lg font-bold text-green-400">
-          $
-          {(1000 * prices.MGP * exchangeRates.curve.vmgpMGP * Number(supplies.vmgp) / Number(supplies.rmgp)).toFixed(2)}
-
-          {" "}
-
-          vs $
-          {(1000 * prices.MGP).toFixed(2)}
-        </div>
-
-        <div className="text-xs text-gray-400">
-          Vote Price (1k Votes)
-        </div>
+        <div className="text-lg font-bold text-green-400">${(1000 * prices.MGP * exchangeRates.curve.vmgpMGP * Number(supplies.vmgp) / Number(supplies.rmgp)).toFixed(2)} vs ${(1000 * prices.MGP).toFixed(2)}</div>
+        <div className="text-xs text-gray-400">Vote Price (1k Votes)</div>
       </div>
     </div>
-
     <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-4">
       {features.map(feature => <div className="rounded-lg border border-gray-700/50 bg-gray-900/50 p-3 transition-colors hover:border-green-600/30" key={feature.title}>
-        <div className="mb-2 text-xl">
-          {feature.icon}
-        </div>
-
-        <h3 className="mb-1 text-sm font-semibold text-green-400">
-          {feature.title}
-        </h3>
-
-        <p className="text-xs leading-tight text-gray-300">
-          {feature.description}
-        </p>
+        <div className="mb-2 text-xl">{feature.icon}</div>
+        <h3 className="mb-1 text-sm font-semibold text-green-400">{feature.title}</h3>
+        <p className="text-xs leading-tight text-gray-300">{feature.description}</p>
       </div>)}
     </div>
   </div>;

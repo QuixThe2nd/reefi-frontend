@@ -6,130 +6,36 @@ export const ConversionRates = memo((): ReactElement => {
   const { exchangeRates } = useGlobalContext();
   return <div className="flex flex-col items-center rounded-xl border border-gray-700 bg-gray-800 p-3">
     <div className="flex w-full max-w-2xl flex-col items-center">
-      <h2 className="mb-4 text-2xl font-bold">
-        Conversion Rates
-      </h2>
-
+      <h2 className="mb-4 text-2xl font-bold">Conversion Rates</h2>
       <div className="rounded-lg bg-gray-700/50 p-1 sm:p-4">
         <table>
           <thead>
             <tr>
-              <th>
-                <h3 className="mb-2 text-lg font-bold" />
-              </th>
-
-              <th>
-                <h3 className="mb-2 text-lg font-bold">
-                  Mint
-                </h3>
-              </th>
-
-              <th>
-                <h3 className="mb-2 text-lg font-bold">
-                  Market Buy
-                </h3>
-              </th>
-
-              <th>
-                <h3 className="mb-2 text-lg font-bold">
-                  Market Sell
-                </h3>
-              </th>
-
-              <th>
-                <h3 className="mb-2 text-lg font-bold">
-                  Burn
-                </h3>
-              </th>
+              <th><h3 className="mb-2 text-lg font-bold" /></th>
+              <th><h3 className="mb-2 text-lg font-bold">Mint</h3></th>
+              <th><h3 className="mb-2 text-lg font-bold">Market Buy</h3></th>
+              <th><h3 className="mb-2 text-lg font-bold">Market Sell</h3></th>
+              <th><h3 className="mb-2 text-lg font-bold">Burn</h3></th>
             </tr>
           </thead>
-
           <tbody>
             <tr>
-              <td>
-                <p className="mx-2 my-1 text-sm font-bold sm:mx-4">
-                  rMGP
-                </p>
-              </td>
-
-              <td>
-                <p className="mx-2 my-1 text-sm sm:mx-4">
-                  {formatNumber(exchangeRates.mintRMGP, 4)}
-
-                  {" "}
-                  MGP
-                </p>
-              </td>
-
-              <td>
-                <p className="mx-2 my-1 text-sm sm:mx-4">
-                  {formatNumber(exchangeRates.curve.mgpRMGP, 4)}
-
-                  {" "}
-                  MGP
-                </p>
-              </td>
-
-              <td>
-                <p className="mx-2 my-1 text-sm sm:mx-4">
-                  {formatNumber(exchangeRates.curve.rmgpMGP, 4)}
-
-                  {" "}
-                  MGP
-                </p>
-              </td>
-
-              <td>
-                <p className="mx-2 my-1 text-sm sm:mx-4">
-                  {formatNumber(exchangeRates.mintRMGP * 0.9, 4)}
-
-                  {" "}
-                  MGP
-                </p>
-              </td>
+              <td><p className="mx-2 my-1 text-sm font-bold sm:mx-4">rMGP</p></td>
+              <td><p className="mx-2 my-1 text-sm sm:mx-4">{formatNumber(exchangeRates.mintRMGP, 4)} MGP</p></td>
+              <td><p className="mx-2 my-1 text-sm sm:mx-4">{formatNumber(exchangeRates.curve.mgpRMGP, 4)} MGP</p></td>
+              <td><p className="mx-2 my-1 text-sm sm:mx-4">{formatNumber(exchangeRates.curve.rmgpMGP, 4)} MGP</p></td>
+              <td><p className="mx-2 my-1 text-sm sm:mx-4">{formatNumber(exchangeRates.mintRMGP * 0.9, 4)} MGP</p></td>
             </tr>
-
             <tr>
-              <td>
-                <p className="mx-2 my-1 text-sm font-bold sm:mx-4">
-                  yMGP
-                </p>
-              </td>
-
-              <td>
-                <p className="mx-2 my-1 text-sm sm:mx-4">
-                  1 rMGP
-                </p>
-              </td>
-
-              <td>
-                <p className="mx-2 my-1 text-sm sm:mx-4">
-                  {formatNumber(exchangeRates.curve.rmgpYMGP, 4)}
-
-                  {" "}
-                  rMGP
-                </p>
-              </td>
-
-              <td>
-                <p className="mx-2 my-1 text-sm sm:mx-4">
-                  {formatNumber(exchangeRates.curve.ymgpRMGP, 4)}
-
-                  {" "}
-                  rMGP
-                </p>
-              </td>
-
-              <td>
-                <p className="mx-2 my-1 text-sm sm:mx-4">
-                  0 rMGP
-                </p>
-              </td>
+              <td><p className="mx-2 my-1 text-sm font-bold sm:mx-4">yMGP</p></td>
+              <td><p className="mx-2 my-1 text-sm sm:mx-4">1 rMGP</p></td>
+              <td><p className="mx-2 my-1 text-sm sm:mx-4">{formatNumber(exchangeRates.curve.rmgpYMGP, 4)} rMGP</p></td>
+              <td><p className="mx-2 my-1 text-sm sm:mx-4">{formatNumber(exchangeRates.curve.ymgpRMGP, 4)} rMGP</p></td>
+              <td><p className="mx-2 my-1 text-sm sm:mx-4">0 rMGP</p></td>
             </tr>
           </tbody>
         </table>
       </div>
-
       <ul className="mt-4 text-xs text-gray-400">
         <li><span className="font-bold">Mint</span>: The native rate Reefi will fulfill mints at</li>
         <li><span className="font-bold">Market Buy</span>: The rate Curve will fulfill buys at</li>

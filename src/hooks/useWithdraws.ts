@@ -17,18 +17,9 @@ export interface UseWithdraws {
 }
 
 export const useWithdraws = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseWithdraws => {
-  const [userPendingWithdraws, updateUserPendingWithdraws] = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].rMGP.read.getUserPendingWithdraws([wallet.account]), [contracts, wallet.account, wallet.chain], "userPendingWithdraws", 0n),
-    [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useCachedUpdateable(() => contracts[wallet.chain].rMGP.read.unsubmittedWithdraws(), [contracts, wallet.chain], "unsubmittedWithdraws", 0n),
-    [userWithdrawable, updateUserWithdrawable] = useCachedUpdateable(() => contracts[wallet.chain].rMGP.read.getUserWithdrawable(), [contracts, wallet.chain], "userWithdrawable", 0n),
-    [unlockSchedule, updateUnlockSchedule] = useCachedUpdateable(() => contracts[wallet.chain].VLMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].rMGP.address]), [contracts, wallet.chain], "unlockSchedule", []);
-  return {
-    unlockSchedule,
-    unsubmittedWithdraws,
-    updateUnlockSchedule,
-    updateUnsubmittedWithdraws,
-    updateUserPendingWithdraws,
-    updateUserWithdrawable,
-    userPendingWithdraws,
-    userWithdrawable
-  };
+  const [userPendingWithdraws, updateUserPendingWithdraws] = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].rMGP.read.getUserPendingWithdraws([wallet.account]), [contracts, wallet.account, wallet.chain], "userPendingWithdraws", 0n);
+  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useCachedUpdateable(() => contracts[wallet.chain].rMGP.read.unsubmittedWithdraws(), [contracts, wallet.chain], "unsubmittedWithdraws", 0n);
+  const [userWithdrawable, updateUserWithdrawable] = useCachedUpdateable(() => contracts[wallet.chain].rMGP.read.getUserWithdrawable(), [contracts, wallet.chain], "userWithdrawable", 0n);
+  const [unlockSchedule, updateUnlockSchedule] = useCachedUpdateable(() => contracts[wallet.chain].VLMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].rMGP.address]), [contracts, wallet.chain], "unlockSchedule", []);
+  return { unlockSchedule, unsubmittedWithdraws, updateUnlockSchedule, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, userPendingWithdraws, userWithdrawable };
 };

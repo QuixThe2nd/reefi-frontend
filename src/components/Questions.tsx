@@ -63,58 +63,27 @@ const qaData: readonly QAItem[] = [
 ] as const;
 
 export const QASection = (): ReactElement => {
-  const [openItems, setOpenItems] = useState<Set<number>>(new Set()),
-
-    toggleItem = (index: number): void => {
-      const newOpenItems = new Set(openItems);
-      if (newOpenItems.has(index)) newOpenItems.delete(index);
-      else newOpenItems.add(index);
-
-      setOpenItems(newOpenItems);
-    };
+  const [openItems, setOpenItems] = useState<Set<number>>(() => new Set());
+  const toggleItem = (index: number): void => {
+    const newOpenItems = new Set(openItems);
+    if (newOpenItems.has(index)) newOpenItems.delete(index);
+    else newOpenItems.add(index);
+    setOpenItems(newOpenItems);
+  };
 
   return <div className="flex justify-center rounded-xl border border-gray-700 bg-gray-800 p-3">
     <div className="max-w-3xl">
       <div className="mb-6 rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4">
-        <h3 className="mb-2 text-lg font-semibold text-yellow-400">
-          ⚠️ Important Notice
-        </h3>
-
+        <h3 className="mb-2 text-lg font-semibold text-yellow-400">⚠️ Important Notice</h3>
         <p className="text-sm text-gray-300">Reefi is in <strong>very early beta</strong>. Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution</p>
       </div>
-
-      <h2 className="mb-4 text-2xl font-bold">
-        Frequently Asked Questions
-      </h2>
-
+      <h2 className="mb-4 text-2xl font-bold">Frequently Asked Questions</h2>
       <div className="space-y-2">
         {qaData.map((item, index) => <div className="rounded-lg border border-gray-700" key={item.question}>
-          <button
-            className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-700/30"
-            onClick={() => {
-              toggleItem(index);
-            }}
-            type="button"
-          >
-            <span className="font-medium text-gray-200">
-              {item.question}
-            </span>
-
-            <svg
-              className={`size-5 text-gray-400 transition-transform${openItems.has(index) ? "rotate-180" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M19 9l-7 7-7-7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            </svg>
+          <button className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-700/30" onClick={() => toggleItem(index)} type="button">
+            <span className="font-medium text-gray-200">{item.question}</span>
+            <svg className={`size-5 text-gray-400 transition-transform${openItems.has(index) ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}/></svg>
           </button>
-
           {openItems.has(index) && <div className="px-4 pb-4">
             <div className="border-t border-gray-700 pt-2">
               {Array.isArray(item.answer) ? (item.answer as string[]).map(paragraph => <p className="mb-2 text-sm text-gray-300 last:mb-0" dangerouslySetInnerHTML={{ __html: paragraph }} key={paragraph} />) : <p className="text-sm text-gray-300" dangerouslySetInnerHTML={{ __html: item.answer }} />}
@@ -122,13 +91,8 @@ export const QASection = (): ReactElement => {
           </div>}
         </div>)}
       </div>
-
       <div className="my-4 flex justify-center">
-        <img
-          alt="Diagram"
-          className="w-full"
-          src={Diagram}
-        />
+        <img alt="Diagram" className="w-full" src={Diagram} />
       </div>
     </div>
   </div>;

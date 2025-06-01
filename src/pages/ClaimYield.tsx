@@ -32,7 +32,6 @@ export const ClaimYieldComponent = ({ claimYMGPRewards, unclaimedUserYield, unco
 
 export const ClaimYield = memo((): ReactElement => {
   const { actions, balances, locked, supplies, rewards } = useGlobalContext();
-
   return <ClaimYieldComponent claimYMGPRewards={actions.claimYMGPRewards} lockedYMGP={locked.ymgp} unclaimedUserYield={rewards.unclaimedUserYield} uncompoundedMGPYield={rewards.uncompoundedMGPYield} userLockedYMGP={locked.userYMGP} ymgpHoldings={balances.ymgpHoldings} ymgpSupply={supplies.ymgp} />;
 });
 ClaimYield.displayName = "ClaimYield";

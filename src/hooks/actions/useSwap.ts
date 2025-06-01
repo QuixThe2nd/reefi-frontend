@@ -17,14 +17,14 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
 }
 
 export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, sendAmount, setConnectRequired, setError, setNotification }: Properties<Clients>): (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void => {
-  const accountReference = useRef(account),
-    allowancesReference = useRef(allowances),
-    chainReference = useRef(chain),
-    clientsReference = useRef(clients),
-    sendAmountReference = useRef(sendAmount),
-    setConnectRequiredReference = useRef(setConnectRequired),
-    setErrorReference = useRef(setError),
-    setNotificationReference = useRef(setNotification);
+  const accountReference = useRef(account);
+  const allowancesReference = useRef(allowances);
+  const chainReference = useRef(chain);
+  const clientsReference = useRef(clients);
+  const sendAmountReference = useRef(sendAmount);
+  const setConnectRequiredReference = useRef(setConnectRequired);
+  const setErrorReference = useRef(setError);
+  const setNotificationReference = useRef(setNotification);
 
   useEffect(() => {
     accountReference.current = account;

@@ -6,9 +6,9 @@ import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 
 export const GetRMGPPage = memo((): ReactElement => {
-  const { actions, amounts, rewards } = useGlobalContext();
+  const { actions, rewards } = useGlobalContext();
   return <Page info="MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.">
-    <SwapToken buy={actions.buyRMGP} curveAmount={amounts.mgpRmgpCurve} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Mint" nativeSwap={actions.depositMGP} originalTokenIn="MGP" tokenOut="rMGP" />
+    <SwapToken buy={actions.buyRMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Mint" nativeSwap={actions.depositMGP} originalTokenIn="MGP" tokenOut="rMGP" />
     <div className="mt-4 text-sm text-gray-400">
       <div className="mb-1 flex justify-between">
         <span>Original APR</span>

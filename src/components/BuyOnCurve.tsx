@@ -15,7 +15,7 @@ interface Properties {
 }
 
 export const BuyOnCurve = memo(({ sendAmount, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenASymbol, tokenBSymbol }: Properties): ReactElement => <div>
-  <TokenApproval allowance={allowanceCurve} curve onApprove={onApprove} sendAmount={sendAmount} tokenSymbol={tokenASymbol} />
+  <TokenApproval allowance={allowanceCurve} curve={true} onApprove={onApprove} sendAmount={sendAmount} tokenSymbol={tokenASymbol} />
   <div className="relative">
     <button className="h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 md:text-base" onClick={buy} type="submit">Buy on Curve ({formatEther(curveAmount).toFixed(4)} {tokenBSymbol})</button>
     {((): JSX.Element | undefined => {

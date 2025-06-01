@@ -23,17 +23,17 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
 }
 
 export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, balances, chain, clients, sendAmount, setConnectRequired, setError, supplies, updateYMGPHoldings, writeContracts }: Properties<Clients>): () => void => {
-  const accountReference = useRef(account),
-    allowancesReference = useRef(allowances),
-    balancesReference = useRef(balances),
-    chainReference = useRef(chain),
-    clientsReference = useRef(clients),
-    sendAmountReference = useRef(sendAmount),
-    setConnectRequiredReference = useRef(setConnectRequired),
-    setErrorReference = useRef(setError),
-    suppliesReference = useRef(supplies),
-    updateYMGPHoldingsReference = useRef(updateYMGPHoldings),
-    writeContractsReference = useRef(writeContracts);
+  const accountReference = useRef(account);
+  const allowancesReference = useRef(allowances);
+  const balancesReference = useRef(balances);
+  const chainReference = useRef(chain);
+  const clientsReference = useRef(clients);
+  const sendAmountReference = useRef(sendAmount);
+  const setConnectRequiredReference = useRef(setConnectRequired);
+  const setErrorReference = useRef(setError);
+  const suppliesReference = useRef(supplies);
+  const updateYMGPHoldingsReference = useRef(updateYMGPHoldings);
+  const writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
     accountReference.current = account;
@@ -79,21 +79,14 @@ export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & Pub
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
 
-  const depositRMGP = useCallback(async (): Promise<void> => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
-      setConnectRequiredReference.current(true); return;
-    }
-    if (allowancesReference.current.rMGP[0] < sendAmountReference.current) {
-      setErrorReference.current("Allowance too low"); return;
-    }
-    await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendAmountReference.current], { account: accountReference.current,
-      chain: clientsReference.current[chainReference.current].chain });
+  return useCallback(async (): Promise<void> => {
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
+    if (allowancesReference.current.rMGP[0] < sendAmountReference.current) return setErrorReference.current("Allowance too low");
+    await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     balancesReference.current.rMGP[1]();
     balancesReference.current.yMGP[1]();
     suppliesReference.current.updateRMGP();
     suppliesReference.current.updateYMGP();
     updateYMGPHoldingsReference.current();
   }, []);
-
-  return depositRMGP;
 };

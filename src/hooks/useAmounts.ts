@@ -15,38 +15,23 @@ export interface UseAmounts {
   ymgpMgpCurve: bigint;
   mgpYmgpCurve: bigint;
   mgpLP: bigint;
-  setMGPLP: (_amount: bigint) => void;
+  setMgpLP: (_amount: bigint) => void;
   rmgpLP: bigint;
-  setRMGPLP: (_amount: bigint) => void;
+  setRmgpLP: (_amount: bigint) => void;
   ymgpLP: bigint;
-  setYMGPLP: (_amount: bigint) => void;
+  setYmgpLP: (_amount: bigint) => void;
 }
 
 export const useAmounts = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseAmounts => {
-  const [send, setSend] = useState(parseEther(1));
-  const [mgpLP, setMGPLP] = useState(0n);
-  const [rmgpLP, setRMGPLP] = useState(0n);
-  const [ymgpLP, setYMGPLP] = useState(0n);
+  const [send, setSend] = useState(() => parseEther(1));
+  const [mgpLP, setMgpLP] = useState(0n);
+  const [rmgpLP, setRmgpLP] = useState(0n);
+  const [ymgpLP, setYmgpLP] = useState(0n);
   const [mgpRmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, send], { account: wallet.account }), [contracts, wallet.chain, send], "mgpRmgpCurveAmount", 0n);
   const [mgpYmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, send], { account: wallet.account }), [contracts, wallet.chain, send], "ymgpMgpCurve", 0n);
   const [rmgpMgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, send], { account: wallet.account }), [contracts, wallet.chain, send], "rmgpMgpCurveAmount", 0n);
   const [rmgpYmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, send], { account: wallet.account }), [contracts, wallet.chain, send], "rmgpYmgpCurveAmount", 0n);
   const [ymgpMgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, send], { account: wallet.account }), [contracts, wallet.chain, send], "ymgpMgpCurve", 0n);
   const [ymgpRmgpCurve] = useCachedUpdateable(() => send === 0n ? 0n : contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, send], { account: wallet.account }), [contracts, wallet.chain, send], "ymgpRmgpCurve", 0n);
-  return {
-    mgpLP,
-    mgpRmgpCurve,
-    mgpYmgpCurve,
-    rmgpLP,
-    rmgpMgpCurve,
-    rmgpYmgpCurve,
-    send,
-    setMGPLP,
-    setRMGPLP,
-    setSend,
-    setYMGPLP,
-    ymgpLP,
-    ymgpMgpCurve,
-    ymgpRmgpCurve
-  };
+  return { mgpLP, mgpRmgpCurve, mgpYmgpCurve, rmgpLP, rmgpMgpCurve, rmgpYmgpCurve, send, setMgpLP, setRmgpLP, setSend, setYmgpLP, ymgpLP, ymgpMgpCurve, ymgpRmgpCurve };
 };

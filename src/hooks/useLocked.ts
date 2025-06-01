@@ -26,15 +26,5 @@ export const useLocked = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseLocke
   };
   const [ymgp, updateYMGP] = useCachedUpdateable(() => contracts[wallet.chain].yMGP.read.totalLocked(), [contracts, wallet.account], "ymgp locked", 0n);
   const [userYMGP, updateUserYMGP] = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]), [contracts, wallet.account], "userYMGP locked", 0n);
-
-  return {
-    mgp,
-    reefiMGP,
-    updateMGP,
-    updateReefiMGP,
-    updateUserYMGP,
-    updateYMGP,
-    userYMGP,
-    ymgp
-  };
+  return { mgp, reefiMGP, updateMGP, updateReefiMGP, updateUserYMGP, updateYMGP, userYMGP, ymgp };
 };

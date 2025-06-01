@@ -17,7 +17,6 @@ import { useUnlockYMGP } from "./actions/useUnlockYMGP";
 import { useWithdrawMGP } from "./actions/useWithdrawMGP";
 
 import { Coins } from "../config/contracts";
-import { Pages } from "../App";
 import { UseAllowances } from "./useAllowances";
 import { UseAmounts } from "./useAmounts";
 import { UseBalances } from "./useBalances";
@@ -29,7 +28,6 @@ import { UseWallet } from "./useWallet";
 import { UseWithdraws } from "./useWithdraws";
 
 interface Properties<W extends UseWallet> {
-  page: Pages;
   setError: (_message: string) => void;
   setNotification: (_message: string) => void;
   wallet: W;

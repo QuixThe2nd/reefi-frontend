@@ -1,44 +1,54 @@
-// TODO: ERC4626 support
-// TODO: Make rMGP and lockManager separate so the contract can be upgraded without requiring migration on users end
-// TODO: Coin logo
+/*
+ * TODO: ERC4626 support
+ * TODO: Make rMGP and lockManager separate so the contract can be upgraded without requiring migration on users end
+ * TODO: Coin logo
+ */
 
-import { useState, ReactElement } from 'react'
-import { type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods } from 'viem'
-import { TokenCards } from './components/TokenCards'
-import { Header } from './components/Header'
-import { ConversionRates } from './components/ConversionRates'
-import { Contracts } from './components/Contracts'
-import { ConnectWallet } from './components/ConnectWallet'
-import { ErrorCard } from './components/ErrorCard'
-import { DepositPage } from './pages/DepositPage'
-import { SupplyLiquidityPage } from './pages/SupplyLiquidityPage'
-import { RedeemPage } from './pages/RedeemPage'
-import { LockPage } from './pages/LockPage'
-import { UnlockPage } from './pages/UnlockPage'
-import { QASection } from './components/Questions';
-import { GlobalProvider, useGlobalContext } from './contexts/GlobalContext';
-import { ConvertPage } from './pages/ConvertPage'
-import { YieldBadge } from './components/YieldBadge'
-import { aprToApy } from './utils'
-import { CompoundYield } from './pages/CompoundYield'
-import { ClaimYield } from './pages/ClaimYield'
-import { NotificationCard } from './components/NotificationCard'
-import { GetMGPPage } from './pages/GetMGPPage'
-import { Features } from './pages/Features'
-// import { Web3Provider } from '@ethersproject/providers';
-// import snapshot from '@snapshot-labs/snapshot.js';
+import { aprToApy, formatNumber } from "./utilities";
+import { useGlobalContext, GlobalProvider } from "./contexts/GlobalContext";
+import { useState, ReactElement } from "react";
 
-// const client = new snapshot.Client712('https://testnet.hub.snapshot.org');
-// const web3 = new Web3Provider(window.ethereum);
-// const receipt = await client.vote(web3, '0x3662f5FccDA09Ec5b71c9e2fdCf7D71CbEc622E0', {
-//   space: 'parsay.eth',
-//   proposal: '0xc216cb43644422545e344f1fa004e5f90816dfc07f9a9c60eadde2ca685a402f',
-//   type: 'single-choice',
-//   choice: 1,
-//   app: 'my-app'
-// });
+import { Badge, YieldBadge } from "./components/YieldBadge";
+import { ClaimYield } from "./pages/ClaimYield";
+import { CompoundYield } from "./pages/CompoundYield";
+import { ConnectWallet } from "./components/ConnectWallet";
+import { Contracts } from "./components/Contracts";
+import { ConversionRates } from "./components/ConversionRates";
+import { GetYMGPPage } from "./pages/GetYMGPPage";
+import { GetRMGPPage } from "./pages/GetRMGPPage";
+import { ErrorCard } from "./components/ErrorCard";
+import { Features } from "./pages/Features";
+import { GetMGPPage } from "./pages/GetMGPPage";
+import { Header } from "./components/Header";
+import { LockPage } from "./pages/LockPage";
+import { NotificationCard } from "./components/NotificationCard";
+import { QASection } from "./components/Questions";
+import { RedeemMGPPage } from "./pages/RedeemMGPPage";
+import { SupplyLiquidityPage } from "./pages/SupplyLiquidityPage";
+import { TokenCards } from "./components/TokenCards";
+import { UnlockPage } from "./pages/UnlockPage";
+
+import type { EIP1193EventMap, EIP1193RequestFn, EIP1474Methods } from "viem";
+
+/*
+ * Import { Web3Provider } from '@ethersproject/providers';
+ * Import snapshot from '@snapshot-labs/snapshot.js';
+ */
+
+/*
+ * Const client = new snapshot.Client712('https://testnet.hub.snapshot.org');
+ * Const web3 = new Web3Provider(window.ethereum);
+ * Const receipt = await client.vote(web3, '0x3662f5FccDA09Ec5b71c9e2fdCf7D71CbEc622E0', {
+ *   Space: 'parsay.eth',
+ *   Proposal: '0xc216cb43644422545e344f1fa004e5f90816dfc07f9a9c60eadde2ca685a402f',
+ *   Type: 'single-choice',
+ *   Choice: 1,
+ *   App: 'my-app'
+ * });
+ */
 
 declare global {
+  // eslint-disable-next-line
   interface Window {
     ethereum?: {
       on: <event extends keyof EIP1193EventMap>(event: event, _listener: EIP1193EventMap[event]) => void;
@@ -48,116 +58,114 @@ declare global {
   }
 }
 
-export type Pages = 'getMGP' | 'deposit' | 'convert' | 'lock' | 'buyVotes' | 'supplyLiquidity' | 'unlock' | 'redeem' | 'compoundRMGP' | 'claimYMGP' | 'vote'
+export type Pages = "getMGP" | "deposit" | "convert" | "lock" | "buyVotes" | "supplyLiquidity" | "unlock" | "redeem" | "compoundRMGP" | "claimYMGP" | "vote";
 
 const AppContent = (): ReactElement => {
-  const [page, setPage] = useState<Pages | undefined>('deposit')
-  const [error, setError] = useState('')
-  const { balances, exchangeRates, locked, rewards } = useGlobalContext()
+  const [page, setPage] = useState<Pages | undefined>("deposit");
+  const [error, setError] = useState("");
+  const { balances, exchangeRates, locked, rewards, supplies } = useGlobalContext();
 
-  return (
-    <div className="flex h-screen bg-gray-900 text-white">
-      <ConnectWallet />
-      <ErrorCard error={error} setError={setError} />
-      <div className="flex-grow overflow-auto">
-        <Header />
-        <div className="p-4 md:p-6 md:mx-16 lg:mx-22 xl:mx-28 flex flex-col gap-6">
-          <TokenCards />
-          <Features />
-          <div>
-            <div className="bg-gray-800 p-3 border border-gray-700 rounded-t-xl">
-              <div className="flex flex-col-reverse gap-2 lg:flex-row justify-between">
-                <div className="bg-gray-700 p-1 rounded-lg flex">
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'getMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'getMGP' ? setPage(undefined) : setPage('getMGP')}>Get MGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'deposit' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'deposit' ? setPage(undefined) : setPage('deposit')}>Get rMGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'compoundRMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'compoundRMGP' ? setPage(undefined) : setPage('compoundRMGP')}>Compound Yield</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'redeem' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'redeem' ? setPage(undefined) : setPage('redeem')}>Redeem rMGP</button>
-                </div>
-                <div className="flex flex-row-reverse h-min">
-                  <div className="flex gap-1">
-                    <YieldBadge asset="MGP" apr={rewards.mgpAPR} breakdown={[{ asset: 'Original vlMGP', apr: rewards.mgpAPR }]} />
-                    <YieldBadge asset="rMGP" apy={aprToApy(rewards.mgpAPR)*0.9} breakdown={[{ asset: 'vlMGP', apy: aprToApy(rewards.mgpAPR)*0.9 }]} />
-                  </div>
+  return <div className="flex h-screen bg-gray-900 text-white">
+    <ConnectWallet />
+    <ErrorCard error={error} setError={setError} />
+    <div className="grow overflow-auto">
+      <Header />
+      <div className="flex flex-col gap-6 p-4 md:mx-16 md:p-6 lg:mx-24 xl:mx-28">
+        <TokenCards />
+        <Features />
+        <div>
+          <div className="rounded-t-xl border border-gray-700 bg-gray-800 p-3">
+            <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row">
+              <div className="flex rounded-lg bg-gray-700 p-1">
+                <button className={`rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "getMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`} onClick={() => setPage(page === "getMGP" ? undefined : "getMGP")} type="button">Get MGP</button>
+                <button className={`rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "deposit" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`} onClick={() => setPage(page === "deposit" ? undefined : "deposit")} type="button">Get rMGP</button>
+                <button className={`rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "compoundRMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`} onClick={() => setPage(page === "compoundRMGP" ? undefined : "compoundRMGP")} type="button">Compound Yield</button>
+                <button className={`rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "redeem" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`} onClick={() => setPage(page === "redeem" ? undefined : "redeem")} type="button">Redeem rMGP</button>
+              </div>
+              <div className="flex h-min flex-row-reverse">
+                <div className="flex gap-1">
+                  <YieldBadge apr={rewards.mgpAPR} asset="MGP" breakdown={[{ apr: rewards.mgpAPR, asset: "Original vlMGP" }]} />
+                  <YieldBadge apy={aprToApy(rewards.mgpAPR) * 0.9} asset="rMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "vlMGP" }]} />
                 </div>
               </div>
-              {page === 'getMGP' && <GetMGPPage />}
-              {page === 'deposit' && <DepositPage />}
-              {page === 'compoundRMGP' && <CompoundYield />}
-              {page === 'redeem' && <RedeemPage />}
             </div>
-            <div className="bg-gray-800 p-3 border border-gray-700">
-            <div className="flex flex-col-reverse gap-2 lg:flex-row justify-between">
-                <div className="bg-gray-700 p-1 rounded-lg flex">
-                <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'convert' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'convert' ? setPage(undefined) : setPage('convert')}>Get yMGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'lock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'lock' ? setPage(undefined) : setPage('lock')}>Lock yMGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'claimYMGP' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'claimYMGP' ? setPage(undefined) : setPage('claimYMGP')}>Claim Yield</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'unlock' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'unlock' ? setPage(undefined) : setPage('unlock')}>Unlock yMGP</button>
-                </div>
-                <div className="flex flex-row-reverse h-min">
-                  <div className="flex gap-1">
-                    <YieldBadge asset="yMGP" apy={aprToApy(rewards.mgpAPR)*0.9} breakdown={[{ asset: 'rMGP', apy: aprToApy(rewards.mgpAPR)*0.9 }]} />
-                    <YieldBadge asset="Locked yMGP" apy={((Number(locked.reefiMGP)*aprToApy(rewards.mgpAPR)*0.05)/Number(locked.ymgp))+aprToApy(rewards.mgpAPR)*0.9} suffix='+' breakdown={[
-                      { asset: 'Base vlMGP', apy: aprToApy(rewards.mgpAPR)*0.9 },
-                      { asset: 'Boosted vlMGP', apr: ((Number(locked.reefiMGP)*rewards.mgpAPR*0.05)/Number(locked.ymgp)) },
-                      { asset: 'Withdrawals', apr: 'variable' }
-                    ]} />
-                  </div>
+            {page === "getMGP" && <GetMGPPage />}
+            {page === "deposit" && <GetRMGPPage />}
+            {page === "compoundRMGP" && <CompoundYield />}
+            {page === "redeem" && <RedeemMGPPage />}
+          </div>
+          <div className="border border-gray-700 bg-gray-800 p-3">
+            <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row">
+              <div className="flex rounded-lg bg-gray-700 p-1">
+                <button className={`rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "convert" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`} onClick={() => setPage(page === "convert" ? undefined : "convert")} type="button">Get yMGP</button>
+                <button className={`rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "lock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`} onClick={() => setPage(page === "lock" ? undefined : "lock")} type="button">Lock yMGP</button>
+                <button className={`rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "claimYMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`} onClick={() => setPage(page === "claimYMGP" ? undefined : "claimYMGP")} type="button">Claim Yield</button>
+                <button className={`rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "unlock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`} onClick={() => setPage(page === "unlock" ? undefined : "unlock")} type="button">Unlock yMGP</button>
+              </div>
+              <div className="flex h-min flex-row-reverse">
+                <div className="flex gap-1">
+                  <YieldBadge apy={aprToApy(rewards.mgpAPR) * 0.9} asset="yMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP" }]} />
+                  <YieldBadge apy={Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.ymgp) + aprToApy(rewards.mgpAPR) * 0.9} asset="Locked yMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "Base vlMGP" }, { apr: Number(locked.reefiMGP) * rewards.mgpAPR * 0.05 / Number(locked.ymgp), asset: "Boosted vlMGP" }, { apr: "variable", asset: "Withdrawals" }]} suffix='+' />
                 </div>
               </div>
-              {page === 'convert' && <ConvertPage />}
-              {page === 'lock' && <LockPage />}
-              {page === 'claimYMGP' && <ClaimYield />}
-              {page === 'unlock' && <UnlockPage />}
             </div>
-            <div className="bg-gray-800 p-3 border border-gray-700">
-              <div className="flex flex-col-reverse gap-2 lg:flex-row justify-between">
-                <div className="bg-gray-700 p-1 rounded-lg flex">
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'buyVotes' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'buyVotes' ? setPage(undefined) : setPage('buyVotes')}>Get vMGP</button>
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'vote' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'vote' ? setPage(undefined) : setPage('vote')}>Vote</button>
+            {page === "convert" && <GetYMGPPage />}
+            {page === "lock" && <LockPage />}
+            {page === "claimYMGP" && <ClaimYield />}
+            {page === "unlock" && <UnlockPage />}
+          </div>
+          <div className="border border-gray-700 bg-gray-800 p-3">
+            <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row">
+              <div className="flex rounded-lg bg-gray-700 p-1">
+                <button className={`rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "buyVotes" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`} onClick={() => setPage(page === "buyVotes" ? undefined : "buyVotes")} type="button">Get vMGP</button>
+                <button className={`rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "vote" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`} onClick={() => setPage(page === "vote" ? undefined : "vote")} type="button">Vote</button>
+              </div>
+              <div className="flex h-min flex-row-reverse">
+                <div className="flex gap-1">
+                  <Badge title="Vote Multiplier" value={`${formatNumber(Number(supplies.rmgp) / Number(supplies.vmgp), 2)}x+`} />
                 </div>
               </div>
-              {/* <Badge title="Vote Multiplier" value={supplies.vmgp / supplies.rmgp} /> */}
-            </div>
-            <div className="bg-gray-800 p-3 border border-gray-700 rounded-b-xl">
-              <div className="flex flex-col-reverse gap-2 lg:flex-row justify-between">
-                <div className="bg-gray-700 p-1 rounded-lg flex">
-                  <button type="button" className={`px-2 py-1 rounded-md transition-colors text-xs md:text-sm ${page === 'supplyLiquidity' ? 'bg-green-600 text-white' : 'bg-transparent text-gray-400 hover:text-white'}`} onClick={() => page === 'supplyLiquidity' ? setPage(undefined) : setPage('supplyLiquidity')}>Supply Liquidity</button>
-                </div>
-                <div className="flex flex-row-reverse h-min">
-                  <div className="flex gap-1">
-                    <YieldBadge asset="cMGP" apy={rewards.cmgpAPY} breakdown={[
-                      { asset: `${(100*Number(balances.mgpCurve)*exchangeRates.mintRMGP/(Number(balances.mgpCurve)+(Number(balances.rmgpCurve)*exchangeRates.mintRMGP)+(Number(balances.ymgpCurve)*exchangeRates.mintRMGP))).toFixed(2)}% MGP`, apy: 0 },
-                      { asset: `${(100*Number(balances.rmgpCurve)*exchangeRates.mintRMGP/(Number(balances.mgpCurve)+(Number(balances.rmgpCurve)*exchangeRates.mintRMGP)+(Number(balances.ymgpCurve)*exchangeRates.mintRMGP))).toFixed(2)}% rMGP`, apy: aprToApy(rewards.mgpAPR)*0.9 },
-                      { asset: `${(100*Number(balances.ymgpCurve)*exchangeRates.mintRMGP/(Number(balances.mgpCurve)+(Number(balances.rmgpCurve)*exchangeRates.mintRMGP)+(Number(balances.ymgpCurve)*exchangeRates.mintRMGP))).toFixed(2)}% yMGP`, apy: aprToApy(rewards.mgpAPR)*0.9 },
-                      { asset: 'Swap Fees', apy: rewards.cmgpPoolAPY }
-                    ]} />
-                  </div>
-                </div>
-              </div>
-              {page === 'supplyLiquidity' && <SupplyLiquidityPage />}
-              {/* {page === 'buyVotes' && <BuyVotesPage sendAmount={amounts.send} ymgpAllowance={allowances.ymgp} ymgpAllowanceCurve={allowances.ymgpCurve} ymgpBalance={balances.ymgp} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} onApprove={approve} setSendAmount={amounts.setSend} />} */}
             </div>
           </div>
-          <QASection />
-          <ConversionRates />
-          <Contracts />
+          <div className="rounded-b-xl border border-gray-700 bg-gray-800 p-3">
+            <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row">
+              <div className="flex rounded-lg bg-gray-700 p-1">
+                <button className={`rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "supplyLiquidity" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`} onClick={() => setPage(page === "supplyLiquidity" ? undefined : "supplyLiquidity")} type="button">Supply Liquidity</button>
+              </div>
+              <div className="flex h-min flex-row-reverse">
+                <div className="flex gap-1">
+                  <YieldBadge
+                    apy={rewards.cmgpAPY}
+                    asset="cMGP"
+                    breakdown={[
+                      { apy: 0, asset: `${(100 * Number(balances.mgpCurve) * exchangeRates.mintRMGP / (Number(balances.mgpCurve) + Number(balances.rmgpCurve) * exchangeRates.mintRMGP + Number(balances.ymgpCurve) * exchangeRates.mintRMGP)).toFixed(2)}% MGP` },
+                      { apy: aprToApy(rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.rmgpCurve) * exchangeRates.mintRMGP / (Number(balances.mgpCurve) + Number(balances.rmgpCurve) * exchangeRates.mintRMGP + Number(balances.ymgpCurve) * exchangeRates.mintRMGP)).toFixed(2)}% rMGP` },
+                      { apy: aprToApy(rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.ymgpCurve) * exchangeRates.mintRMGP / (Number(balances.mgpCurve) + Number(balances.rmgpCurve) * exchangeRates.mintRMGP + Number(balances.ymgpCurve) * exchangeRates.mintRMGP)).toFixed(2)}% yMGP` },
+                      { apy: rewards.cmgpPoolAPY, asset: "Swap Fees" }
+                    ]}
+                  />
+                </div>
+              </div>
+            </div>
+            {page === "supplyLiquidity" && <SupplyLiquidityPage />}
+          </div>
         </div>
+        <QASection />
+        <ConversionRates />
+        <Contracts />
       </div>
     </div>
-  );
+  </div>;
 };
 
 const App = (): ReactElement => {
-  const [error, setError] = useState('')
-  const [notification, setNotification] = useState('')
-  const [page] = useState<Pages>('deposit')
+  const [error, setError] = useState("");
+  const [notification, setNotification] = useState("");
 
-  return (
-    <GlobalProvider setError={setError} setNotification={setNotification} page={page} >
-      <ErrorCard error={error} setError={setError} />
-      <NotificationCard notification={notification} setNotification={setNotification} />
-      <AppContent />
-    </GlobalProvider>
-  )
-}
+  return <GlobalProvider setError={setError} setNotification={setNotification}>
+    <ErrorCard error={error} setError={setError} />
+    <NotificationCard notification={notification} setNotification={setNotification} />
+    <AppContent />
+  </GlobalProvider>;
+};
 export default App;

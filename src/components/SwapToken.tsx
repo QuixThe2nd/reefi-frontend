@@ -1,14 +1,15 @@
-import { ReactElement, useState } from "react"
-import { Coins } from "../config/contracts"
-import { useGlobalContext } from "../contexts/GlobalContext"
-import { SwapInput } from "./SwapInput"
-import { SwapButton } from "./SwapButton"
+import { useGlobalContext } from "../contexts/GlobalContext";
+import { useState, ReactElement } from "react";
 
-export const SwapToken = ({ originalTokenIn, tokenOut, buy, nativeSwap, label, excludeCoins }: { originalTokenIn: Coins, tokenOut: Coins, curveAmount: bigint, buy: () => void, nativeSwap?: () => void, label?: string, excludeCoins: Coins[] }): ReactElement => {
-  const { amounts, balances } = useGlobalContext()
-  const [tokenIn, setTokenIn] = useState<Coins | 'ETH'>(originalTokenIn)
+import { Coins } from "../config/contracts";
+import { SwapButton } from "./SwapButton";
+import { SwapInput } from "./SwapInput";
+
+export const SwapToken = ({ originalTokenIn, tokenOut, buy, nativeSwap, label, excludeCoins }: Readonly<{ originalTokenIn: Coins; tokenOut: Coins; buy: () => void; nativeSwap?: () => void; label?: string; excludeCoins: Coins[] }>): ReactElement => {
+  const { amounts, balances } = useGlobalContext();
+  const [tokenIn, setTokenIn] = useState<Coins | "ETH">(originalTokenIn);
   return <>
-    <SwapInput label={`Get ${tokenOut}`} selectedCoin={tokenIn} onCoinChange={setTokenIn} balance={balances[tokenIn][0]} value={amounts.send} onChange={amounts.setSend} outputCoin={tokenOut} excludeCoins={excludeCoins} />
-    <SwapButton buy={buy} nativeSwap={nativeSwap} label={label} tokenIn={tokenIn} tokenOut={tokenOut} />
-  </>
-}
+    <SwapInput balance={balances[tokenIn][0]} excludeCoins={excludeCoins} label={`Get ${tokenOut}`} onChange={amounts.setSend} onCoinChange={setTokenIn} outputCoin={tokenOut} selectedCoin={tokenIn} value={amounts.send} />
+    <SwapButton buy={buy} label={label} nativeSwap={nativeSwap} tokenIn={tokenIn} tokenOut={tokenOut} />
+  </>;
+};

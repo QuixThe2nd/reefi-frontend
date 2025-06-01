@@ -1,14 +1,17 @@
-import { memo, type ReactElement } from 'react'
+import { memo, type ReactElement } from "react";
 
-interface Props {
-  readonly title: string,
-  readonly detail: string
+interface Properties {
+  readonly title: string;
+  readonly detail: string;
 }
 
-export const TokenStat = memo(({ title, detail }: Props): ReactElement => {
-  return <div className="bg-gradient-to-r from-green-600/20 to-blue-600/20 rounded-lg py-1 px-2">
-    <p className="text-gray-400 text-xs">{title}</p>
-    <p className="font-medium text-xs">{detail}</p>
-  </div>
-})
-TokenStat.displayName = 'TokenStat'
+export const TokenStat = memo(({ title, detail }: Properties): ReactElement => <div className="rounded-lg bg-gradient-to-r from-green-600/20 to-blue-600/20 px-2 py-1">
+  <p className="text-xs text-gray-400">
+    {title}
+  </p>
+
+  <p className="text-xs font-medium">
+    {detail}
+  </p>
+</div>);
+TokenStat.displayName = "TokenStat";

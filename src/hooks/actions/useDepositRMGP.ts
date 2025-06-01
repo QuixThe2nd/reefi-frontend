@@ -1,92 +1,99 @@
-import { useRef, useEffect, useCallback } from "react"
-import { Chains } from "../../config/contracts"
-import { WalletClient, PublicActions } from "viem"
-import { UseContracts } from "../useContracts"
-import { UseAllowances } from "../useAllowances"
-import { UseBalances } from "../useBalances"
-import { UseSupplies } from "../useSupplies"
+import { useCallback, useEffect, useRef } from "react";
 
-interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
-  account: `0x${string}` | undefined
-  allowances: UseAllowances
-  balances: UseBalances
-  chain: Chains
-  clients: Clients
-  sendAmount: bigint
-  setConnectRequired: (_val: boolean) => void
-  setError: (_val: string) => void
-  supplies: UseSupplies
-  updateYMGPHoldings: () => void
-  writeContracts: UseContracts<Clients>
+import { Chains } from "../../config/contracts";
+import { UseAllowances } from "../useAllowances";
+import { UseBalances } from "../useBalances";
+import { UseContracts } from "../useContracts";
+import { UseSupplies } from "../useSupplies";
+
+import type { PublicActions, WalletClient } from "viem";
+
+interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
+  account: `0x${string}` | undefined;
+  allowances: UseAllowances;
+  balances: UseBalances;
+  chain: Chains;
+  clients: Clients;
+  sendAmount: bigint;
+  setConnectRequired: (_value: boolean) => void;
+  setError: (_value: string) => void;
+  supplies: UseSupplies;
+  updateYMGPHoldings: () => void;
+  writeContracts: UseContracts<Clients>;
 }
 
-export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, balances, chain, clients, sendAmount, setConnectRequired, setError, supplies, updateYMGPHoldings, writeContracts }: Props<Clients>): () => void => {
-  const accountRef = useRef(account)
-  const allowancesRef = useRef(allowances)
-  const balancesRef = useRef(balances)
-  const chainRef = useRef(chain)
-  const clientsRef = useRef(clients)
-  const sendAmountRef = useRef(sendAmount)
-  const setConnectRequiredRef = useRef(setConnectRequired)
-  const setErrorRef = useRef(setError)
-  const suppliesRef = useRef(supplies)
-  const updateYMGPHoldingsRef = useRef(updateYMGPHoldings)
-  const writeContractsRef = useRef(writeContracts)
+export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, balances, chain, clients, sendAmount, setConnectRequired, setError, supplies, updateYMGPHoldings, writeContracts }: Properties<Clients>): () => void => {
+  const accountReference = useRef(account),
+    allowancesReference = useRef(allowances),
+    balancesReference = useRef(balances),
+    chainReference = useRef(chain),
+    clientsReference = useRef(clients),
+    sendAmountReference = useRef(sendAmount),
+    setConnectRequiredReference = useRef(setConnectRequired),
+    setErrorReference = useRef(setError),
+    suppliesReference = useRef(supplies),
+    updateYMGPHoldingsReference = useRef(updateYMGPHoldings),
+    writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
-    accountRef.current = account
-  }, [account])
+    accountReference.current = account;
+  }, [account]);
 
   useEffect(() => {
-    allowancesRef.current = allowances
-  }, [allowances])
+    allowancesReference.current = allowances;
+  }, [allowances]);
 
   useEffect(() => {
-    balancesRef.current = balances
-  }, [balances])
+    balancesReference.current = balances;
+  }, [balances]);
 
   useEffect(() => {
-    chainRef.current = chain
-  }, [chain])
+    chainReference.current = chain;
+  }, [chain]);
 
   useEffect(() => {
-    clientsRef.current = clients
-  }, [clients])
+    clientsReference.current = clients;
+  }, [clients]);
 
   useEffect(() => {
-    sendAmountRef.current = sendAmount
-  }, [sendAmount])
+    sendAmountReference.current = sendAmount;
+  }, [sendAmount]);
 
   useEffect(() => {
-    setConnectRequiredRef.current = setConnectRequired
-  }, [setConnectRequired])
+    setConnectRequiredReference.current = setConnectRequired;
+  }, [setConnectRequired]);
 
   useEffect(() => {
-    setErrorRef.current = setError
-  }, [setError])
+    setErrorReference.current = setError;
+  }, [setError]);
 
   useEffect(() => {
-    suppliesRef.current = supplies
-  }, [supplies])
+    suppliesReference.current = supplies;
+  }, [supplies]);
 
   useEffect(() => {
-    updateYMGPHoldingsRef.current = updateYMGPHoldings
-  }, [updateYMGPHoldings])
+    updateYMGPHoldingsReference.current = updateYMGPHoldings;
+  }, [updateYMGPHoldings]);
 
   useEffect(() => {
-    writeContractsRef.current = writeContracts
-  }, [writeContracts])
+    writeContractsReference.current = writeContracts;
+  }, [writeContracts]);
 
   const depositRMGP = useCallback(async (): Promise<void> => {
-    if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    if (allowancesRef.current.rMGP[0] < sendAmountRef.current) return setErrorRef.current('Allowance too low')
-    await writeContractsRef.current[chainRef.current].yMGP.write.deposit([sendAmountRef.current], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-    balancesRef.current.rMGP[1]()
-    balancesRef.current.yMGP[1]()
-    suppliesRef.current.updateRMGP()
-    suppliesRef.current.updateYMGP()
-    updateYMGPHoldingsRef.current()
-  }, [])
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true); return;
+    }
+    if (allowancesReference.current.rMGP[0] < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low"); return;
+    }
+    await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendAmountReference.current], { account: accountReference.current,
+      chain: clientsReference.current[chainReference.current].chain });
+    balancesReference.current.rMGP[1]();
+    balancesReference.current.yMGP[1]();
+    suppliesReference.current.updateRMGP();
+    suppliesReference.current.updateYMGP();
+    updateYMGPHoldingsReference.current();
+  }, []);
 
-  return depositRMGP
-}
+  return depositRMGP;
+};

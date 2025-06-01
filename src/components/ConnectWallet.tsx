@@ -1,13 +1,23 @@
-import { memo, ReactElement } from 'react'
-import { useGlobalContext } from '../contexts/GlobalContext'
+import { memo, ReactElement } from "react";
+import { useGlobalContext } from "../contexts/GlobalContext";
 
-export const ConnectWallet = memo((): ReactElement => {
-  const { wallet } = useGlobalContext()
-  return wallet.connectRequired ? <div className="absolute w-full h-full bg-black z-1 flex items-center justify-center">
-    <div className="bg-gray-700/50 p-10 rounded-lg text-center">
-      <p className="text-xl mb-4">Connect your wallet to use Reefi</p>
-      <button type="button" className="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg transition-colors" onClick={wallet.connectWallet} disabled={wallet.isConnecting}>{wallet.isConnecting ? 'Connecting...' : 'Connect Wallet'}</button>
+export const ConnectWallet = memo((): ReactElement | undefined => {
+  const { wallet } = useGlobalContext();
+  return wallet.connectRequired ? <div className="absolute z-10 flex size-full items-center justify-center bg-black">
+    <div className="rounded-lg bg-gray-700/50 p-10 text-center">
+      <p className="mb-4 text-xl">
+        Connect your wallet to use Reefi
+      </p>
+
+      <button
+        className="rounded-lg bg-green-600 px-6 py-3 transition-colors hover:bg-green-700"
+        disabled={wallet.isConnecting}
+        onClick={wallet.connectWallet}
+        type="button"
+      >
+        {wallet.isConnecting ? "Connecting..." : "Connect Wallet"}
+      </button>
     </div>
-  </div> : <></>
-})
-ConnectWallet.displayName = 'ConnectWallet'
+  </div> : undefined;
+});
+ConnectWallet.displayName = "ConnectWallet";

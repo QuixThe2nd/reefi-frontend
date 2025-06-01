@@ -1,71 +1,67 @@
-import { useRef, useEffect, useCallback } from "react"
-import { Chains, Coins, contracts } from "../../config/contracts"
-import { WalletClient, PublicActions } from "viem"
-import { Pages } from "../../App"
-import { UseContracts } from "../useContracts"
-import { UseAllowances } from "../useAllowances"
+import { contracts, Chains, Coins } from "../../config/contracts";
+import { useCallback, useEffect, useRef } from "react";
 
-interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
-  account: `0x${string}` | undefined
-  allowances: UseAllowances
-  chain: Chains
-  clients: Clients
-  page: Pages
-  sendAmount: bigint
-  setConnectRequired: (_val: boolean) => void
-  writeContracts: UseContracts<Clients>
+import { Pages } from "../../App";
+import { UseAllowances } from "../useAllowances";
+import { UseContracts } from "../useContracts";
+
+import type { PublicActions, WalletClient } from "viem";
+
+interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
+  account: `0x${string}` | undefined;
+  allowances: UseAllowances;
+  chain: Chains;
+  clients: Clients;
+  sendAmount: bigint;
+  setConnectRequired: (_value: boolean) => void;
+  writeContracts: UseContracts<Clients>;
 }
 
-export const useApprove = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, page, sendAmount, setConnectRequired, writeContracts }: Props<Clients>): (_contract: 'rMGP' | 'yMGP' | 'cMGP' | 'ODOSRouter', _coin: Coins, _infinity: boolean) => void => {
-  const accountRef = useRef(account)
-  const allowancesRef = useRef(allowances)
-  const chainRef = useRef(chain)
-  const clientsRef = useRef(clients)
-  const pageRef = useRef(page)
-  const sendAmountRef = useRef(sendAmount)
-  const setConnectRequiredRef = useRef(setConnectRequired)
-  const writeContractsRef = useRef(writeContracts)
+export const useApprove = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, sendAmount, setConnectRequired, writeContracts }: Properties<Clients>): (_contract: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _coin: Coins, _infinity: boolean) => void => {
+  const accountReference = useRef(account),
+    allowancesReference = useRef(allowances),
+    chainReference = useRef(chain),
+    clientsReference = useRef(clients),
+    sendAmountReference = useRef(sendAmount),
+    setConnectRequiredReference = useRef(setConnectRequired),
+    writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
-    accountRef.current = account
-  }, [account])
+    accountReference.current = account;
+  }, [account]);
 
   useEffect(() => {
-    allowancesRef.current = allowances
-  }, [allowances])
+    allowancesReference.current = allowances;
+  }, [allowances]);
 
   useEffect(() => {
-    chainRef.current = chain
-  }, [chain])
+    chainReference.current = chain;
+  }, [chain]);
 
   useEffect(() => {
-    clientsRef.current = clients
-  }, [clients])
+    clientsReference.current = clients;
+  }, [clients]);
 
   useEffect(() => {
-    pageRef.current = page
-  }, [page])
+    sendAmountReference.current = sendAmount;
+  }, [sendAmount]);
 
   useEffect(() => {
-    sendAmountRef.current = sendAmount
-  }, [sendAmount])
+    setConnectRequiredReference.current = setConnectRequired;
+  }, [setConnectRequired]);
 
   useEffect(() => {
-    setConnectRequiredRef.current = setConnectRequired
-  }, [setConnectRequired])
+    writeContractsReference.current = writeContracts;
+  }, [writeContracts]);
 
-  useEffect(() => {
-    writeContractsRef.current = writeContracts
-  }, [writeContracts])
+  const approve = useCallback(async (contract: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", coin: Coins, infinity: boolean): Promise<void> => {
+    if (clientsReference.current === undefined || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
+    const amount = infinity ? 2n ** 256n - 1n : sendAmountReference.current;
+    await writeContractsReference.current[chainReference.current][coin].write.approve([contracts[chainReference.current][contract].address, amount], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    if (contract === "cMGP") allowancesReference.current.curve[coin][1]();
+    else if (contract === "ODOSRouter") allowancesReference.current.odos[coin][1]();
+    else allowancesReference.current.curve[coin][1]();
+  }, []);
 
-  const approve = useCallback(async (contract: 'rMGP' | 'yMGP' | 'cMGP' | 'ODOSRouter', coin: Coins, infinity: boolean): Promise<void> => {
-    if (clientsRef.current === undefined || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    const amount = infinity ? 2n ** 256n - 1n : sendAmountRef.current;
-    await writeContractsRef.current[chainRef.current][coin].write.approve([contracts[chainRef.current][contract].address, amount], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-    if (contract === 'cMGP') allowancesRef.current.curve[coin][1]()
-    else if (contract === 'ODOSRouter') allowancesRef.current.odos[coin][1]()
-    else allowancesRef.current.curve[coin][1]()
-  }, [])
-
-  return approve
-}
+  return approve;
+};

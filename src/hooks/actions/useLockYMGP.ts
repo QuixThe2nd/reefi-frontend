@@ -1,75 +1,80 @@
-import { useRef, useEffect, useCallback } from "react"
-import { Chains } from "../../config/contracts"
-import { WalletClient, PublicActions } from "viem"
-import { UseContracts } from "../useContracts"
-import { UseSupplies } from "../useSupplies"
+import { useCallback, useEffect, useRef } from "react";
 
-interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
-  account: `0x${string}` | undefined
-  chain: Chains
-  clients: Clients
-  sendAmount: bigint
-  setConnectRequired: (_val: boolean) => void
-  supplies: UseSupplies
-  updateTotalLockedYMGP: () => void
-  updateUserLockedYMGP: () => void
-  writeContracts: UseContracts<Clients>
+import { Chains } from "../../config/contracts";
+import { UseContracts } from "../useContracts";
+import { UseSupplies } from "../useSupplies";
+
+import type { PublicActions, WalletClient } from "viem";
+
+interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
+  account: `0x${string}` | undefined;
+  chain: Chains;
+  clients: Clients;
+  sendAmount: bigint;
+  setConnectRequired: (_value: boolean) => void;
+  supplies: UseSupplies;
+  updateTotalLockedYMGP: () => void;
+  updateUserLockedYMGP: () => void;
+  writeContracts: UseContracts<Clients>;
 }
 
-export const useLockYMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, sendAmount, setConnectRequired, supplies, updateTotalLockedYMGP, updateUserLockedYMGP, writeContracts }: Props<Clients>): () => void => {
-  const accountRef = useRef(account)
-  const chainRef = useRef(chain)
-  const clientsRef = useRef(clients)
-  const sendAmountRef = useRef(sendAmount)
-  const setConnectRequiredRef = useRef(setConnectRequired)
-  const suppliesRef = useRef(supplies)
-  const updateTotalLockedYMGPRef = useRef(updateTotalLockedYMGP)
-  const updateUserLockedYMGPRef = useRef(updateUserLockedYMGP)
-  const writeContractsRef = useRef(writeContracts)
+export const useLockYMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, sendAmount, setConnectRequired, supplies, updateTotalLockedYMGP, updateUserLockedYMGP, writeContracts }: Properties<Clients>): () => void => {
+  const accountReference = useRef(account),
+    chainReference = useRef(chain),
+    clientsReference = useRef(clients),
+    sendAmountReference = useRef(sendAmount),
+    setConnectRequiredReference = useRef(setConnectRequired),
+    suppliesReference = useRef(supplies),
+    updateTotalLockedYMGPReference = useRef(updateTotalLockedYMGP),
+    updateUserLockedYMGPReference = useRef(updateUserLockedYMGP),
+    writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
-    accountRef.current = account
-  }, [account])
+    accountReference.current = account;
+  }, [account]);
 
   useEffect(() => {
-    chainRef.current = chain
-  }, [chain])
+    chainReference.current = chain;
+  }, [chain]);
 
   useEffect(() => {
-    clientsRef.current = clients
-  }, [clients])
+    clientsReference.current = clients;
+  }, [clients]);
 
   useEffect(() => {
-    sendAmountRef.current = sendAmount
-  }, [sendAmount])
+    sendAmountReference.current = sendAmount;
+  }, [sendAmount]);
 
   useEffect(() => {
-    setConnectRequiredRef.current = setConnectRequired
-  }, [setConnectRequired])
+    setConnectRequiredReference.current = setConnectRequired;
+  }, [setConnectRequired]);
 
   useEffect(() => {
-    suppliesRef.current = supplies
-  }, [supplies])
+    suppliesReference.current = supplies;
+  }, [supplies]);
 
   useEffect(() => {
-    updateTotalLockedYMGPRef.current = updateTotalLockedYMGP
-  }, [updateTotalLockedYMGP])
+    updateTotalLockedYMGPReference.current = updateTotalLockedYMGP;
+  }, [updateTotalLockedYMGP]);
 
   useEffect(() => {
-    updateUserLockedYMGPRef.current = updateUserLockedYMGP
-  }, [updateUserLockedYMGP])
+    updateUserLockedYMGPReference.current = updateUserLockedYMGP;
+  }, [updateUserLockedYMGP]);
 
   useEffect(() => {
-    writeContractsRef.current = writeContracts
-  }, [writeContracts])
+    writeContractsReference.current = writeContracts;
+  }, [writeContracts]);
 
   const lockYMGP = useCallback(async (): Promise<void> => {
-    if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    await writeContractsRef.current[chainRef.current].yMGP.write.lock([sendAmountRef.current], { account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-    suppliesRef.current.updateYMGP()
-    updateTotalLockedYMGPRef.current()
-    updateUserLockedYMGPRef.current()
-  }, [])
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true); return;
+    }
+    await writeContractsReference.current[chainReference.current].yMGP.write.lock([sendAmountReference.current], { account: accountReference.current,
+      chain: clientsReference.current[chainReference.current].chain });
+    suppliesReference.current.updateYMGP();
+    updateTotalLockedYMGPReference.current();
+    updateUserLockedYMGPReference.current();
+  }, []);
 
-  return lockYMGP
-}
+  return lockYMGP;
+};

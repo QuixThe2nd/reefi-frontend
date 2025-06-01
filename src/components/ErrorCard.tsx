@@ -1,13 +1,14 @@
-import { ReactElement, useEffect } from 'react'
+import { useEffect, ReactElement } from "react";
 
-export const ErrorCard = ({ error, setError }: { readonly error: string, readonly setError: (_error: string) => void }): ReactElement => {
+
+export const ErrorCard = ({ error, setError }: Readonly<{ error: string; setError: (_error: string) => void }>): ReactElement | undefined => {
   useEffect(() => {
-    if (error.length > 0) setTimeout(() => {setError('')}, 2000)
-  }, [error, setError])
-  return error.length > 0 ? <div className="absolute z-2 top-2 right-2">
-    <div className="bg-red-700 p-4 rounded-lg text-center">
-      <p className="text-xl mb-2">Error</p>
+    if (error.length > 0) setTimeout(() => setError(""), 2000);
+  }, [error, setError]);
+  return error.length > 0 ? <div className="absolute right-2 top-2 z-20">
+    <div className="rounded-lg bg-red-700 p-4 text-center">
+      <p className="mb-2 text-xl">Error</p>
       <p className="text-sm">{error}</p>
     </div>
-  </div> : <></>
-}
+  </div> : undefined;
+};

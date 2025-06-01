@@ -1,54 +1,56 @@
-import { useRef, useEffect, useCallback } from "react"
-import { Chains } from "../../config/contracts"
-import { WalletClient, PublicActions } from "viem"
-import { UseContracts } from "../useContracts"
+import { useCallback, useEffect, useRef } from "react";
 
-interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
-  account: `0x${string}` | undefined
-  chain: Chains
-  clients: Clients
-  setConnectRequired: (_val: boolean) => void
-  updateUnclaimedUserYield: () => void
-  writeContracts: UseContracts<Clients>
+import { Chains } from "../../config/contracts";
+import { UseContracts } from "../useContracts";
+
+import type { PublicActions, WalletClient } from "viem";
+
+interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
+  account: `0x${string}` | undefined;
+  chain: Chains;
+  clients: Clients;
+  setConnectRequired: (_value: boolean) => void;
+  updateUnclaimedUserYield: () => void;
+  writeContracts: UseContracts<Clients>;
 }
 
-export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, setConnectRequired, updateUnclaimedUserYield, writeContracts }: Props<Clients>): () => void => {
-  const accountRef = useRef(account)
-  const chainRef = useRef(chain)
-  const clientsRef = useRef(clients)
-  const setConnectRequiredRef = useRef(setConnectRequired)
-  const updateUnclaimedUserYieldRef = useRef(updateUnclaimedUserYield)
-  const writeContractsRef = useRef(writeContracts)
+export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, setConnectRequired, updateUnclaimedUserYield, writeContracts }: Properties<Clients>): () => void => {
+  const accountReference = useRef(account),
+    chainReference = useRef(chain),
+    clientsReference = useRef(clients),
+    setConnectRequiredReference = useRef(setConnectRequired),
+    updateUnclaimedUserYieldReference = useRef(updateUnclaimedUserYield),
+    writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
-    accountRef.current = account
-  }, [account])
+    accountReference.current = account;
+  }, [account]);
 
   useEffect(() => {
-    chainRef.current = chain
-  }, [chain])
+    chainReference.current = chain;
+  }, [chain]);
 
   useEffect(() => {
-    clientsRef.current = clients
-  }, [clients])
+    clientsReference.current = clients;
+  }, [clients]);
 
   useEffect(() => {
-    setConnectRequiredRef.current = setConnectRequired
-  }, [setConnectRequired])
+    setConnectRequiredReference.current = setConnectRequired;
+  }, [setConnectRequired]);
 
   useEffect(() => {
-    updateUnclaimedUserYieldRef.current = updateUnclaimedUserYield
-  }, [updateUnclaimedUserYield])
+    updateUnclaimedUserYieldReference.current = updateUnclaimedUserYield;
+  }, [updateUnclaimedUserYield]);
 
   useEffect(() => {
-    writeContractsRef.current = writeContracts
-  }, [writeContracts])
+    writeContractsReference.current = writeContracts;
+  }, [writeContracts]);
 
   const claimYMGPRewards = useCallback(async (): Promise<void> => {
-    if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    await writeContractsRef.current[chainRef.current].yMGP.write.claim({ account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-    updateUnclaimedUserYieldRef.current()
-  }, [])
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
+    await writeContractsReference.current[chainReference.current].yMGP.write.claim({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    updateUnclaimedUserYieldReference.current();
+  }, []);
 
-  return claimYMGPRewards
-}
+  return claimYMGPRewards;
+};

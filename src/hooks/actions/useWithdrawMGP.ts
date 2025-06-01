@@ -1,77 +1,81 @@
-import { useRef, useEffect, useCallback } from "react"
-import { Chains } from "../../config/contracts"
-import { WalletClient, PublicActions } from "viem"
-import { UseContracts } from "../useContracts"
-import { UseBalances } from "../useBalances"
+import { useCallback, useEffect, useRef } from "react";
 
-interface Props<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
-  account: `0x${string}` | undefined
-  balances: UseBalances
-  chain: Chains
-  clients: Clients
-  setConnectRequired: (_val: boolean) => void
-  updateUnsubmittedWithdraws: () => void
-  updateUserPendingWithdraws: () => void
-  updateUserWithdrawable: () => void
-  writeContracts: UseContracts<Clients>
+import { Chains } from "../../config/contracts";
+import { UseBalances } from "../useBalances";
+import { UseContracts } from "../useContracts";
+
+import type { PublicActions, WalletClient } from "viem";
+
+interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
+  account: `0x${string}` | undefined;
+  balances: UseBalances;
+  chain: Chains;
+  clients: Clients;
+  setConnectRequired: (_value: boolean) => void;
+  updateUnsubmittedWithdraws: () => void;
+  updateUserPendingWithdraws: () => void;
+  updateUserWithdrawable: () => void;
+  writeContracts: UseContracts<Clients>;
 }
 
-export const useWithdrawMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, balances, chain, clients, setConnectRequired, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }: Props<Clients>): () => void => {
-  const accountRef = useRef(account)
-  const balancesRef = useRef(balances)
-  const chainRef = useRef(chain)
-  const clientsRef = useRef(clients)
-  const setConnectRequiredRef = useRef(setConnectRequired)
-  const updateUnsubmittedWithdrawsRef = useRef(updateUnsubmittedWithdraws)
-  const updateUserPendingWithdrawsRef = useRef(updateUserPendingWithdraws)
-  const updateUserWithdrawableRef = useRef(updateUserWithdrawable)
-  const writeContractsRef = useRef(writeContracts)
+export const useWithdrawMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, balances, chain, clients, setConnectRequired, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }: Properties<Clients>): () => void => {
+  const accountReference = useRef(account),
+    balancesReference = useRef(balances),
+    chainReference = useRef(chain),
+    clientsReference = useRef(clients),
+    setConnectRequiredReference = useRef(setConnectRequired),
+    updateUnsubmittedWithdrawsReference = useRef(updateUnsubmittedWithdraws),
+    updateUserPendingWithdrawsReference = useRef(updateUserPendingWithdraws),
+    updateUserWithdrawableReference = useRef(updateUserWithdrawable),
+    writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
-    accountRef.current = account
-  }, [account])
+    accountReference.current = account;
+  }, [account]);
 
   useEffect(() => {
-    balancesRef.current = balances
-  }, [balances])
+    balancesReference.current = balances;
+  }, [balances]);
 
   useEffect(() => {
-    chainRef.current = chain
-  }, [chain])
+    chainReference.current = chain;
+  }, [chain]);
 
   useEffect(() => {
-    clientsRef.current = clients
-  }, [clients])
+    clientsReference.current = clients;
+  }, [clients]);
 
   useEffect(() => {
-    setConnectRequiredRef.current = setConnectRequired
-  }, [setConnectRequired])
+    setConnectRequiredReference.current = setConnectRequired;
+  }, [setConnectRequired]);
 
   useEffect(() => {
-    updateUnsubmittedWithdrawsRef.current = updateUnsubmittedWithdraws
-  }, [updateUnsubmittedWithdraws])
+    updateUnsubmittedWithdrawsReference.current = updateUnsubmittedWithdraws;
+  }, [updateUnsubmittedWithdraws]);
 
   useEffect(() => {
-    updateUserPendingWithdrawsRef.current = updateUserPendingWithdraws
-  }, [updateUserPendingWithdraws])
+    updateUserPendingWithdrawsReference.current = updateUserPendingWithdraws;
+  }, [updateUserPendingWithdraws]);
 
   useEffect(() => {
-    updateUserWithdrawableRef.current = updateUserWithdrawable
-  }, [updateUserWithdrawable])
+    updateUserWithdrawableReference.current = updateUserWithdrawable;
+  }, [updateUserWithdrawable]);
 
   useEffect(() => {
-    writeContractsRef.current = writeContracts
-  }, [writeContracts])
+    writeContractsReference.current = writeContracts;
+  }, [writeContracts]);
 
   const withdrawMGP = useCallback(async (): Promise<void> => {
-    if (!clientsRef.current || !writeContractsRef.current || accountRef.current === undefined) return setConnectRequiredRef.current(true)
-    await writeContractsRef.current[chainRef.current].rMGP.write.unlock({ account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-    await writeContractsRef.current[chainRef.current].rMGP.write.withdraw({ account: accountRef.current, chain: clientsRef.current[chainRef.current].chain })
-    balancesRef.current.MGP[1]()
-    updateUserPendingWithdrawsRef.current()
-    updateUnsubmittedWithdrawsRef.current()
-    updateUserWithdrawableRef.current()
-  }, [])
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true); return;
+    }
+    await writeContractsReference.current[chainReference.current].rMGP.write.unlock({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].rMGP.write.withdraw({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    balancesReference.current.MGP[1]();
+    updateUserPendingWithdrawsReference.current();
+    updateUnsubmittedWithdrawsReference.current();
+    updateUserWithdrawableReference.current();
+  }, []);
 
-  return withdrawMGP
-}
+  return withdrawMGP;
+};

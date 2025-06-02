@@ -37547,7 +37547,7 @@ var SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpCurveAmoun
     let nativeRate = 1;
     let curveAmount = 0n;
     if (tokenIn === "MGP" && tokenOut === "rMGP") {
-      nativeRate = Number(rmgpSupply) / Number(lockedReefiMGP);
+      nativeRate = lockedReefiMGP === 0n ? 1 : Number(rmgpSupply) / Number(lockedReefiMGP);
       curveAmount = mgpRmgpCurveAmount;
     } else if (tokenIn === "rMGP" && tokenOut === "MGP") {
       nativeRate = Number(lockedReefiMGP) / Number(rmgpSupply) * 0.9;
@@ -39706,5 +39706,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=1C1D2592A2D95C2964756E2164756E21
-//# sourceMappingURL=index-b3d4jt0t.js.map
+//# debugId=CA5D49B6E252056064756E2164756E21
+//# sourceMappingURL=index-g8mxeqre.js.map

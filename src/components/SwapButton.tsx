@@ -36,7 +36,7 @@ export const SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpC
     let nativeRate = 1;
     let curveAmount = 0n;
     if (tokenIn === "MGP" && tokenOut === "rMGP") {
-      nativeRate = Number(rmgpSupply) / Number(lockedReefiMGP);
+      nativeRate = lockedReefiMGP === 0n ? 1 : Number(rmgpSupply) / Number(lockedReefiMGP);
       curveAmount = mgpRmgpCurveAmount;
     } else if (tokenIn === "rMGP" && tokenOut === "MGP") {
       nativeRate = Number(lockedReefiMGP) / Number(rmgpSupply) * 0.9;

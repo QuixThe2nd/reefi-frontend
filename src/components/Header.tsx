@@ -18,7 +18,7 @@ interface Properties {
 
 export const Header = memo(({ ens, chain, account, isConnecting, setChain, connectWallet, mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance }: Properties): ReactElement => <div className="sticky top-0 z-10 flex w-full items-center justify-between bg-gray-800 p-4">
   <div className="flex items-center gap-4">
-    <h1 className="text-xl font-bold">REEFI</h1>
+    <h1 className="text-xl font-bold text-blue-500">REEFI</h1>
     <p className="hidden lg:block">Refinance Magpie Yield and Governance</p>
   </div>
   {account === undefined ? <button className="rounded-lg bg-green-600 px-4 py-2 transition-colors hover:bg-green-700" disabled={isConnecting} onClick={connectWallet} type="button">{isConnecting ? "Connecting..." : "Connect Wallet"}</button> : <div className="flex items-center space-x-4">

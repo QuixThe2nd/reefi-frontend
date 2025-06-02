@@ -34402,8 +34402,8 @@ var coins = {
   PNP: { bgColor: "bg-orange-600", color: "bg-orange-400", symbol: "PNP" },
   WETH: { bgColor: "bg-gray-600", color: "bg-gray-400", symbol: "ETH" },
   cMGP: { bgColor: "bg-indigo-600", color: "bg-indigo-400", symbol: "CMGP" },
-  rMGP: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "RMGP" },
-  yMGP: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "YMGP" }
+  rMGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "RMGP" },
+  yMGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "YMGP" }
 };
 var publicClients = {
   1: createPublicClient({ chain: mainnet, transport: webSocket("wss://eth.drpc.org") }),
@@ -37084,7 +37084,7 @@ var CompoundYield = import_react35.memo(({ uncompoundedMGPYield, estimatedCompou
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("p", {
             className: "mb-2 text-sm text-gray-300",
-            children: "Compounding vlMGP yield is critical to Reefi's function. Anyone can trigger a compound, which compounds everyone's pending yield. By doing so, you receive 1% of all pending yield. You can automate this process and earn rewards with no investment."
+            children: "Compounding vlMGP yield is critical to Reefi's function. Anyone can trigger a compound of everyone's pending yield. By doing so, you receive 1% reward. You can automate this process and earn rewards with no investment."
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("ul", {
             className: "mb-2 list-inside list-disc text-xs text-gray-400",
@@ -37344,10 +37344,10 @@ var Features = import_react40.memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSuppl
       className: "mb-4 grid w-full grid-cols-2 gap-4 md:grid-cols-4",
       children: [
         /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
-          className: "rounded-lg border border-green-600/30 bg-gradient-to-r from-green-600/20 to-blue-600/20 p-3 text-center",
+          className: "rounded-lg border border-blue-600/30 bg-gradient-to-r from-blue-600/20 to-green-600/20 p-3 text-center",
           children: [
             /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
-              className: "text-lg font-bold text-green-400",
+              className: "text-lg font-bold text-blue-400",
               children: [
                 (100 * mgpAPR).toFixed(2),
                 "%"
@@ -37360,10 +37360,10 @@ var Features = import_react40.memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSuppl
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
-          className: "rounded-lg border border-green-600/30 bg-gradient-to-r from-green-600/20 to-blue-600/20 p-3 text-center",
+          className: "rounded-lg border border-blue-600/30 bg-gradient-to-r from-blue-600/20 to-green-600/20 p-3 text-center",
           children: [
             /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
-              className: "text-lg font-bold text-green-400",
+              className: "text-lg font-bold text-blue-400",
               children: [
                 (100 * aprToApy(mgpAPR)).toFixed(2),
                 "%+"
@@ -37392,10 +37392,10 @@ var Features = import_react40.memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSuppl
           ]
         }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
-          className: "rounded-lg border border-green-600/30 bg-gradient-to-r from-green-600/20 to-blue-600/20 p-3 text-center",
+          className: "rounded-lg border border-blue-600/30 bg-gradient-to-r from-blue-600/20 to-green-600/20 p-3 text-center",
           children: [
             /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
-              className: "text-lg font-bold text-green-400",
+              className: "text-lg font-bold text-blue-400",
               children: [
                 "<$",
                 (1000 * mgpPrice * vmgpMGPCurveRate * Number(vmgpSupply) / Number(reefiLockedMGP)).toFixed(2),
@@ -37414,14 +37414,14 @@ var Features = import_react40.memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSuppl
     /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
       className: "grid w-full grid-cols-2 gap-3 md:grid-cols-4",
       children: features.map((feature) => /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
-        className: "rounded-lg border border-gray-700/50 bg-gray-900/50 p-3 transition-colors hover:border-green-600/30",
+        className: "rounded-lg border border-gray-700/50 bg-gray-900/50 p-3 transition-colors hover:border-blue-600/30",
         children: [
           /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("div", {
             className: "mb-2 text-xl",
             children: feature.icon
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("h3", {
-            className: "mb-1 text-sm font-semibold text-green-400",
+            className: "mb-1 text-sm font-semibold text-blue-400",
             children: feature.title
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("p", {
@@ -38097,7 +38097,7 @@ var Header = import_react50.memo(({ ens, chain, account, isConnecting, setChain,
       className: "flex items-center gap-4",
       children: [
         /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("h1", {
-          className: "text-xl font-bold",
+          className: "text-xl font-bold text-blue-500",
           children: "REEFI"
         }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
@@ -38122,7 +38122,7 @@ var Header = import_react50.memo(({ ens, chain, account, isConnecting, setChain,
           cmgpBalance
         }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("div", {
-          className: "rounded-lg bg-green-600/20 px-3 py-2 text-sm text-green-400",
+          className: "rounded-lg bg-blue-600/20 px-3 py-2 text-sm text-blue-400",
           children: ens ?? `${account.slice(0, 6)}...${account.slice(-4)}`
         }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("select", {
@@ -38225,7 +38225,7 @@ var LockPage = import_react52.memo(({ ymgpBalance, setSend, send, lockYMGP, mgpA
       balance: ymgpBalance,
       label: "Lock yMGP",
       onChange: setSend,
-      token: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "yMGP" },
+      token: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "yMGP" },
       value: send
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Button, {
@@ -38999,7 +38999,7 @@ var SupplyLiquidityPage = import_react56.memo(({ mgpBalance, rmgpBalance, ymgpBa
         };
         return formatEther(BigInt(getTotalRecommendedLP() * rmgpTarget / (1 - rmgpTarget))).toString();
       })(),
-      token: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "rMGP" },
+      token: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "rMGP" },
       value: rmgpLPAmount
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
@@ -39031,7 +39031,7 @@ var SupplyLiquidityPage = import_react56.memo(({ mgpBalance, rmgpBalance, ymgpBa
         };
         return formatEther(BigInt(getTotalRecommendedLP() * ymgpTarget / (1 - ymgpTarget))).toString();
       })(),
-      token: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "yMGP" },
+      token: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "yMGP" },
       value: ymgpLPAmount
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
@@ -39176,7 +39176,7 @@ var TokenCards = import_react59.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupp
       symbol: "MGP"
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(TokenCard, {
-      color: "green",
+      color: "blue",
       decimals: decimals.rMGP,
       description: "rMGP earns auto compounding yield from locked MGP, while remaining liquid. rMGP can be converted back to MGP.",
       marketRate: mgpRmgpCurveRate,
@@ -39186,7 +39186,7 @@ var TokenCards = import_react59.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupp
       underlyingSymbol: "MGP"
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(TokenCard, {
-      color: "green",
+      color: "blue",
       decimals: decimals.yMGP,
       description: "yMGP is backed 1:1 by rMGP but cannot be converted back to rMGP. 5% of protocol yield and withdrawals are distributed to locked yMGP paid in rMGP.",
       locked: ymgpLocked,
@@ -39210,7 +39210,7 @@ var UnlockPageComponent = ({ sendAmount, setSendAmount, unlockYMGP, ymgpBalance 
       balance: ymgpBalance,
       label: "Get yMGP",
       onChange: setSendAmount,
-      token: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "yMGP" },
+      token: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "yMGP" },
       value: sendAmount
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(Button, {
@@ -39706,5 +39706,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=CA5D49B6E252056064756E2164756E21
-//# sourceMappingURL=index-g8mxeqre.js.map
+//# debugId=429A92502FB5256D64756E2164756E21
+//# sourceMappingURL=index-qy5tb6ff.js.map

@@ -5,6 +5,7 @@ import { BuyOnCurve } from "./BuyOnCurve";
 import { ReactElement } from "react";
 import { TokenApproval } from "./TokenApproval";
 import { UseAllowances } from "../hooks/useAllowances";
+import { Button } from "./Button";
 
 interface Properties {
   buy: () => void;
@@ -44,7 +45,7 @@ export const SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpC
     return <div className="grid grid-cols-2 gap-2">
       <div>
         {tokenOut !== "MGP" && <TokenApproval allowance={allowances[tokenIn]} onApprove={infinity => approve(tokenOut, tokenIn, infinity)} sendAmount={sendAmount} tokenSymbol={tokenIn} />}
-        <button className="h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 md:text-base" onClick={nativeSwap} type="submit">{label} ({formatEther(BigInt(Number(sendAmount) * nativeRate)).toFixed(4)} {tokenOut})</button>
+        <Button className="w-full" onClick={nativeSwap} type="submit">{label} ({formatEther(BigInt(Number(sendAmount) * nativeRate)).toFixed(4)} {tokenOut})</Button>
       </div>
       <BuyOnCurve allowanceCurve={allowances.curve[tokenIn]} buy={buy} curveAmount={curveAmount} nativeRate={nativeRate} onApprove={infinity => approve("cMGP", tokenIn, infinity)} sendAmount={sendAmount} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />
     </div>;
@@ -54,8 +55,8 @@ export const SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpC
   if (tokenIn === "yMGP" && tokenOut === "MGP") return <BuyOnCurve allowanceCurve={allowances.curve[tokenIn]} buy={sellYMGP} curveAmount={ymgpMgpCurveAmount} nativeRate={1 / Number(lockedReefiMGP) / Number(rmgpSupply) * 0.9} onApprove={infinity => approve("cMGP", tokenIn, infinity)} sendAmount={sendAmount} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />;
 
   return <>
-    {tokenIn === "ETH" && <button className="mb-2 h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 md:text-base" onClick={mintWETH} type="submit">Wrap ETH</button>}
+    {tokenIn === "ETH" && <Button className="mb-2 w-full" variant="secondary" onClick={mintWETH} type="submit">Wrap ETH</Button>}
     {tokenIn === "WETH" && <TokenApproval allowance={allowances.odos[tokenIn]} onApprove={infinity => approve("ODOSRouter", tokenIn, infinity)} sendAmount={sendAmount} tokenSymbol={tokenIn} />}
-    <button className="h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 md:text-base" onClick={() => swap(contracts[chain][tokenIn === "ETH" ? "WETH" : tokenIn].address, contracts[chain].MGP.address)} type="submit">Swap to MGP With Odos</button>
+    <Button className="w-full" variant="secondary" onClick={() => swap(contracts[chain][tokenIn === "ETH" ? "WETH" : tokenIn].address, contracts[chain].MGP.address)} type="submit">Swap to MGP With Odos</Button>
   </>;
 };

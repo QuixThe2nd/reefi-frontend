@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 interface CardProperties {
   readonly children: ReactNode;
   readonly className?: string;
-  readonly padding: number;
+  readonly padding?: number;
 }
 
 export const Card = ({ children, padding = 6, className = "" }: CardProperties) => <div className={`rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-${padding} shadow-2xl backdrop-blur-xl transition-all duration-400 hover:scale-[1.01] hover:shadow-purple-500/10 ${className}`}>

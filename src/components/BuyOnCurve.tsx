@@ -2,6 +2,7 @@ import { formatEther } from "../utilities";
 
 import { JSX, memo, ReactElement } from "react";
 import { TokenApproval } from "./TokenApproval";
+import { Button } from "./Button";
 
 interface Properties {
   readonly sendAmount: bigint;
@@ -17,7 +18,7 @@ interface Properties {
 export const BuyOnCurve = memo(({ sendAmount, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenASymbol, tokenBSymbol }: Properties): ReactElement => <div>
   <TokenApproval allowance={allowanceCurve} curve={true} onApprove={onApprove} sendAmount={sendAmount} tokenSymbol={tokenASymbol} />
   <div className="relative">
-    <button className="h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 md:text-base" onClick={buy} type="submit">Buy on Curve ({formatEther(curveAmount).toFixed(4)} {tokenBSymbol})</button>
+    <Button variant="secondary" className="w-full" onClick={buy} type="submit">Buy on Curve ({formatEther(curveAmount).toFixed(4)} {tokenBSymbol})</Button>
     {((): JSX.Element | undefined => {
       const directRate = formatEther(sendAmount) * nativeRate;
       const premiumDiscount = (formatEther(curveAmount) - directRate) / directRate * 100;

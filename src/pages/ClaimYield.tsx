@@ -3,6 +3,7 @@ import { formatEther, formatNumber } from "../utilities";
 import { memo, type ReactElement } from "react";
 
 import { Page } from "../components/Page";
+import { Button } from "../components/Button";
 
 interface Properties {
   readonly claimYMGPRewards: () => void;
@@ -26,7 +27,7 @@ export const ClaimYieldComponent = ({ claimYMGPRewards, unclaimedUserYield, unco
       <p className="text-sm text-gray-400">+{formatNumber(uncompoundedMGPYield * 0.05, 4)} MGP</p>
     </div>
   </div>
-  <button className="mt-4 w-full rounded-lg bg-green-600 py-3 transition-colors hover:bg-green-700" onClick={claimYMGPRewards} type="button">Claim Rewards</button>
+  <Button className="mt-4 w-full" onClick={claimYMGPRewards} type="button">Claim Rewards</Button>
 </Page>;
 
 export const ClaimYield = memo(({ claimYMGPRewards, lockedYMGP, unclaimedUserYield, uncompoundedMGPYield, userLockedYMGP, ymgpHoldings, ymgpSupply }: Properties): ReactElement => <ClaimYieldComponent claimYMGPRewards={claimYMGPRewards} lockedYMGP={lockedYMGP} unclaimedUserYield={unclaimedUserYield} uncompoundedMGPYield={uncompoundedMGPYield} userLockedYMGP={userLockedYMGP} ymgpHoldings={ymgpHoldings} ymgpSupply={ymgpSupply} />);

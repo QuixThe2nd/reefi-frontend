@@ -3,6 +3,7 @@ import { memo, type ReactElement } from "react";
 
 import { AmountInput } from "../components/AmountInput";
 import { Page } from "../components/Page";
+import { Button } from "../components/Button";
 
 interface Properties {
   ymgpBalance: bigint;
@@ -16,7 +17,7 @@ interface Properties {
 
 export const LockPage = memo(({ ymgpBalance, setSend, send, lockYMGP, mgpAPR, reefiLockedMGP, ymgpLocked }: Properties): ReactElement => <Page info={["yMGP can be locked to earn additional yield paid in rMGP. 5% of protocol yield and half of rMGP withdrawal fees are paid to yMGP lockers.", "Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi's vlMGP."]}>
   <AmountInput balance={ymgpBalance} label="Lock yMGP" onChange={setSend} token={{ bgColor: "bg-green-600", color: "bg-green-400", symbol: "yMGP" }} value={send} />
-  <button className="h-min w-full rounded-lg bg-green-600 py-2 transition-colors hover:bg-green-700" onClick={lockYMGP} type="submit">Lock yMGP</button>
+  <Button className="w-full" onClick={lockYMGP} type="submit">Lock yMGP</Button>
   <div className="mt-4 text-sm text-gray-400">
     <div className="mb-1 flex justify-between">
       <span>Base APY</span>

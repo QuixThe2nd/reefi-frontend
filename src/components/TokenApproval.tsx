@@ -1,4 +1,5 @@
 import { memo, useState, type ReactElement } from "react";
+import { Button } from "./Button";
 
 interface TokenApprovalProperties {
   readonly allowance: bigint;
@@ -29,7 +30,7 @@ export const TokenApproval = memo(({ allowance, sendAmount, onApprove, tokenSymb
       <input checked={approveInfinity} className="mr-2" id={`approve-infinity-${tokenSymbol}`} onChange={() => setApproveInfinity(v => !v)} type="checkbox" />
       <label className="cursor-pointer select-none text-sm text-gray-300" htmlFor={`approve-infinity-${tokenSymbol}`}>Approve Infinity</label>
     </div>
-    <button className="my-2 h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50 md:text-base" disabled={isApproving} onClick={handleApprove} type="submit">{getButtonText()}</button>
+    <Button className="w-full my-2" disabled={isApproving} onClick={handleApprove} type="submit">{getButtonText()}</Button>
   </div>;
 });
 TokenApproval.displayName = "TokenApproval";

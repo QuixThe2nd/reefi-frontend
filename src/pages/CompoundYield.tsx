@@ -4,6 +4,7 @@ import { memo, type ReactElement } from "react";
 import { Chains, contracts, decimals, type Coins } from "../config/contracts";
 import { Page } from "../components/Page";
 import { UsePrices } from "../hooks/usePrices";
+import { Button } from "../components/Button";
 interface Properties {
   uncompoundedMGPYield: number;
   estimatedCompoundGasFee: number;
@@ -19,7 +20,7 @@ interface Properties {
 export const CompoundYield = memo(({ uncompoundedMGPYield, estimatedCompoundGasFee, pendingRewards, estimatedCompoundAmount, mgpAPR, reefiMGPLocked, chain, prices, compoundRMGP }: Properties): ReactElement => {
   const textColor = `text-${uncompoundedMGPYield * prices.MGP * 0.01 > estimatedCompoundGasFee ? "green" : "red"}-400`;
   return <Page info="Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of rMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the button below, you will receive 1% of the pending yield.">
-    <h3 className="mb-1 font-medium">Uncompounded Yield</h3>
+    <h3 className="mb-2 font-medium">Uncompounded Yield</h3>
     <div className="rounded-lg bg-gray-700/50 p-2">
       <div className="mb-2 flex items-center justify-between">
         <p className="text-lg font-medium">{formatNumber(uncompoundedMGPYield, 4)} MGP</p>
@@ -30,7 +31,7 @@ export const CompoundYield = memo(({ uncompoundedMGPYield, estimatedCompoundGasF
         <p className="text-xs">{formatNumber(prices[symbol] * Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 4)} MGP</p>
       </div>)}
     </div>
-    <button className="mt-4 w-full rounded-lg bg-green-600 py-3 transition-colors hover:bg-green-700" onClick={compoundRMGP} type="button">Compound Yield (Get ~{Number(estimatedCompoundAmount[0] ?? 0n) / 100} yMGP)</button>
+    <Button className="mt-4 w-full" onClick={compoundRMGP} type="button">Compound Yield (Get ~{Number(estimatedCompoundAmount[0] ?? 0n) / 100} yMGP)</Button>
     <div className="mt-4 text-sm text-gray-400">
       <div className="mb-1 flex justify-between">
         <span>Estimated Payout</span>

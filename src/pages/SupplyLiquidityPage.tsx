@@ -3,6 +3,7 @@ import { memo, type ReactElement } from "react";
 
 import { AmountInput } from "../components/AmountInput";
 import { Page } from "../components/Page";
+import { Button } from "../components/Button";
 
 interface Properties {
   mgpBalance: bigint;
@@ -83,6 +84,6 @@ export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance,
     <span>Target</span>
     <span>{(100 * Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed(0)}%</span>
   </div>
-  <button className="w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min}" onClick={supplyLiquidity} type="submit">Get cMGP</button>
+  <Button className="w-full" onClick={supplyLiquidity} type="submit">Get cMGP</Button>
 </Page>);
 SupplyLiquidityPage.displayName = "SupplyLiquidityPage";

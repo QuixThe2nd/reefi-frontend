@@ -15,8 +15,8 @@ export const coins: Record<Coins, { symbol: string; color: string; bgColor: stri
   PNP: { bgColor: "bg-orange-600", color: "bg-orange-400", symbol: "PNP" },
   WETH: { bgColor: "bg-gray-600", color: "bg-gray-400", symbol: "ETH" },
   cMGP: { bgColor: "bg-indigo-600", color: "bg-indigo-400", symbol: "CMGP" },
-  rMGP: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "RMGP" },
-  yMGP: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "YMGP" }
+  rMGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "RMGP" },
+  yMGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "YMGP" }
 } as const;
 
 export const publicClients = {

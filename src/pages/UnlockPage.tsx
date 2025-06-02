@@ -12,7 +12,7 @@ interface Properties {
 }
 
 const UnlockPageComponent = ({ sendAmount, setSendAmount, unlockYMGP, ymgpBalance }: Properties): ReactElement => <Page info={["yMGP can be unlocked instantly. Unlocked yMGP earns the underlying rMGP yield, but forfeits the additional yield."]}>
-  <AmountInput balance={ymgpBalance} label="Get yMGP" onChange={setSendAmount} token={{ bgColor: "bg-green-600", color: "bg-green-400", symbol: "yMGP" }} value={sendAmount} />
+  <AmountInput balance={ymgpBalance} label="Get yMGP" onChange={setSendAmount} token={{ bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "yMGP" }} value={sendAmount} />
   <Button className="w-full" onClick={unlockYMGP} type="submit">Unlock yMGP</Button>
 </Page>;
 export const UnlockPage = memo(UnlockPageComponent);

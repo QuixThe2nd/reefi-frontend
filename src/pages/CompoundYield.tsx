@@ -52,7 +52,7 @@ export const CompoundYield = memo(({ uncompoundedMGPYield, estimatedCompoundGasF
     </div>
     <div className="mt-6 rounded-xl border border-dashed border-green-700 bg-gray-900/80 p-4">
       <h3 className="mb-2 text-lg font-semibold text-green-400">Developer Tip: Automate Compounding for Free Money</h3>
-      <p className="mb-2 text-sm text-gray-300">Compounding vlMGP yield is critical to Reefi&apos;s function. Anyone can trigger a compound, which compounds everyone&apos;s pending yield. By doing so, you receive 1% of all pending yield. You can automate this process and earn rewards with no investment.</p>
+      <p className="mb-2 text-sm text-gray-300">Compounding vlMGP yield is critical to Reefi&apos;s function. Anyone can trigger a compound of everyone&apos;s pending yield. By doing so, you receive 1% reward. You can automate this process and earn rewards with no investment.</p>
       <ul className="mb-2 list-inside list-disc text-xs text-gray-400">
         <li>Monitor the estimated profit and gas fee.</li>
         <li>Trigger compounding when profit exceeds gas cost by calling <span className="rounded bg-gray-800 px-1 py-0.5 font-mono">{contracts[chain].rMGP.address}.claim()</span> whenever rewards are higher than gas fees.</li>

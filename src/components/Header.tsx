@@ -23,7 +23,7 @@ export const Header = memo(({ ens, chain, account, isConnecting, setChain, conne
   </div>
   {account === undefined ? <button className="rounded-lg bg-green-600 px-4 py-2 transition-colors hover:bg-green-700" disabled={isConnecting} onClick={connectWallet} type="button">{isConnecting ? "Connecting..." : "Connect Wallet"}</button> : <div className="flex items-center space-x-4">
     <TokenBalances mgpBalance={mgpBalance} rmgpBalance={rmgpBalance} ymgpBalance={ymgpBalance} cmgpBalance={cmgpBalance} />
-    <div className="rounded-lg bg-green-600/20 px-3 py-2 text-sm text-green-400">{ens ?? `${account.slice(0, 6)}...${account.slice(-4)}`}</div>
+    <div className="rounded-lg bg-blue-600/20 px-3 py-2 text-sm text-blue-400">{ens ?? `${account.slice(0, 6)}...${account.slice(-4)}`}</div>
     <select
       className="rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" onChange={event => {
         setChain(Number(event.target.value) as 56 | 42_161);

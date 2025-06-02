@@ -37165,18 +37165,8 @@ ConnectWallet.displayName = "ConnectWallet";
 // src/components/Contracts.tsx
 var import_react37 = __toESM(require_react(), 1);
 var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
-var Contracts = import_react37.memo(({ chain }) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-  className: "rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-6 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:scale-[1.02] hover:shadow-purple-500/10",
+var Contracts = import_react37.memo(({ chain }) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(Card, {
   children: [
-    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-      className: "absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-600/10 opacity-50 transition-opacity duration-700 hover:opacity-80"
-    }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-      className: "absolute right-4 top-4 size-32 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 opacity-60 blur-3xl transition-opacity duration-700 hover:opacity-90"
-    }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-      className: "absolute bottom-4 left-4 size-24 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 opacity-40 blur-2xl transition-opacity duration-700 hover:opacity-70"
-    }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("h2", {
       className: "mb-2 text-lg font-bold",
       children: "Contract Addresses"
@@ -38097,7 +38087,7 @@ var Header = import_react50.memo(({ ens, chain, account, isConnecting, setChain,
       className: "flex items-center gap-4",
       children: [
         /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("h1", {
-          className: "text-xl font-bold",
+          className: "text-xl font-bold text-blue-500",
           children: "REEFI"
         }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime24.jsxDEV("p", {
@@ -38415,7 +38405,7 @@ var PegCard = ({ token, data, targetToken }) => {
   ];
   const values = originalMintPos === undefined ? [buyPos, sellPos] : [buyPos, sellPos, originalMintPos];
   const healthScore = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
-  const [isHealthy, isWarning] = [healthScore > 70, healthScore > 40 && healthScore <= 70];
+  const [isHealthy, isWarning] = [healthScore > 95, healthScore > 75 && healthScore <= 95];
   const allRates = [
     { value: mint, pos: mintPos, label: "Mint", color: "green" },
     { value: marketBuy, pos: buyPos, label: "Buy", color: "blue" },
@@ -38425,13 +38415,16 @@ var PegCard = ({ token, data, targetToken }) => {
     ...originalBurn ? [{ value: originalBurn, pos: originalBurnPos, label: "Orig Burn", color: "gray" }] : []
   ];
   const sortedRates = [...allRates].sort((a, b) => b.value - a.value);
-  const topPositions = sortedRates.reduce((accumulator, rate, index2) => {
+  const topPositions = {};
+  let index2 = 0;
+  for (const rate of sortedRates) {
     const topPercent = 20 + index2 * 70 / Math.max(1, sortedRates.length - 1);
-    accumulator[rate.label] = `${topPercent}%`;
-    return accumulator;
-  }, {});
+    topPositions[rate.label] = `${topPercent}%`;
+    index2++;
+  }
   const svgPathPoints = sortedRates.map((rate) => {
-    const topPercent = Number(topPositions[rate.label].replace("%", ""));
+    const label = rate.label;
+    const topPercent = Number(topPositions[label].replace("%", ""));
     return `${rate.pos},${topPercent}`;
   }).join(" L ");
   return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
@@ -38624,15 +38617,15 @@ var PegCard = ({ token, data, targetToken }) => {
                     }, undefined, false, undefined, this)
                   ]
                 }, undefined, true, undefined, this),
-                ["Peg Health (vs Mint Rate)", "Spread"].map((label, index2) => {
-                  const value = index2 === 0 ? healthScore : spread;
-                  const colors = index2 === 0 ? { green: isHealthy, orange: isWarning } : { green: spread <= 10, orange: spread <= 20 };
+                ["Peg Health (vs Mint Rate)", "Spread"].map((label, index3) => {
+                  const value = index3 === 0 ? healthScore : spread;
+                  const colors = index3 === 0 ? { green: isHealthy, orange: isWarning } : { green: spread <= 10, orange: spread <= 20 };
                   let color = "red";
                   if (colors.green)
                     color = "green";
                   else if (colors.orange)
                     color = "orange";
-                  const width = index2 === 0 ? value : Math.max(0, 100 - Math.min(spread, 100));
+                  const width = index3 === 0 ? value : Math.max(0, 100 - Math.min(spread, 100));
                   return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
                     className: "mt-6",
                     children: [
@@ -38645,7 +38638,7 @@ var PegCard = ({ token, data, targetToken }) => {
                           }, undefined, false, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
                             className: `text-xs font-bold text-${color}-400`,
-                            children: index2 === 0 ? `${value}%` : `${spread.toFixed(2)}%`
+                            children: index3 === 0 ? `${value}%` : `${spread.toFixed(2)}%`
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
@@ -39706,5 +39699,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=9EF60DAAE19EF38164756E2164756E21
-//# sourceMappingURL=index-nwbh8kkp.js.map
+//# debugId=5F2129DA25D3369364756E2164756E21
+//# sourceMappingURL=index-byzc6pf5.js.map

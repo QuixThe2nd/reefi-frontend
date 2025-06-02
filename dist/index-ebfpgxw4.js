@@ -38415,7 +38415,7 @@ var PegCard = ({ token, data, targetToken }) => {
   ];
   const values = originalMintPos === undefined ? [buyPos, sellPos] : [buyPos, sellPos, originalMintPos];
   const healthScore = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
-  const [isHealthy, isWarning] = [healthScore > 70, healthScore > 40 && healthScore <= 70];
+  const [isHealthy, isWarning] = [healthScore > 95, healthScore > 75 && healthScore <= 95];
   const allRates = [
     { value: mint, pos: mintPos, label: "Mint", color: "green" },
     { value: marketBuy, pos: buyPos, label: "Buy", color: "blue" },
@@ -39706,5 +39706,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=429A92502FB5256D64756E2164756E21
-//# sourceMappingURL=index-qy5tb6ff.js.map
+//# debugId=559FBAC234F5DA2364756E2164756E21
+//# sourceMappingURL=index-ebfpgxw4.js.map

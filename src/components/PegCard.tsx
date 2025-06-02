@@ -104,7 +104,7 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
 
   const values = originalMintPos === undefined ? [buyPos, sellPos] : [buyPos, sellPos, originalMintPos];
   const healthScore = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
-  const [isHealthy, isWarning] = [healthScore > 70, healthScore > 40 && healthScore <= 70];
+  const [isHealthy, isWarning] = [healthScore > 95, healthScore > 75 && healthScore <= 95];
 
   const allRates = [
     { value: mint, pos: mintPos, label: "Mint", color: "green" },
@@ -113,19 +113,24 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
     { value: burn, pos: burnPos, label: "Burn", color: "slate" },
     ...originalMint ? [{ value: originalMint, pos: originalMintPos!, label: "Orig Mint", color: "emerald" }] : [],
     ...originalBurn ? [{ value: originalBurn, pos: originalBurnPos!, label: "Orig Burn", color: "gray" }] : []
-  ];
+  ] as const;
 
   const sortedRates = [...allRates].sort((a, b) => b.value - a.value);
 
-  const topPositions = sortedRates.reduce((accumulator, rate, index) => {
+  // Define all possible rate labels as a union type
+  type RateLabel = "Mint" | "Buy" | "Sell" | "Burn" | "Orig Mint" | "Orig Burn";
+  const topPositions: Record<RateLabel, string> = {} as Record<RateLabel, string>;
+  let index = 0;
+  for (const rate of sortedRates) {
     const topPercent = 20 + index * 70 / Math.max(1, sortedRates.length - 1);
-    accumulator[rate.label] = `${topPercent}%`;
-    return accumulator;
-  }, {} as Record<string, string>);
+    topPositions[rate.label as RateLabel] = `${topPercent}%`;
+    index++;
+  }
 
   // Generate SVG path points based on sorted order - fixed
   const svgPathPoints = sortedRates.map(rate => {
-    const topPercent = Number(topPositions[rate.label].replace("%", ""));
+    const label = rate.label as RateLabel;
+    const topPercent = Number(topPositions[label].replace("%", ""));
     return `${rate.pos},${topPercent}`;
   }).join(" L ");
 

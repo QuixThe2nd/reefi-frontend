@@ -36700,7 +36700,9 @@ var BadgeComponent = ({ title, value, breakdown }) => /* @__PURE__ */ jsx_dev_ru
                 ":"
               ]
             }, undefined, true, undefined, this),
-            item.apy === undefined ? /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("span", {
+            item.value !== undefined ? /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("span", {
+              children: item.value
+            }, undefined, false, undefined, this) : item.apy === undefined ? /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("span", {
               children: [
                 item.apr === "variable" ? "Variable" : `${Math.round(item.apr * 1e4) / 100}%`,
                 " APR"
@@ -36718,14 +36720,14 @@ var BadgeComponent = ({ title, value, breakdown }) => /* @__PURE__ */ jsx_dev_ru
   ]
 }, undefined, true, undefined, this);
 var Badge = import_react32.memo(BadgeComponent);
-var YieldBadge = import_react32.memo(({ asset, apy, apr, suffix, breakdown }) => {
+var YieldBadge = import_react32.memo(({ asset, apy, apr, suffix, breakdown, value }) => {
   const yieldType = apy === undefined ? "APR" : "APY";
   const yieldValue = apy ?? apr;
-  const percentage = Math.round((yieldValue === "variable" ? 0 : yieldValue) * 1e4) / 100;
+  const percentage = yieldValue ? Math.round((yieldValue === "variable" ? 0 : yieldValue) * 1e4) / 100 : undefined;
   return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(Badge, {
     breakdown,
     title: `${asset} ${yieldType}`,
-    value: `${percentage}%${suffix ?? ""}`
+    value: `${percentage ? `${percentage}%` : value}${suffix ?? ""}`
   }, undefined, false, undefined, this);
 });
 YieldBadge.displayName = "YieldBadge";
@@ -37096,8 +37098,17 @@ ConnectWallet.displayName = "ConnectWallet";
 var import_react37 = __toESM(require_react(), 1);
 var jsx_dev_runtime8 = __toESM(require_jsx_dev_runtime(), 1);
 var Contracts = import_react37.memo(({ chain }) => /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
-  className: "mb-6 rounded-xl border border-gray-700 bg-gray-800 p-4",
+  className: "rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-6 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:scale-[1.02] hover:shadow-purple-500/10",
   children: [
+    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+      className: "absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-600/10 opacity-50 transition-opacity duration-700 hover:opacity-80"
+    }, undefined, false, undefined, this),
+    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+      className: "absolute right-4 top-4 size-32 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 opacity-60 blur-3xl transition-opacity duration-700 hover:opacity-90"
+    }, undefined, false, undefined, this),
+    /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("div", {
+      className: "absolute bottom-4 left-4 size-24 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 opacity-40 blur-2xl transition-opacity duration-700 hover:opacity-70"
+    }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime8.jsxDEV("h2", {
       className: "mb-2 text-lg font-bold",
       children: "Contract Addresses"
@@ -37128,270 +37139,61 @@ Contracts.displayName = "Contracts";
 // src/components/ConversionRates.tsx
 var import_react38 = __toESM(require_react(), 1);
 var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
-var ConversionRates = import_react38.memo(({ mgpRMGPCurveRate, rmgpMGPCurveRate, rmgpYMGPCurveRate, ymgpRMGPCurveRate, reefiMGPLocked, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
-  className: "flex flex-col items-center rounded-xl border border-gray-700 bg-gray-800 p-3",
-  children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
-    className: "flex w-full max-w-4xl flex-col items-center",
-    children: [
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h2", {
-        className: "mb-4 text-2xl font-bold",
-        children: "Conversion Rates"
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
-        className: "rounded-lg bg-gray-700/50 p-1 sm:p-4",
-        children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("table", {
+var ConversionRates = import_react38.memo(() => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
+  className: "rounded-xl border border-dashed border-green-700 bg-gray-900/80 p-4",
+  children: [
+    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h3", {
+      className: "mb-2 text-lg font-semibold text-green-400",
+      children: "Developer Tip: Arbitraging Conversion Rates"
+    }, undefined, false, undefined, this),
+    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
+      className: "mb-2 text-sm text-gray-300",
+      children: "rMGP can be minted for an only increasing amount of MGP and burnt for 90% the mint rate with a delay. When the market rate moves out of the mint-rate to burn-rate range, this can be arbitraged."
+    }, undefined, false, undefined, this),
+    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("ul", {
+      className: "mb-2 list-inside list-disc text-xs text-gray-400",
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("li", {
           children: [
-            /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("thead", {
-              children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("tr", {
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h3", {
-                      className: "mx-1 mb-2 text-lg font-bold"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h3", {
-                      className: "mx-1 mb-2 text-lg font-bold",
-                      children: "Mint"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h3", {
-                      className: "mx-1 mb-2 text-lg font-bold",
-                      children: "Market Buy"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h3", {
-                      className: "mx-1 mb-2 text-lg font-bold",
-                      children: "Spread"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h3", {
-                      className: "mx-1 mb-2 text-lg font-bold",
-                      children: "Market Sell"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("th", {
-                    children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h3", {
-                      className: "mx-1 mb-2 text-lg font-bold",
-                      children: "Burn"
-                    }, undefined, false, undefined, this)
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this)
+            "If rMGP becomes cheaper the burn rate, you can buy rMGP and natively burn it. This requires you to wait 60-120 days. ",
+            /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("strong", {
+              children: "If you don't want to wait the burn period"
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("tbody", {
-              children: [
-                /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("tr", {
-                  children: [
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm font-bold sm:mx-4",
-                        children: "1 rMGP"
-                      }, undefined, false, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm sm:mx-4",
-                        children: [
-                          formatNumber(Number(reefiMGPLocked) / Number(rmgpSupply), 4),
-                          " MGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm sm:mx-4",
-                        children: [
-                          formatNumber(1 / mgpRMGPCurveRate, 4),
-                          " MGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm sm:mx-4",
-                        children: [
-                          formatNumber(100 / mgpRMGPCurveRate / rmgpMGPCurveRate - 100),
-                          "%"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm sm:mx-4",
-                        children: [
-                          formatNumber(rmgpMGPCurveRate, 4),
-                          " MGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm sm:mx-4",
-                        children: [
-                          formatNumber(Number(reefiMGPLocked) / Number(rmgpSupply) * 0.9, 4),
-                          " MGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this)
-                  ]
-                }, undefined, true, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("tr", {
-                  children: [
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm font-bold sm:mx-4",
-                        children: "1 yMGP"
-                      }, undefined, false, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm sm:mx-4",
-                        children: "1 rMGP"
-                      }, undefined, false, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm sm:mx-4",
-                        children: [
-                          formatNumber(1 / rmgpYMGPCurveRate, 4),
-                          " rMGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm sm:mx-4",
-                        children: [
-                          formatNumber(100 / rmgpYMGPCurveRate / ymgpRMGPCurveRate - 100),
-                          "%"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm sm:mx-4",
-                        children: [
-                          formatNumber(ymgpRMGPCurveRate, 4),
-                          " rMGP"
-                        ]
-                      }, undefined, true, undefined, this)
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("td", {
-                      children: /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-                        className: "mx-2 my-1 text-sm sm:mx-4",
-                        children: "0 rMGP"
-                      }, undefined, false, undefined, this)
-                    }, undefined, false, undefined, this)
-                  ]
-                }, undefined, true, undefined, this)
-              ]
-            }, undefined, true, undefined, this)
+            ", you can indirectly arbitrage by buying rMGP and waiting for others to burn."
           ]
-        }, undefined, true, undefined, this)
-      }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("ul", {
-        className: "mt-4 text-xs text-gray-400",
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("li", {
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
-                className: "font-bold",
-                children: "Mint"
-              }, undefined, false, undefined, this),
-              ": The native rate Reefi will fulfill mints at"
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("li", {
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
-                className: "font-bold",
-                children: "Market Buy"
-              }, undefined, false, undefined, this),
-              ": The rate Curve will fulfill buys at"
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("li", {
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
-                className: "font-bold",
-                children: "Market Sell"
-              }, undefined, false, undefined, this),
-              ": The rate Curve will fulfill sells at"
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("li", {
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
-                className: "font-bold",
-                children: "Burn"
-              }, undefined, false, undefined, this),
-              ": The native rate Reefi will fulfill burns at"
-            ]
-          }, undefined, true, undefined, this)
-        ]
-      }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("div", {
-        className: "mt-6 rounded-xl border border-dashed border-green-700 bg-gray-900/80 p-4",
-        children: [
-          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("h3", {
-            className: "mb-2 text-lg font-semibold text-green-400",
-            children: "Developer Tip: Arbitraging Conversion Rates"
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-            className: "mb-2 text-sm text-gray-300",
-            children: "rMGP can be minted for an only increasing amount of MGP and burnt for 90% the mint rate with a delay. When the market rate moves out of the mint-rate to burn-rate range, this can be arbitraged."
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("ul", {
-            className: "mb-2 list-inside list-disc text-xs text-gray-400",
-            children: [
-              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("li", {
-                children: [
-                  "If rMGP becomes cheaper the burn rate, you can buy rMGP and natively burn it. This requires you to wait 60-120 days. ",
-                  /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("strong", {
-                    children: "If you don't want to wait the burn period"
-                  }, undefined, false, undefined, this),
-                  ", you can indirectly arbitrage by buying rMGP and waiting for others to burn."
-                ]
-              }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("li", {
-                children: "If rMGP becomes more expensive than the mint rate, you can mint rMGP and swap back to MGP."
-              }, undefined, false, undefined, this)
-            ]
-          }, undefined, true, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-            className: "mb-2 list-inside list-disc text-xs text-gray-400",
-            children: "By arbitraging you help tighten the spread by maintaining the 90%-100% peg and increase liquidity through trading volume. This also increases revenue for cMGP holders through swap fees and for locked yMGP holders through withdrawal fees."
-          }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
-            className: "text-xs text-gray-400",
-            children: [
-              "Example: Use ",
-              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
-                className: "rounded bg-gray-800 px-1 py-0.5 font-mono",
-                children: "Viem"
-              }, undefined, false, undefined, this),
-              ", ",
-              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
-                className: "rounded bg-gray-800 px-1 py-0.5 font-mono",
-                children: "ethers.js"
-              }, undefined, false, undefined, this),
-              " or ",
-              /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
-                className: "rounded bg-gray-800 px-1 py-0.5 font-mono",
-                children: "web3.js"
-              }, undefined, false, undefined, this),
-              " in a scheduled script to call the contract method and claim your reward automatically."
-            ]
-          }, undefined, true, undefined, this)
-        ]
-      }, undefined, true, undefined, this)
-    ]
-  }, undefined, true, undefined, this)
-}, undefined, false, undefined, this));
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("li", {
+          children: "If rMGP becomes more expensive than the mint rate, you can mint rMGP and swap back to MGP."
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this),
+    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
+      className: "mb-2 list-inside list-disc text-xs text-gray-400",
+      children: "By arbitraging you help tighten the spread by maintaining the 90%-100% peg and increase liquidity through trading volume. This also increases revenue for cMGP holders through swap fees and for locked yMGP holders through withdrawal fees."
+    }, undefined, false, undefined, this),
+    /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("p", {
+      className: "text-xs text-gray-400",
+      children: [
+        "Example: Use ",
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
+          className: "rounded bg-gray-800 px-1 py-0.5 font-mono",
+          children: "Viem"
+        }, undefined, false, undefined, this),
+        ", ",
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
+          className: "rounded bg-gray-800 px-1 py-0.5 font-mono",
+          children: "ethers.js"
+        }, undefined, false, undefined, this),
+        " or ",
+        /* @__PURE__ */ jsx_dev_runtime9.jsxDEV("span", {
+          className: "rounded bg-gray-800 px-1 py-0.5 font-mono",
+          children: "web3.js"
+        }, undefined, false, undefined, this),
+        " in a scheduled script to call the contract method and claim your reward automatically."
+      ]
+    }, undefined, true, undefined, this)
+  ]
+}, undefined, true, undefined, this));
 ConversionRates.displayName = "ConversionRates";
 
 // src/components/ErrorCard.tsx
@@ -37821,7 +37623,7 @@ var SwapInput = import_react43.memo(({ label, selectedCoin, onCoinChange, balanc
     className: "mb-4",
     children: [
       /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("div", {
-        className: "mb-1 flex items-center justify-between",
+        className: "mb-2 flex items-center justify-between",
         children: [
           /* @__PURE__ */ jsx_dev_runtime15.jsxDEV("h3", {
             className: "font-medium",
@@ -38434,14 +38236,449 @@ var NotificationCard = ({ notification, setNotification }) => {
   }, undefined, false, undefined, this) : undefined;
 };
 
+// src/components/PegCard.tsx
+var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
+var Gauge = ({ value, label, isHealthy, isWarning, isSpread = false }) => {
+  const colors = isSpread ? { green: value <= 10, orange: value <= 20 } : { green: isHealthy, orange: isWarning };
+  let color = "rgb(239 68 68)";
+  if (colors.green)
+    color = "rgb(34 197 94)";
+  else if (colors.orange)
+    color = "rgb(251 146 60)";
+  let textColor = "text-red-400";
+  if (colors.green)
+    textColor = "text-green-400";
+  else if (colors.orange)
+    textColor = "text-orange-400";
+  const fillValue = isSpread ? Math.max(0, 100 - Math.min(value * 3.33, 100)) : value;
+  return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+    className: "relative size-16",
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("svg", {
+        className: "size-16 -rotate-90",
+        viewBox: "0 0 36 36",
+        children: [
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("path", {
+            d: "M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831",
+            fill: "none",
+            stroke: "rgb(71 85 105)",
+            strokeWidth: "2"
+          }, undefined, false, undefined, this),
+          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("path", {
+            d: "M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831",
+            fill: "none",
+            stroke: color,
+            strokeWidth: "3",
+            strokeDasharray: `${fillValue}, 100`,
+            className: "transition-all duration-1000 ease-out"
+          }, undefined, false, undefined, this)
+        ]
+      }, undefined, true, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+        className: "absolute inset-0 flex items-center justify-center",
+        children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+          className: `text-xs font-bold ${textColor}`,
+          children: isSpread ? `${value.toFixed(2)}%` : `${Math.round(value)}%`
+        }, undefined, false, undefined, this)
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+        className: "absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-slate-400",
+        children: label
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+};
+var PegCard = ({ token, data, targetToken }) => {
+  const { mint, marketBuy, marketSell, burn, spread, originalMint, originalBurn } = data;
+  const [buyDistribution, sellDistribution, burnDistribution, originalMintDistribution, originalBurnDistribution] = [
+    Math.abs(marketBuy - mint),
+    Math.abs(marketSell - mint),
+    Math.abs(burn - mint),
+    originalMint ? Math.abs(originalMint - mint) : 0,
+    originalBurn ? Math.abs(originalBurn - mint) : 0
+  ];
+  const maxDistribution = Math.max(buyDistribution, sellDistribution, burnDistribution, originalMintDistribution, originalBurnDistribution, 0.01);
+  const [mintPos, buyPos, sellPos, burnPos, originalMintPos, originalBurnPos] = [
+    100,
+    Math.max(0, 100 - buyDistribution / maxDistribution * 100),
+    Math.max(0, 100 - sellDistribution / maxDistribution * 100),
+    Math.max(0, 100 - burnDistribution / maxDistribution * 100),
+    originalMint ? Math.max(0, 100 - originalMintDistribution / maxDistribution * 100) : null,
+    originalBurn ? Math.max(0, 100 - originalBurnDistribution / maxDistribution * 100) : null
+  ];
+  const values = originalMintPos === null ? [buyPos, sellPos] : [buyPos, sellPos, originalMintPos];
+  const healthScore = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
+  const [isHealthy, isWarning] = [healthScore > 70, healthScore > 40 && healthScore <= 70];
+  const Marker = ({ pos, top, color, label, value, show = true }) => show && /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+    className: "absolute transition-all duration-1000 ease-out group",
+    style: { left: `${pos}%`, top, transform: "translate(-50%, -50%)" },
+    children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+      className: "flex flex-col items-center",
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          className: `opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-xs px-2 py-1 rounded font-mono shadow-lg mb-1 pointer-events-none bg-${color}-500 border border-${color}-400/50`,
+          children: value.toFixed(4)
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          className: `size-4 bg-${color}-500 rounded-full border-2 border-white shadow-lg group-hover:scale-125 transition-transform cursor-pointer pointer-events-auto`
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          className: `text-xs text-${color}-400 mt-1 font-semibold pointer-events-none ${label.includes(" ") ? "whitespace-nowrap" : ""}`,
+          children: label
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+  const Line = ({ pos, color, label, value, show }) => show && /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+    className: `absolute inset-y-0 w-1 bg-gradient-to-b from-${color}-400/60 via-${color}-500/80 to-${color}-400/60 border border-${color}-400/40 shadow-lg shadow-${color}-500/30 group pointer-events-auto cursor-pointer`,
+    style: { left: `${pos}%`, transform: "translateX(-50%)" },
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+        className: "size-full bg-gradient-to-b from-white/20 to-transparent"
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+        className: `bg-${color}-500 absolute left-1/2 -translate-x-1/2 -translate-y-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 border border-${color}-400/50 rounded px-2 py-1 font-mono text-xs text-white shadow-lg pointer-events-none mb-1 whitespace-nowrap`,
+        style: { top: label === "Orig Burn" ? "80%" : label === "Burn" ? "75%" : "25%" },
+        children: value.toFixed(4)
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+        className: `text-${color}-400 absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs pointer-events-none mt-1 font-semibold ${label.includes(" ") ? "whitespace-nowrap" : ""}`,
+        children: label
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this);
+  return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+    className: "relative w-full",
+    children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+      className: "relative overflow-hidden rounded-2xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-6 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:scale-[1.02] hover:shadow-purple-500/10",
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          className: "absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-600/10 opacity-50 transition-opacity duration-700 hover:opacity-80"
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          className: "absolute right-4 top-4 size-32 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 opacity-60 blur-3xl transition-opacity duration-700 hover:opacity-90"
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          className: "absolute bottom-4 left-4 size-24 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 opacity-40 blur-2xl transition-opacity duration-700 hover:opacity-70"
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          className: "relative z-10",
+          children: [
+            /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+              className: "mb-6 flex items-center justify-between",
+              children: [
+                /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                  className: "flex items-center space-x-4",
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                      className: "relative flex size-12 items-center justify-center rounded-xl border border-blue-400/30 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 text-sm font-bold text-white shadow-xl",
+                      children: [
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                          className: "absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 to-transparent"
+                        }, undefined, false, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                          className: "relative",
+                          children: token
+                        }, undefined, false, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                      className: "text-slate-300",
+                      children: [
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                          className: "text-sm font-semibold",
+                          children: [
+                            "1 ",
+                            token
+                          ]
+                        }, undefined, true, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                          className: "text-xs text-slate-500",
+                          children: [
+                            "→ ",
+                            targetToken
+                          ]
+                        }, undefined, true, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this)
+                  ]
+                }, undefined, true, undefined, this),
+                /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                  className: "flex items-center space-x-4",
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Gauge, {
+                      value: healthScore,
+                      label: "Peg Health",
+                      isHealthy,
+                      isWarning
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Gauge, {
+                      value: spread,
+                      label: "Spread",
+                      isHealthy,
+                      isWarning,
+                      isSpread: true
+                    }, undefined, false, undefined, this)
+                  ]
+                }, undefined, true, undefined, this)
+              ]
+            }, undefined, true, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+              className: "relative mb-6 rounded-xl border border-slate-700/30 bg-slate-800/20 p-4",
+              children: [
+                /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                  className: "relative h-32 overflow-visible rounded-lg border border-slate-700/50 bg-gradient-to-r from-red-900/20 via-slate-800/40 to-green-900/20",
+                  children: [
+                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                      className: "absolute inset-0",
+                      children: [0, 25, 50, 75, 100].map((p) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                        className: "absolute inset-y-0 w-px border-l border-slate-500/20 bg-slate-600/30",
+                        style: { left: `${p}%` }
+                      }, p, false, undefined, this))
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Line, {
+                      pos: mintPos,
+                      color: "green",
+                      label: "Mint",
+                      value: mint,
+                      show: true
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Line, {
+                      pos: originalBurnPos ?? 0,
+                      color: "gray",
+                      label: "Orig Burn",
+                      value: originalBurn ?? 0,
+                      show: originalBurnPos !== null
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Line, {
+                      pos: burnPos,
+                      color: "slate",
+                      label: "Burn",
+                      value: burn,
+                      show: burn === 0
+                    }, undefined, false, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("svg", {
+                      className: "pointer-events-none absolute inset-0 size-full",
+                      viewBox: "0 0 100 100",
+                      preserveAspectRatio: "none",
+                      children: [
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("defs", {
+                          children: [
+                            /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("linearGradient", {
+                              id: "lineGradient",
+                              x1: "0%",
+                              y1: "0%",
+                              x2: "100%",
+                              y2: "0%",
+                              children: [
+                                /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("stop", {
+                                  offset: "0%",
+                                  stopColor: "#ef4444",
+                                  stopOpacity: "0.8"
+                                }, undefined, false, undefined, this),
+                                /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("stop", {
+                                  offset: "50%",
+                                  stopColor: "#f59e0b",
+                                  stopOpacity: "0.8"
+                                }, undefined, false, undefined, this),
+                                /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("stop", {
+                                  offset: "100%",
+                                  stopColor: "#10b981",
+                                  stopOpacity: "0.8"
+                                }, undefined, false, undefined, this)
+                              ]
+                            }, undefined, true, undefined, this),
+                            /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("linearGradient", {
+                              id: "areaGradient",
+                              x1: "0%",
+                              y1: "0%",
+                              x2: "100%",
+                              y2: "0%",
+                              children: [
+                                /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("stop", {
+                                  offset: "0%",
+                                  stopColor: "#ef4444",
+                                  stopOpacity: "0.3"
+                                }, undefined, false, undefined, this),
+                                /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("stop", {
+                                  offset: "100%",
+                                  stopColor: "#10b981",
+                                  stopOpacity: "0.3"
+                                }, undefined, false, undefined, this)
+                              ]
+                            }, undefined, true, undefined, this)
+                          ]
+                        }, undefined, true, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("path", {
+                          d: `M 0 25 L ${mintPos} 25 ${originalMintPos === null ? "" : `L ${originalMintPos} 35`} L ${buyPos} 40 L ${sellPos} 60 L ${burnPos} 75 ${originalBurnPos === null ? "" : `L ${originalBurnPos} 85`} L ${originalBurnPos ?? burnPos} 100 L 0 100 Z`,
+                          fill: "url(#areaGradient)",
+                          className: "transition-all duration-1000 ease-out"
+                        }, undefined, false, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("path", {
+                          d: `M ${mintPos} 25 ${originalMintPos === null ? "" : `L ${originalMintPos} 35`} L ${buyPos} 40 L ${sellPos} 60 L ${burnPos} 75 ${originalBurnPos === null ? "" : `L ${originalBurnPos} 85`}`,
+                          stroke: "url(#lineGradient)",
+                          strokeWidth: "3",
+                          fill: "none",
+                          strokeLinecap: "round",
+                          strokeLinejoin: "round",
+                          className: "drop-shadow-lg transition-all duration-1000 ease-out"
+                        }, undefined, false, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("path", {
+                          d: `M ${buyPos} 40 L ${sellPos} 60`,
+                          stroke: "#f59e0b",
+                          strokeWidth: "2",
+                          strokeDasharray: "3,3",
+                          fill: "none",
+                          className: "opacity-80 transition-all duration-1000 ease-out"
+                        }, undefined, false, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                      className: "pointer-events-none absolute inset-0",
+                      children: [
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Marker, {
+                          pos: originalMintPos ?? 0,
+                          top: "35%",
+                          color: "emerald",
+                          label: "Orig Mint",
+                          value: originalMint ?? 0,
+                          show: originalMintPos !== null
+                        }, undefined, false, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Marker, {
+                          pos: buyPos,
+                          top: "40%",
+                          color: "blue",
+                          label: "Buy",
+                          value: marketBuy
+                        }, undefined, false, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Marker, {
+                          pos: sellPos,
+                          top: "60%",
+                          color: "red",
+                          label: "Sell",
+                          value: marketSell
+                        }, undefined, false, undefined, this),
+                        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Marker, {
+                          pos: burnPos,
+                          top: "75%",
+                          color: "slate",
+                          label: "Burn",
+                          value: burn,
+                          show: burn !== 0
+                        }, undefined, false, undefined, this)
+                      ]
+                    }, undefined, true, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                      className: "absolute inset-x-0 bottom-1 flex justify-end px-2 text-xs text-slate-500",
+                      children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                        children: "Closer to mint rate"
+                      }, undefined, false, undefined, this)
+                    }, undefined, false, undefined, this)
+                  ]
+                }, undefined, true, undefined, this),
+                ["Peg Health (vs Mint Rate)", "Spread"].map((label, index2) => {
+                  const value = index2 === 0 ? healthScore : spread;
+                  const colors = index2 === 0 ? { green: isHealthy, orange: isWarning } : { green: spread <= 10, orange: spread <= 20 };
+                  let color = "red";
+                  if (colors.green)
+                    color = "green";
+                  else if (colors.orange)
+                    color = "orange";
+                  const width = index2 === 0 ? value : Math.max(0, 100 - Math.min(spread, 100));
+                  return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                    className: "mt-6",
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                        className: "mb-2 flex items-center justify-between",
+                        children: [
+                          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                            className: "text-xs text-slate-400",
+                            children: label
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                            className: `text-xs font-bold text-${color}-400`,
+                            children: index2 === 0 ? `${value}%` : `${spread.toFixed(2)}%`
+                          }, undefined, false, undefined, this)
+                        ]
+                      }, undefined, true, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                        className: "h-2 overflow-hidden rounded-full border border-slate-700/50 bg-slate-800",
+                        children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                          className: `h-full rounded-full bg-gradient-to-r from-${color}-500 to-${color === "orange" ? "orange" : color === "green" ? "emerald" : "red"}-${color === "red" ? "600" : "500"} transition-all duration-1000 ease-out`,
+                          style: { width: `${width}%` }
+                        }, undefined, false, undefined, this)
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, label, true, undefined, this);
+                })
+              ]
+            }, undefined, true, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+              className: "grid grid-cols-5 gap-3",
+              children: [
+                { color: "emerald", label: "Mint", value: mint.toFixed(4) },
+                { color: "blue", label: "Buy", value: marketBuy.toFixed(4) },
+                { color: "orange", label: "Spread", value: `${spread.toFixed(2)}%` },
+                { color: "red", label: "Sell", value: marketSell.toFixed(4) },
+                { color: "slate", label: "Burn", value: burn.toFixed(4) }
+              ].map(({ label, value, color }) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                className: "rounded-lg border border-slate-700/30 bg-slate-800/40 p-2 text-center",
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                    className: `text-xs font-semibold text-${color}-400 mb-1`,
+                    children: label
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                    className: `font-mono text-xs ${label === "Spread" ? `font-bold ${spread <= 10 ? "text-green-400" : spread <= 20 ? "text-orange-400" : "text-red-400"}` : "text-slate-200"}`,
+                    children: value
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                    className: "text-[10px] text-slate-500",
+                    children: label === "Spread" ? "depeg risk" : targetToken
+                  }, undefined, false, undefined, this)
+                ]
+              }, label, true, undefined, this))
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+};
+var PegCard_default = PegCard;
+
 // src/components/Questions.tsx
 var import_react54 = __toESM(require_react(), 1);
 
 // public/diagram.svg
 var diagram_default = "./diagram-61tcs965.svg";
 
+// src/components/Card.tsx
+var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
+var Card = ({ children, padding = 6, className = "" }) => /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+  className: `rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-${padding} shadow-2xl backdrop-blur-xl transition-all duration-400 hover:scale-[1.01] hover:shadow-purple-500/10 ${className}`,
+  children: [
+    /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+      className: "absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-600/10 opacity-50 transition-opacity duration-400 hover:opacity-80 pointer-events-none"
+    }, undefined, false, undefined, this),
+    /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+      className: "absolute right-4 top-4 size-32 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 opacity-60 blur-3xl transition-opacity duration-400 hover:opacity-90 pointer-events-none"
+    }, undefined, false, undefined, this),
+    /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+      className: "absolute bottom-4 left-4 size-24 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 opacity-40 blur-2xl transition-opacity duration-400 hover:opacity-70 pointer-events-none"
+    }, undefined, false, undefined, this),
+    /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+      className: "relative z-10 w-full",
+      children: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+        className: "flex flex-col w-full items-center",
+        children
+      }, undefined, false, undefined, this)
+    }, undefined, false, undefined, this)
+  ]
+}, undefined, true, undefined, this);
+
 // src/components/Questions.tsx
-var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
 var qaData = [
   {
     answer: ["Reefi is a protocol that refinances Magpie yield and governance by creating liquid derivatives of vlMGP (vote-locked MGP).", "It allows users to earn auto-compounding yield while maintaining liquidity and boosted yields, as well as boosted governance power."],
@@ -38506,23 +38743,22 @@ var QASection = () => {
       newOpenItems.add(index2);
     setOpenItems(newOpenItems);
   };
-  return /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
-    className: "flex justify-center rounded-xl border border-gray-700 bg-gray-800 p-3",
-    children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Card, {
+    children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
       className: "max-w-4xl",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
           className: "mb-6 rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("h3", {
+            /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("h3", {
               className: "mb-2 text-lg font-semibold text-yellow-400",
               children: "⚠️ Important Notice"
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+            /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
               className: "text-sm text-gray-300",
               children: [
                 "Reefi is in ",
-                /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("strong", {
+                /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("strong", {
                   children: "very early beta"
                 }, undefined, false, undefined, this),
                 ". Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution"
@@ -38530,30 +38766,30 @@ var QASection = () => {
             }, undefined, true, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("h2", {
+        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("h2", {
           className: "mb-4 text-2xl font-bold",
           children: "Frequently Asked Questions"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
           className: "space-y-2",
-          children: qaData.map((item, index2) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+          children: qaData.map((item, index2) => /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
             className: "rounded-lg border border-gray-700",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("button", {
+              /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
                 className: "flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-700/30",
                 onClick: () => toggleItem(index2),
                 type: "button",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
                     className: "font-medium text-gray-200",
                     children: item.question
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("svg", {
+                  /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("svg", {
                     className: `size-5 text-gray-400 transition-transform${openItems.has(index2) ? "rotate-180" : ""}`,
                     fill: "none",
                     stroke: "currentColor",
                     viewBox: "0 0 24 24",
-                    children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("path", {
+                    children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("path", {
                       d: "M19 9l-7 7-7-7",
                       strokeLinecap: "round",
                       strokeLinejoin: "round",
@@ -38562,14 +38798,14 @@ var QASection = () => {
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              openItems.has(index2) && /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+              openItems.has(index2) && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
                 className: "px-4 pb-4",
-                children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+                children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
                   className: "border-t border-gray-700 pt-2",
-                  children: Array.isArray(item.answer) ? item.answer.map((paragraph) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                  children: Array.isArray(item.answer) ? item.answer.map((paragraph) => /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
                     className: "mb-2 text-sm text-gray-300 last:mb-0",
                     dangerouslySetInnerHTML: { __html: paragraph }
-                  }, paragraph, false, undefined, this)) : /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("p", {
+                  }, paragraph, false, undefined, this)) : /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("p", {
                     className: "text-sm text-gray-300",
                     dangerouslySetInnerHTML: { __html: item.answer }
                   }, undefined, false, undefined, this)
@@ -38578,9 +38814,9 @@ var QASection = () => {
             ]
           }, item.question, true, undefined, this))
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
           className: "my-4 flex justify-center",
-          children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV("img", {
+          children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("img", {
             alt: "Diagram",
             className: "w-full",
             src: diagram_default
@@ -38593,11 +38829,11 @@ var QASection = () => {
 
 // src/pages/RedeemRMGPPage.tsx
 var import_react55 = __toESM(require_react(), 1);
-var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
-var RedeemRMGPPage = import_react55.memo(({ buyMGP, redeemRMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(Page, {
+var jsx_dev_runtime29 = __toESM(require_jsx_dev_runtime(), 1);
+var RedeemRMGPPage = import_react55.memo(({ buyMGP, redeemRMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(Page, {
   info: ["rMGP can be redeemed for the underlying MGP through the withdrawal queue for a 10% fee or swapped instantly at market rate via Curve.", "The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.", "Only 6 withdrawals can be processed through Magpie at once. If all slots are used, withdrawals will be added to the queue once a new slot is made available making worst case withdrawal time 120 days.", "With the 10% withdrawal fee, rMGP depegs under 90% of the underlying value always recover as they can be arbitraged by people willing to wait for withdrawals to be processed.", "Half of the withdrawal fee (5% of withdrawal) is redistributed to yMGP holders as yield, with the other half sent to the Reefi treasury."],
   children: [
-    /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(SwapToken, {
+    /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(SwapToken, {
       buy: buyMGP,
       excludeCoins: ["CKP", "PNP", "EGP", "LTP", "WETH"],
       label: "Redeem via Queue",
@@ -38627,54 +38863,54 @@ var RedeemRMGPPage = import_react55.memo(({ buyMGP, redeemRMGP, withdrawMGP, unl
       lockedReefiMGP,
       rmgpSupply
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
       className: "mt-4 flex justify-between text-sm text-gray-400",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("span", {
           children: "Native Withdraw Time"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("span", {
           children: unlockSchedule.length === 6 ? formatTime(Number(unlockSchedule?.[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2) : formatTime(60 * 60 * 24 * 30 * 2)
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this),
-    userPendingWithdraws > 0n ? /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(jsx_dev_runtime27.Fragment, {
+    userPendingWithdraws > 0n ? /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(jsx_dev_runtime29.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("h3", {
+        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("h3", {
           className: "mt-4 text-base font-medium",
           children: "Pending Withdraws"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
+        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("p", {
           children: [
             formatEther(userPendingWithdraws, decimals.MGP),
             " MGP"
           ]
         }, undefined, true, undefined, this),
-        unlockSchedule[0] ? /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
+        unlockSchedule[0] ? /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("p", {
           children: [
             " Unlock available in: ",
             formatTime(Number(unlockSchedule?.[0]?.endTime) - Date.now() / 1000),
             " to ",
             formatTime(Number(unlockSchedule.at(-1)?.endTime) + 60 * 60 * 24 * 60 - Date.now() / 1000)
           ]
-        }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
+        }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("p", {
           children: "N/A"
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this) : "",
-    userWithdrawable > 0n ? /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(jsx_dev_runtime27.Fragment, {
+    userWithdrawable > 0n ? /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(jsx_dev_runtime29.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("h3", {
+        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("h3", {
           className: "mt-4 text-base font-medium",
           children: "Available To Withdraw"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("p", {
+        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("p", {
           children: [
             formatEther(userWithdrawable, decimals.MGP),
             " MGP"
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
           className: "h-min w-full rounded-lg bg-green-600 py-2 transition-colors hover:bg-green-700",
           onClick: withdrawMGP,
           type: "submit",
@@ -38688,11 +38924,11 @@ RedeemRMGPPage.displayName = "RedeemMGPPage";
 
 // src/pages/SupplyLiquidityPage.tsx
 var import_react56 = __toESM(require_react(), 1);
-var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
-var SupplyLiquidityPage = import_react56.memo(({ mgpBalance, rmgpBalance, ymgpBalance, setMgpLPAmount, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, setRmgpLPAmount, setYmgpLPAmount, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, supplyLiquidity }) => /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Page, {
+var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
+var SupplyLiquidityPage = import_react56.memo(({ mgpBalance, rmgpBalance, ymgpBalance, setMgpLPAmount, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, setRmgpLPAmount, setYmgpLPAmount, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, supplyLiquidity }) => /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(Page, {
   info: 'Supply liquidity to the cMGP Curve pool (MGP/rMGP/yMGP). You can supply liquidity at any ratio of MGP:rMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use <a href="https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/" className="text-blue-400">Curve</a>.',
   children: [
-    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(AmountInput, {
+    /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(AmountInput, {
       balance: mgpBalance,
       label: "Supply MGP",
       onChange: setMgpLPAmount,
@@ -38710,13 +38946,13 @@ var SupplyLiquidityPage = import_react56.memo(({ mgpBalance, rmgpBalance, ymgpBa
       token: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "MGP" },
       value: mgpLPAmount
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
       className: "mb-4 flex justify-between text-sm text-gray-400",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
           children: "Target"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
           children: [
             (100 * Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed(0),
             "%"
@@ -38724,7 +38960,7 @@ var SupplyLiquidityPage = import_react56.memo(({ mgpBalance, rmgpBalance, ymgpBa
         }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(AmountInput, {
+    /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(AmountInput, {
       balance: rmgpBalance,
       label: "Supply rMGP",
       onChange: setRmgpLPAmount,
@@ -38742,13 +38978,13 @@ var SupplyLiquidityPage = import_react56.memo(({ mgpBalance, rmgpBalance, ymgpBa
       token: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "rMGP" },
       value: rmgpLPAmount
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
       className: "mb-4 flex justify-between text-sm text-gray-400",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
           children: "Target"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
           children: [
             (100 * Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed(0),
             "%"
@@ -38756,7 +38992,7 @@ var SupplyLiquidityPage = import_react56.memo(({ mgpBalance, rmgpBalance, ymgpBa
         }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(AmountInput, {
+    /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(AmountInput, {
       balance: ymgpBalance,
       label: "Supply yMGP",
       onChange: setYmgpLPAmount,
@@ -38774,13 +39010,13 @@ var SupplyLiquidityPage = import_react56.memo(({ mgpBalance, rmgpBalance, ymgpBa
       token: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "yMGP" },
       value: ymgpLPAmount
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
       className: "mb-4 flex justify-between text-sm text-gray-400",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
           children: "Target"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
           children: [
             (100 * Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed(0),
             "%"
@@ -38788,7 +39024,7 @@ var SupplyLiquidityPage = import_react56.memo(({ mgpBalance, rmgpBalance, ymgpBa
         }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("button", {
+    /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
       className: "w-full py-2 rounded-lg transition-colors bg-green-600 hover:bg-green-700 h-min}",
       onClick: supplyLiquidity,
       type: "submit",
@@ -38806,15 +39042,15 @@ var import_react58 = __toESM(require_react(), 1);
 
 // src/components/TokenStat.tsx
 var import_react57 = __toESM(require_react(), 1);
-var jsx_dev_runtime29 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenStat = import_react57.memo(({ title, detail }) => /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
+var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
+var TokenStat = import_react57.memo(({ title, detail }) => /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
   className: "rounded-lg bg-gradient-to-r from-green-600/20 to-blue-600/20 px-2 py-1",
   children: [
-    /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("p", {
+    /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("p", {
       className: "text-xs text-gray-400",
       children: title
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("p", {
+    /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("p", {
       className: "text-xs font-medium",
       children: detail
     }, undefined, false, undefined, this)
@@ -38823,26 +39059,26 @@ var TokenStat = import_react57.memo(({ title, detail }) => /* @__PURE__ */ jsx_d
 TokenStat.displayName = "TokenStat";
 
 // src/components/TokenCard.tsx
-var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime32 = __toESM(require_jsx_dev_runtime(), 1);
 var TokenCard = import_react58.memo(({ symbol, decimals: decimals2, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate, color = "green" }) => {
   const bg = `bg-${color}-500`;
-  return /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
-    className: "rounded-xl border border-gray-700 bg-gray-800 p-2",
+  return /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(Card, {
+    padding: 4,
     children: [
-      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
-        className: "xl:grid xl:grid-cols-3",
+      /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
+        className: "xl:grid xl:grid-cols-3 w-full",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
             className: "flex items-start justify-between",
-            children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
-              children: /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+            children: /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
+              children: /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
                 className: "flex items-center",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
                     className: `${bg} mr-2 flex size-8 items-center justify-center rounded-full`,
                     children: symbol[0]?.toUpperCase()
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("p", {
                     className: "text-lg font-bold",
                     children: [
                       "$",
@@ -38853,38 +39089,38 @@ var TokenCard = import_react58.memo(({ symbol, decimals: decimals2, description,
               }, undefined, true, undefined, this)
             }, undefined, false, undefined, this)
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
             className: "col-span-2 mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:mt-0",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(TokenStat, {
+              /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(TokenStat, {
                 detail: `${formatNumber(formatEther(supply, decimals2), 3)} ${symbol}`,
                 title: "Supply"
               }, undefined, false, undefined, this),
-              price !== undefined && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(TokenStat, {
+              price !== undefined && /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(TokenStat, {
                 detail: `$${price.toFixed(4)}`,
                 title: "Price"
               }, undefined, false, undefined, this),
-              underlying !== undefined && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(TokenStat, {
+              underlying !== undefined && /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(TokenStat, {
                 detail: `${formatNumber(formatEther(underlying), 2)} ${underlyingSymbol}`,
                 title: "TVL"
               }, undefined, false, undefined, this),
-              underlying !== undefined && underlying !== supply && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(TokenStat, {
+              underlying !== undefined && underlying !== supply && /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(TokenStat, {
                 detail: `${formatNumber(Number(underlying) / Number(supply), 4)} ${underlyingSymbol}`,
                 title: "Mint Rate"
               }, undefined, false, undefined, this),
-              locked !== undefined && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(TokenStat, {
+              locked !== undefined && /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(TokenStat, {
                 detail: `${Math.round(1e4 * Number(locked) / Number(supply)) / 100}%`,
                 title: "Lock Rate"
               }, undefined, false, undefined, this),
-              price !== undefined && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(TokenStat, {
+              price !== undefined && /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(TokenStat, {
                 detail: `$${formatNumber(price * formatEther(supply, decimals2))}`,
                 title: "FDV"
               }, undefined, false, undefined, this),
-              voteMultiplier !== undefined && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(TokenStat, {
+              voteMultiplier !== undefined && /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(TokenStat, {
                 detail: formatNumber(voteMultiplier),
                 title: "Vote Multiplier"
               }, undefined, false, undefined, this),
-              marketRate !== undefined && /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(TokenStat, {
+              marketRate !== undefined && /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(TokenStat, {
                 detail: `${formatNumber(100 * (Number(underlying) / Number(supply)) / Number(marketRate), 2)}%`,
                 title: "Peg"
               }, undefined, false, undefined, this)
@@ -38892,8 +39128,8 @@ var TokenCard = import_react58.memo(({ symbol, decimals: decimals2, description,
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("p", {
-        className: "mt-2 text-xs text-gray-400",
+      /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("p", {
+        className: "mt-2 text-xs text-gray-400 w-full",
         children: description
       }, undefined, false, undefined, this)
     ]
@@ -38902,11 +39138,11 @@ var TokenCard = import_react58.memo(({ symbol, decimals: decimals2, description,
 TokenCard.displayName = "TokenCard";
 
 // src/components/TokenCards.tsx
-var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenCards = import_react59.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupply, ymgpSupply, ymgpLocked, reefiMGPLocked, mgpRmgpCurveRate, rmgpYmgpCurveRate }) => /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
+var jsx_dev_runtime33 = __toESM(require_jsx_dev_runtime(), 1);
+var TokenCards = import_react59.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupply, ymgpSupply, ymgpLocked, reefiMGPLocked, mgpRmgpCurveRate, rmgpYmgpCurveRate }) => /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
   className: "grid grid-cols-2 gap-4 md:grid-cols-4",
   children: [
-    /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(TokenCard, {
+    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(TokenCard, {
       color: "blue",
       decimals: decimals.MGP,
       description: "MGP is the underlying asset all derivatives rely on.",
@@ -38915,7 +39151,7 @@ var TokenCards = import_react59.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupp
       supply: mgpSupply,
       symbol: "MGP"
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(TokenCard, {
+    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(TokenCard, {
       color: "green",
       decimals: decimals.rMGP,
       description: "rMGP earns auto compounding yield from locked MGP, while remaining liquid. rMGP can be converted back to MGP.",
@@ -38925,7 +39161,7 @@ var TokenCards = import_react59.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupp
       underlying: reefiMGPLocked,
       underlyingSymbol: "MGP"
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(TokenCard, {
+    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(TokenCard, {
       color: "green",
       decimals: decimals.yMGP,
       description: "yMGP is backed 1:1 by rMGP but cannot be converted back to rMGP. 5% of protocol yield and withdrawals are distributed to locked yMGP paid in rMGP.",
@@ -38942,18 +39178,18 @@ TokenCards.displayName = "TokenCards";
 
 // src/pages/UnlockPage.tsx
 var import_react60 = __toESM(require_react(), 1);
-var jsx_dev_runtime32 = __toESM(require_jsx_dev_runtime(), 1);
-var UnlockPageComponent = ({ sendAmount, setSendAmount, unlockYMGP, ymgpBalance }) => /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(Page, {
+var jsx_dev_runtime34 = __toESM(require_jsx_dev_runtime(), 1);
+var UnlockPageComponent = ({ sendAmount, setSendAmount, unlockYMGP, ymgpBalance }) => /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(Page, {
   info: ["yMGP can be unlocked instantly. Unlocked yMGP earns the underlying rMGP yield, but forfeits the additional yield."],
   children: [
-    /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(AmountInput, {
+    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(AmountInput, {
       balance: ymgpBalance,
       label: "Get yMGP",
       onChange: setSendAmount,
       token: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "yMGP" },
       value: sendAmount
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("button", {
+    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("button", {
       className: "h-min w-full rounded-lg bg-green-600 py-2 transition-colors hover:bg-green-700",
       onClick: unlockYMGP,
       type: "submit",
@@ -38964,7 +39200,7 @@ var UnlockPageComponent = ({ sendAmount, setSendAmount, unlockYMGP, ymgpBalance 
 var UnlockPage = import_react60.memo(UnlockPageComponent);
 
 // src/App.tsx
-var jsx_dev_runtime33 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime35 = __toESM(require_jsx_dev_runtime(), 1);
 var AppContent = () => {
   const [page, setPage] = import_react61.useState("deposit");
   const [error, setError] = import_react61.useState("");
@@ -38982,22 +39218,22 @@ var AppContent = () => {
     withdraws,
     balances
   } = useGlobalContext();
-  return /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
     className: "flex h-screen bg-gray-900 text-white",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(ConnectWallet, {
+      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(ConnectWallet, {
         connectRequired,
         isConnecting,
         connectWallet
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(ErrorCard, {
+      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(ErrorCard, {
         error,
         setError
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
         className: "grow overflow-auto",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(Header, {
+          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(Header, {
             ens,
             chain,
             account,
@@ -39009,10 +39245,10 @@ var AppContent = () => {
             ymgpBalance: balances.yMGP,
             cmgpBalance: balances.cMGP
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
             className: "flex flex-col gap-6 p-4 md:mx-16 md:p-6 lg:mx-24 xl:mx-28",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(TokenCards, {
+              /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(TokenCards, {
                 mgpLocked: locked.MGP[56] + locked.MGP[42161],
                 mgpPrice: prices.MGP,
                 mgpSupply: supplies.MGP,
@@ -39023,7 +39259,7 @@ var AppContent = () => {
                 mgpRmgpCurveRate: exchangeRates.mgpRMGP,
                 rmgpYmgpCurveRate: exchangeRates.rmgpYMGP
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(Features, {
+              /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(Features, {
                 mgpAPR: rewards.rewards.mgpAPR,
                 lockedYmgpAPY: rewards.lockedYmgpAPY,
                 mgpPrice: prices.MGP,
@@ -39031,364 +39267,373 @@ var AppContent = () => {
                 reefiLockedMGP: locked.reefiMGP,
                 vmgpMGPCurveRate: 0.5
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(Card, {
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                    className: "rounded-t-xl border border-gray-700 bg-gray-800 p-3",
+                  /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                    className: "flex flex-col-reverse justify-between gap-2 lg:flex-row w-full",
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                        className: "flex flex-col-reverse justify-between gap-2 lg:flex-row",
+                      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                        className: "flex rounded-lg bg-gray-700 p-1",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                            className: "flex rounded-lg bg-gray-700 p-1",
-                            children: [
-                              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("button", {
-                                className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "getMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                                onClick: () => setPage(page === "getMGP" ? undefined : "getMGP"),
-                                type: "button",
-                                children: "Get MGP"
-                              }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("button", {
-                                className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "deposit" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                                onClick: () => setPage(page === "deposit" ? undefined : "deposit"),
-                                type: "button",
-                                children: "Get rMGP"
-                              }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("button", {
-                                className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "compoundRMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                                onClick: () => setPage(page === "compoundRMGP" ? undefined : "compoundRMGP"),
-                                type: "button",
-                                children: "Compound Yield"
-                              }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("button", {
-                                className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "redeem" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                                onClick: () => setPage(page === "redeem" ? undefined : "redeem"),
-                                type: "button",
-                                children: "Redeem rMGP"
-                              }, undefined, false, undefined, this)
-                            ]
-                          }, undefined, true, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                            className: "flex h-min flex-row-reverse",
-                            children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                              className: "flex gap-1",
-                              children: [
-                                /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(YieldBadge, {
-                                  apr: rewards.rewards.mgpAPR,
-                                  asset: "MGP",
-                                  breakdown: [{ apr: rewards.rewards.mgpAPR, asset: "Original vlMGP" }]
-                                }, undefined, false, undefined, this),
-                                /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(YieldBadge, {
-                                  apy: aprToApy(rewards.rewards.mgpAPR) * 0.9,
-                                  asset: "rMGP",
-                                  breakdown: [{ apy: aprToApy(rewards.rewards.mgpAPR) * 0.9, asset: "vlMGP" }]
-                                }, undefined, false, undefined, this)
-                              ]
-                            }, undefined, true, undefined, this)
+                          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
+                            className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "getMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            onClick: () => setPage(page === "getMGP" ? undefined : "getMGP"),
+                            type: "button",
+                            children: "Get MGP"
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
+                            className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "deposit" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            onClick: () => setPage(page === "deposit" ? undefined : "deposit"),
+                            type: "button",
+                            children: "Get rMGP"
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
+                            className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "compoundRMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            onClick: () => setPage(page === "compoundRMGP" ? undefined : "compoundRMGP"),
+                            type: "button",
+                            children: "Compound Yield"
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
+                            className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "redeem" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            onClick: () => setPage(page === "redeem" ? undefined : "redeem"),
+                            type: "button",
+                            children: "Redeem rMGP"
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      page === "getMGP" && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(GetMGPPage, {
-                        mgpAPR: rewards.rewards.mgpAPR,
-                        balances,
-                        setSend: updateAmounts.send,
-                        send: amounts.send,
-                        prices,
-                        ymgpMgpCurveRate: exchangeRates.ymgpMGP,
-                        mgpRmgpCurveRate: exchangeRates.mgpRMGP,
-                        mgpRmgpCurveAmount: amounts.curve.mgpRmgp,
-                        rmgpYmgpCurveAmount: amounts.curve.rmgpYmgp,
-                        rmgpMgpCurveAmount: amounts.curve.rmgpMgp,
-                        mgpYmgpCurveAmount: amounts.curve.mgpYmgp,
-                        ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
-                        ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
-                        allowances,
-                        sendAmount: amounts.send,
-                        chain,
-                        buyMGP,
-                        approve,
-                        convertMGP,
-                        sellYMGP,
-                        mintWETH,
-                        swap,
-                        lockedReefiMGP: locked.reefiMGP,
-                        rmgpSupply: supplies.rMGP
-                      }, undefined, false, undefined, this),
-                      page === "deposit" && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(GetRMGPPage, {
-                        mgpAPR: rewards.rewards.mgpAPR,
-                        depositMGP,
-                        balances,
-                        setSend: updateAmounts.send,
-                        send: amounts.send,
-                        prices,
-                        ymgpMgpCurveRate: exchangeRates.ymgpMGP,
-                        mgpRmgpCurveRate: exchangeRates.mgpRMGP,
-                        mgpRmgpCurveAmount: amounts.curve.mgpRmgp,
-                        rmgpYmgpCurveAmount: amounts.curve.rmgpYmgp,
-                        rmgpMgpCurveAmount: amounts.curve.rmgpMgp,
-                        mgpYmgpCurveAmount: amounts.curve.mgpYmgp,
-                        ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
-                        ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
-                        allowances,
-                        sendAmount: amounts.send,
-                        chain,
-                        buyRMGP,
-                        approve,
-                        convertMGP,
-                        sellYMGP,
-                        mintWETH,
-                        swap,
-                        lockedReefiMGP: locked.reefiMGP,
-                        rmgpSupply: supplies.rMGP
-                      }, undefined, false, undefined, this),
-                      page === "compoundRMGP" && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(CompoundYield, {
-                        uncompoundedMGPYield: rewards.uncompoundedMGPYield,
-                        estimatedCompoundGasFee: rewards.estimatedCompoundGasFee,
-                        pendingRewards: rewards.rewards.pendingRewards,
-                        estimatedCompoundAmount: rewards.rewards.estimatedCompoundAmount,
-                        mgpAPR: rewards.rewards.mgpAPR,
-                        reefiMGPLocked: locked.reefiMGP,
-                        chain,
-                        prices,
-                        compoundRMGP
-                      }, undefined, false, undefined, this),
-                      page === "redeem" && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(RedeemRMGPPage, {
-                        buyMGP,
-                        redeemRMGP,
-                        withdrawMGP,
-                        unlockSchedule: withdraws.unlockSchedule,
-                        balances,
-                        setSend: updateAmounts.send,
-                        send: amounts.send,
-                        prices,
-                        ymgpMgpCurveRate: exchangeRates.ymgpMGP,
-                        mgpRmgpCurveRate: exchangeRates.mgpRMGP,
-                        mgpRmgpCurveAmount: amounts.curve.mgpRmgp,
-                        rmgpYmgpCurveAmount: amounts.curve.rmgpYmgp,
-                        rmgpMgpCurveAmount: amounts.curve.rmgpMgp,
-                        mgpYmgpCurveAmount: amounts.curve.mgpYmgp,
-                        ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
-                        ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
-                        allowances,
-                        sendAmount: amounts.send,
-                        userPendingWithdraws: withdraws.userPending,
-                        userWithdrawable: withdraws.userWithdrawable,
-                        chain,
-                        approve,
-                        convertMGP,
-                        sellYMGP,
-                        mintWETH,
-                        swap,
-                        lockedReefiMGP: locked.reefiMGP,
-                        rmgpSupply: supplies.rMGP
-                      }, undefined, false, undefined, this)
-                    ]
-                  }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                    className: "border border-gray-700 bg-gray-800 p-3",
-                    children: [
-                      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                        className: "flex flex-col-reverse justify-between gap-2 lg:flex-row",
-                        children: [
-                          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                            className: "flex rounded-lg bg-gray-700 p-1",
-                            children: [
-                              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("button", {
-                                className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "convert" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                                onClick: () => setPage(page === "convert" ? undefined : "convert"),
-                                type: "button",
-                                children: "Get yMGP"
-                              }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("button", {
-                                className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "lock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                                onClick: () => setPage(page === "lock" ? undefined : "lock"),
-                                type: "button",
-                                children: "Lock yMGP"
-                              }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("button", {
-                                className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "claimYMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                                onClick: () => setPage(page === "claimYMGP" ? undefined : "claimYMGP"),
-                                type: "button",
-                                children: "Claim Yield"
-                              }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("button", {
-                                className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "unlock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                                onClick: () => setPage(page === "unlock" ? undefined : "unlock"),
-                                type: "button",
-                                children: "Unlock yMGP"
-                              }, undefined, false, undefined, this)
-                            ]
-                          }, undefined, true, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                            className: "flex h-min flex-row-reverse",
-                            children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                              className: "flex gap-1",
-                              children: [
-                                /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(YieldBadge, {
-                                  apy: aprToApy(rewards.rewards.mgpAPR) * 0.9,
-                                  asset: "yMGP",
-                                  breakdown: [{ apy: aprToApy(rewards.rewards.mgpAPR) * 0.9, asset: "rMGP" }]
-                                }, undefined, false, undefined, this),
-                                /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(YieldBadge, {
-                                  apy: Number(locked.reefiMGP) * aprToApy(rewards.rewards.mgpAPR) * 0.05 / Number(locked.yMGP) + aprToApy(rewards.rewards.mgpAPR) * 0.9,
-                                  asset: "Locked yMGP",
-                                  breakdown: [{ apy: aprToApy(rewards.rewards.mgpAPR) * 0.9, asset: "Base vlMGP" }, { apr: Number(locked.reefiMGP) * rewards.rewards.mgpAPR * 0.05 / Number(locked.yMGP), asset: "Boosted vlMGP" }, { apr: "variable", asset: "Withdrawals" }],
-                                  suffix: "+"
-                                }, undefined, false, undefined, this)
-                              ]
-                            }, undefined, true, undefined, this)
-                          }, undefined, false, undefined, this)
-                        ]
-                      }, undefined, true, undefined, this),
-                      page === "convert" && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(GetYMGPPage, {
-                        balances,
-                        setSend: updateAmounts.send,
-                        send: amounts.send,
-                        prices,
-                        ymgpMgpCurveRate: exchangeRates.ymgpMGP,
-                        mgpRmgpCurveRate: exchangeRates.mgpRMGP,
-                        mgpRmgpCurveAmount: amounts.curve.mgpRmgp,
-                        rmgpYmgpCurveAmount: amounts.curve.rmgpYmgp,
-                        rmgpMgpCurveAmount: amounts.curve.rmgpMgp,
-                        mgpYmgpCurveAmount: amounts.curve.mgpYmgp,
-                        ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
-                        ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
-                        allowances,
-                        sendAmount: amounts.send,
-                        chain,
-                        approve,
-                        convertMGP,
-                        sellYMGP,
-                        mintWETH,
-                        swap,
-                        buyYMGP,
-                        depositRMGP,
-                        lockedReefiMGP: locked.reefiMGP,
-                        rmgpSupply: supplies.rMGP
-                      }, undefined, false, undefined, this),
-                      page === "lock" && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(LockPage, {
-                        ymgpBalance: balances.yMGP,
-                        setSend: updateAmounts.send,
-                        send: amounts.send,
-                        lockYMGP,
-                        mgpAPR: rewards.rewards.mgpAPR,
-                        reefiLockedMGP: locked.reefiMGP,
-                        ymgpLocked: locked.yMGP
-                      }, undefined, false, undefined, this),
-                      page === "claimYMGP" && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(ClaimYield, {
-                        claimYMGPRewards,
-                        lockedYMGP: locked.yMGP,
-                        unclaimedUserYield: rewards.rewards.unclaimedUserYield,
-                        uncompoundedMGPYield: rewards.uncompoundedMGPYield,
-                        userLockedYMGP: locked.userYMGP,
-                        ymgpHoldings: balances.ymgpHoldings,
-                        ymgpSupply: supplies.yMGP
-                      }, undefined, false, undefined, this),
-                      page === "unlock" && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(UnlockPage, {
-                        sendAmount: amounts.send,
-                        setSendAmount: updateAmounts.send,
-                        unlockYMGP,
-                        ymgpBalance: balances.yMGP
-                      }, undefined, false, undefined, this)
-                    ]
-                  }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                    className: "border border-gray-700 bg-gray-800 p-3",
-                    children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                      className: "flex flex-col-reverse justify-between gap-2 lg:flex-row",
-                      children: [
-                        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                          className: "flex rounded-lg bg-gray-700 p-1",
+                      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                        className: "flex h-min flex-row-reverse",
+                        children: /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                          className: "flex gap-1",
                           children: [
-                            /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("button", {
-                              className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "buyVotes" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                              onClick: () => setPage(page === "buyVotes" ? undefined : "buyVotes"),
-                              type: "button",
-                              children: "Get vMGP"
+                            /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(YieldBadge, {
+                              apr: rewards.rewards.mgpAPR,
+                              asset: "MGP",
+                              breakdown: [{ apr: rewards.rewards.mgpAPR, asset: "Original vlMGP" }]
                             }, undefined, false, undefined, this),
-                            /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("button", {
-                              className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "vote" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                              onClick: () => setPage(page === "vote" ? undefined : "vote"),
-                              type: "button",
-                              children: "Vote"
+                            /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(YieldBadge, {
+                              apy: aprToApy(rewards.rewards.mgpAPR) * 0.9,
+                              asset: "rMGP",
+                              breakdown: [{ apy: aprToApy(rewards.rewards.mgpAPR) * 0.9, asset: "vlMGP" }]
                             }, undefined, false, undefined, this)
                           ]
-                        }, undefined, true, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                          className: "flex h-min flex-row-reverse",
-                          children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                            className: "flex gap-1",
-                            children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(Badge, {
-                              title: "Vote Multiplier",
-                              value: `${formatNumber(Number(supplies.rMGP) / Number(supplies.vMGP), 2)}x+`
-                            }, undefined, false, undefined, this)
-                          }, undefined, false, undefined, this)
-                        }, undefined, false, undefined, this)
-                      ]
-                    }, undefined, true, undefined, this)
+                        }, undefined, true, undefined, this)
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  page === "getMGP" && /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(GetMGPPage, {
+                    mgpAPR: rewards.rewards.mgpAPR,
+                    balances,
+                    setSend: updateAmounts.send,
+                    send: amounts.send,
+                    prices,
+                    ymgpMgpCurveRate: exchangeRates.ymgpMGP,
+                    mgpRmgpCurveRate: exchangeRates.mgpRMGP,
+                    mgpRmgpCurveAmount: amounts.curve.mgpRmgp,
+                    rmgpYmgpCurveAmount: amounts.curve.rmgpYmgp,
+                    rmgpMgpCurveAmount: amounts.curve.rmgpMgp,
+                    mgpYmgpCurveAmount: amounts.curve.mgpYmgp,
+                    ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
+                    ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
+                    allowances,
+                    sendAmount: amounts.send,
+                    chain,
+                    buyMGP,
+                    approve,
+                    convertMGP,
+                    sellYMGP,
+                    mintWETH,
+                    swap,
+                    lockedReefiMGP: locked.reefiMGP,
+                    rmgpSupply: supplies.rMGP
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                    className: "rounded-b-xl border border-gray-700 bg-gray-800 p-3",
+                  page === "deposit" && /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(GetRMGPPage, {
+                    mgpAPR: rewards.rewards.mgpAPR,
+                    depositMGP,
+                    balances,
+                    setSend: updateAmounts.send,
+                    send: amounts.send,
+                    prices,
+                    ymgpMgpCurveRate: exchangeRates.ymgpMGP,
+                    mgpRmgpCurveRate: exchangeRates.mgpRMGP,
+                    mgpRmgpCurveAmount: amounts.curve.mgpRmgp,
+                    rmgpYmgpCurveAmount: amounts.curve.rmgpYmgp,
+                    rmgpMgpCurveAmount: amounts.curve.rmgpMgp,
+                    mgpYmgpCurveAmount: amounts.curve.mgpYmgp,
+                    ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
+                    ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
+                    allowances,
+                    sendAmount: amounts.send,
+                    chain,
+                    buyRMGP,
+                    approve,
+                    convertMGP,
+                    sellYMGP,
+                    mintWETH,
+                    swap,
+                    lockedReefiMGP: locked.reefiMGP,
+                    rmgpSupply: supplies.rMGP
+                  }, undefined, false, undefined, this),
+                  page === "compoundRMGP" && /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(CompoundYield, {
+                    uncompoundedMGPYield: rewards.uncompoundedMGPYield,
+                    estimatedCompoundGasFee: rewards.estimatedCompoundGasFee,
+                    pendingRewards: rewards.rewards.pendingRewards,
+                    estimatedCompoundAmount: rewards.rewards.estimatedCompoundAmount,
+                    mgpAPR: rewards.rewards.mgpAPR,
+                    reefiMGPLocked: locked.reefiMGP,
+                    chain,
+                    prices,
+                    compoundRMGP
+                  }, undefined, false, undefined, this),
+                  page === "redeem" && /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(RedeemRMGPPage, {
+                    buyMGP,
+                    redeemRMGP,
+                    withdrawMGP,
+                    unlockSchedule: withdraws.unlockSchedule,
+                    balances,
+                    setSend: updateAmounts.send,
+                    send: amounts.send,
+                    prices,
+                    ymgpMgpCurveRate: exchangeRates.ymgpMGP,
+                    mgpRmgpCurveRate: exchangeRates.mgpRMGP,
+                    mgpRmgpCurveAmount: amounts.curve.mgpRmgp,
+                    rmgpYmgpCurveAmount: amounts.curve.rmgpYmgp,
+                    rmgpMgpCurveAmount: amounts.curve.rmgpMgp,
+                    mgpYmgpCurveAmount: amounts.curve.mgpYmgp,
+                    ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
+                    ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
+                    allowances,
+                    sendAmount: amounts.send,
+                    userPendingWithdraws: withdraws.userPending,
+                    userWithdrawable: withdraws.userWithdrawable,
+                    chain,
+                    approve,
+                    convertMGP,
+                    sellYMGP,
+                    mintWETH,
+                    swap,
+                    lockedReefiMGP: locked.reefiMGP,
+                    rmgpSupply: supplies.rMGP
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                    className: "bg-gray-500 w-full h-[0.5px] mt-8"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                    className: "flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full",
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                        className: "flex flex-col-reverse justify-between gap-2 lg:flex-row",
+                      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                        className: "flex rounded-lg bg-gray-700 p-1",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                            className: "flex rounded-lg bg-gray-700 p-1",
-                            children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("button", {
-                              className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "supplyLiquidity" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
-                              onClick: () => setPage(page === "supplyLiquidity" ? undefined : "supplyLiquidity"),
-                              type: "button",
-                              children: "Supply Liquidity"
-                            }, undefined, false, undefined, this)
+                          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
+                            className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "convert" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            onClick: () => setPage(page === "convert" ? undefined : "convert"),
+                            type: "button",
+                            children: "Get yMGP"
                           }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                            className: "flex h-min flex-row-reverse",
-                            children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                              className: "flex gap-1",
-                              children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(YieldBadge, {
-                                apy: rewards.cmgpAPY,
-                                asset: "cMGP",
-                                breakdown: [
-                                  { apy: 0, asset: `${(100 * Number(balances.curveMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% MGP` },
-                                  { apy: aprToApy(rewards.rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% rMGP` },
-                                  { apy: aprToApy(rewards.rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% yMGP` },
-                                  { apy: rewards.rewards.cmgpPoolAPY, asset: "Swap Fees" }
-                                ]
-                              }, undefined, false, undefined, this)
-                            }, undefined, false, undefined, this)
+                          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
+                            className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "lock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            onClick: () => setPage(page === "lock" ? undefined : "lock"),
+                            type: "button",
+                            children: "Lock yMGP"
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
+                            className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "claimYMGP" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            onClick: () => setPage(page === "claimYMGP" ? undefined : "claimYMGP"),
+                            type: "button",
+                            children: "Claim Yield"
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
+                            className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "unlock" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            onClick: () => setPage(page === "unlock" ? undefined : "unlock"),
+                            type: "button",
+                            children: "Unlock yMGP"
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      page === "supplyLiquidity" && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(SupplyLiquidityPage, {
-                        mgpBalance: balances.MGP,
-                        rmgpBalance: balances.rMGP,
-                        ymgpBalance: balances.yMGP,
-                        mgpCurveBalance: balances.curveMGP,
-                        rmgpCurveBalance: balances.curveRMGP,
-                        ymgpCurveBalance: balances.curveYMGP,
-                        setMgpLPAmount: updateAmounts.lp.MGP,
-                        mgpLPAmount: amounts.lp.MGP,
-                        rmgpLPAmount: amounts.lp.rMGP,
-                        ymgpLPAmount: amounts.lp.yMGP,
-                        setRmgpLPAmount: updateAmounts.lp.rMGP,
-                        setYmgpLPAmount: updateAmounts.lp.yMGP,
-                        supplyLiquidity
+                      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                        className: "flex h-min flex-row-reverse",
+                        children: /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                          className: "flex gap-1",
+                          children: [
+                            /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(YieldBadge, {
+                              apy: aprToApy(rewards.rewards.mgpAPR) * 0.9,
+                              asset: "yMGP",
+                              breakdown: [{ apy: aprToApy(rewards.rewards.mgpAPR) * 0.9, asset: "rMGP" }]
+                            }, undefined, false, undefined, this),
+                            /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(YieldBadge, {
+                              apy: Number(locked.reefiMGP) * aprToApy(rewards.rewards.mgpAPR) * 0.05 / Number(locked.yMGP) + aprToApy(rewards.rewards.mgpAPR) * 0.9,
+                              asset: "Locked yMGP",
+                              breakdown: [{ apy: aprToApy(rewards.rewards.mgpAPR) * 0.9, asset: "Base vlMGP" }, { apr: Number(locked.reefiMGP) * rewards.rewards.mgpAPR * 0.05 / Number(locked.yMGP), asset: "Boosted vlMGP" }, { apr: "variable", asset: "Withdrawals" }],
+                              suffix: "+"
+                            }, undefined, false, undefined, this)
+                          ]
+                        }, undefined, true, undefined, this)
                       }, undefined, false, undefined, this)
                     ]
-                  }, undefined, true, undefined, this)
+                  }, undefined, true, undefined, this),
+                  page === "convert" && /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(GetYMGPPage, {
+                    balances,
+                    setSend: updateAmounts.send,
+                    send: amounts.send,
+                    prices,
+                    ymgpMgpCurveRate: exchangeRates.ymgpMGP,
+                    mgpRmgpCurveRate: exchangeRates.mgpRMGP,
+                    mgpRmgpCurveAmount: amounts.curve.mgpRmgp,
+                    rmgpYmgpCurveAmount: amounts.curve.rmgpYmgp,
+                    rmgpMgpCurveAmount: amounts.curve.rmgpMgp,
+                    mgpYmgpCurveAmount: amounts.curve.mgpYmgp,
+                    ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
+                    ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
+                    allowances,
+                    sendAmount: amounts.send,
+                    chain,
+                    approve,
+                    convertMGP,
+                    sellYMGP,
+                    mintWETH,
+                    swap,
+                    buyYMGP,
+                    depositRMGP,
+                    lockedReefiMGP: locked.reefiMGP,
+                    rmgpSupply: supplies.rMGP
+                  }, undefined, false, undefined, this),
+                  page === "lock" && /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(LockPage, {
+                    ymgpBalance: balances.yMGP,
+                    setSend: updateAmounts.send,
+                    send: amounts.send,
+                    lockYMGP,
+                    mgpAPR: rewards.rewards.mgpAPR,
+                    reefiLockedMGP: locked.reefiMGP,
+                    ymgpLocked: locked.yMGP
+                  }, undefined, false, undefined, this),
+                  page === "claimYMGP" && /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(ClaimYield, {
+                    claimYMGPRewards,
+                    lockedYMGP: locked.yMGP,
+                    unclaimedUserYield: rewards.rewards.unclaimedUserYield,
+                    uncompoundedMGPYield: rewards.uncompoundedMGPYield,
+                    userLockedYMGP: locked.userYMGP,
+                    ymgpHoldings: balances.ymgpHoldings,
+                    ymgpSupply: supplies.yMGP
+                  }, undefined, false, undefined, this),
+                  page === "unlock" && /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(UnlockPage, {
+                    sendAmount: amounts.send,
+                    setSendAmount: updateAmounts.send,
+                    unlockYMGP,
+                    ymgpBalance: balances.yMGP
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                    className: "bg-gray-500 w-full h-[0.5px] mt-8"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                    className: "flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full",
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                        className: "flex rounded-lg bg-gray-700 p-1",
+                        children: [
+                          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
+                            className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "buyVotes" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            onClick: () => setPage(page === "buyVotes" ? undefined : "buyVotes"),
+                            type: "button",
+                            children: "Get vMGP"
+                          }, undefined, false, undefined, this),
+                          /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
+                            className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "vote" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                            onClick: () => setPage(page === "vote" ? undefined : "vote"),
+                            type: "button",
+                            children: "Vote"
+                          }, undefined, false, undefined, this)
+                        ]
+                      }, undefined, true, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                        className: "flex h-min flex-row-reverse",
+                        children: /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                          className: "flex gap-1",
+                          children: /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(Badge, {
+                            title: "Vote Multiplier",
+                            value: `${formatNumber(Number(supplies.rMGP) / Number(supplies.vMGP), 2)}x+`,
+                            breakdown: [
+                              {
+                                asset: "Reefi's vlMGP",
+                                value: formatNumber(formatEther(locked.reefiMGP))
+                              },
+                              {
+                                asset: "Votable vMGP",
+                                value: formatNumber(formatEther(supplies.vMGP))
+                              }
+                            ]
+                          }, undefined, false, undefined, this)
+                        }, undefined, false, undefined, this)
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                    className: "bg-gray-500 w-full h-[0.5px] mt-8"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                    className: "flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full",
+                    children: [
+                      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                        className: "flex rounded-lg bg-gray-700 p-1",
+                        children: /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
+                          className: `rounded-md px-2 py-1 text-xs transition-colors md:text-sm ${page === "supplyLiquidity" ? "bg-green-600 text-white" : "bg-transparent text-gray-400 hover:text-white"}`,
+                          onClick: () => setPage(page === "supplyLiquidity" ? undefined : "supplyLiquidity"),
+                          type: "button",
+                          children: "Supply Liquidity"
+                        }, undefined, false, undefined, this)
+                      }, undefined, false, undefined, this),
+                      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                        className: "flex h-min flex-row-reverse",
+                        children: /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                          className: "flex gap-1",
+                          children: /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(YieldBadge, {
+                            apy: rewards.cmgpAPY,
+                            asset: "cMGP",
+                            breakdown: [
+                              { apy: 0, asset: `${(100 * Number(balances.curveMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% MGP` },
+                              { apy: aprToApy(rewards.rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% rMGP` },
+                              { apy: aprToApy(rewards.rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% yMGP` },
+                              { apy: rewards.rewards.cmgpPoolAPY, asset: "Swap Fees" }
+                            ]
+                          }, undefined, false, undefined, this)
+                        }, undefined, false, undefined, this)
+                      }, undefined, false, undefined, this)
+                    ]
+                  }, undefined, true, undefined, this),
+                  page === "supplyLiquidity" && /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(SupplyLiquidityPage, {
+                    mgpBalance: balances.MGP,
+                    rmgpBalance: balances.rMGP,
+                    ymgpBalance: balances.yMGP,
+                    mgpCurveBalance: balances.curveMGP,
+                    rmgpCurveBalance: balances.curveRMGP,
+                    ymgpCurveBalance: balances.curveYMGP,
+                    setMgpLPAmount: updateAmounts.lp.MGP,
+                    mgpLPAmount: amounts.lp.MGP,
+                    rmgpLPAmount: amounts.lp.rMGP,
+                    ymgpLPAmount: amounts.lp.yMGP,
+                    setRmgpLPAmount: updateAmounts.lp.rMGP,
+                    setYmgpLPAmount: updateAmounts.lp.yMGP,
+                    supplyLiquidity
+                  }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(QASection, {}, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(ConversionRates, {
-                mgpRMGPCurveRate: exchangeRates.mgpRMGP,
-                rmgpMGPCurveRate: exchangeRates.rmgpMGP,
-                reefiMGPLocked: locked.reefiMGP,
-                rmgpSupply: supplies.rMGP,
-                rmgpYMGPCurveRate: exchangeRates.rmgpYMGP,
-                ymgpRMGPCurveRate: exchangeRates.ymgpRMGP
-              }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(Contracts, {
+              /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(QASection, {}, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+                className: "flex gap-6",
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(PegCard_default, {
+                    token: "rMGP",
+                    data: { burn: Number(locked.reefiMGP) / Number(supplies.rMGP) * 0.9, marketBuy: 1 / exchangeRates.mgpRMGP, marketSell: exchangeRates.rmgpMGP, mint: Number(locked.reefiMGP) / Number(supplies.rMGP), originalBurn: 0.9, originalMint: 1, spread: 100 / exchangeRates.mgpRMGP / exchangeRates.rmgpMGP - 100 },
+                    targetToken: "MGP"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(PegCard_default, {
+                    token: "yMGP",
+                    data: { burn: 0, marketBuy: 1 / exchangeRates.rmgpYMGP, marketSell: exchangeRates.ymgpRMGP, mint: 1, spread: 100 / exchangeRates.rmgpYMGP / exchangeRates.ymgpRMGP - 100 },
+                    targetToken: "rMGP"
+                  }, undefined, false, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(ConversionRates, {}, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(Contracts, {
                 chain
               }, undefined, false, undefined, this)
             ]
@@ -39401,19 +39646,19 @@ var AppContent = () => {
 var App = () => {
   const [error, setError] = import_react61.useState("");
   const [notification, setNotification] = import_react61.useState("");
-  return /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(GlobalProvider, {
+  return /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(GlobalProvider, {
     setError,
     setNotification,
     children: [
-      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(ErrorCard, {
+      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(ErrorCard, {
         error,
         setError
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(NotificationCard, {
+      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(NotificationCard, {
         notification,
         setNotification
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(AppContent, {}, undefined, false, undefined, this)
+      /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(AppContent, {}, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
@@ -39421,7 +39666,7 @@ var App_default = App;
 
 // src/index.tsx
 var import_client = __toESM(require_client(), 1);
-var jsx_dev_runtime34 = __toESM(require_jsx_dev_runtime(), 1);
-import_client.default.createRoot(document.querySelector("#root")).render(/* @__PURE__ */ jsx_dev_runtime34.jsxDEV(React2.StrictMode, {
-  children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(App_default, {}, undefined, false, undefined, this)
+var jsx_dev_runtime36 = __toESM(require_jsx_dev_runtime(), 1);
+import_client.default.createRoot(document.querySelector("#root")).render(/* @__PURE__ */ jsx_dev_runtime36.jsxDEV(React2.StrictMode, {
+  children: /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));

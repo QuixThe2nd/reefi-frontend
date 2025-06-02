@@ -1,6 +1,7 @@
 import { useState, type ReactElement } from "react";
 
 import Diagram from "../../public/diagram.svg";
+import { Card } from "./Card";
 
 interface QAItem {
   readonly question: string;
@@ -71,7 +72,7 @@ export const QASection = (): ReactElement => {
     setOpenItems(newOpenItems);
   };
 
-  return <div className="flex justify-center rounded-xl border border-gray-700 bg-gray-800 p-3">
+  return <Card>
     <div className="max-w-4xl">
       <div className="mb-6 rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4">
         <h3 className="mb-2 text-lg font-semibold text-yellow-400">⚠️ Important Notice</h3>
@@ -95,5 +96,5 @@ export const QASection = (): ReactElement => {
         <img alt="Diagram" className="w-full" src={Diagram} />
       </div>
     </div>
-  </div>;
+  </Card>;
 };

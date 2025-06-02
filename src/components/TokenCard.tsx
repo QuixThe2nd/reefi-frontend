@@ -2,6 +2,7 @@ import { formatEther, formatNumber } from "../utilities";
 import { memo, type ReactElement } from "react";
 
 import { TokenStat } from "./TokenStat";
+import { Card } from "./Card";
 
 interface Properties {
   readonly symbol: string;
@@ -19,8 +20,8 @@ interface Properties {
 
 export const TokenCard = memo(({ symbol, decimals, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate, color = "green" }: Properties): ReactElement => {
   const bg = `bg-${color}-500`;
-  return <div className="rounded-xl border border-gray-700 bg-gray-800 p-2">
-    <div className="xl:grid xl:grid-cols-3">
+  return <Card padding={4}>
+    <div className="xl:grid xl:grid-cols-3 w-full">
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center">
@@ -40,7 +41,7 @@ export const TokenCard = memo(({ symbol, decimals, description, price, supply, u
         {marketRate !== undefined && <TokenStat detail={`${formatNumber(100 * (Number(underlying) / Number(supply)) / Number(marketRate), 2)}%`} title="Peg" />}
       </div>
     </div>
-    <p className="mt-2 text-xs text-gray-400">{description}</p>
-  </div>;
+    <p className="mt-2 text-xs text-gray-400 w-full">{description}</p>
+  </Card>;
 });
 TokenCard.displayName = "TokenCard";

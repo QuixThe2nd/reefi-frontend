@@ -51,7 +51,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
   };
 
   return <div className="mb-4">
-    <div className="mb-1 flex items-center justify-between">
+    <div className="mb-2 flex items-center justify-between">
       <h3 className="font-medium">{label}</h3>
       <span className="text-sm text-gray-400">Balance: {formatEther(balance, decimals[selectedCoin]).toFixed(4)} {selectedCoin}</span>
     </div>

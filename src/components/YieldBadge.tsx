@@ -6,10 +6,16 @@ type Yield = Readonly<{
 }> & (Readonly<{
   apy: number | "variable";
   apr?: undefined;
+  value?: number;
 }> | Readonly<{
   apr: number | "variable";
   apy?: undefined;
-}>);
+  value?: number;
+} | Readonly<{
+  value: string | number;
+  apr?: undefined;
+  apy?: undefined;
+}>>);
 
 type Properties = Yield & Readonly<{ breakdown: Yield[] }>;
 
@@ -20,7 +26,7 @@ const BadgeComponent = ({ title, value, breakdown }: Readonly<{ title: string; v
     <div className="space-y-1">
       {breakdown?.map(item => <div className="flex justify-between gap-2" key={item.asset}>
         <span>{item.asset}:</span>
-        {item.apy === undefined ? <span>{item.apr === "variable" ? "Variable" : `${Math.round(item.apr * 10_000) / 100}%`} APR</span> : <span>{item.apy === "variable" ? "Variable" : `${Math.round(item.apy * 10_000) / 100}%`} APY</span>}
+        {item.value !== undefined ? <span>{item.value}</span> : item.apy === undefined ? <span>{item.apr === "variable" ? "Variable" : `${Math.round(item.apr * 10_000) / 100}%`} APR</span> : <span>{item.apy === "variable" ? "Variable" : `${Math.round(item.apy * 10_000) / 100}%`} APY</span>}
       </div>)}
     </div>
   </div>
@@ -28,10 +34,10 @@ const BadgeComponent = ({ title, value, breakdown }: Readonly<{ title: string; v
 
 export const Badge = memo(BadgeComponent);
 
-export const YieldBadge = memo(({ asset, apy, apr, suffix, breakdown }: Properties): ReactElement => {
+export const YieldBadge = memo(({ asset, apy, apr, suffix, breakdown, value }: Properties): ReactElement => {
   const yieldType = apy === undefined ? "APR" : "APY";
   const yieldValue = apy ?? apr;
-  const percentage = Math.round((yieldValue === "variable" ? 0 : yieldValue) * 10_000) / 100;
-  return <Badge breakdown={breakdown} title={`${asset} ${yieldType}`} value={`${percentage}%${suffix ?? ""}`} />;
+  const percentage = yieldValue ? Math.round((yieldValue === "variable" ? 0 : yieldValue) * 10_000) / 100 : undefined;
+  return <Badge breakdown={breakdown} title={`${asset} ${yieldType}`} value={`${percentage ? `${percentage}%` : value}${suffix ?? ""}`} />;
 });
 YieldBadge.displayName = "YieldBadge";

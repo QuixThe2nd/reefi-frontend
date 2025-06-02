@@ -44,12 +44,12 @@ export const RedeemRMGPPage = memo(({ buyMGP, redeemRMGP, withdrawMGP, unlockSch
   <SwapToken buy={buyMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Redeem via Queue" nativeSwap={redeemRMGP} originalTokenIn="rMGP" tokenOut="MGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} sendAmount={sendAmount} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} />
   <div className="mt-4 flex justify-between text-sm text-gray-400">
     <span>Native Withdraw Time</span>
-    <span>{unlockSchedule.length === 6 ? formatTime(Number(unlockSchedule?.[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2) : formatTime(60 * 60 * 24 * 30 * 2)}</span>
+    <span>{unlockSchedule.length === 6 ? formatTime(Number(unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2) : formatTime(60 * 60 * 24 * 30 * 2)}</span>
   </div>
   {userPendingWithdraws > 0n ? <>
     <h3 className="mt-4 text-base font-medium">Pending Withdraws</h3>
     <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
-    {unlockSchedule[0] ? <p> Unlock available in: {formatTime(Number(unlockSchedule?.[0]?.endTime) - Date.now() / 1000)} to {formatTime(Number(unlockSchedule.at(-1)?.endTime) + 60 * 60 * 24 * 60 - Date.now() / 1000)}</p> : <p>N/A</p>}
+    {unlockSchedule[0] ? <p> Unlock available in: {formatTime(Number(unlockSchedule[0].endTime) - Date.now() / 1000)} to {formatTime(Number(unlockSchedule.at(-1)?.endTime) + 60 * 60 * 24 * 60 - Date.now() / 1000)}</p> : <p>N/A</p>}
   </> : ""}
   {userWithdrawable > 0n ? <>
     <h3 className="mt-4 text-base font-medium">Available To Withdraw</h3>

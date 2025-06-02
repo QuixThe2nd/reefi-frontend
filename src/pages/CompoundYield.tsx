@@ -31,7 +31,7 @@ export const CompoundYield = memo(({ uncompoundedMGPYield, estimatedCompoundGasF
         <p className="text-xs">{formatNumber(prices[symbol] * Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 4)} MGP</p>
       </div>)}
     </div>
-    <Button className="mt-4 w-full" onClick={compoundRMGP} type="button">Compound Yield (Get ~{Number(estimatedCompoundAmount ?? 0n) / 100} yMGP)</Button>
+    <Button className="mt-4 w-full" onClick={compoundRMGP} type="button">Compound Yield (Get ~{Number(estimatedCompoundAmount) / 100} yMGP)</Button>
     <div className="mt-4 text-sm text-gray-400">
       <div className="mb-1 flex justify-between">
         <span>Estimated Payout</span>

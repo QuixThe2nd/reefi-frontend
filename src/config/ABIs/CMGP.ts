@@ -1,4 +1,4 @@
-/* eslint-disable sort-keys */
+
 export const cMGP = [
   {
     name: "Transfer",

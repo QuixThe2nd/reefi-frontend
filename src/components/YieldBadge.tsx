@@ -45,6 +45,7 @@ export const YieldBadge = memo(({ asset, apy, apr, suffix, breakdown, value }: P
   const yieldType = apy === undefined ? "APR" : "APY";
   const yieldValue = apy ?? apr;
   const percentage = yieldValue ? Math.round(yieldValue * 10_000) / 100 : undefined;
-  return <Badge breakdown={breakdown} title={`${asset} ${yieldType}`} value={`${percentage ? `${percentage}%` : value}${suffix ?? ""}`} />;
+  const valueString = percentage ? `${percentage}%` : String(value);
+  return <Badge breakdown={breakdown} title={`${asset} ${yieldType}`} value={valueString + (suffix ?? "")} />;
 });
 YieldBadge.displayName = "YieldBadge";

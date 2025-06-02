@@ -83,11 +83,11 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
     Math.max(0, 100 - buyDistribution / maxDistribution * 100),
     Math.max(0, 100 - sellDistribution / maxDistribution * 100),
     Math.max(0, 100 - burnDistribution / maxDistribution * 100),
-    originalMint ? Math.max(0, 100 - originalMintDistribution / maxDistribution * 100) : null,
-    originalBurn ? Math.max(0, 100 - originalBurnDistribution / maxDistribution * 100) : null
+    originalMint ? Math.max(0, 100 - originalMintDistribution / maxDistribution * 100) : undefined,
+    originalBurn ? Math.max(0, 100 - originalBurnDistribution / maxDistribution * 100) : undefined
   ];
 
-  const values = originalMintPos === null ? [buyPos, sellPos] : [buyPos, sellPos, originalMintPos];
+  const values = originalMintPos === undefined ? [buyPos, sellPos] : [buyPos, sellPos, originalMintPos];
   const healthScore = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
   const [isHealthy, isWarning] = [healthScore > 70, healthScore > 40 && healthScore <= 70];
 
@@ -99,12 +99,21 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
         <div className={`text-xs text-${color}-400 mt-1 font-semibold pointer-events-none ${label.includes(" ") ? "whitespace-nowrap" : ""}`}>{label}</div>
       </div>
     </div>;
-  const Line: React.FC<LineProperties> = ({ pos, color, label, value, show }) => show &&
-    <div className={`absolute inset-y-0 w-1 bg-gradient-to-b from-${color}-400/60 via-${color}-500/80 to-${color}-400/60 border border-${color}-400/40 shadow-lg shadow-${color}-500/30 group pointer-events-auto cursor-pointer`} style={{ left: `${pos}%`, transform: "translateX(-50%)" }}>
+
+  const Line: React.FC<LineProperties> = ({ pos, color, label, value, show }) => {
+    if (!show) return undefined;
+    const getTopPosition = (): string => {
+      if (label === "Orig Burn") return "80%";
+      if (label === "Burn") return "75%";
+      return "25%";
+    };
+    return <div className={`absolute inset-y-0 w-1 bg-gradient-to-b from-${color}-400/60 via-${color}-500/80 to-${color}-400/60 border border-${color}-400/40 shadow-lg shadow-${color}-500/30 group pointer-events-auto cursor-pointer`} style={{ left: `${pos}%`, transform: "translateX(-50%)" }}>
       <div className="size-full bg-gradient-to-b from-white/20 to-transparent"></div>
-      <div className={`bg-${color}-500 absolute left-1/2 -translate-x-1/2 -translate-y-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 border border-${color}-400/50 rounded px-2 py-1 font-mono text-xs text-white shadow-lg pointer-events-none mb-1 whitespace-nowrap`} style={{ top: label === "Orig Burn" ? "80%" : label === 'Burn' ? '75%' : '25%' }}>{value.toFixed(4)}</div>
+      <div className={`bg-${color}-500 absolute left-1/2 -translate-x-1/2 -translate-y-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 border border-${color}-400/50 rounded px-2 py-1 font-mono text-xs text-white shadow-lg pointer-events-none mb-1 whitespace-nowrap`} style={{ top: getTopPosition() }}>{value.toFixed(4)}</div>
       <div className={`text-${color}-400 absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs pointer-events-none mt-1 font-semibold ${label.includes(" ") ? "whitespace-nowrap" : ""}`}>{label}</div>
     </div>;
+  };
+
   return (
     <div className="relative w-full">
       <div className="relative overflow-hidden rounded-2xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-6 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:scale-[1.02] hover:shadow-purple-500/10">
@@ -137,7 +146,7 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
               </div>
 
               <Line pos={mintPos} color="green" label="Mint" value={mint} show />
-              <Line pos={originalBurnPos ?? 0} color="gray" label="Orig Burn" value={originalBurn ?? 0} show={originalBurnPos !== null} />
+              <Line pos={originalBurnPos ?? 0} color="gray" label="Orig Burn" value={originalBurn ?? 0} show={originalBurnPos !== undefined} />
               <Line pos={burnPos} color="slate" label="Burn" value={burn} show={burn === 0} />
 
               <svg className="pointer-events-none absolute inset-0 size-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -152,12 +161,12 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
                     <stop offset="100%" stopColor="#10b981" stopOpacity="0.3"/>
                   </linearGradient>
                 </defs>
-                <path d={`M ${mintPos} 25 ${originalMintPos === null ? "" : `L ${originalMintPos} 35`} L ${buyPos} 40 L ${sellPos} 60 L ${burnPos} 75 ${originalBurnPos === null ? "" : `L ${originalBurnPos} 85`}`} stroke="url(#lineGradient)" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-lg transition-all duration-1000 ease-out"/>
+                <path d={`M ${mintPos} 25 ${originalMintPos === undefined ? "" : `L ${originalMintPos} 35`} L ${buyPos} 40 L ${sellPos} 60 L ${burnPos} 75 ${originalBurnPos === undefined ? "" : `L ${originalBurnPos} 85`}`} stroke="url(#lineGradient)" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-lg transition-all duration-1000 ease-out"/>
                 <path d={`M ${buyPos} 40 L ${sellPos} 60`} stroke="#f59e0b" strokeWidth="2" strokeDasharray="3,3" fill="none" className="opacity-80 transition-all duration-1000 ease-out"/>
               </svg>
 
               <div className="pointer-events-none absolute inset-0">
-                <Marker pos={originalMintPos ?? 0} top="35%" color="emerald" label="Orig Mint" value={originalMint ?? 0} show={originalMintPos !== null} />
+                <Marker pos={originalMintPos ?? 0} top="35%" color="emerald" label="Orig Mint" value={originalMint ?? 0} show={originalMintPos !== undefined} />
                 <Marker pos={buyPos} top="40%" color="blue" label="Buy" value={marketBuy} />
                 <Marker pos={sellPos} top="60%" color="red" label="Sell" value={marketSell} />
                 <Marker pos={burnPos} top="75%" color="slate" label="Burn" value={burn} show={burn !== 0} />

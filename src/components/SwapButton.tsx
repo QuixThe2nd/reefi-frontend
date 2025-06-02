@@ -1,11 +1,11 @@
 import { contracts, Coins, Chains } from "../config/contracts";
 import { formatEther } from "../utilities";
 
+import { Button } from "./Button";
 import { BuyOnCurve } from "./BuyOnCurve";
 import { ReactElement } from "react";
 import { TokenApproval } from "./TokenApproval";
 import { UseAllowances } from "../hooks/useAllowances";
-import { Button } from "./Button";
 
 interface Properties {
   buy: () => void;

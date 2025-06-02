@@ -1,7 +1,7 @@
 import { useState, type ReactElement } from "react";
 
-import Diagram from "../../public/diagram.svg";
 import { Card } from "./Card";
+import Diagram from "../../public/diagram.svg";
 
 interface QAItem {
   readonly question: string;

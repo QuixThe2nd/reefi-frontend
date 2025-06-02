@@ -38,7 +38,7 @@ interface Properties<W extends UseWallet> {
   writeContracts: UseContracts;
   updateLocked: UseLocked["updateLocked"];
   amounts: UseAmounts["amounts"];
-  rewards: UseRewards;
+  updateRewards: UseRewards["updateRewards"];
   updateWithdraws: UseWithdraws["updateWithdraws"];
 }
 
@@ -62,7 +62,7 @@ export interface UseActions {
   sellYMGP: () => void;
 }
 
-export const useActions = <W extends UseWallet>({ setError, setNotification, wallet, updateBalances, allowances, updateAllowances, updateSupplies, writeContracts, updateLocked, amounts, updateWithdraws, rewards }: Properties<W>): UseActions => {
+export const useActions = <W extends UseWallet>({ setError, setNotification, wallet, updateBalances, allowances, updateAllowances, updateSupplies, writeContracts, updateLocked, amounts, updateRewards, updateWithdraws }: Properties<W>): UseActions => {
   const approve = useApprove({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateAllowances, writeContracts });
   const depositMGP = useDepositMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => updateLocked.MGP.all(), writeContracts });
   const buyRMGP = useBuyRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
@@ -76,13 +76,13 @@ export const useActions = <W extends UseWallet>({ setError, setNotification, wal
   const redeemRMGP = useRedeemRMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => {
     updateLocked.MGP[56]();
     updateLocked.MGP[42_161]();
-  }, updateUnclaimedUserYield: rewards.updateUnclaimedUserYield, updateUnlockSchedule: updateWithdraws.unlockSchedule, updateUnsubmittedWithdraws: updateWithdraws.unsubmitted, updateUserPendingWithdraws: updateWithdraws.userPending, updateUserWithdrawable: updateWithdraws.userWithdrawable, writeContracts });
+  }, updateUnclaimedUserYield: updateRewards.unclaimedUserYield, updateUnlockSchedule: updateWithdraws.unlockSchedule, updateUnsubmittedWithdraws: updateWithdraws.unsubmitted, updateUserPendingWithdraws: updateWithdraws.userPending, updateUserWithdrawable: updateWithdraws.userWithdrawable, writeContracts });
   const withdrawMGP = useWithdrawMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateBalances, updateUnsubmittedWithdraws: updateWithdraws.unsubmitted, updateUserPendingWithdraws: updateWithdraws.userPending, updateUserWithdrawable: updateWithdraws.userWithdrawable, writeContracts });
-  const compoundRMGP = useCompoundRMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateBalances, updatePendingRewards: rewards.updatePendingRewards, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => {
+  const compoundRMGP = useCompoundRMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateBalances, updatePendingRewards: updateRewards.pendingRewards, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => {
     updateLocked.MGP[56]();
     updateLocked.MGP[42_161]();
-  }, updateUnclaimedUserYield: rewards.updateUnclaimedUserYield, writeContracts });
-  const claimYMGPRewards = useClaimYMGPRewards({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateUnclaimedUserYield: rewards.updateUnclaimedUserYield, writeContracts });
+  }, updateUnclaimedUserYield: updateRewards.unclaimedUserYield, writeContracts });
+  const claimYMGPRewards = useClaimYMGPRewards({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateUnclaimedUserYield: updateRewards.unclaimedUserYield, writeContracts });
   const supplyLiquidity = useSupplyLiquidity({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, mgpLPAmount: amounts.lp.MGP, rmgpLPAmount: amounts.lp.rMGP, setConnectRequired: wallet.setConnectRequired, updateBalances, writeContracts, ymgpLPAmount: amounts.lp.yMGP });
   const swap = useSwap({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, setNotification });
   const mintWETH = useMintWETH({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts });

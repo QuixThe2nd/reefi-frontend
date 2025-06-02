@@ -1,8 +1,8 @@
 import { memo, type ReactElement } from "react";
 
 import { AmountInput } from "../components/AmountInput";
-import { Page } from "../components/Page";
 import { Button } from "../components/Button";
+import { Page } from "../components/Page";
 
 interface Properties {
   readonly sendAmount: bigint;

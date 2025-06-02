@@ -2,6 +2,7 @@ import { coins, decimals, type Coins } from "../config/contracts";
 import { formatEther } from "../utilities";
 import { memo, useEffect, useRef, useState, Fragment, type ReactElement } from "react";
 
+import { Button } from "./Button";
 import { UsePrices } from "../hooks/usePrices";
 
 interface Properties {
@@ -58,7 +59,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
     <div className="flex items-center justify-between rounded-lg bg-gray-900 p-4">
       <input className="w-3/4 bg-transparent text-xl outline-none" onChange={event => onChange(BigInt(Math.round((Number.isNaN(Number.parseFloat(event.target.value)) ? 0 : Number.parseFloat(event.target.value)) * Number(10n ** BigInt(decimals[selectedCoin])))))} placeholder='0' type="text" value={value === 0n ? undefined : formatEther(value, decimals[selectedCoin])} />
       <div className="flex items-center space-x-2">
-        <button className="rounded bg-gray-700 px-2 py-1 text-xs hover:bg-gray-600" onClick={() => onChange(balance)} type="button">MAX</button>
+        <Button size="xs" variant="ghost" onClick={() => onChange(balance)} type="button">MAX</Button>
         <div className="relative" ref={dropdownReference}>
           <button className={["flex cursor-pointer items-center rounded-md px-3 py-1 transition-opacity hover:opacity-90", coins[selectedCoin === "ETH" ? "WETH" : selectedCoin].bgColor].join(" ")} onClick={() => setIsDropdownOpen(!isDropdownOpen)} type="button">
             <div className={["mr-2 flex size-5 items-center justify-center rounded-full", coins[selectedCoin === "ETH" ? "WETH" : selectedCoin].color].join(" ")}>{selectedCoin[0]?.toUpperCase()}</div>

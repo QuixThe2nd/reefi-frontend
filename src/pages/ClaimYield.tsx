@@ -2,8 +2,8 @@ import { decimals } from "../config/contracts";
 import { formatEther, formatNumber } from "../utilities";
 import { memo, type ReactElement } from "react";
 
-import { Page } from "../components/Page";
 import { Button } from "../components/Button";
+import { Page } from "../components/Page";
 
 interface Properties {
   readonly claimYMGPRewards: () => void;

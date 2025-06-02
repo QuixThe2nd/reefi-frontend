@@ -13,9 +13,9 @@ interface Properties {
   buyMGP: () => void;
   redeemRMGP: () => void;
   withdrawMGP: () => void;
-  unlockSchedule: UseWithdraws["unlockSchedule"];
-  userPendingWithdraws: UseWithdraws["userPendingWithdraws"];
-  userWithdrawable: UseWithdraws["userWithdrawable"];
+  unlockSchedule: UseWithdraws["withdraws"]["unlockSchedule"];
+  userPendingWithdraws: UseWithdraws["withdraws"]["userPending"];
+  userWithdrawable: UseWithdraws["withdraws"]["userWithdrawable"];
   balances: UseBalances["balances"];
   setSend: (_send: bigint) => void;
   send: bigint;

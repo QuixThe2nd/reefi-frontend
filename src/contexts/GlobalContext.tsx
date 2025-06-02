@@ -27,7 +27,7 @@ interface GlobalContextType<W extends UseWallet = UseWallet> {
   exchangeRates: UseExchangeRates["exchangeRates"];
   amounts: UseAmounts["amounts"];
   updateAmounts: UseAmounts["updateAmounts"];
-  rewards: UseRewards;
+  rewards: UseRewards["rewards"];
   withdraws: UseWithdraws["withdraws"];
   actions: UseActions;
 }
@@ -52,9 +52,9 @@ export const GlobalProvider = ({ children, setError, setNotification }: GlobalPr
   const { exchangeRates } = useExchangeRates({ wallet });
   const prices = usePrices();
   const writeContracts = useContracts({ wallet });
-  const rewards = useRewards({ balances, locked, prices, wallet });
-  const actions = useActions({ allowances, amounts, rewards, setError, setNotification, updateAllowances, updateBalances, updateLocked, updateSupplies, updateWithdraws, wallet, writeContracts });
-  const value = useMemo(() => ({ actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, updateAllowances, updateAmounts, updateBalances, updateLocked, updateSupplies, wallet, withdraws, writeContracts }), [actions, allowances, updateAllowances, amounts, balances, updateBalances, exchangeRates, locked, prices, rewards, supplies, wallet, withdraws, writeContracts]);
+  const { rewards, updateRewards } = useRewards({ balances, locked, prices, wallet });
+  const actions = useActions({ allowances, amounts, setError, setNotification, updateAllowances, updateBalances, updateLocked, updateRewards, updateSupplies, updateWithdraws, wallet, writeContracts });
+  const value = useMemo(() => ({ actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, updateAllowances, updateAmounts, updateBalances, updateLocked, updateSupplies, wallet, withdraws, writeContracts }), [actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, updateAllowances, updateAmounts, updateBalances, updateLocked, updateSupplies, wallet, withdraws, writeContracts]);
   return <GlobalContext value={value}>{children}</GlobalContext>;
 };
 

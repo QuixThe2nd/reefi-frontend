@@ -8,9 +8,6 @@ import { UseLocked } from "./useLocked";
 import { UsePrices } from "./usePrices";
 import { UseWallet } from "./useWallet";
 
-type PendingRewards = Record<Coins, { address: `0x${string}`;
-  rewards: bigint; }> | Record<string, never>;
-
 interface Properties {
   readonly wallet: UseWallet;
   readonly prices: UsePrices;
@@ -37,11 +34,12 @@ interface UpdateRewards {
 }
 
 export interface UseRewards {
-  cmgpAPY: number;
-  lockedYmgpAPY: number;
-  uncompoundedMGPYield: number;
-  estimatedCompoundGasFee: number;
-  rewards: Rewards;
+  rewards: Rewards & {
+    cmgpAPY: number;
+    estimatedCompoundGasFee: number;
+    lockedYmgpAPY: number;
+    uncompoundedMGPYield: number;
+  };
   updateRewards: UpdateRewards;
 }
 
@@ -104,7 +102,7 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
     const underlyingYield = yieldBearingUnderlyingPercent * aprToApy(rewards.mgpAPR) * 0.9;
     return underlyingYield + rewards.cmgpPoolAPY;
   }, [rewards.cmgpPoolAPY, rewards.mgpAPR, balances.curveMGP, balances.curveRMGP, balances.curveYMGP]);
-  const uncompoundedMGPYield = useMemo(() => Object.keys(rewards.pendingRewards).length > 0 ? (Object.keys(rewards.pendingRewards) as Coins[]).map(symbol => prices[symbol] * Number(formatEther(rewards.pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [rewards.pendingRewards, prices]);
+  const uncompoundedMGPYield = useMemo(() => Object.keys(rewards.pendingRewards).length > 0 ? (Object.keys(rewards.pendingRewards) as Coins[]).map(symbol => prices[symbol] * Number(formatEther(rewards.pendingRewards[symbol]?.rewards ?? 0n, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [rewards.pendingRewards, prices]);
   const estimatedCompoundGasFee = useMemo(() => formatEther(rewards.compoundRMGPGas, decimals.WETH) * prices.WETH, [rewards.compoundRMGPGas, prices]);
   const lockedYmgpAPY = useMemo(() => Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.yMGP) + aprToApy(rewards.mgpAPR) * 0.9, [locked.reefiMGP, rewards.mgpAPR, locked.yMGP]);
 
@@ -113,5 +111,5 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
     return (): void => clearInterval(interval);
   }, [updateRewards.pendingRewards]);
 
-  return { cmgpAPY, estimatedCompoundGasFee, lockedYmgpAPY, rewards, uncompoundedMGPYield, updateRewards };
+  return { rewards: { ...rewards, cmgpAPY, estimatedCompoundGasFee, lockedYmgpAPY, uncompoundedMGPYield }, updateRewards };
 };

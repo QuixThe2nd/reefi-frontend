@@ -1,8 +1,8 @@
 import { formatEther } from "../utilities";
 
+import { Button } from "./Button";
 import { JSX, memo, ReactElement } from "react";
 import { TokenApproval } from "./TokenApproval";
-import { Button } from "./Button";
 
 interface Properties {
   readonly sendAmount: bigint;

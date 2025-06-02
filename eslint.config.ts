@@ -54,6 +54,7 @@ export default defineConfig([
       "@stylistic/indent": ["error", 2],
       "@stylistic/jsx-one-expression-per-line": "off",
       "tailwindcss/classnames-order": "off",
+      "init-declarations": "off",
       "@eslint-react/avoid-shorthand-boolean": "off",
       "tailwindcss/no-custom-classname": "off",
       "@stylistic/multiline-comment-style": "off",

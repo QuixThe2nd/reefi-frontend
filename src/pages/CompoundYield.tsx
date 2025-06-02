@@ -1,15 +1,15 @@
 import { formatEther, formatNumber, formatTime } from "../utilities";
 import { memo, type ReactElement } from "react";
 
+import { Button } from "../components/Button";
 import { Chains, contracts, decimals, type Coins } from "../config/contracts";
 import { Page } from "../components/Page";
 import { UsePrices } from "../hooks/usePrices";
-import { Button } from "../components/Button";
 interface Properties {
   uncompoundedMGPYield: number;
   estimatedCompoundGasFee: number;
   pendingRewards: Record<Coins, { rewards: bigint }>;
-  estimatedCompoundAmount: [bigint | undefined, () => void];
+  estimatedCompoundAmount: bigint;
   mgpAPR: number;
   chain: Chains;
   prices: UsePrices;
@@ -31,7 +31,7 @@ export const CompoundYield = memo(({ uncompoundedMGPYield, estimatedCompoundGasF
         <p className="text-xs">{formatNumber(prices[symbol] * Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 4)} MGP</p>
       </div>)}
     </div>
-    <Button className="mt-4 w-full" onClick={compoundRMGP} type="button">Compound Yield (Get ~{Number(estimatedCompoundAmount[0] ?? 0n) / 100} yMGP)</Button>
+    <Button className="mt-4 w-full" onClick={compoundRMGP} type="button">Compound Yield (Get ~{Number(estimatedCompoundAmount ?? 0n) / 100} yMGP)</Button>
     <div className="mt-4 text-sm text-gray-400">
       <div className="mb-1 flex justify-between">
         <span>Estimated Payout</span>

@@ -1,8 +1,8 @@
 import { formatEther, formatNumber } from "../utilities";
 import { memo, type ReactElement } from "react";
 
-import { TokenStat } from "./TokenStat";
 import { Card } from "./Card";
+import { TokenStat } from "./TokenStat";
 
 interface Properties {
   readonly symbol: string;

@@ -1,4 +1,5 @@
 import { memo, useState, type ReactElement } from "react";
+
 import { Button } from "./Button";
 
 interface TokenApprovalProperties {

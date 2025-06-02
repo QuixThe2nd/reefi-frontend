@@ -152,7 +152,6 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
                     <stop offset="100%" stopColor="#10b981" stopOpacity="0.3"/>
                   </linearGradient>
                 </defs>
-                <path d={`M 0 25 L ${mintPos} 25 ${originalMintPos === null ? "" : `L ${originalMintPos} 35`} L ${buyPos} 40 L ${sellPos} 60 L ${burnPos} 75 ${originalBurnPos === null ? "" : `L ${originalBurnPos} 85`} L ${originalBurnPos ?? burnPos} 100 L 0 100 Z`} fill="url(#areaGradient)" className="transition-all duration-1000 ease-out"/>
                 <path d={`M ${mintPos} 25 ${originalMintPos === null ? "" : `L ${originalMintPos} 35`} L ${buyPos} 40 L ${sellPos} 60 L ${burnPos} 75 ${originalBurnPos === null ? "" : `L ${originalBurnPos} 85`}`} stroke="url(#lineGradient)" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-lg transition-all duration-1000 ease-out"/>
                 <path d={`M ${buyPos} 40 L ${sellPos} 60`} stroke="#f59e0b" strokeWidth="2" strokeDasharray="3,3" fill="none" className="opacity-80 transition-all duration-1000 ease-out"/>
               </svg>

@@ -3,9 +3,10 @@
  * TODO: Make rMGP and lockManager separate so the contract can be upgraded without requiring migration on users end
  * TODO: Coin logo
  * TODO: reefi priority queue. withdraw slot 1 is free, 2: 10 MGP, 3: 100 MGP, 4: 500 MGP, 5: 1000 MGP, 6: 10000 MGP. if lets say 4 withdraw slots are being used, but user only wants to pay when it costs 100 MGP, they can join the queue and be included next time theres only 2 slots being used.
+ * TODO: Make *MGP on either chain burnable in exchange for the same coin on another chain. E.g. if you have rMGP on BSC and arbitrum starts performing better, you can burn your BSC *MGP for ARB *MGP. This averages out yields and depegs across chains allowing BSC & ARB to maintain the same yields. If rMGP on arb has performed better than BSC, you can mint on BSC and burn on ARB.
  */
 
-import { aprToApy, formatEther, formatNumber, parseEther } from './utilities';
+import { aprToApy, formatEther, formatNumber } from './utilities';
 import { useGlobalContext, GlobalProvider } from "./contexts/GlobalContext";
 import { useState, ReactElement } from "react";
 
@@ -37,6 +38,11 @@ import { Card } from "./components/Card";
  * Import { Web3Provider } from '@ethersproject/providers';
  * Import snapshot from '@snapshot-labs/snapshot.js';
  */
+
+/*
+1 rMGP = 1.2 BSC MGP
+1 rMGP = 1.4 ARB MGP
+*/
 
 /*
  * Const client = new snapshot.Client712('https://testnet.hub.snapshot.org');

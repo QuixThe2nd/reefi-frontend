@@ -1,38 +1,61 @@
-import { contracts, Coins } from "../config/contracts";
+import { contracts, Coins, Chains } from "../config/contracts";
 import { formatEther } from "../utilities";
-import { useGlobalContext } from "../contexts/GlobalContext";
 
 import { BuyOnCurve } from "./BuyOnCurve";
 import { ReactElement } from "react";
 import { TokenApproval } from "./TokenApproval";
+import { UseAllowances } from "../hooks/useAllowances";
 
-export const SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut }: Readonly<{ buy: () => void; nativeSwap: undefined | (() => void); label: string | undefined; tokenIn: Coins | "ETH"; tokenOut: Coins }>): ReactElement => {
-  const { actions, allowances, amounts, wallet, exchangeRates } = useGlobalContext();
+interface Properties {
+  buy: () => void;
+  nativeSwap: undefined | (() => void);
+  label: string | undefined;
+  tokenIn: Coins | "ETH";
+  tokenOut: Coins;
+  mgpRmgpCurveAmount: bigint;
+  rmgpYmgpCurveAmount: bigint;
+  rmgpMgpCurveAmount: bigint;
+  mgpYmgpCurveAmount: bigint;
+  ymgpRmgpCurveAmount: bigint;
+  ymgpMgpCurveAmount: bigint;
+  allowances: UseAllowances["allowances"];
+  sendAmount: bigint;
+  chain: Chains;
+  lockedReefiMGP: bigint;
+  rmgpSupply: bigint;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  convertMGP: () => void;
+  sellYMGP: () => void;
+  mintWETH: () => void;
+  swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
+}
+
+export const SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => {
   if (tokenIn === "MGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "yMGP" || tokenIn === "rMGP" && tokenOut === "MGP") {
     let nativeRate = 1;
     let curveAmount = 0n;
     if (tokenIn === "MGP" && tokenOut === "rMGP") {
-      nativeRate = 1 / exchangeRates.mintRMGP;
-      curveAmount = amounts.mgpRmgpCurve;
+      nativeRate = Number(rmgpSupply) / Number(lockedReefiMGP);
+      curveAmount = mgpRmgpCurveAmount;
     } else if (tokenIn === "rMGP" && tokenOut === "MGP") {
-      nativeRate = exchangeRates.mintRMGP * 0.9;
-      curveAmount = amounts.rmgpMgpCurve;
-    } else if (tokenIn === "rMGP" && tokenOut === "yMGP") curveAmount = amounts.rmgpYmgpCurve;
+      nativeRate = Number(lockedReefiMGP) / Number(rmgpSupply) * 0.9;
+      curveAmount = rmgpMgpCurveAmount;
+    } else if (tokenIn === "rMGP" && tokenOut === "yMGP") curveAmount = rmgpYmgpCurveAmount;
     return <div className="grid grid-cols-2 gap-2">
       <div>
-        {tokenOut !== "MGP" && <TokenApproval allowance={allowances[tokenIn][0]} onApprove={infinity => actions.approve(tokenOut, tokenIn, infinity)} sendAmount={amounts.send} tokenSymbol={tokenIn} />}
-        <button className="h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 md:text-base" onClick={nativeSwap} type="submit">{label} ({formatEther(BigInt(Number(amounts.send) * nativeRate)).toFixed(4)} {tokenOut})</button>
+        {tokenOut !== "MGP" && <TokenApproval allowance={allowances[tokenIn]} onApprove={infinity => approve(tokenOut, tokenIn, infinity)} sendAmount={sendAmount} tokenSymbol={tokenIn} />}
+        <button className="h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 md:text-base" onClick={nativeSwap} type="submit">{label} ({formatEther(BigInt(Number(sendAmount) * nativeRate)).toFixed(4)} {tokenOut})</button>
       </div>
-      <BuyOnCurve allowanceCurve={allowances.curve[tokenIn][0]} buy={buy} curveAmount={curveAmount} nativeRate={nativeRate} onApprove={infinity => actions.approve("cMGP", tokenIn, infinity)} sendAmount={amounts.send} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />
+      <BuyOnCurve allowanceCurve={allowances.curve[tokenIn]} buy={buy} curveAmount={curveAmount} nativeRate={nativeRate} onApprove={infinity => approve("cMGP", tokenIn, infinity)} sendAmount={sendAmount} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />
     </div>;
   }
-  if (tokenIn === "MGP" && tokenOut === "yMGP") return <BuyOnCurve allowanceCurve={allowances.curve[tokenIn][0]} buy={actions.convertMGP} curveAmount={amounts.mgpYmgpCurve} nativeRate={1} onApprove={infinity => actions.approve("cMGP", tokenIn, infinity)} sendAmount={amounts.send} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />;
-  if (tokenIn === "yMGP" && tokenOut === "rMGP") return <BuyOnCurve allowanceCurve={allowances.curve[tokenIn][0]} buy={actions.sellYMGP} curveAmount={amounts.ymgpRmgpCurve} nativeRate={1} onApprove={infinity => actions.approve("cMGP", tokenIn, infinity)} sendAmount={amounts.send} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />;
-  if (tokenIn === "yMGP" && tokenOut === "MGP") return <BuyOnCurve allowanceCurve={allowances.curve[tokenIn][0]} buy={actions.sellYMGP} curveAmount={amounts.ymgpMgpCurve} nativeRate={1 / exchangeRates.mintRMGP * 0.9} onApprove={infinity => actions.approve("cMGP", tokenIn, infinity)} sendAmount={amounts.send} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />;
-  if (tokenIn === "ETH") return <button className="h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 md:text-base" onClick={() => actions.mintWETH()} type="submit">Mint WETH</button>;
+  if (tokenIn === "MGP" && tokenOut === "yMGP") return <BuyOnCurve allowanceCurve={allowances.curve[tokenIn]} buy={convertMGP} curveAmount={mgpYmgpCurveAmount} nativeRate={1} onApprove={infinity => approve("cMGP", tokenIn, infinity)} sendAmount={sendAmount} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />;
+  if (tokenIn === "yMGP" && tokenOut === "rMGP") return <BuyOnCurve allowanceCurve={allowances.curve[tokenIn]} buy={sellYMGP} curveAmount={ymgpRmgpCurveAmount} nativeRate={1} onApprove={infinity => approve("cMGP", tokenIn, infinity)} sendAmount={sendAmount} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />;
+  if (tokenIn === "yMGP" && tokenOut === "MGP") return <BuyOnCurve allowanceCurve={allowances.curve[tokenIn]} buy={sellYMGP} curveAmount={ymgpMgpCurveAmount} nativeRate={1 / Number(lockedReefiMGP) / Number(rmgpSupply) * 0.9} onApprove={infinity => approve("cMGP", tokenIn, infinity)} sendAmount={sendAmount} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />;
 
   return <>
-    <TokenApproval allowance={allowances.odos[tokenIn][0]} onApprove={infinity => actions.approve("ODOSRouter", tokenIn, infinity)} sendAmount={amounts.send} tokenSymbol={tokenIn} />
-    <button className="h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 md:text-base" onClick={() => actions.swap(contracts[wallet.chain][tokenIn].address, contracts[wallet.chain].MGP.address)} type="submit">Swap to MGP With Odos</button>
+    {tokenIn === "ETH" && <button className="mb-2 h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 md:text-base" onClick={mintWETH} type="submit">Wrap ETH</button>}
+    {tokenIn === "WETH" && <TokenApproval allowance={allowances.odos[tokenIn]} onApprove={infinity => approve("ODOSRouter", tokenIn, infinity)} sendAmount={sendAmount} tokenSymbol={tokenIn} />}
+    <button className="h-min w-full rounded-lg bg-green-600 py-2 text-xs transition-colors hover:bg-green-700 md:text-base" onClick={() => swap(contracts[chain][tokenIn === "ETH" ? "WETH" : tokenIn].address, contracts[chain].MGP.address)} type="submit">Swap to MGP With Odos</button>
   </>;
 };

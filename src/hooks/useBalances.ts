@@ -1,34 +1,38 @@
 import { contracts, publicClients, Coins } from "../config/contracts";
-import { useCachedUpdateable } from "./useUpdateable";
+import { useEffect } from "react";
+import { useStoredObject } from "./useStoredState";
 
 import { UseWallet } from "./useWallet";
 
-export type UseBalances = Record<Coins, [bigint, () => void]> & Readonly<{
-  mgpCurve: bigint;
-  rmgpCurve: bigint;
-  ymgpCurve: bigint;
-  ymgpHoldings: bigint;
-  ETH: [bigint, () => void];
-  updateMGPCurve: () => void;
-  updateRMGPCurve: () => void;
-  updateYMGPCurve: () => void;
-  updateYMGPHoldings: () => void;
+type Balances = Record<Coins | "ETH" | "curveMGP" | "curveRMGP" | "curveYMGP" | "ymgpHoldings", bigint>;
+type UpdateBalances = Record<keyof Balances, () => Promise<void>>;
+
+export type UseBalances = Readonly<{
+  balances: Balances;
+  updateBalances: UpdateBalances;
 }>;
 
 export const useBalances = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseBalances => {
-  const MGP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].MGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "mgp balance", 0n);
-  const rMGP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].rMGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "rmgp balance", 0n);
-  const yMGP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].yMGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "ymgp balance", 0n);
-  const cMGP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].cMGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "cmgp balance", 0n);
-  const CKP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]), [contracts, wallet.account], "CKP balance", 0n);
-  const PNP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].PNP.read.balanceOf([wallet.account]), [contracts, wallet.account], "PNP balance", 0n);
-  const EGP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].EGP.read.balanceOf([wallet.account]), [contracts, wallet.account], "EGP balance", 0n);
-  const LTP = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].LTP.read.balanceOf([wallet.account]), [contracts, wallet.account], "LTP balance", 0n);
-  const WETH = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].WETH.read.balanceOf([wallet.account]), [contracts, wallet.account], "WETH balance", 0n);
-  const ETH = useCachedUpdateable(() => wallet.account === undefined ? 0n : publicClients[wallet.chain].getBalance({ address: wallet.account }), [contracts, wallet.account], "ETH balance", 0n);
-  const [mgpCurve, updateMGPCurve] = useCachedUpdateable(() => contracts[wallet.chain].MGP.read.balanceOf([contracts[wallet.chain].cMGP.address]), [contracts, wallet.chain, wallet.account], "mgpCurve balance", 0n);
-  const [rmgpCurve, updateRMGPCurve] = useCachedUpdateable(() => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]), [contracts, wallet.chain, wallet.account], "rmgpCurve balance", 0n);
-  const [ymgpCurve, updateYMGPCurve] = useCachedUpdateable(() => contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]), [contracts, wallet.chain, wallet.account], "ymgpCurve balance", 0n);
-  const [ymgpHoldings, updateYMGPHoldings] = useCachedUpdateable(() => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]), [contracts, wallet.chain, wallet.account], "ymgpHoldings balance", 0n);
-  return { CKP, EGP, ETH, LTP, MGP, PNP, WETH, cMGP, mgpCurve, rMGP, rmgpCurve, updateMGPCurve, updateRMGPCurve, updateYMGPCurve, updateYMGPHoldings, yMGP, ymgpCurve, ymgpHoldings };
+  const [balances, setBalances] = useStoredObject("balances", { CKP: 0n, EGP: 0n, ETH: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, curveMGP: 0n, curveRMGP: 0n, curveYMGP: 0n, rMGP: 0n, yMGP: 0n, ymgpHoldings: 0n });
+
+  const updateBalances: UpdateBalances = {
+    CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]).then(CKP => setBalances(() => ({ CKP }))) as Promise<void>,
+    EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.balanceOf([wallet.account]).then(EGP => setBalances(() => ({ EGP }))) as Promise<void>,
+    ETH: () => wallet.account === undefined ? Promise.resolve() : publicClients[wallet.chain].getBalance({ address: wallet.account }).then(ETH => setBalances(() => ({ ETH }))),
+    LTP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].LTP.read.balanceOf([wallet.account]).then(LTP => setBalances(() => ({ LTP }))) as Promise<void>,
+    MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.balanceOf([wallet.account]).then(MGP => setBalances(() => ({ MGP }))) as Promise<void>,
+    PNP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].PNP.read.balanceOf([wallet.account]).then(PNP => setBalances(() => ({ PNP }))) as Promise<void>,
+    WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.balanceOf([wallet.account]).then(WETH => setBalances(() => ({ WETH }))) as Promise<void>,
+    cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.balanceOf([wallet.account]).then(cMGP => setBalances(() => ({ cMGP }))) as Promise<void>,
+    curveMGP: () => contracts[wallet.chain].MGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then(curveMGP => setBalances({ curveMGP })),
+    curveRMGP: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then(curveRMGP => setBalances({ curveRMGP })),
+    curveYMGP: () => contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then(curveYMGP => setBalances({ curveYMGP })),
+    rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.balanceOf([wallet.account]).then(rMGP => setBalances(() => ({ rMGP }))) as Promise<void>,
+    yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.balanceOf([wallet.account]).then(yMGP => setBalances(() => ({ yMGP }))) as Promise<void>,
+    ymgpHoldings: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then(ymgpHoldings => setBalances(() => ({ ymgpHoldings })))
+  };
+
+  useEffect(() => Object.values(updateBalances).forEach(u => u()), [wallet.chain, wallet.account]);
+
+  return { balances, updateBalances };
 };

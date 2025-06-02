@@ -1,25 +1,47 @@
 import { contracts } from "../config/contracts";
-import { useCachedUpdateable } from "./useUpdateable";
+import { useEffect } from "react";
+import { useStoredObject } from "./useStoredState";
 
 import { UseWallet } from "./useWallet";
 
-export interface UseWithdraws {
-  userPendingWithdraws: bigint;
-  updateUserPendingWithdraws: () => void;
-  unsubmittedWithdraws: bigint;
-  updateUnsubmittedWithdraws: () => void;
+interface Withdraws {
+  userPending: bigint;
+  unsubmitted: bigint;
   userWithdrawable: bigint;
-  updateUserWithdrawable: () => void;
-  unlockSchedule: readonly { startTime: bigint;
-    endTime: bigint;
-    amountInCoolDown: bigint; }[];
-  updateUnlockSchedule: () => void;
+  unlockSchedule: readonly { startTime: bigint; endTime: bigint; amountInCoolDown: bigint }[];
+}
+
+interface UpdateWithdraws {
+  userPending: () => void;
+  unsubmitted: () => void;
+  userWithdrawable: () => void;
+  unlockSchedule: () => void;
+}
+
+export interface UseWithdraws {
+  withdraws: Withdraws;
+  updateWithdraws: UpdateWithdraws;
 }
 
 export const useWithdraws = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseWithdraws => {
-  const [userPendingWithdraws, updateUserPendingWithdraws] = useCachedUpdateable(() => wallet.account === undefined ? 0n : contracts[wallet.chain].rMGP.read.getUserPendingWithdraws([wallet.account]), [contracts, wallet.account, wallet.chain], "userPendingWithdraws", 0n);
-  const [unsubmittedWithdraws, updateUnsubmittedWithdraws] = useCachedUpdateable(() => contracts[wallet.chain].rMGP.read.unsubmittedWithdraws(), [contracts, wallet.chain], "unsubmittedWithdraws", 0n);
-  const [userWithdrawable, updateUserWithdrawable] = useCachedUpdateable(() => contracts[wallet.chain].rMGP.read.getUserWithdrawable(), [contracts, wallet.chain], "userWithdrawable", 0n);
-  const [unlockSchedule, updateUnlockSchedule] = useCachedUpdateable(() => contracts[wallet.chain].VLMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].rMGP.address]), [contracts, wallet.chain], "unlockSchedule", []);
-  return { unlockSchedule, unsubmittedWithdraws, updateUnlockSchedule, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, userPendingWithdraws, userWithdrawable };
+  const [withdraws, setWithdraws] = useStoredObject<Withdraws>("withdraws", { unlockSchedule: [], unsubmitted: 0n, userPending: 0n, userWithdrawable: 0n });
+
+  const updateWithdraws = {
+    unlockSchedule: () => contracts[wallet.chain].VLMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].rMGP.address]).then(unlockSchedule => setWithdraws({ unlockSchedule })),
+    unsubmitted: () => contracts[wallet.chain].rMGP.read.unsubmittedWithdraws().then(unsubmitted => setWithdraws({ unsubmitted })),
+    userPending: () => wallet.account === undefined ? 0n : contracts[wallet.chain].rMGP.read.getUserPendingWithdraws([wallet.account]).then(userPending => setWithdraws({ userPending })),
+    userWithdrawable: () => contracts[wallet.chain].rMGP.read.getUserWithdrawable().then(userWithdrawable => setWithdraws({ userWithdrawable }))
+  };
+
+  useEffect(() => {
+    updateWithdraws.unlockSchedule();
+    updateWithdraws.unsubmitted();
+    updateWithdraws.userWithdrawable();
+  }, [wallet.chain]);
+
+  useEffect(() => {
+    updateWithdraws.userPending();
+  }, [wallet.chain, wallet.account]);
+
+  return { updateWithdraws, withdraws };
 };

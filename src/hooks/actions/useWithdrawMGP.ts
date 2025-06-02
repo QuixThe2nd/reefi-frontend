@@ -8,19 +8,19 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  balances: UseBalances;
+  updateBalances: UseBalances["updateBalances"];
   chain: Chains;
   clients: Clients;
   setConnectRequired: (_value: boolean) => void;
   updateUnsubmittedWithdraws: () => void;
   updateUserPendingWithdraws: () => void;
   updateUserWithdrawable: () => void;
-  writeContracts: UseContracts<Clients>;
+  writeContracts: UseContracts;
 }
 
-export const useWithdrawMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, balances, chain, clients, setConnectRequired, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }: Properties<Clients>): () => void => {
+export const useWithdrawMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateBalances, chain, clients, setConnectRequired, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }: Properties<Clients>): () => void => {
   const accountReference = useRef(account);
-  const balancesReference = useRef(balances);
+  const updateBalancesReference = useRef(updateBalances);
   const chainReference = useRef(chain);
   const clientsReference = useRef(clients);
   const setConnectRequiredReference = useRef(setConnectRequired);
@@ -34,8 +34,8 @@ export const useWithdrawMGP = <Clients extends Record<Chains, WalletClient & Pub
   }, [account]);
 
   useEffect(() => {
-    balancesReference.current = balances;
-  }, [balances]);
+    updateBalancesReference.current = updateBalances;
+  }, [updateBalances]);
 
   useEffect(() => {
     chainReference.current = chain;
@@ -69,7 +69,7 @@ export const useWithdrawMGP = <Clients extends Record<Chains, WalletClient & Pub
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
     await writeContractsReference.current[chainReference.current].rMGP.write.unlock({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     await writeContractsReference.current[chainReference.current].rMGP.write.withdraw({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    balancesReference.current.MGP[1]();
+    updateBalancesReference.current.MGP();
     updateUserPendingWithdrawsReference.current();
     updateUnsubmittedWithdrawsReference.current();
     updateUserWithdrawableReference.current();

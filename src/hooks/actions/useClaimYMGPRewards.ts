@@ -11,7 +11,7 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   clients: Clients;
   setConnectRequired: (_value: boolean) => void;
   updateUnclaimedUserYield: () => void;
-  writeContracts: UseContracts<Clients>;
+  writeContracts: UseContracts;
 }
 
 export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, setConnectRequired, updateUnclaimedUserYield, writeContracts }: Properties<Clients>): () => void => {

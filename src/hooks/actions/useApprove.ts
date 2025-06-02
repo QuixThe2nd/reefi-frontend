@@ -8,17 +8,17 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  allowances: UseAllowances;
+  updateAllowances: UseAllowances["updateAllowances"];
   chain: Chains;
   clients: Clients;
   sendAmount: bigint;
   setConnectRequired: (_value: boolean) => void;
-  writeContracts: UseContracts<Clients>;
+  writeContracts: UseContracts;
 }
 
-export const useApprove = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, sendAmount, setConnectRequired, writeContracts }: Properties<Clients>): (_contract: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _coin: Coins, _infinity: boolean) => void => {
+export const useApprove = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateAllowances, chain, clients, sendAmount, setConnectRequired, writeContracts }: Properties<Clients>): (_contract: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _coin: Coins, _infinity: boolean) => void => {
   const accountReference = useRef(account);
-  const allowancesReference = useRef(allowances);
+  const updateAllowancesReference = useRef(updateAllowances);
   const chainReference = useRef(chain);
   const clientsReference = useRef(clients);
   const sendAmountReference = useRef(sendAmount);
@@ -30,8 +30,8 @@ export const useApprove = <Clients extends Record<Chains, WalletClient & PublicA
   }, [account]);
 
   useEffect(() => {
-    allowancesReference.current = allowances;
-  }, [allowances]);
+    updateAllowancesReference.current = updateAllowances;
+  }, [updateAllowances]);
 
   useEffect(() => {
     chainReference.current = chain;
@@ -57,9 +57,9 @@ export const useApprove = <Clients extends Record<Chains, WalletClient & PublicA
     if (clientsReference.current === undefined || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
     const amount = infinity ? 2n ** 256n - 1n : sendAmountReference.current;
     await writeContractsReference.current[chainReference.current][coin].write.approve([contracts[chainReference.current][contract].address, amount], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    if (contract === "cMGP") allowancesReference.current.curve[coin][1]();
-    else if (contract === "ODOSRouter") allowancesReference.current.odos[coin][1]();
-    else allowancesReference.current.curve[coin][1]();
+    if (contract === "cMGP") updateAllowancesReference.current.curve[coin as "MGP" | "rMGP" | "yMGP"]();
+    else if (contract === "ODOSRouter") updateAllowancesReference.current.odos[coin]();
+    else updateAllowancesReference.current.curve[coin as "MGP" | "rMGP" | "yMGP"]();
   }, []);
 
   return approve;

@@ -8,13 +8,13 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  allowances: UseAllowances;
+  allowances: UseAllowances["allowances"];
   chain: Chains;
   clients: Clients;
   sendAmount: bigint;
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
-  writeContracts: UseContracts<Clients>;
+  writeContracts: UseContracts;
 }
 
 export const useMintWETH = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }: Properties<Clients>): () => void => {
@@ -61,7 +61,7 @@ export const useMintWETH = <Clients extends Record<Chains, WalletClient & Public
 
   const depositMGP = useCallback(async (): Promise<void> => {
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.MGP[0] < sendAmountReference.current) return setErrorReference.current("Allowance too low");
+    if (allowancesReference.current.MGP < sendAmountReference.current) return setErrorReference.current("Allowance too low");
     await writeContractsReference.current[chainReference.current].WETH.write.deposit({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain, value: sendAmountReference.current });
   }, []);
 

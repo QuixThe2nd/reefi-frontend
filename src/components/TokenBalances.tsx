@@ -1,18 +1,21 @@
 import { decimals } from "../config/contracts";
 import { memo, type ReactElement } from "react";
-import { useGlobalContext } from "../contexts/GlobalContext";
 
 import { TokenBalance } from "./TokenBalance";
 
-export const TokenBalances = memo((): ReactElement => {
-  const { balances } = useGlobalContext();
-  return <div className='hidden items-center space-x-2 md:flex'>
-    <TokenBalance balance={balances.MGP[0]} decimals={decimals.MGP} symbol="MGP" />
-    <TokenBalance balance={balances.rMGP[0]} decimals={decimals.rMGP} symbol="rMGP" />
-    <TokenBalance balance={balances.yMGP[0]} decimals={decimals.yMGP} symbol="yMGP" />
-    {/* <TokenBalance symbol="VMGP" balance={vmgpBalance} decimals={decimals.VMGP} /> */}
-    <TokenBalance balance={balances.cMGP[0]} decimals={decimals.cMGP} symbol="cMGP" />
-    {/* <TokenBalance symbol="Locked yMGP" balance={userLockedYMGP} decimals={decimals.YMGP} /> */}
-  </div>;
-});
+interface Properties {
+  mgpBalance: bigint;
+  rmgpBalance: bigint;
+  ymgpBalance: bigint;
+  cmgpBalance: bigint;
+}
+
+export const TokenBalances = memo(({ mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance }: Properties): ReactElement => <div className='hidden items-center space-x-2 md:flex'>
+  <TokenBalance balance={mgpBalance} decimals={decimals.MGP} symbol="MGP" />
+  <TokenBalance balance={rmgpBalance} decimals={decimals.rMGP} symbol="rMGP" />
+  <TokenBalance balance={ymgpBalance} decimals={decimals.yMGP} symbol="yMGP" />
+  {/* <TokenBalance symbol="VMGP" balance={vmgpBalance} decimals={decimals.VMGP} /> */}
+  <TokenBalance balance={cmgpBalance} decimals={decimals.cMGP} symbol="cMGP" />
+  {/* <TokenBalance symbol="Locked yMGP" balance={userLockedYMGP} decimals={decimals.YMGP} /> */}
+</div>);
 TokenBalances.displayName = "TokenBalance";

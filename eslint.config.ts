@@ -13,22 +13,21 @@ import sonarjs from "eslint-plugin-sonarjs";
 import splitAndSortImports from "@sngn/eslint-plugin-split-and-sort-imports";
 import stylistic from "@stylistic/eslint-plugin";
 import tailwind from "eslint-plugin-tailwindcss";
-// import tsParser from "@typescript-eslint/parser";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-  tseslint.configs.stylisticTypeChecked,
   eslintPluginUnicorn.configs.all,
   reactHooks.configs["recommended-latest"],
-  eslintReact.configs.all,
   js.configs.all,
   stylistic.configs.all,
   sonarjs.configs.recommended,
   deMorgan.configs.recommended,
   tailwind.configs["flat/recommended"],
-  functional.configs.all,
   eslintPluginMath.configs.recommended,
   splitAndSortImports.configs.recommended,
+  tseslint.configs.stylisticTypeChecked,
+  eslintReact.configs.all,
+  functional.configs.all,
   {
     extends: ["depend/flat/recommended"],
     languageOptions: {
@@ -62,6 +61,7 @@ export default defineConfig([
       "@stylistic/object-property-newline": "off",
       "@stylistic/padded-blocks": ["error", "never"],
       "@stylistic/quote-props": ["error", "consistent-as-needed"],
+      "@typescript-eslint/consistent-indexed-object-style": "off",
       "better-styled-components/sort-declarations-alphabetically": 2,
       "capitalized-comments": "off",
       "complexity": "off",
@@ -86,6 +86,7 @@ export default defineConfig([
       "max-lines-per-function": "off",
       "max-params": "off",
       "max-statements": "off",
+      "new-cap": "off",
       "no-magic-numbers": "off",
       "no-redeclare": "off",
       "no-ternary": "off",
@@ -104,7 +105,8 @@ export default defineConfig([
       "split-and-sort-imports/split-imports": "off",
       "unicorn/filename-case": "off",
       "unicorn/no-array-for-each": "off",
-      "unicorn/no-keyword-prefix": "off"
+      "unicorn/no-keyword-prefix": "off",
+      "unicorn/prefer-global-this": "off"
     }
   }
 ]);

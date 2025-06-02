@@ -7,7 +7,7 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  allowances: UseAllowances;
+  allowances: UseAllowances["allowances"];
   chain: Chains;
   clients: Clients;
   sendAmount: bigint;
@@ -60,7 +60,7 @@ export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActi
 
   const buyRMGP = useCallback(async (tokenIn: `0x${string}`, tokenOut: `0x${string}`): Promise<void> => {
     if (!clientsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.curve.MGP[0] < sendAmountReference.current) return setErrorReference.current("Allowance too low");
+    if (allowancesReference.current.curve.MGP < sendAmountReference.current) return setErrorReference.current("Allowance too low");
 
     setNotificationReference.current("Fetching swap route");
     const quoteRequestBody = {

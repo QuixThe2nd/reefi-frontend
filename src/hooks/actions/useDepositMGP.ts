@@ -10,29 +10,29 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  allowances: UseAllowances;
-  balances: UseBalances;
+  allowances: UseAllowances["allowances"];
+  updateBalances: UseBalances["updateBalances"];
   chain: Chains;
   clients: Clients;
   sendAmount: bigint;
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
-  supplies: UseSupplies;
+  updateSupplies: UseSupplies["updateSupplies"];
   updateReefiLockedMGP: () => void;
   updateTotalLockedMGP: () => void;
-  writeContracts: UseContracts<Clients>;
+  writeContracts: UseContracts;
 }
 
-export const useDepositMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, balances, chain, clients, sendAmount, setConnectRequired, setError, supplies, updateReefiLockedMGP, updateTotalLockedMGP, writeContracts }: Properties<Clients>): () => void => {
+export const useDepositMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, updateSupplies, updateReefiLockedMGP, updateTotalLockedMGP, writeContracts }: Properties<Clients>): () => void => {
   const accountReference = useRef(account);
   const allowancesReference = useRef(allowances);
-  const balancesReference = useRef(balances);
+  const updateBalancesReference = useRef(updateBalances);
   const chainReference = useRef(chain);
   const clientsReference = useRef(clients);
   const sendAmountReference = useRef(sendAmount);
   const setConnectRequiredReference = useRef(setConnectRequired);
   const setErrorReference = useRef(setError);
-  const suppliesReference = useRef(supplies);
+  const updateSuppliesReference = useRef(updateSupplies);
   const updateReefiLockedMGPReference = useRef(updateReefiLockedMGP);
   const updateTotalLockedMGPReference = useRef(updateTotalLockedMGP);
   const writeContractsReference = useRef(writeContracts);
@@ -46,8 +46,8 @@ export const useDepositMGP = <Clients extends Record<Chains, WalletClient & Publ
   }, [allowances]);
 
   useEffect(() => {
-    balancesReference.current = balances;
-  }, [balances]);
+    updateBalancesReference.current = updateBalances;
+  }, [updateBalances]);
 
   useEffect(() => {
     chainReference.current = chain;
@@ -70,8 +70,8 @@ export const useDepositMGP = <Clients extends Record<Chains, WalletClient & Publ
   }, [setError]);
 
   useEffect(() => {
-    suppliesReference.current = supplies;
-  }, [supplies]);
+    updateSuppliesReference.current = updateSupplies;
+  }, [updateSupplies]);
 
   useEffect(() => {
     updateReefiLockedMGPReference.current = updateReefiLockedMGP;
@@ -87,12 +87,12 @@ export const useDepositMGP = <Clients extends Record<Chains, WalletClient & Publ
 
   return useCallback(async (): Promise<void> => {
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.MGP[0] < sendAmountReference.current) return setErrorReference.current("Allowance too low");
+    if (allowancesReference.current.MGP < sendAmountReference.current) return setErrorReference.current("Allowance too low");
     await writeContractsReference.current[chainReference.current].rMGP.write.deposit([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    balancesReference.current.MGP[1]();
-    balancesReference.current.rMGP[1]();
-    suppliesReference.current.updateMGP();
-    suppliesReference.current.updateRMGP();
+    updateBalancesReference.current.MGP();
+    updateBalancesReference.current.rMGP();
+    updateSuppliesReference.current.MGP();
+    updateSuppliesReference.current.rMGP();
     updateTotalLockedMGPReference.current();
     updateReefiLockedMGPReference.current();
   }, []);

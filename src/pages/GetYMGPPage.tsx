@@ -1,13 +1,40 @@
 import { memo, type ReactElement } from "react";
-import { useGlobalContext } from "../contexts/GlobalContext";
 
+import { Chains, Coins } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
+import { UseAllowances } from "../hooks/useAllowances";
+import { UseBalances } from "../hooks/useBalances";
+import { UsePrices } from "../hooks/usePrices";
 
-export const GetYMGPPage = memo((): ReactElement => {
-  const { actions } = useGlobalContext();
-  return <Page info="yMGP is backed 1:1 by rMGP. This process can not be undone. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield.">
-    <SwapToken buy={actions.buyYMGP} excludeCoins={["CKP", "EGP", "PNP", "LTP", "WETH"]} label="Mint" nativeSwap={actions.depositRMGP} originalTokenIn="rMGP" tokenOut="yMGP" />
-  </Page>;
-});
+interface Properties {
+  balances: UseBalances["balances"];
+  setSend: (_send: bigint) => void;
+  send: bigint;
+  prices: UsePrices;
+  ymgpMgpCurveRate: number;
+  mgpRmgpCurveRate: number;
+  mgpRmgpCurveAmount: bigint;
+  rmgpYmgpCurveAmount: bigint;
+  rmgpMgpCurveAmount: bigint;
+  mgpYmgpCurveAmount: bigint;
+  ymgpRmgpCurveAmount: bigint;
+  ymgpMgpCurveAmount: bigint;
+  allowances: UseAllowances["allowances"];
+  sendAmount: bigint;
+  chain: Chains;
+  lockedReefiMGP: bigint;
+  rmgpSupply: bigint;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  convertMGP: () => void;
+  sellYMGP: () => void;
+  mintWETH: () => void;
+  swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
+  buyYMGP: () => void;
+  depositRMGP: () => void;
+}
+
+export const GetYMGPPage = memo(({ balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, buyYMGP, depositRMGP, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info="yMGP is backed 1:1 by rMGP. This process can not be undone. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield.">
+  <SwapToken buy={buyYMGP} excludeCoins={["CKP", "EGP", "PNP", "LTP", "WETH"]} label="Mint" nativeSwap={depositRMGP} originalTokenIn="rMGP" tokenOut="yMGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} sendAmount={sendAmount} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} />
+</Page>);
 GetYMGPPage.displayName = "ConvertPage";

@@ -10,28 +10,28 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  allowances: UseAllowances;
-  balances: UseBalances;
+  allowances: UseAllowances["allowances"];
+  updateBalances: UseBalances["updateBalances"];
   chain: Chains;
   clients: Clients;
   sendAmount: bigint;
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
-  supplies: UseSupplies;
+  updateSupplies: UseSupplies["updateSupplies"];
   updateYMGPHoldings: () => void;
-  writeContracts: UseContracts<Clients>;
+  writeContracts: UseContracts;
 }
 
-export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, balances, chain, clients, sendAmount, setConnectRequired, setError, supplies, updateYMGPHoldings, writeContracts }: Properties<Clients>): () => void => {
+export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, updateSupplies, updateYMGPHoldings, writeContracts }: Properties<Clients>): () => void => {
   const accountReference = useRef(account);
   const allowancesReference = useRef(allowances);
-  const balancesReference = useRef(balances);
+  const updateBalancesReference = useRef(updateBalances);
   const chainReference = useRef(chain);
   const clientsReference = useRef(clients);
   const sendAmountReference = useRef(sendAmount);
   const setConnectRequiredReference = useRef(setConnectRequired);
   const setErrorReference = useRef(setError);
-  const suppliesReference = useRef(supplies);
+  const updateSuppliesReference = useRef(updateSupplies);
   const updateYMGPHoldingsReference = useRef(updateYMGPHoldings);
   const writeContractsReference = useRef(writeContracts);
 
@@ -44,8 +44,8 @@ export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & Pub
   }, [allowances]);
 
   useEffect(() => {
-    balancesReference.current = balances;
-  }, [balances]);
+    updateBalancesReference.current = updateBalances;
+  }, [updateBalances]);
 
   useEffect(() => {
     chainReference.current = chain;
@@ -68,8 +68,8 @@ export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & Pub
   }, [setError]);
 
   useEffect(() => {
-    suppliesReference.current = supplies;
-  }, [supplies]);
+    updateSuppliesReference.current = updateSupplies;
+  }, [updateSupplies]);
 
   useEffect(() => {
     updateYMGPHoldingsReference.current = updateYMGPHoldings;
@@ -81,12 +81,12 @@ export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & Pub
 
   return useCallback(async (): Promise<void> => {
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.rMGP[0] < sendAmountReference.current) return setErrorReference.current("Allowance too low");
+    if (allowancesReference.current.rMGP < sendAmountReference.current) return setErrorReference.current("Allowance too low");
     await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    balancesReference.current.rMGP[1]();
-    balancesReference.current.yMGP[1]();
-    suppliesReference.current.updateRMGP();
-    suppliesReference.current.updateYMGP();
+    updateBalancesReference.current.rMGP();
+    updateBalancesReference.current.yMGP();
+    updateSuppliesReference.current.rMGP();
+    updateSuppliesReference.current.yMGP();
     updateYMGPHoldingsReference.current();
   }, []);
 };

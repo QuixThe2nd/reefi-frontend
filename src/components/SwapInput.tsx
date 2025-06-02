@@ -1,7 +1,8 @@
 import { coins, decimals, type Coins } from "../config/contracts";
 import { formatEther } from "../utilities";
 import { memo, useEffect, useRef, useState, Fragment, type ReactElement } from "react";
-import { useGlobalContext } from "../contexts/GlobalContext";
+
+import { UsePrices } from "../hooks/usePrices";
 
 interface Properties {
   readonly label: string;
@@ -12,10 +13,12 @@ interface Properties {
   readonly onChange: (_value: bigint) => void;
   readonly outputCoin: Coins;
   readonly excludeCoins: Coins[];
+  readonly prices: UsePrices;
+  readonly ymgpMgpCurveRate: number;
+  readonly mgpRmgpCurveRate: number;
 }
 
-export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin, excludeCoins }: Properties): ReactElement => {
-  const { exchangeRates, prices } = useGlobalContext();
+export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin, excludeCoins, prices, ymgpMgpCurveRate, mgpRmgpCurveRate }: Properties): ReactElement => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownReference = useRef<HTMLDivElement>(null);
   excludeCoins.push(outputCoin, "cMGP");
@@ -34,13 +37,16 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
     if (selectedCoin === "rMGP" && outputCoin === "yMGP") return undefined;
     if (selectedCoin === "MGP" && outputCoin === "rMGP") return undefined;
     if (selectedCoin === "yMGP" && outputCoin === "rMGP") return undefined;
-    else if (selectedCoin === "yMGP" && outputCoin === "MGP") return `${(inputAmount / exchangeRates.curve.ymgpMGP).toFixed(6)} ${outputCoin}`;
-    else if (outputCoin === "rMGP") return `${(inputAmount * prices[selectedCoin === "ETH" ? `W${selectedCoin}` as "WETH" : selectedCoin] / prices.MGP / exchangeRates.curve.mgpRMGP).toFixed(6)} ${outputCoin}`;
+    else if (selectedCoin === "yMGP" && outputCoin === "MGP") return `${(inputAmount / ymgpMgpCurveRate).toFixed(6)} ${outputCoin}`;
+    else if (outputCoin === "rMGP") {
+      const priceKey = selectedCoin === "ETH" ? "WETH" : selectedCoin;
+      return `${(inputAmount * prices[priceKey] / prices.MGP / mgpRmgpCurveRate).toFixed(6)} ${outputCoin}`;
+    }
     return undefined;
   };
 
-  const handleCoinChange = (coin: Coins) => {
-    onCoinChange(coin.replace("W", "") as "ETH");
+  const handleCoinChange = (coin: Coins | "ETH") => {
+    onCoinChange(coin);
     setIsDropdownOpen(false);
   };
 
@@ -54,8 +60,8 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
       <div className="flex items-center space-x-2">
         <button className="rounded bg-gray-700 px-2 py-1 text-xs hover:bg-gray-600" onClick={() => onChange(balance)} type="button">MAX</button>
         <div className="relative" ref={dropdownReference}>
-          <button className={`flex cursor-pointer items-center rounded-md px-3 py-1 transition-opacity hover:opacity-90 ${coins[selectedCoin === "ETH" ? `W${selectedCoin}` as "WETH" : selectedCoin].bgColor}`} onClick={() => setIsDropdownOpen(!isDropdownOpen)} type="button">
-            <div className={`mr-2 flex size-5 items-center justify-center rounded-full ${coins[selectedCoin === "ETH" ? `W${selectedCoin}` as "WETH" : selectedCoin].color}`}>{selectedCoin[0]?.toUpperCase()}</div>
+          <button className={["flex cursor-pointer items-center rounded-md px-3 py-1 transition-opacity hover:opacity-90", coins[selectedCoin === "ETH" ? "WETH" : selectedCoin].bgColor].join(" ")} onClick={() => setIsDropdownOpen(!isDropdownOpen)} type="button">
+            <div className={["mr-2 flex size-5 items-center justify-center rounded-full", coins[selectedCoin === "ETH" ? "WETH" : selectedCoin].color].join(" ")}>{selectedCoin[0]?.toUpperCase()}</div>
             <span className="mr-2">{selectedCoin}</span>
             <svg className={`size-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>
           </button>
@@ -65,7 +71,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
                 <div className={`mr-2 flex size-5 items-center justify-center rounded-full ${coins[coin].color}`}>{coin[0]?.toUpperCase()}</div>
                 <span>{coin}</span>
               </button>
-              {coin === "WETH" && <button className={`flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin.replace("W", "") ? "bg-gray-700" : ""}`} key={coin} onClick={() => handleCoinChange(coin)} type="button">
+              {coin === "WETH" && <button className={`flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin.replace("W", "") ? "bg-gray-700" : ""}`} key={coin} onClick={() => handleCoinChange(coin.replace("W", "") as "ETH")} type="button">
                 <div className={`mr-2 flex size-5 items-center justify-center rounded-full ${coins[coin].color}`}>{coin[1]?.toUpperCase()}</div>
                 <span>{coin.replace("W", "")}</span>
               </button>}

@@ -8,19 +8,19 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  balances: UseBalances;
+  updateBalances: UseBalances["updateBalances"];
   chain: Chains;
   clients: Clients;
   mgpLPAmount: bigint;
   rmgpLPAmount: bigint;
   setConnectRequired: (_value: boolean) => void;
-  writeContracts: UseContracts<Clients>;
+  writeContracts: UseContracts;
   ymgpLPAmount: bigint;
 }
 
-export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, balances, chain, clients, mgpLPAmount, rmgpLPAmount, setConnectRequired, writeContracts, ymgpLPAmount }: Properties<Clients>): () => void => {
+export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateBalances, chain, clients, mgpLPAmount, rmgpLPAmount, setConnectRequired, writeContracts, ymgpLPAmount }: Properties<Clients>): () => void => {
   const accountReference = useRef(account);
-  const balancesReference = useRef(balances);
+  const updateBalancesReference = useRef(updateBalances);
   const chainReference = useRef(chain);
   const clientsReference = useRef(clients);
   const mgpLPAmountReference = useRef(mgpLPAmount);
@@ -34,8 +34,8 @@ export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient &
   }, [account]);
 
   useEffect(() => {
-    balancesReference.current = balances;
-  }, [balances]);
+    updateBalancesReference.current = updateBalances;
+  }, [updateBalances]);
 
   useEffect(() => {
     chainReference.current = chain;
@@ -68,12 +68,12 @@ export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient &
   return useCallback(async (): Promise<void> => {
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
     await writeContractsReference.current[chainReference.current].cMGP.write.add_liquidity([[mgpLPAmountReference.current, rmgpLPAmountReference.current, ymgpLPAmountReference.current], 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    balancesReference.current.MGP[1]();
-    balancesReference.current.rMGP[1]();
-    balancesReference.current.yMGP[1]();
-    balancesReference.current.cMGP[1]();
-    balancesReference.current.updateMGPCurve();
-    balancesReference.current.updateRMGPCurve();
-    balancesReference.current.updateYMGPCurve();
+    updateBalancesReference.current.MGP();
+    updateBalancesReference.current.rMGP();
+    updateBalancesReference.current.yMGP();
+    updateBalancesReference.current.cMGP();
+    updateBalancesReference.current.curveMGP();
+    updateBalancesReference.current.curveRMGP();
+    updateBalancesReference.current.curveYMGP();
   }, []);
 };

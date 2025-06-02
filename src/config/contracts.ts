@@ -1,9 +1,7 @@
 import { arbitrum, bsc, mainnet } from "viem/chains";
-import { createPublicClient, decodeFunctionData, erc20Abi, fallback, getContract, http } from "viem";
+import { createPublicClient, erc20Abi, getContract, webSocket } from "viem";
 
 import { ABIs } from "./ABIs/abis";
-
-type NonEmptyArray<T> = [T, ...T[]];
 
 export type Chains = 56 | 42_161;
 export type Coins = "MGP" | "rMGP" | "yMGP" | "cMGP" | "CKP" | "PNP" | "EGP" | "LTP" | "WETH";
@@ -21,33 +19,10 @@ export const coins: Record<Coins, { symbol: string; color: string; bgColor: stri
   yMGP: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "YMGP" }
 } as const;
 
-const calls: `0x${string}_0x${string}`[] = [];
-const onRPCRequest = async (request: Request): Promise<void> => {
-  const body = await new Response(request.body).json() as { method: string; params: NonEmptyArray<{ data: `0x${string}`; to: `0x${string}` }> }[];
-  body.forEach(call => {
-    if (call.method === "eth_call") {
-      const key = `${call.params[0].to}_${call.params[0].data}` as const;
-      if (calls.includes(key)) Object.values(contracts).forEach(chain => {
-        Object.keys(chain).forEach(contractName => {
-          const contract = chain[contractName];
-          if (contract.address === call.params[0].to) {
-            const decodedData = decodeFunctionData({ abi: contract.abi, data: call.params[0].data });
-            console.log("Duplicate RPC Call", `${contractName}.${decodedData.functionName}(${decodedData.args === undefined ? "" : decodedData.args.join(", ")})`);
-          }
-        });
-      });
-      else calls.push(key);
-    }
-  });
-};
-
 export const publicClients = {
-  1: createPublicClient({ chain: mainnet, transport: http("https://eth.drpc.org", { batch: { batchSize: 3, wait: 1000 }, onFetchRequest: onRPCRequest, retryDelay: 250 }) }),
-  42_161: createPublicClient({ chain: arbitrum, transport: fallback([
-    http("https://arb1.arbitrum.io/rpc", { batch: true, onFetchRequest: onRPCRequest }),
-    http("https://arbitrum-one-rpc.publicnode.com", { batch: true, onFetchRequest: onRPCRequest })
-  ]) }),
-  56: createPublicClient({ chain: bsc, transport: http("https://bsc-dataseed1.binance.org", { batch: true, onFetchRequest: onRPCRequest, retryDelay: 250 }) })
+  1: createPublicClient({ chain: mainnet, transport: webSocket("wss://eth.drpc.org") }),
+  42_161: createPublicClient({ chain: arbitrum, transport: webSocket("wss://arbitrum.drpc.org") }),
+  56: createPublicClient({ chain: bsc, transport: webSocket("wss://bsc.drpc.org") })
 };
 
 export const contracts = {

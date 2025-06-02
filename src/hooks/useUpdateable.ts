@@ -1,8 +1,8 @@
 import superjson from "superjson";
 import { useEffect, useState } from "react";
 
-const depUpdateLog: string[] = [];
-const manUpdateLog: string[] = [];
+// const depUpdateLog: string[] = [];
+// const manUpdateLog: string[] = [];
 
 function useUpdateable<T> (_factory: () => T | Promise<T>, _deps: readonly unknown[], _label: string, _initial: T): [T, () => void];
 function useUpdateable<T> (_factory: () => T | Promise<T>, _deps: readonly unknown[], _label: string): [T | undefined, () => void];
@@ -17,14 +17,14 @@ function useUpdateable<T> (factory: () => T | Promise<T>, deps: readonly unknown
     })();
   }, [...deps, updateCount]);
 
-  useEffect(() => {
-    if (depUpdateLog.includes(label)) console.log(`${label} deps updated: ${value}`);
-    else depUpdateLog.push(label);
-  }, deps);
-  useEffect(() => {
-    if (manUpdateLog.includes(label)) console.log(`${label} manually updated: ${value}`);
-    else manUpdateLog.push(label);
-  }, [updateCount]);
+  // useEffect(() => {
+  //   if (depUpdateLog.includes(label)) console.log(`${label} deps updated: ${value}`);
+  //   else depUpdateLog.push(label);
+  // }, deps);
+  // useEffect(() => {
+  //   if (manUpdateLog.includes(label)) console.log(`${label} manually updated: ${value}`);
+  //   else manUpdateLog.push(label);
+  // }, [updateCount]);
 
   const update = (): void => setUpdateCount(c => c + 1);
   return [value, update];

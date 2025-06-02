@@ -1,7 +1,6 @@
 import { decimals } from "../config/contracts";
 import { formatEther, formatNumber } from "../utilities";
 import { memo, type ReactElement } from "react";
-import { useGlobalContext } from "../contexts/GlobalContext";
 
 import { Page } from "../components/Page";
 
@@ -30,8 +29,5 @@ export const ClaimYieldComponent = ({ claimYMGPRewards, unclaimedUserYield, unco
   <button className="mt-4 w-full rounded-lg bg-green-600 py-3 transition-colors hover:bg-green-700" onClick={claimYMGPRewards} type="button">Claim Rewards</button>
 </Page>;
 
-export const ClaimYield = memo((): ReactElement => {
-  const { actions, balances, locked, supplies, rewards } = useGlobalContext();
-  return <ClaimYieldComponent claimYMGPRewards={actions.claimYMGPRewards} lockedYMGP={locked.ymgp} unclaimedUserYield={rewards.unclaimedUserYield} uncompoundedMGPYield={rewards.uncompoundedMGPYield} userLockedYMGP={locked.userYMGP} ymgpHoldings={balances.ymgpHoldings} ymgpSupply={supplies.ymgp} />;
-});
+export const ClaimYield = memo(({ claimYMGPRewards, lockedYMGP, unclaimedUserYield, uncompoundedMGPYield, userLockedYMGP, ymgpHoldings, ymgpSupply }: Properties): ReactElement => <ClaimYieldComponent claimYMGPRewards={claimYMGPRewards} lockedYMGP={lockedYMGP} unclaimedUserYield={unclaimedUserYield} uncompoundedMGPYield={uncompoundedMGPYield} userLockedYMGP={userLockedYMGP} ymgpHoldings={ymgpHoldings} ymgpSupply={ymgpSupply} />);
 ClaimYield.displayName = "ClaimYield";

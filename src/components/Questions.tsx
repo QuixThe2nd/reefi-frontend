@@ -72,7 +72,7 @@ export const QASection = (): ReactElement => {
   };
 
   return <div className="flex justify-center rounded-xl border border-gray-700 bg-gray-800 p-3">
-    <div className="max-w-3xl">
+    <div className="max-w-4xl">
       <div className="mb-6 rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4">
         <h3 className="mb-2 text-lg font-semibold text-yellow-400">⚠️ Important Notice</h3>
         <p className="text-sm text-gray-300">Reefi is in <strong>very early beta</strong>. Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution</p>

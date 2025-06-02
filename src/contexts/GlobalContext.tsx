@@ -14,16 +14,21 @@ import { useWithdraws, UseWithdraws } from "../hooks/useWithdraws";
 
 interface GlobalContextType<W extends UseWallet = UseWallet> {
   wallet: W;
-  balances: UseBalances;
-  allowances: UseAllowances;
-  supplies: UseSupplies;
+  balances: UseBalances["balances"];
+  updateBalances: UseBalances["updateBalances"];
+  allowances: UseAllowances["allowances"];
+  updateAllowances: UseAllowances["updateAllowances"];
+  supplies: UseSupplies["supplies"];
+  updateSupplies: UseSupplies["updateSupplies"];
   prices: UsePrices;
-  writeContracts: UseContracts<W["clients"]>;
-  locked: UseLocked;
-  exchangeRates: UseExchangeRates;
-  amounts: UseAmounts;
+  writeContracts: UseContracts;
+  locked: UseLocked["locked"];
+  updateLocked: UseLocked["updateLocked"];
+  exchangeRates: UseExchangeRates["exchangeRates"];
+  amounts: UseAmounts["amounts"];
+  updateAmounts: UseAmounts["updateAmounts"];
   rewards: UseRewards;
-  withdraws: UseWithdraws;
+  withdraws: UseWithdraws["withdraws"];
   actions: UseActions;
 }
 
@@ -38,18 +43,18 @@ GlobalContext.displayName = "GlobalContext";
 
 export const GlobalProvider = ({ children, setError, setNotification }: GlobalProviderProperties): ReactElement => {
   const wallet = useWallet({ setError });
-  const balances = useBalances({ wallet });
-  const allowances = useAllowances({ wallet });
-  const supplies = useSupplies({ wallet });
+  const { balances, updateBalances } = useBalances({ wallet });
+  const { allowances, updateAllowances } = useAllowances({ wallet });
+  const { amounts, updateAmounts } = useAmounts({ wallet });
+  const { supplies, updateSupplies } = useSupplies({ wallet });
+  const { locked, updateLocked } = useLocked({ wallet });
+  const { withdraws, updateWithdraws } = useWithdraws({ wallet });
+  const { exchangeRates } = useExchangeRates({ wallet });
   const prices = usePrices();
   const writeContracts = useContracts({ wallet });
-  const locked = useLocked({ wallet });
-  const amounts = useAmounts({ wallet });
-  const withdraws = useWithdraws({ wallet });
-  const exchangeRates = useExchangeRates({ locked, supplies, wallet });
   const rewards = useRewards({ balances, locked, prices, wallet });
-  const actions = useActions({ allowances, amounts, balances, locked, rewards, setError, setNotification, supplies, wallet, withdraws, writeContracts });
-  const value = useMemo(() => ({ actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, wallet, withdraws, writeContracts }), [actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, wallet, withdraws, writeContracts]);
+  const actions = useActions({ allowances, amounts, rewards, setError, setNotification, updateAllowances, updateBalances, updateLocked, updateSupplies, updateWithdraws, wallet, writeContracts });
+  const value = useMemo(() => ({ actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, updateAllowances, updateAmounts, updateBalances, updateLocked, updateSupplies, wallet, withdraws, writeContracts }), [actions, allowances, updateAllowances, amounts, balances, updateBalances, exchangeRates, locked, prices, rewards, supplies, wallet, withdraws, writeContracts]);
   return <GlobalContext value={value}>{children}</GlobalContext>;
 };
 

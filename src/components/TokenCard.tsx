@@ -27,18 +27,17 @@ export const TokenCard = memo(({ symbol, decimals, description, price, supply, u
             <div className={`${bg} mr-2 flex size-8 items-center justify-center rounded-full`}>{symbol[0]?.toUpperCase()}</div>
             <p className="text-lg font-bold">${symbol}</p>
           </div>
-          {price !== undefined && <h2 className="mt-2 text-2xl font-bold">${price.toFixed(4)}</h2>}
         </div>
       </div>
       <div className="col-span-2 mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:mt-0">
         <TokenStat detail={`${formatNumber(formatEther(supply, decimals), 3)} ${symbol}`} title="Supply" />
-        {underlying !== undefined && underlying !== supply && <TokenStat detail={`${formatNumber(formatEther(underlying), 2)} ${underlyingSymbol}`} title="TVL" />}
+        {price !== undefined && <TokenStat detail={`$${price.toFixed(4)}`} title="Price" />}
+        {underlying !== undefined && <TokenStat detail={`${formatNumber(formatEther(underlying), 2)} ${underlyingSymbol}`} title="TVL" />}
         {underlying !== undefined && underlying !== supply && <TokenStat detail={`${formatNumber(Number(underlying) / Number(supply), 4)} ${underlyingSymbol}`} title="Mint Rate" />}
-        {marketRate !== undefined && <TokenStat detail={`${formatNumber(Number(marketRate), 3)} ${underlyingSymbol}`} title="Market Rate" />}
-        {locked !== undefined && <TokenStat detail={`${formatNumber(Math.round(formatEther(locked, decimals)))} ${symbol}`} title="Locked" />}
         {locked !== undefined && <TokenStat detail={`${Math.round(10_000 * Number(locked) / Number(supply)) / 100}%`} title="Lock Rate" />}
         {price !== undefined && <TokenStat detail={`$${formatNumber(price * formatEther(supply, decimals))}`} title="FDV" />}
         {voteMultiplier !== undefined && <TokenStat detail={formatNumber(voteMultiplier)} title="Vote Multiplier" />}
+        {marketRate !== undefined && <TokenStat detail={`${formatNumber(100 * (Number(underlying) / Number(supply)) / Number(marketRate), 2)}%`} title="Peg" />}
       </div>
     </div>
     <p className="mt-2 text-xs text-gray-400">{description}</p>

@@ -9,25 +9,25 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  balances: UseBalances;
+  updateBalances: UseBalances["updateBalances"];
   chain: Chains;
   clients: Clients;
   setConnectRequired: (_value: boolean) => void;
-  supplies: UseSupplies;
+  updateSupplies: UseSupplies["updateSupplies"];
   updatePendingRewards: () => void;
   updateReefiLockedMGP: () => void;
   updateTotalLockedMGP: () => void;
   updateUnclaimedUserYield: () => void;
-  writeContracts: UseContracts<Clients>;
+  writeContracts: UseContracts;
 }
 
-export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, balances, chain, clients, setConnectRequired, supplies, updatePendingRewards, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, writeContracts }: Properties<Clients>): () => void => {
+export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateBalances, chain, clients, setConnectRequired, updateSupplies, updatePendingRewards, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, writeContracts }: Properties<Clients>): () => void => {
   const accountReference = useRef(account);
-  const balancesReference = useRef(balances);
+  const updateBalancesReference = useRef(updateBalances);
   const chainReference = useRef(chain);
   const clientsReference = useRef(clients);
   const setConnectRequiredReference = useRef(setConnectRequired);
-  const suppliesReference = useRef(supplies);
+  const updateSuppliesReference = useRef(updateSupplies);
   const updatePendingRewardsReference = useRef(updatePendingRewards);
   const updateReefiLockedMGPReference = useRef(updateReefiLockedMGP);
   const updateTotalLockedMGPReference = useRef(updateTotalLockedMGP);
@@ -39,8 +39,8 @@ export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & Pu
   }, [account]);
 
   useEffect(() => {
-    balancesReference.current = balances;
-  }, [balances]);
+    updateBalancesReference.current = updateBalances;
+  }, [updateBalances]);
 
   useEffect(() => {
     chainReference.current = chain;
@@ -55,8 +55,8 @@ export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & Pu
   }, [setConnectRequired]);
 
   useEffect(() => {
-    suppliesReference.current = supplies;
-  }, [supplies]);
+    updateSuppliesReference.current = updateSupplies;
+  }, [updateSupplies]);
 
   useEffect(() => {
     updatePendingRewardsReference.current = updatePendingRewards;
@@ -85,8 +85,8 @@ export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & Pu
     await writeContractsReference.current[chainReference.current].rMGP.write.claim({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updatePendingRewardsReference.current();
     updateUnclaimedUserYieldReference.current();
-    suppliesReference.current.updateRMGP();
-    balancesReference.current.rMGP[1]();
+    updateSuppliesReference.current.rMGP();
+    updateBalancesReference.current.rMGP();
     updateTotalLockedMGPReference.current();
     updateReefiLockedMGPReference.current();
   }, []);

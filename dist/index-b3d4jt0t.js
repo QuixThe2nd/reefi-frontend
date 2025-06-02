@@ -38361,6 +38361,40 @@ var Gauge = ({ value, label, isHealthy, isWarning, isSpread = false }) => {
     ]
   }, undefined, true, undefined, this);
 };
+var Line = ({ pos, color, label, value, top }) => /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+  className: `absolute inset-y-0 w-1 bg-gradient-to-b from-${color}-400/60 via-${color}-500/80 to-${color}-400/60 border border-${color}-400/40 shadow-lg shadow-${color}-500/30 group pointer-events-auto cursor-pointer`,
+  style: { left: `${pos}%`, transform: "translateX(-50%)" },
+  children: [
+    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+      className: "size-full bg-gradient-to-b from-white/20 to-transparent"
+    }, undefined, false, undefined, this),
+    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+      className: `bg-${color}-500 absolute left-1/2 -translate-x-1/2 -translate-y-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 border border-${color}-400/50 rounded px-2 py-1 font-mono text-xs text-white shadow-lg pointer-events-none mb-1 whitespace-nowrap`,
+      style: { top },
+      children: value.toFixed(4)
+    }, undefined, false, undefined, this),
+    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+      className: `text-${color}-400 absolute -bottom-1 left-1/2 -translate-x-1/2 translate-y-full text-xs pointer-events-none mt-1 font-semibold ${label.includes(" ") ? "whitespace-nowrap" : ""}`,
+      children: label
+    }, undefined, false, undefined, this)
+  ]
+}, undefined, true, undefined, this);
+var Marker = ({ pos, top, color, value, show = true }) => show && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+  className: "absolute transition-all duration-1000 ease-out group",
+  style: { left: `${pos}%`, top, transform: "translate(-50%, -80%)" },
+  children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+    className: "flex flex-col items-center",
+    children: [
+      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+        className: `opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-xs px-2 py-1 rounded font-mono shadow-lg mb-1 pointer-events-none bg-${color}-500 border border-${color}-400/50`,
+        children: value.toFixed(4)
+      }, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+        className: `size-4 bg-${color}-500 rounded-full border-2 border-white shadow-lg group-hover:scale-125 transition-transform cursor-pointer pointer-events-auto`
+      }, undefined, false, undefined, this)
+    ]
+  }, undefined, true, undefined, this)
+}, undefined, false, undefined, this);
 var PegCard = ({ token, data, targetToken }) => {
   const { mint, marketBuy, marketSell, burn, spread, originalMint, originalBurn } = data;
   const [buyDistribution, sellDistribution, burnDistribution, originalMintDistribution, originalBurnDistribution] = [
@@ -38382,55 +38416,24 @@ var PegCard = ({ token, data, targetToken }) => {
   const values = originalMintPos === undefined ? [buyPos, sellPos] : [buyPos, sellPos, originalMintPos];
   const healthScore = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
   const [isHealthy, isWarning] = [healthScore > 70, healthScore > 40 && healthScore <= 70];
-  const Marker = ({ pos, top, color, label, value, show = true }) => show && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-    className: "absolute transition-all duration-1000 ease-out group",
-    style: { left: `${pos}%`, top, transform: "translate(-50%, -50%)" },
-    children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-      className: "flex flex-col items-center",
-      children: [
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-          className: `opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-xs px-2 py-1 rounded font-mono shadow-lg mb-1 pointer-events-none bg-${color}-500 border border-${color}-400/50`,
-          children: value.toFixed(4)
-        }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-          className: `size-4 bg-${color}-500 rounded-full border-2 border-white shadow-lg group-hover:scale-125 transition-transform cursor-pointer pointer-events-auto`
-        }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-          className: `text-xs text-${color}-400 mt-1 font-semibold pointer-events-none ${label.includes(" ") ? "whitespace-nowrap" : ""}`,
-          children: label
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this)
-  }, undefined, false, undefined, this);
-  const Line = ({ pos, color, label, value, show }) => {
-    if (!show)
-      return;
-    const getTopPosition = () => {
-      if (label === "Orig Burn")
-        return "80%";
-      if (label === "Burn")
-        return "75%";
-      return "25%";
-    };
-    return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-      className: `absolute inset-y-0 w-1 bg-gradient-to-b from-${color}-400/60 via-${color}-500/80 to-${color}-400/60 border border-${color}-400/40 shadow-lg shadow-${color}-500/30 group pointer-events-auto cursor-pointer`,
-      style: { left: `${pos}%`, transform: "translateX(-50%)" },
-      children: [
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-          className: "size-full bg-gradient-to-b from-white/20 to-transparent"
-        }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-          className: `bg-${color}-500 absolute left-1/2 -translate-x-1/2 -translate-y-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 border border-${color}-400/50 rounded px-2 py-1 font-mono text-xs text-white shadow-lg pointer-events-none mb-1 whitespace-nowrap`,
-          style: { top: getTopPosition() },
-          children: value.toFixed(4)
-        }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-          className: `text-${color}-400 absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full text-xs pointer-events-none mt-1 font-semibold ${label.includes(" ") ? "whitespace-nowrap" : ""}`,
-          children: label
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this);
-  };
+  const allRates = [
+    { value: mint, pos: mintPos, label: "Mint", color: "green" },
+    { value: marketBuy, pos: buyPos, label: "Buy", color: "blue" },
+    { value: marketSell, pos: sellPos, label: "Sell", color: "red" },
+    { value: burn, pos: burnPos, label: "Burn", color: "slate" },
+    ...originalMint ? [{ value: originalMint, pos: originalMintPos, label: "Orig Mint", color: "emerald" }] : [],
+    ...originalBurn ? [{ value: originalBurn, pos: originalBurnPos, label: "Orig Burn", color: "gray" }] : []
+  ];
+  const sortedRates = [...allRates].sort((a, b) => b.value - a.value);
+  const topPositions = sortedRates.reduce((accumulator, rate, index2) => {
+    const topPercent = 20 + index2 * 70 / Math.max(1, sortedRates.length - 1);
+    accumulator[rate.label] = `${topPercent}%`;
+    return accumulator;
+  }, {});
+  const svgPathPoints = sortedRates.map((rate) => {
+    const topPercent = Number(topPositions[rate.label].replace("%", ""));
+    return `${rate.pos},${topPercent}`;
+  }).join(" L ");
   return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
     className: "relative w-full",
     children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
@@ -38520,27 +38523,14 @@ var PegCard = ({ token, data, targetToken }) => {
                         style: { left: `${p}%` }
                       }, p, false, undefined, this))
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Line, {
-                      pos: mintPos,
-                      color: "green",
-                      label: "Mint",
-                      value: mint,
-                      show: true
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Line, {
-                      pos: originalBurnPos ?? 0,
-                      color: "gray",
-                      label: "Orig Burn",
-                      value: originalBurn ?? 0,
-                      show: originalBurnPos !== undefined
-                    }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Line, {
-                      pos: burnPos,
-                      color: "slate",
-                      label: "Burn",
-                      value: burn,
-                      show: burn === 0
-                    }, undefined, false, undefined, this),
+                    allRates.map((rate) => /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Line, {
+                      pos: rate.pos,
+                      color: rate.color,
+                      label: rate.label,
+                      value: rate.value,
+                      show: true,
+                      top: topPositions[rate.label]
+                    }, rate.label, false, undefined, this)),
                     /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("svg", {
                       className: "pointer-events-none absolute inset-0 size-full",
                       viewBox: "0 0 100 100",
@@ -38594,7 +38584,7 @@ var PegCard = ({ token, data, targetToken }) => {
                           ]
                         }, undefined, true, undefined, this),
                         /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("path", {
-                          d: `M ${mintPos} 25 ${originalMintPos === undefined ? "" : `L ${originalMintPos} 35`} L ${buyPos} 40 L ${sellPos} 60 L ${burnPos} 75 ${originalBurnPos === undefined ? "" : `L ${originalBurnPos} 85`}`,
+                          d: `M ${svgPathPoints}`,
                           stroke: "url(#lineGradient)",
                           strokeWidth: "3",
                           fill: "none",
@@ -38603,7 +38593,7 @@ var PegCard = ({ token, data, targetToken }) => {
                           className: "drop-shadow-lg transition-all duration-1000 ease-out"
                         }, undefined, false, undefined, this),
                         /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("path", {
-                          d: `M ${buyPos} 40 L ${sellPos} 60`,
+                          d: `M ${buyPos},${Number(topPositions["Buy"].replace("%", ""))} L ${sellPos},${Number(topPositions["Sell"].replace("%", ""))}`,
                           stroke: "#f59e0b",
                           strokeWidth: "2",
                           strokeDasharray: "3,3",
@@ -38614,39 +38604,18 @@ var PegCard = ({ token, data, targetToken }) => {
                     }, undefined, true, undefined, this),
                     /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
                       className: "pointer-events-none absolute inset-0",
-                      children: [
-                        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Marker, {
-                          pos: originalMintPos ?? 0,
-                          top: "35%",
-                          color: "emerald",
-                          label: "Orig Mint",
-                          value: originalMint ?? 0,
-                          show: originalMintPos !== undefined
-                        }, undefined, false, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Marker, {
-                          pos: buyPos,
-                          top: "40%",
-                          color: "blue",
-                          label: "Buy",
-                          value: marketBuy
-                        }, undefined, false, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Marker, {
-                          pos: sellPos,
-                          top: "60%",
-                          color: "red",
-                          label: "Sell",
-                          value: marketSell
-                        }, undefined, false, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Marker, {
-                          pos: burnPos,
-                          top: "75%",
-                          color: "slate",
-                          label: "Burn",
-                          value: burn,
-                          show: burn !== 0
-                        }, undefined, false, undefined, this)
-                      ]
-                    }, undefined, true, undefined, this),
+                      children: allRates.map((rate) => {
+                        const topPercent = Number(topPositions[rate.label].replace("%", ""));
+                        const adjustedTop = `${topPercent}%`;
+                        return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Marker, {
+                          pos: rate.pos,
+                          top: adjustedTop,
+                          color: rate.color,
+                          label: rate.label,
+                          value: rate.value
+                        }, rate.label, false, undefined, this);
+                      })
+                    }, undefined, false, undefined, this),
                     /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
                       className: "absolute inset-x-0 bottom-1 flex justify-end px-2 text-xs text-slate-500",
                       children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
@@ -39736,3 +39705,6 @@ var jsx_dev_runtime37 = __toESM(require_jsx_dev_runtime(), 1);
 import_client.default.createRoot(document.querySelector("#root")).render(/* @__PURE__ */ jsx_dev_runtime37.jsxDEV(React2.StrictMode, {
   children: /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
+
+//# debugId=1C1D2592A2D95C2964756E2164756E21
+//# sourceMappingURL=index-b3d4jt0t.js.map

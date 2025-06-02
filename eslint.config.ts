@@ -55,6 +55,8 @@ export default defineConfig([
       "@stylistic/jsx-one-expression-per-line": "off",
       "tailwindcss/classnames-order": "off",
       "unicorn/no-useless-undefined": "off",
+      "functional/no-loop-statements": "off",
+      "no-plusplus": "off",
       "sort-keys": "off",
       "@typescript-eslint/no-unnecessary-condition": "error",
       "init-declarations": "off",

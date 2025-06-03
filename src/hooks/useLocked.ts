@@ -16,7 +16,7 @@ interface UpdateLocked {
   MGP: {
     42_161: () => Promise<void>;
     56: () => Promise<void>;
-    all: () => void;
+    all: () => Promise<void>;
   };
   reefiMGP: () => Promise<void>;
   userYMGP: () => Promise<void>;
@@ -35,14 +35,20 @@ export const useLocked = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseLocke
     MGP: {
       42_161: () => contracts[42_161].VLMGP.read.totalLocked().then(value => setLocked(l => ({ MGP: { ...l.MGP, 42_161: value } }))),
       56: () => contracts[56].VLMGP.read.totalLocked().then(value => setLocked(l => ({ MGP: { ...l.MGP, 56: value } }))),
-      all: () => {
-        updateLocked.MGP[42_161]();
-        updateLocked.MGP[56]();
+      all: async () => {
+        await updateLocked.MGP[42_161]();
+        await updateLocked.MGP[56]();
       }
     },
-    reefiMGP: () => contracts[wallet.chain].VLMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]).then(reefiMGP => setLocked({ reefiMGP })),
-    userYMGP: () => wallet.account ? contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]).then(userYMGP => setLocked({ userYMGP })) : Promise.resolve(),
-    yMGP: () => contracts[wallet.chain].yMGP.read.totalLocked().then(yMGP => setLocked({ yMGP }))
+    reefiMGP: () => contracts[wallet.chain].VLMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]).then(reefiMGP => {
+      setLocked({ reefiMGP });
+    }),
+    userYMGP: () => wallet.account ? contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]).then(userYMGP => {
+      setLocked({ userYMGP });
+    }) : Promise.resolve(),
+    yMGP: () => contracts[wallet.chain].yMGP.read.totalLocked().then(yMGP => {
+      setLocked({ yMGP });
+    })
   };
 
   useEffect(() => {

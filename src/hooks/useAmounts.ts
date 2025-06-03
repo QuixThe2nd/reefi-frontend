@@ -49,19 +49,39 @@ export const useAmounts = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseAmou
 
   const updateAmounts: UpdateAmounts = {
     curve: {
-      mgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, amounts.send], { account: wallet.account }).then(value => setAmounts(a => ({ curve: { ...a.curve, mgpRmgp: value } }))),
-      mgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, amounts.send], { account: wallet.account }).then(value => setAmounts(a => ({ curve: { ...a.curve, mgpYmgp: value } }))),
-      rmgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, amounts.send], { account: wallet.account }).then(value => setAmounts(a => ({ curve: { ...a.curve, rmgpMgp: value } }))),
-      rmgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, amounts.send], { account: wallet.account }).then(value => setAmounts(a => ({ curve: { ...a.curve, rmgpYmgp: value } }))),
-      ymgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, amounts.send], { account: wallet.account }).then(value => setAmounts(a => ({ curve: { ...a.curve, ymgpMgp: value } }))),
-      ymgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, amounts.send], { account: wallet.account }).then(value => setAmounts(a => ({ curve: { ...a.curve, ymgpRmgp: value } })))
+      mgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, amounts.send], { account: wallet.account }).then(value => {
+        setAmounts(a => ({ curve: { ...a.curve, mgpRmgp: value } }));
+      }),
+      mgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, amounts.send], { account: wallet.account }).then(value => {
+        setAmounts(a => ({ curve: { ...a.curve, mgpYmgp: value } }));
+      }),
+      rmgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, amounts.send], { account: wallet.account }).then(value => {
+        setAmounts(a => ({ curve: { ...a.curve, rmgpMgp: value } }));
+      }),
+      rmgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, amounts.send], { account: wallet.account }).then(value => {
+        setAmounts(a => ({ curve: { ...a.curve, rmgpYmgp: value } }));
+      }),
+      ymgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, amounts.send], { account: wallet.account }).then(value => {
+        setAmounts(a => ({ curve: { ...a.curve, ymgpMgp: value } }));
+      }),
+      ymgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, amounts.send], { account: wallet.account }).then(value => {
+        setAmounts(a => ({ curve: { ...a.curve, ymgpRmgp: value } }));
+      })
     },
     lp: {
-      MGP: MGP => setAmounts(a => ({ lp: { ...a.lp, MGP } })),
-      rMGP: rMGP => setAmounts(a => ({ lp: { ...a.lp, rMGP } })),
-      yMGP: yMGP => setAmounts(a => ({ lp: { ...a.lp, yMGP } }))
+      MGP: MGP => {
+        setAmounts(a => ({ lp: { ...a.lp, MGP } }));
+      },
+      rMGP: rMGP => {
+        setAmounts(a => ({ lp: { ...a.lp, rMGP } }));
+      },
+      yMGP: yMGP => {
+        setAmounts(a => ({ lp: { ...a.lp, yMGP } }));
+      }
     },
-    send: send => setAmounts({ send })
+    send: send => {
+      setAmounts({ send });
+    }
   };
 
   useEffect(() => {

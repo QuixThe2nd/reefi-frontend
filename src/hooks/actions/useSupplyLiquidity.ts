@@ -18,7 +18,7 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   ymgpLPAmount: bigint;
 }
 
-export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateBalances, chain, clients, mgpLPAmount, rmgpLPAmount, setConnectRequired, writeContracts, ymgpLPAmount }: Properties<Clients>): () => void => {
+export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateBalances, chain, clients, mgpLPAmount, rmgpLPAmount, setConnectRequired, writeContracts, ymgpLPAmount }: Properties<Clients>): () => Promise<void> => {
   const accountReference = useRef(account);
   const updateBalancesReference = useRef(updateBalances);
   const chainReference = useRef(chain);
@@ -66,7 +66,9 @@ export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient &
   }, [ymgpLPAmount]);
 
   return useCallback(async (): Promise<void> => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true); return;
+    }
     await writeContractsReference.current[chainReference.current].cMGP.write.add_liquidity([[mgpLPAmountReference.current, rmgpLPAmountReference.current, ymgpLPAmountReference.current], 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();

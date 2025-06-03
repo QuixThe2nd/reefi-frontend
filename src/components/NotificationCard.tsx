@@ -8,8 +8,11 @@ export const NotificationCard = ({ notification, setNotification }: Readonly<{ n
       const timeout = setTimeout(() => {
         setNotification("");
       }, 2000);
-      return () => clearTimeout(timeout);
+      return () => {
+        clearTimeout(timeout);
+      };
     }
+    return undefined;
   }, [notification, setNotification]);
 
   return notification.length > 0 ? <div className="absolute right-2 top-2 z-20">

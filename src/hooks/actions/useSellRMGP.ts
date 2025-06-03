@@ -19,7 +19,7 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   writeContracts: UseContracts;
 }
 
-export const useSellRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }: Properties<Clients>): () => void => {
+export const useSellRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }: Properties<Clients>): () => Promise<void> => {
   const accountReference = useRef(account);
   const allowancesReference = useRef(allowances);
   const updateBalancesReference = useRef(updateBalances);
@@ -66,15 +66,17 @@ export const useSellRMGP = <Clients extends Record<Chains, WalletClient & Public
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
 
-  const sellYMGP = useCallback(async (): Promise<void> => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.curve.yMGP < sendAmountReference.current) return setErrorReference.current("Allowance too low");
+  return useCallback(async (): Promise<void> => {
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true); return;
+    }
+    if (allowancesReference.current.curve.yMGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low"); return;
+    }
     await writeContractsReference.current[chainReference.current].cMGP.write.exchange([2n, 1n, sendAmountReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.yMGP();
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.curveYMGP();
     updateBalancesReference.current.curveRMGP();
   }, []);
-
-  return sellYMGP;
 };

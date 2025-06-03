@@ -4,19 +4,22 @@ import { memo, type ReactElement } from "react";
 import { Card } from "./Card";
 import { TokenStat } from "./TokenStat";
 
-interface Properties {
-  readonly symbol: string;
-  readonly decimals: number;
-  readonly description: string;
-  readonly color: "green" | "blue";
-  readonly price?: number;
-  readonly supply: bigint;
-  readonly locked?: bigint;
-  readonly marketRate?: number;
-  readonly voteMultiplier?: number;
-  readonly underlying?: bigint;
-  readonly underlyingSymbol?: string | undefined;
+interface Underlying {
+  readonly underlying: bigint;
+  readonly underlyingSymbol: string;
 }
+
+type Properties = {
+  symbol: string;
+  decimals: number;
+  description: string;
+  color: "green" | "blue";
+  price?: number;
+  supply: bigint;
+  locked?: bigint;
+  marketRate?: number;
+  voteMultiplier?: number;
+} & (Underlying | Record<"underlying" | "underlyingSymbol", undefined>);
 
 export const TokenCard = memo(({ symbol, decimals, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate, color = "green" }: Properties): ReactElement => {
   const bg = `bg-${color}-500`;
@@ -35,7 +38,7 @@ export const TokenCard = memo(({ symbol, decimals, description, price, supply, u
         {price !== undefined && <TokenStat detail={`$${price.toFixed(4)}`} title="Price" />}
         {underlying !== undefined && <TokenStat detail={`${formatNumber(formatEther(underlying), 2)} ${underlyingSymbol}`} title="TVL" />}
         {underlying !== undefined && underlying !== supply && <TokenStat detail={`${formatNumber(Number(underlying) / Number(supply), 4)} ${underlyingSymbol}`} title="Mint Rate" />}
-        {locked !== undefined && <TokenStat detail={`${Math.round(10_000 * Number(locked) / Number(supply)) / 100}%`} title="Lock Rate" />}
+        {locked !== undefined && <TokenStat detail={`${String(Math.round(10_000 * Number(locked) / Number(supply)) / 100)}%`} title="Lock Rate" />}
         {price !== undefined && <TokenStat detail={`$${formatNumber(price * formatEther(supply, decimals))}`} title="FDV" />}
         {voteMultiplier !== undefined && <TokenStat detail={formatNumber(voteMultiplier)} title="Vote Multiplier" />}
         {marketRate !== undefined && <TokenStat detail={`${formatNumber(100 * (Number(underlying) / Number(supply)) / Number(marketRate), 2)}%`} title="Peg" />}

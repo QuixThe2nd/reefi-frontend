@@ -15,9 +15,9 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   sendAmount: bigint;
   setConnectRequired: (_value: boolean) => void;
   updateSupplies: UseSupplies["updateSupplies"];
-  updateReefiLockedMGP: () => void;
+  updateReefiLockedMGP: () => Promise<void>;
   updateTotalLockedMGP: () => void;
-  updateUnclaimedUserYield: () => void;
+  updateUnclaimedUserYield: () => Promise<void>;
   updateUnlockSchedule: () => void;
   updateUnsubmittedWithdraws: () => void;
   updateUserPendingWithdraws: () => void;
@@ -25,7 +25,7 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   writeContracts: UseContracts;
 }
 
-export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateBalances, chain, clients, sendAmount, setConnectRequired, updateSupplies, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, updateUnlockSchedule, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }: Properties<Clients>): () => void => {
+export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateBalances, chain, clients, sendAmount, setConnectRequired, updateSupplies, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, updateUnlockSchedule, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }: Properties<Clients>): () => Promise<void> => {
   const accountReference = useRef(account);
   const updateBalancesReference = useRef(updateBalances);
   const chainReference = useRef(chain);
@@ -103,7 +103,9 @@ export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & Publ
   }, [writeContracts]);
 
   return useCallback(async (): Promise<void> => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true); return;
+    }
     await writeContractsReference.current[chainReference.current].rMGP.write.startUnlock([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateUnlockScheduleReference.current();
     updateSuppliesReference.current.rMGP();

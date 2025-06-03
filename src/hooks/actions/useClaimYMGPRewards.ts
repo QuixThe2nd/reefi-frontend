@@ -10,11 +10,11 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   chain: Chains;
   clients: Clients;
   setConnectRequired: (_value: boolean) => void;
-  updateUnclaimedUserYield: () => void;
+  updateUnclaimedUserYield: () => Promise<void>;
   writeContracts: UseContracts;
 }
 
-export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, setConnectRequired, updateUnclaimedUserYield, writeContracts }: Properties<Clients>): () => void => {
+export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, setConnectRequired, updateUnclaimedUserYield, writeContracts }: Properties<Clients>): () => Promise<void> => {
   const accountReference = useRef(account),
     chainReference = useRef(chain),
     clientsReference = useRef(clients),
@@ -46,11 +46,11 @@ export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient 
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
 
-  const claimYMGPRewards = useCallback(async (): Promise<void> => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
+  return useCallback(async (): Promise<void> => {
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true); return;
+    }
     await writeContractsReference.current[chainReference.current].yMGP.write.claim({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateUnclaimedUserYieldReference.current();
   }, []);
-
-  return claimYMGPRewards;
 };

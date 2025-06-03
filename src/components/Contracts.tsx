@@ -1,5 +1,6 @@
 import { contracts, publicClients, Chains } from "../config/contracts";
 import { memo, type ReactElement } from "react";
+
 import { Card } from "./Card";
 
 export const Contracts = memo(({ chain }: { chain: Chains }): ReactElement => <Card>

@@ -18,12 +18,12 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
   updateSupplies: UseSupplies["updateSupplies"];
-  updateReefiLockedMGP: () => void;
+  updateReefiLockedMGP: () => Promise<void>;
   updateTotalLockedMGP: () => void;
   writeContracts: UseContracts;
 }
 
-export const useDepositMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, updateSupplies, updateReefiLockedMGP, updateTotalLockedMGP, writeContracts }: Properties<Clients>): () => void => {
+export const useDepositMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, updateSupplies, updateReefiLockedMGP, updateTotalLockedMGP, writeContracts }: Properties<Clients>): () => Promise<void> => {
   const accountReference = useRef(account);
   const allowancesReference = useRef(allowances);
   const updateBalancesReference = useRef(updateBalances);
@@ -86,8 +86,12 @@ export const useDepositMGP = <Clients extends Record<Chains, WalletClient & Publ
   }, [writeContracts]);
 
   return useCallback(async (): Promise<void> => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.MGP < sendAmountReference.current) return setErrorReference.current("Allowance too low");
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true); return;
+    }
+    if (allowancesReference.current.MGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low"); return;
+    }
     await writeContractsReference.current[chainReference.current].rMGP.write.deposit([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();

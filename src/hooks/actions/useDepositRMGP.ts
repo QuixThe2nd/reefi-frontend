@@ -18,11 +18,11 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
   updateSupplies: UseSupplies["updateSupplies"];
-  updateYMGPHoldings: () => void;
+  updateYMGPHoldings: () => Promise<void>;
   writeContracts: UseContracts;
 }
 
-export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, updateSupplies, updateYMGPHoldings, writeContracts }: Properties<Clients>): () => void => {
+export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, updateSupplies, updateYMGPHoldings, writeContracts }: Properties<Clients>): () => Promise<void> => {
   const accountReference = useRef(account);
   const allowancesReference = useRef(allowances);
   const updateBalancesReference = useRef(updateBalances);
@@ -80,8 +80,12 @@ export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & Pub
   }, [writeContracts]);
 
   return useCallback(async (): Promise<void> => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.rMGP < sendAmountReference.current) return setErrorReference.current("Allowance too low");
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true); return;
+    }
+    if (allowancesReference.current.rMGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low"); return;
+    }
     await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.yMGP();

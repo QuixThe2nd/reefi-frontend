@@ -52,7 +52,7 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
       const response = await fetch("https://api.curve.finance/api/getVolumes/arbitrum");
       const curveBody = await response.json() as { data: { pools: { address: `0x${string}`; latestWeeklyApyPcent: number }[] } };
       curveBody.data.pools.forEach(pool => {
-        if (pool.address === contracts[wallet.chain].cMGP.address) return setRewards({ cmgpPoolAPY: pool.latestWeeklyApyPcent / 100 });
+        if (pool.address === contracts[wallet.chain].cMGP.address) setRewards({ cmgpPoolAPY: pool.latestWeeklyApyPcent / 100 });
       });
     },
     compoundRMGPGas: async () => {
@@ -71,7 +71,7 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
       body.data.rewardTokenInfo.forEach(token => {
         mgpAPR += token.apr;
       });
-      return setRewards({ mgpAPR });
+      setRewards({ mgpAPR });
     },
     pendingRewards: async () => {
       type PendingTokensResponse = [bigint, `0x${string}`[], string[], bigint[]];
@@ -82,7 +82,9 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
       });
       setRewards({ pendingRewards });
     },
-    unclaimedUserYield: () => contracts[wallet.chain].yMGP.read.unclaimedUserYield().then(unclaimedUserYield => setRewards({ unclaimedUserYield }))
+    unclaimedUserYield: () => contracts[wallet.chain].yMGP.read.unclaimedUserYield().then(unclaimedUserYield => {
+      setRewards({ unclaimedUserYield });
+    })
   };
 
   useEffect(() => {
@@ -108,7 +110,9 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
 
   useCallback(() => {
     const interval = setInterval(updateRewards.pendingRewards, 30_000);
-    return (): void => clearInterval(interval);
+    return (): void => {
+      clearInterval(interval);
+    };
   }, [updateRewards.pendingRewards]);
 
   return { rewards: { ...rewards, cmgpAPY, estimatedCompoundGasFee, lockedYmgpAPY, uncompoundedMGPYield }, updateRewards };

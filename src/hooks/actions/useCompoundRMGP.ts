@@ -14,14 +14,14 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   clients: Clients;
   setConnectRequired: (_value: boolean) => void;
   updateSupplies: UseSupplies["updateSupplies"];
-  updatePendingRewards: () => void;
-  updateReefiLockedMGP: () => void;
+  updatePendingRewards: () => Promise<void>;
+  updateReefiLockedMGP: () => Promise<void>;
   updateTotalLockedMGP: () => void;
-  updateUnclaimedUserYield: () => void;
+  updateUnclaimedUserYield: () => Promise<void>;
   writeContracts: UseContracts;
 }
 
-export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateBalances, chain, clients, setConnectRequired, updateSupplies, updatePendingRewards, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, writeContracts }: Properties<Clients>): () => void => {
+export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateBalances, chain, clients, setConnectRequired, updateSupplies, updatePendingRewards, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, writeContracts }: Properties<Clients>): () => Promise<void> => {
   const accountReference = useRef(account);
   const updateBalancesReference = useRef(updateBalances);
   const chainReference = useRef(chain);

@@ -27,8 +27,8 @@ const BadgeComponent = ({ title, value, breakdown }: Readonly<{ title: string; v
       {breakdown?.map(item => {
         let displayValue: string | number;
         if (item.value !== undefined) displayValue = item.value;
-        else if (item.apy === undefined) displayValue = `${Math.round((item.apr ?? 0) * 10_000) / 100}% APR`;
-        else displayValue = `${Math.round(item.apy * 10_000) / 100}% APY`;
+        else if (item.apy === undefined) displayValue = `${((item.apr ?? 0) * 100).toFixed(2)}% APR`;
+        else displayValue = `${(item.apy * 100).toFixed(2)}% APY`;
         return <div className="flex justify-between gap-2" key={item.asset}>
           <span>{item.asset}:</span>
           <span>{displayValue}
@@ -45,7 +45,7 @@ export const YieldBadge = memo(({ asset, apy, apr, suffix, breakdown, value }: P
   const yieldType = apy === undefined ? "APR" : "APY";
   const yieldValue = apy ?? apr;
   const percentage = yieldValue ? Math.round(yieldValue * 10_000) / 100 : undefined;
-  const valueString = percentage ? `${percentage}%` : String(value);
+  const valueString = percentage ? `${String(percentage)}%` : String(value);
   return <Badge breakdown={breakdown} title={`${asset} ${yieldType}`} value={valueString + (suffix ?? "")} />;
 });
 YieldBadge.displayName = "YieldBadge";

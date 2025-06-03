@@ -51,7 +51,9 @@ export const useWallet = ({ setError }: Readonly<{ setError: (_message: string) 
   }, []);
 
   useEffect(() => {
-    if (clients) ((): Promise<void> => clients[chain].switchChain({ id: chain }))().catch(() => setError("Failed to switch chains"));
+    if (clients) ((): Promise<void> => clients[chain].switchChain({ id: chain }))().catch(() => {
+      setError("Failed to switch chains");
+    });
 
     connectWallet();
   }, [chain]);

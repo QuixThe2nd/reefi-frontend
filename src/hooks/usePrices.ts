@@ -9,7 +9,9 @@ export const usePrices = (): UsePrices => {
   useEffect(() => {
     (async (): Promise<void> => {
       const response = await fetch("https://api.magpiexyz.io/getalltokenprice");
-      response.json().then((body: Readonly<{ data: { AllPrice: typeof prices } }>) => setPrices(body.data.AllPrice));
+      response.json().then((body: Readonly<{ data: { AllPrice: typeof prices } }>) => {
+        setPrices(body.data.AllPrice);
+      });
     })();
   }, []);
   return prices;

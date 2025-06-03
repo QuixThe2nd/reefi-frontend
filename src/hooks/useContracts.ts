@@ -5,7 +5,7 @@ import { ABIs } from "../config/ABIs/abis";
 import { Chains, contracts } from "../config/contracts";
 import { UseWallet } from "./useWallet";
 
-export type UseContracts = Record<Chains, { [K in keyof typeof ABIs]: GetContractReturnType<typeof ABIs[K], WalletClient & PublicActions, `0x${string}`> }> | undefined;
+export type UseContracts = Record<Chains, { [K in keyof typeof ABIs]: GetContractReturnType<typeof ABIs[K], WalletClient & PublicActions> }> | undefined;
 
 export const useContracts = ({ wallet }: { wallet: UseWallet }): UseContracts => {
   const writeContracts = useMemo(() => {

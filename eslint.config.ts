@@ -1,13 +1,11 @@
-import betterStyledComponents from "eslint-plugin-better-styled-components";
 import deMorgan from "eslint-plugin-de-morgan";
-import { defineConfig } from "eslint/config";
 import depend from "eslint-plugin-depend";
+import eslint from "@eslint/js";
 import eslintPluginMath from "eslint-plugin-math";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import eslintReact from "@eslint-react/eslint-plugin";
 import functional from "eslint-plugin-functional";
 import globals from "globals";
-import js from "@eslint/js";
 import reactHooks from "eslint-plugin-react-hooks";
 import sonarjs from "eslint-plugin-sonarjs";
 import splitAndSortImports from "@sngn/eslint-plugin-split-and-sort-imports";
@@ -15,10 +13,10 @@ import stylistic from "@stylistic/eslint-plugin";
 import tailwind from "eslint-plugin-tailwindcss";
 import tseslint from "typescript-eslint";
 
-export default defineConfig([
+export default tseslint.config([
   eslintPluginUnicorn.configs.all,
   reactHooks.configs["recommended-latest"],
-  js.configs.all,
+  eslint.configs.all,
   stylistic.configs.all,
   sonarjs.configs.recommended,
   deMorgan.configs.recommended,
@@ -26,13 +24,12 @@ export default defineConfig([
   eslintPluginMath.configs.recommended,
   splitAndSortImports.configs.recommended,
   tseslint.configs.stylisticTypeChecked,
+  tseslint.configs.strictTypeChecked,
   eslintReact.configs.all,
   functional.configs.all,
   {
-    extends: ["depend/flat/recommended"],
     languageOptions: {
       globals: globals.browser,
-      // parser: tsParser,
       parserOptions: {
         ecmaFeatures: {
           jsx: true
@@ -41,10 +38,7 @@ export default defineConfig([
         tsconfigRootDir: import.meta.dirname
       }
     },
-    plugins: {
-      "better-styled-components": betterStyledComponents,
-      depend
-    },
+    plugins: { depend },
     rules: {
       "@eslint-react/avoid-shorthand-fragment": "off",
       "@eslint-react/naming-convention/filename": "off",
@@ -57,6 +51,8 @@ export default defineConfig([
       "unicorn/no-useless-undefined": "off",
       "functional/no-loop-statements": "off",
       "no-plusplus": "off",
+      "@eslint-react/dom/no-dangerously-set-innerhtml": "off",
+      "@typescript-eslint/no-confusing-void-expression": "off",
       "sort-keys": "off",
       "@typescript-eslint/no-unnecessary-condition": "error",
       "init-declarations": "off",
@@ -71,9 +67,11 @@ export default defineConfig([
       "@stylistic/padded-blocks": ["error", "never"],
       "@stylistic/quote-props": ["error", "consistent-as-needed"],
       "@typescript-eslint/consistent-indexed-object-style": "off",
-      "better-styled-components/sort-declarations-alphabetically": 2,
       "capitalized-comments": "off",
       "complexity": "off",
+      "@typescript-eslint/restrict-template-expressions": "off",
+      "@typescript-eslint/no-floating-promises": "off",
+      "@typescript-eslint/no-misused-promises": "off",
       "consistent-return": "off",
       "curly": ["error", "multi"],
       "depend/ban-dependencies": "error",

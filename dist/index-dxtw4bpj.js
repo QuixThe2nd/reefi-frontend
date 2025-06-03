@@ -24558,7 +24558,7 @@ var formatEther = (value, decimals = 18) => {
   const divisor = 10n ** BigInt(decimals);
   const wholePart = value / divisor;
   const fractionalPart = value % divisor;
-  return fractionalPart === 0n ? Number(wholePart) : Number(`${wholePart}.${fractionalPart.toString().padStart(decimals, "0").replace(/0+$/u, "")}`);
+  return fractionalPart === 0n ? Number(wholePart) : Number(`${String(wholePart)}.${fractionalPart.toString().padStart(decimals, "0").replace(/0+$/u, "")}`);
 };
 var formatNumber = (number_, decimals = 2) => {
   if (number_ >= 1e9)
@@ -24576,13 +24576,13 @@ var formatTime = (seconds, units = 2) => {
   const secs = seconds % 60;
   const parts = [];
   if (days > 0)
-    parts.push(`${days} Days`);
+    parts.push(`${String(days)} Days`);
   if (hours > 0)
-    parts.push(`${hours} Hours`);
+    parts.push(`${String(hours)} Hours`);
   if (minutes > 0)
-    parts.push(`${minutes} Minutes`);
+    parts.push(`${String(minutes)} Minutes`);
   if (secs > 0)
-    parts.push(`${secs} Seconds`);
+    parts.push(`${String(secs)} Seconds`);
   return parts.slice(0, units).join(", ");
 };
 var aprToApy = (apr) => (1 + apr / 365) ** 365 - 1;
@@ -34476,9 +34476,11 @@ var useApprove = ({ account, updateAllowances, chain, clients, sendAmount, setCo
   import_react.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
-  const approve = import_react.useCallback(async (contract, coin, infinity) => {
-    if (clientsReference.current === undefined || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
+  return import_react.useCallback(async (contract, coin, infinity) => {
+    if (clientsReference.current === undefined || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
     const amount = infinity ? 2n ** 256n - 1n : sendAmountReference.current;
     await writeContractsReference.current[chainReference.current][coin].write.approve([contracts[chainReference.current][contract].address, amount], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     if (contract === "cMGP")
@@ -34488,7 +34490,6 @@ var useApprove = ({ account, updateAllowances, chain, clients, sendAmount, setCo
     else
       updateAllowancesReference.current.curve[coin]();
   }, []);
-  return approve;
 };
 
 // src/hooks/actions/useBuyMGP.ts
@@ -34531,10 +34532,14 @@ var useBuyMGP = ({ account, allowances, updateBalances, chain, clients, sendAmou
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
   return import_react2.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.curve.rMGP < sendAmountReference.current)
-      return setErrorReference.current("Allowance too low");
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
+    if (allowancesReference.current.curve.rMGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low");
+      return;
+    }
     await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 0n, sendAmountReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();
@@ -34583,10 +34588,14 @@ var useBuyRMGP = ({ account, allowances, updateBalances, chain, clients, sendAmo
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
   return import_react3.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.curve.MGP < sendAmountReference.current)
-      return setErrorReference.current("Allowance too low");
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
+    if (allowancesReference.current.curve.MGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low");
+      return;
+    }
     await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 1n, sendAmountReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();
@@ -34635,10 +34644,14 @@ var useBuyYMGP = ({ account, allowances, updateBalances, chain, clients, sendAmo
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
   return import_react4.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.curve.rMGP < sendAmountReference.current)
-      return setErrorReference.current("Allowance too low");
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
+    if (allowancesReference.current.curve.rMGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low");
+      return;
+    }
     await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 2n, sendAmountReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.yMGP();
@@ -34669,13 +34682,14 @@ var useClaimYMGPRewards = ({ account, chain, clients, setConnectRequired, update
   import_react5.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
-  const claimYMGPRewards = import_react5.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
+  return import_react5.useCallback(async () => {
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
     await writeContractsReference.current[chainReference.current].yMGP.write.claim({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateUnclaimedUserYieldReference.current();
   }, []);
-  return claimYMGPRewards;
 };
 
 // src/hooks/actions/useCompoundRMGP.ts
@@ -34780,10 +34794,14 @@ var useConvertMGP = ({ account, allowances, updateBalances, chain, clients, send
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
   return import_react7.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.curve.rMGP < sendAmountReference.current)
-      return setErrorReference.current("Allowance too low");
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
+    if (allowancesReference.current.curve.rMGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low");
+      return;
+    }
     await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 2n, sendAmountReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.yMGP();
@@ -34844,10 +34862,14 @@ var useDepositMGP = ({ account, allowances, updateBalances, chain, clients, send
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
   return import_react8.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.MGP < sendAmountReference.current)
-      return setErrorReference.current("Allowance too low");
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
+    if (allowancesReference.current.MGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low");
+      return;
+    }
     await writeContractsReference.current[chainReference.current].rMGP.write.deposit([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();
@@ -34906,10 +34928,14 @@ var useDepositRMGP = ({ account, allowances, updateBalances, chain, clients, sen
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
   return import_react9.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.rMGP < sendAmountReference.current)
-      return setErrorReference.current("Allowance too low");
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
+    if (allowancesReference.current.rMGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low");
+      return;
+    }
     await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.yMGP();
@@ -34959,8 +34985,10 @@ var useLockYMGP = ({ account, chain, clients, sendAmount, setConnectRequired, up
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
   return import_react10.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
     await writeContractsReference.current[chainReference.current].yMGP.write.lock([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateSuppliesReference.current.yMGP();
     updateTotalLockedYMGPReference.current();
@@ -35003,14 +35031,17 @@ var useMintWETH = ({ account, allowances, chain, clients, sendAmount, setConnect
   import_react11.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
-  const depositMGP = import_react11.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.MGP < sendAmountReference.current)
-      return setErrorReference.current("Allowance too low");
+  return import_react11.useCallback(async () => {
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
+    if (allowancesReference.current.MGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low");
+      return;
+    }
     await writeContractsReference.current[chainReference.current].WETH.write.deposit({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain, value: sendAmountReference.current });
   }, []);
-  return depositMGP;
 };
 
 // src/hooks/actions/useRedeemRMGP.ts
@@ -35077,8 +35108,10 @@ var useRedeemRMGP = ({ account, updateBalances, chain, clients, sendAmount, setC
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
   return import_react12.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
     await writeContractsReference.current[chainReference.current].rMGP.write.startUnlock([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateUnlockScheduleReference.current();
     updateSuppliesReference.current.rMGP();
@@ -35131,18 +35164,21 @@ var useSellRMGP = ({ account, allowances, updateBalances, chain, clients, sendAm
   import_react13.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
-  const sellYMGP = import_react13.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.curve.yMGP < sendAmountReference.current)
-      return setErrorReference.current("Allowance too low");
+  return import_react13.useCallback(async () => {
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
+    if (allowancesReference.current.curve.yMGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low");
+      return;
+    }
     await writeContractsReference.current[chainReference.current].cMGP.write.exchange([2n, 1n, sendAmountReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.yMGP();
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.curveYMGP();
     updateBalancesReference.current.curveRMGP();
   }, []);
-  return sellYMGP;
 };
 
 // src/hooks/actions/useSupplyLiquidity.ts
@@ -35185,8 +35221,10 @@ var useSupplyLiquidity = ({ account, updateBalances, chain, clients, mgpLPAmount
     ymgpLPAmountReference.current = ymgpLPAmount;
   }, [ymgpLPAmount]);
   return import_react14.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
     await writeContractsReference.current[chainReference.current].cMGP.write.add_liquidity([[mgpLPAmountReference.current, rmgpLPAmountReference.current, ymgpLPAmountReference.current], 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();
@@ -35233,11 +35271,15 @@ var useSwap = ({ account, allowances, chain, clients, sendAmount, setConnectRequ
   import_react15.useEffect(() => {
     setNotificationReference.current = setNotification;
   }, [setNotification]);
-  const buyRMGP = import_react15.useCallback(async (tokenIn, tokenOut) => {
-    if (!clientsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
-    if (allowancesReference.current.curve.MGP < sendAmountReference.current)
-      return setErrorReference.current("Allowance too low");
+  return import_react15.useCallback(async (tokenIn, tokenOut) => {
+    if (!clientsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
+    if (allowancesReference.current.curve.MGP < sendAmountReference.current) {
+      setErrorReference.current("Allowance too low");
+      return;
+    }
     setNotificationReference.current("Fetching swap route");
     const quoteRequestBody = {
       chainId: chainReference.current,
@@ -35250,15 +35292,16 @@ var useSwap = ({ account, allowances, chain, clients, sendAmount, setConnectRequ
       userAddr: accountReference.current
     };
     const response = await fetch("https://api.odos.xyz/sor/quote/v2", { body: JSON.stringify(quoteRequestBody), headers: { "Content-Type": "application/json" }, method: "POST" });
-    if (!response.ok)
-      return setError("Failed to find route");
+    if (!response.ok) {
+      setError("Failed to find route");
+      return;
+    }
     setNotificationReference.current("Assembling transaction");
     const assembleRequestBody = { pathId: (await response.json()).pathId, simulate: false, userAddr: accountReference.current };
     const response2 = await fetch("https://api.odos.xyz/sor/assemble", { body: JSON.stringify(assembleRequestBody), headers: { "Content-Type": "application/json" }, method: "POST" });
     const { transaction } = await response2.json();
     await clientsReference.current[chainReference.current].sendTransaction({ ...transaction, account: accountReference.current, chain: undefined, gas: BigInt(Math.max(transaction.gas, 0)) });
   }, []);
-  return buyRMGP;
 };
 
 // src/hooks/actions/useUnlockYMGP.ts
@@ -35301,8 +35344,10 @@ var useUnlockYMGP = ({ account, chain, clients, sendAmount, setConnectRequired, 
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
   return import_react16.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
     await writeContractsReference.current[chainReference.current].yMGP.write.unlock([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateSuppliesReference.current.yMGP();
     updateTotalLockedYMGPReference.current();
@@ -35350,8 +35395,10 @@ var useWithdrawMGP = ({ account, updateBalances, chain, clients, setConnectRequi
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
   return import_react17.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
-      return setConnectRequiredReference.current(true);
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
     await writeContractsReference.current[chainReference.current].rMGP.write.unlock({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     await writeContractsReference.current[chainReference.current].rMGP.write.withdraw({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
@@ -35364,7 +35411,9 @@ var useWithdrawMGP = ({ account, updateBalances, chain, clients, setConnectRequi
 // src/hooks/useActions.ts
 var useActions = ({ setError, setNotification, wallet, updateBalances, allowances, updateAllowances, updateSupplies, writeContracts, updateLocked, amounts, updateRewards, updateWithdraws }) => {
   const approve = useApprove({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateAllowances, writeContracts });
-  const depositMGP = useDepositMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => updateLocked.MGP.all(), writeContracts });
+  const depositMGP = useDepositMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => {
+    updateLocked.MGP.all();
+  }, writeContracts });
   const buyRMGP = useBuyRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
   const sellYMGP = useSellRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
   const buyYMGP = useBuyYMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
@@ -36245,7 +36294,9 @@ function useObjectState(initialValue) {
 var useStoredObject = (key, initialValue) => {
   const [savedState, saveState] = useLocalStorage(key, SuperJSON.stringify(initialValue));
   const [state, setState] = useObjectState(SuperJSON.parse(savedState));
-  import_react18.useEffect(() => saveState(SuperJSON.stringify(state)), [state, saveState]);
+  import_react18.useEffect(() => {
+    saveState(SuperJSON.stringify(state));
+  }, [state, saveState]);
   return [state, setState];
 };
 
@@ -36253,25 +36304,55 @@ var useStoredObject = (key, initialValue) => {
 var useAllowances = ({ wallet }) => {
   const [allowances, setAllowances] = useStoredObject("allowances", { MGP: 0n, curve: { MGP: 0n, cMGP: 0n, rMGP: 0n, yMGP: 0n }, odos: { CKP: 0n, EGP: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, rMGP: 0n, yMGP: 0n }, rMGP: 0n });
   const updateAllowances = {
-    MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].rMGP.address]).then((value) => setAllowances(() => ({ MGP: value }))),
+    MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].rMGP.address]).then((value) => {
+      setAllowances(() => ({ MGP: value }));
+    }),
     curve: {
-      MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].cMGP.address]).then((value) => setAllowances((a) => ({ curve: { ...a.curve, MGP: value } }))),
-      cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.allowance([wallet.account, contracts[wallet.chain].cMGP.address]).then((value) => setAllowances((a) => ({ curve: { ...a.curve, cMGP: value } }))),
-      rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].cMGP.address]).then((value) => setAllowances((a) => ({ curve: { ...a.curve, rMGP: value } }))),
-      yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.allowance([wallet.account, contracts[wallet.chain].cMGP.address]).then((value) => setAllowances((a) => ({ curve: { ...a.curve, yMGP: value } })))
+      MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].cMGP.address]).then((value) => {
+        setAllowances((a) => ({ curve: { ...a.curve, MGP: value } }));
+      }),
+      cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.allowance([wallet.account, contracts[wallet.chain].cMGP.address]).then((value) => {
+        setAllowances((a) => ({ curve: { ...a.curve, cMGP: value } }));
+      }),
+      rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].cMGP.address]).then((value) => {
+        setAllowances((a) => ({ curve: { ...a.curve, rMGP: value } }));
+      }),
+      yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.allowance([wallet.account, contracts[wallet.chain].cMGP.address]).then((value) => {
+        setAllowances((a) => ({ curve: { ...a.curve, yMGP: value } }));
+      })
     },
     odos: {
-      CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => setAllowances((a) => ({ odos: { ...a.odos, CKP: value } }))),
-      EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => setAllowances((a) => ({ odos: { ...a.odos, EGP: value } }))),
-      LTP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].LTP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => setAllowances((a) => ({ odos: { ...a.odos, LTP: value } }))),
-      MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => setAllowances((a) => ({ odos: { ...a.odos, MGP: value } }))),
-      PNP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].PNP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => setAllowances((a) => ({ odos: { ...a.odos, PNP: value } }))),
-      WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => setAllowances((a) => ({ odos: { ...a.odos, WETH: value } }))),
-      cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => setAllowances((a) => ({ odos: { ...a.odos, cMGP: value } }))),
-      rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => setAllowances((a) => ({ odos: { ...a.odos, rMGP: value } }))),
-      yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => setAllowances((a) => ({ odos: { ...a.odos, yMGP: value } })))
+      CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+        setAllowances((a) => ({ odos: { ...a.odos, CKP: value } }));
+      }),
+      EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+        setAllowances((a) => ({ odos: { ...a.odos, EGP: value } }));
+      }),
+      LTP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].LTP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+        setAllowances((a) => ({ odos: { ...a.odos, LTP: value } }));
+      }),
+      MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+        setAllowances((a) => ({ odos: { ...a.odos, MGP: value } }));
+      }),
+      PNP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].PNP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+        setAllowances((a) => ({ odos: { ...a.odos, PNP: value } }));
+      }),
+      WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+        setAllowances((a) => ({ odos: { ...a.odos, WETH: value } }));
+      }),
+      cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+        setAllowances((a) => ({ odos: { ...a.odos, cMGP: value } }));
+      }),
+      rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+        setAllowances((a) => ({ odos: { ...a.odos, rMGP: value } }));
+      }),
+      yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+        setAllowances((a) => ({ odos: { ...a.odos, yMGP: value } }));
+      })
     },
-    rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].yMGP.address]).then((value) => setAllowances(() => ({ rMGP: value })))
+    rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].yMGP.address]).then((value) => {
+      setAllowances(() => ({ rMGP: value }));
+    })
   };
   import_react19.useEffect(() => {
     updateAllowances.MGP();
@@ -36299,19 +36380,39 @@ var useAmounts = ({ wallet }) => {
   const [amounts, setAmounts] = useStoredObject("amounts", { curve: { mgpRmgp: 0n, mgpYmgp: 0n, rmgpMgp: 0n, rmgpYmgp: 0n, ymgpMgp: 0n, ymgpRmgp: 0n }, lp: { MGP: 0n, rMGP: 0n, yMGP: 0n }, send: parseEther(1) });
   const updateAmounts = {
     curve: {
-      mgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, amounts.send], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, mgpRmgp: value } }))),
-      mgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, amounts.send], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, mgpYmgp: value } }))),
-      rmgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, amounts.send], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, rmgpMgp: value } }))),
-      rmgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, amounts.send], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, rmgpYmgp: value } }))),
-      ymgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, amounts.send], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, ymgpMgp: value } }))),
-      ymgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, amounts.send], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, ymgpRmgp: value } })))
+      mgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, amounts.send], { account: wallet.account }).then((value) => {
+        setAmounts((a) => ({ curve: { ...a.curve, mgpRmgp: value } }));
+      }),
+      mgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, amounts.send], { account: wallet.account }).then((value) => {
+        setAmounts((a) => ({ curve: { ...a.curve, mgpYmgp: value } }));
+      }),
+      rmgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, amounts.send], { account: wallet.account }).then((value) => {
+        setAmounts((a) => ({ curve: { ...a.curve, rmgpMgp: value } }));
+      }),
+      rmgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, amounts.send], { account: wallet.account }).then((value) => {
+        setAmounts((a) => ({ curve: { ...a.curve, rmgpYmgp: value } }));
+      }),
+      ymgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, amounts.send], { account: wallet.account }).then((value) => {
+        setAmounts((a) => ({ curve: { ...a.curve, ymgpMgp: value } }));
+      }),
+      ymgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, amounts.send], { account: wallet.account }).then((value) => {
+        setAmounts((a) => ({ curve: { ...a.curve, ymgpRmgp: value } }));
+      })
     },
     lp: {
-      MGP: (MGP) => setAmounts((a) => ({ lp: { ...a.lp, MGP } })),
-      rMGP: (rMGP2) => setAmounts((a) => ({ lp: { ...a.lp, rMGP: rMGP2 } })),
-      yMGP: (yMGP2) => setAmounts((a) => ({ lp: { ...a.lp, yMGP: yMGP2 } }))
+      MGP: (MGP) => {
+        setAmounts((a) => ({ lp: { ...a.lp, MGP } }));
+      },
+      rMGP: (rMGP2) => {
+        setAmounts((a) => ({ lp: { ...a.lp, rMGP: rMGP2 } }));
+      },
+      yMGP: (yMGP2) => {
+        setAmounts((a) => ({ lp: { ...a.lp, yMGP: yMGP2 } }));
+      }
     },
-    send: (send) => setAmounts({ send })
+    send: (send) => {
+      setAmounts({ send });
+    }
   };
   import_react20.useEffect(() => {
     updateAmounts.curve.mgpRmgp();
@@ -36329,22 +36430,52 @@ var import_react21 = __toESM(require_react(), 1);
 var useBalances = ({ wallet }) => {
   const [balances, setBalances] = useStoredObject("balances", { CKP: 0n, EGP: 0n, ETH: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, curveMGP: 0n, curveRMGP: 0n, curveYMGP: 0n, rMGP: 0n, yMGP: 0n, ymgpHoldings: 0n });
   const updateBalances = {
-    CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]).then((CKP) => setBalances(() => ({ CKP }))),
-    EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.balanceOf([wallet.account]).then((EGP) => setBalances(() => ({ EGP }))),
-    ETH: () => wallet.account === undefined ? Promise.resolve() : publicClients[wallet.chain].getBalance({ address: wallet.account }).then((ETH) => setBalances(() => ({ ETH }))),
-    LTP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].LTP.read.balanceOf([wallet.account]).then((LTP) => setBalances(() => ({ LTP }))),
-    MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.balanceOf([wallet.account]).then((MGP) => setBalances(() => ({ MGP }))),
-    PNP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].PNP.read.balanceOf([wallet.account]).then((PNP) => setBalances(() => ({ PNP }))),
-    WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.balanceOf([wallet.account]).then((WETH2) => setBalances(() => ({ WETH: WETH2 }))),
-    cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.balanceOf([wallet.account]).then((cMGP2) => setBalances(() => ({ cMGP: cMGP2 }))),
-    curveMGP: () => contracts[wallet.chain].MGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveMGP) => setBalances({ curveMGP })),
-    curveRMGP: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveRMGP) => setBalances({ curveRMGP })),
-    curveYMGP: () => contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveYMGP) => setBalances({ curveYMGP })),
-    rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.balanceOf([wallet.account]).then((rMGP2) => setBalances(() => ({ rMGP: rMGP2 }))),
-    yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.balanceOf([wallet.account]).then((yMGP2) => setBalances(() => ({ yMGP: yMGP2 }))),
-    ymgpHoldings: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then((ymgpHoldings) => setBalances(() => ({ ymgpHoldings })))
+    CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]).then((CKP) => {
+      setBalances(() => ({ CKP }));
+    }),
+    EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.balanceOf([wallet.account]).then((EGP) => {
+      setBalances(() => ({ EGP }));
+    }),
+    ETH: () => wallet.account === undefined ? Promise.resolve() : publicClients[wallet.chain].getBalance({ address: wallet.account }).then((ETH) => {
+      setBalances(() => ({ ETH }));
+    }),
+    LTP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].LTP.read.balanceOf([wallet.account]).then((LTP) => {
+      setBalances(() => ({ LTP }));
+    }),
+    MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.balanceOf([wallet.account]).then((MGP) => {
+      setBalances(() => ({ MGP }));
+    }),
+    PNP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].PNP.read.balanceOf([wallet.account]).then((PNP) => {
+      setBalances(() => ({ PNP }));
+    }),
+    WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.balanceOf([wallet.account]).then((WETH2) => {
+      setBalances(() => ({ WETH: WETH2 }));
+    }),
+    cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.balanceOf([wallet.account]).then((cMGP2) => {
+      setBalances(() => ({ cMGP: cMGP2 }));
+    }),
+    curveMGP: () => contracts[wallet.chain].MGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveMGP) => {
+      setBalances({ curveMGP });
+    }),
+    curveRMGP: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveRMGP) => {
+      setBalances({ curveRMGP });
+    }),
+    curveYMGP: () => contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveYMGP) => {
+      setBalances({ curveYMGP });
+    }),
+    rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.balanceOf([wallet.account]).then((rMGP2) => {
+      setBalances(() => ({ rMGP: rMGP2 }));
+    }),
+    yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.balanceOf([wallet.account]).then((yMGP2) => {
+      setBalances(() => ({ yMGP: yMGP2 }));
+    }),
+    ymgpHoldings: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then((ymgpHoldings) => {
+      setBalances(() => ({ ymgpHoldings }));
+    })
   };
-  import_react21.useEffect(() => Object.values(updateBalances).forEach((u) => u()), [wallet.chain, wallet.account]);
+  import_react21.useEffect(() => {
+    Object.values(updateBalances).forEach((u) => u());
+  }, [wallet.chain, wallet.account]);
   return { balances, updateBalances };
 };
 
@@ -36397,12 +36528,24 @@ var import_react23 = __toESM(require_react(), 1);
 var useExchangeRates = ({ wallet }) => {
   const [exchangeRates, setExchangeRates] = useStoredObject("exchangeRates", { mgpRMGP: 0, mgpYMGP: 0, rmgpMGP: 0, rmgpYMGP: 0, ymgpMGP: 0, ymgpRMGP: 0 });
   const updateExchangeRates = {
-    mgpRMGP: async () => setExchangeRates({ mgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) }),
-    mgpYMGP: async () => setExchangeRates({ mgpYMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) }),
-    rmgpMGP: async () => setExchangeRates({ rmgpMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) }),
-    rmgpYMGP: async () => setExchangeRates({ rmgpYMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) }),
-    ymgpMGP: async () => setExchangeRates({ ymgpMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) }),
-    ymgpRMGP: async () => setExchangeRates({ ymgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) })
+    mgpRMGP: async () => {
+      setExchangeRates({ mgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+    },
+    mgpYMGP: async () => {
+      setExchangeRates({ mgpYMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+    },
+    rmgpMGP: async () => {
+      setExchangeRates({ rmgpMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+    },
+    rmgpYMGP: async () => {
+      setExchangeRates({ rmgpYMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+    },
+    ymgpMGP: async () => {
+      setExchangeRates({ ymgpMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+    },
+    ymgpRMGP: async () => {
+      setExchangeRates({ ymgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+    }
   };
   import_react23.useEffect(() => {
     updateExchangeRates.mgpRMGP();
@@ -36423,14 +36566,20 @@ var useLocked = ({ wallet }) => {
     MGP: {
       42161: () => contracts[42161].VLMGP.read.totalLocked().then((value) => setLocked((l) => ({ MGP: { ...l.MGP, 42161: value } }))),
       56: () => contracts[56].VLMGP.read.totalLocked().then((value) => setLocked((l) => ({ MGP: { ...l.MGP, 56: value } }))),
-      all: () => {
-        updateLocked.MGP[42161]();
-        updateLocked.MGP[56]();
+      all: async () => {
+        await updateLocked.MGP[42161]();
+        await updateLocked.MGP[56]();
       }
     },
-    reefiMGP: () => contracts[wallet.chain].VLMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]).then((reefiMGP) => setLocked({ reefiMGP })),
-    userYMGP: () => wallet.account ? contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]).then((userYMGP) => setLocked({ userYMGP })) : Promise.resolve(),
-    yMGP: () => contracts[wallet.chain].yMGP.read.totalLocked().then((yMGP2) => setLocked({ yMGP: yMGP2 }))
+    reefiMGP: () => contracts[wallet.chain].VLMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]).then((reefiMGP) => {
+      setLocked({ reefiMGP });
+    }),
+    userYMGP: () => wallet.account ? contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]).then((userYMGP) => {
+      setLocked({ userYMGP });
+    }) : Promise.resolve(),
+    yMGP: () => contracts[wallet.chain].yMGP.read.totalLocked().then((yMGP2) => {
+      setLocked({ yMGP: yMGP2 });
+    })
   };
   import_react24.useEffect(() => {
     updateLocked.MGP[42161]();
@@ -36453,7 +36602,9 @@ var usePrices = () => {
   import_react25.useEffect(() => {
     (async () => {
       const response = await fetch("https://api.magpiexyz.io/getalltokenprice");
-      response.json().then((body) => setPrices(body.data.AllPrice));
+      response.json().then((body) => {
+        setPrices(body.data.AllPrice);
+      });
     })();
   }, []);
   return prices;
@@ -36469,7 +36620,7 @@ var useRewards = ({ wallet, prices, balances, locked }) => {
       const curveBody = await response.json();
       curveBody.data.pools.forEach((pool) => {
         if (pool.address === contracts[wallet.chain].cMGP.address)
-          return setRewards({ cmgpPoolAPY: pool.latestWeeklyApyPcent / 100 });
+          setRewards({ cmgpPoolAPY: pool.latestWeeklyApyPcent / 100 });
       });
     },
     compoundRMGPGas: async () => {
@@ -36489,7 +36640,7 @@ var useRewards = ({ wallet, prices, balances, locked }) => {
       body.data.rewardTokenInfo.forEach((token) => {
         mgpAPR += token.apr;
       });
-      return setRewards({ mgpAPR });
+      setRewards({ mgpAPR });
     },
     pendingRewards: async () => {
       const data = await contracts[wallet.chain].MASTERMGP.read.allPendingTokens([contracts[wallet.chain].VLMGP.address, contracts[wallet.chain].rMGP.address]);
@@ -36500,7 +36651,9 @@ var useRewards = ({ wallet, prices, balances, locked }) => {
       });
       setRewards({ pendingRewards });
     },
-    unclaimedUserYield: () => contracts[wallet.chain].yMGP.read.unclaimedUserYield().then((unclaimedUserYield) => setRewards({ unclaimedUserYield }))
+    unclaimedUserYield: () => contracts[wallet.chain].yMGP.read.unclaimedUserYield().then((unclaimedUserYield) => {
+      setRewards({ unclaimedUserYield });
+    })
   };
   import_react26.useEffect(() => {
     updateRewards.cmgpPoolAPY();
@@ -36522,7 +36675,9 @@ var useRewards = ({ wallet, prices, balances, locked }) => {
   const lockedYmgpAPY = import_react26.useMemo(() => Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.yMGP) + aprToApy(rewards.mgpAPR) * 0.9, [locked.reefiMGP, rewards.mgpAPR, locked.yMGP]);
   import_react26.useCallback(() => {
     const interval = setInterval(updateRewards.pendingRewards, 30000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+    };
   }, [updateRewards.pendingRewards]);
   return { rewards: { ...rewards, cmgpAPY, estimatedCompoundGasFee, lockedYmgpAPY, uncompoundedMGPYield }, updateRewards };
 };
@@ -36548,7 +36703,7 @@ var useSupplies = ({ wallet }) => {
 
 // src/hooks/useUpdateable.ts
 var import_react28 = __toESM(require_react(), 1);
-function useUpdateable(factory, deps, label, initial) {
+function useUpdateable(factory, deps, initial) {
   const [updateCount, setUpdateCount] = import_react28.useState(0);
   const [value, setValue] = import_react28.useState(initial);
   import_react28.useEffect(() => {
@@ -36558,13 +36713,15 @@ function useUpdateable(factory, deps, label, initial) {
         setValue(newValue);
     })();
   }, [...deps, updateCount]);
-  const update = () => setUpdateCount((c) => c + 1);
+  const update = () => {
+    setUpdateCount((c) => c + 1);
+  };
   return [value, update];
 }
 function useCachedUpdateable(factory, deps, label, initial) {
   const item = localStorage.getItem(label);
   const initialValue = item === null ? initial : SuperJSON.parse(item);
-  const updateable = useUpdateable(factory, deps, label, initialValue);
+  const updateable = useUpdateable(factory, deps, initialValue);
   import_react28.useEffect(() => {
     if (updateable[0] !== undefined)
       localStorage.setItem(label, SuperJSON.stringify(updateable[0]));
@@ -36610,7 +36767,9 @@ var useWallet = ({ setError }) => {
   }, []);
   import_react29.useEffect(() => {
     if (clients)
-      (() => clients[chain].switchChain({ id: chain }))().catch(() => setError("Failed to switch chains"));
+      (() => clients[chain].switchChain({ id: chain }))().catch(() => {
+        setError("Failed to switch chains");
+      });
     connectWallet();
   }, [chain]);
   return { account, chain, clients, connectRequired, connectWallet, ens, isConnecting, setChain, setConnectRequired };
@@ -36621,10 +36780,18 @@ var import_react30 = __toESM(require_react(), 1);
 var useWithdraws = ({ wallet }) => {
   const [withdraws, setWithdraws] = useStoredObject("withdraws", { unlockSchedule: [], unsubmitted: 0n, userPending: 0n, userWithdrawable: 0n });
   const updateWithdraws = {
-    unlockSchedule: () => contracts[wallet.chain].VLMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].rMGP.address]).then((unlockSchedule) => setWithdraws({ unlockSchedule })),
-    unsubmitted: () => contracts[wallet.chain].rMGP.read.unsubmittedWithdraws().then((unsubmitted) => setWithdraws({ unsubmitted })),
-    userPending: () => wallet.account === undefined ? 0n : contracts[wallet.chain].rMGP.read.getUserPendingWithdraws([wallet.account]).then((userPending) => setWithdraws({ userPending })),
-    userWithdrawable: () => contracts[wallet.chain].rMGP.read.getUserWithdrawable().then((userWithdrawable) => setWithdraws({ userWithdrawable }))
+    unlockSchedule: () => contracts[wallet.chain].VLMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].rMGP.address]).then((unlockSchedule) => {
+      setWithdraws({ unlockSchedule });
+    }),
+    unsubmitted: () => contracts[wallet.chain].rMGP.read.unsubmittedWithdraws().then((unsubmitted) => {
+      setWithdraws({ unsubmitted });
+    }),
+    userPending: () => wallet.account === undefined ? 0n : contracts[wallet.chain].rMGP.read.getUserPendingWithdraws([wallet.account]).then((userPending) => {
+      setWithdraws({ userPending });
+    }),
+    userWithdrawable: () => contracts[wallet.chain].rMGP.read.getUserWithdrawable().then((userWithdrawable) => {
+      setWithdraws({ userWithdrawable });
+    })
   };
   import_react30.useEffect(() => {
     updateWithdraws.unlockSchedule();
@@ -36696,9 +36863,9 @@ var BadgeComponent = ({ title, value, breakdown }) => /* @__PURE__ */ jsx_dev_ru
           if (item.value !== undefined)
             displayValue = item.value;
           else if (item.apy === undefined)
-            displayValue = `${Math.round((item.apr ?? 0) * 1e4) / 100}% APR`;
+            displayValue = `${((item.apr ?? 0) * 100).toFixed(2)}% APR`;
           else
-            displayValue = `${Math.round(item.apy * 1e4) / 100}% APY`;
+            displayValue = `${(item.apy * 100).toFixed(2)}% APY`;
           return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
             className: "flex justify-between gap-2",
             children: [
@@ -36723,7 +36890,7 @@ var YieldBadge = import_react32.memo(({ asset, apy, apr, suffix, breakdown, valu
   const yieldType = apy === undefined ? "APR" : "APY";
   const yieldValue = apy ?? apr;
   const percentage = yieldValue ? Math.round(yieldValue * 1e4) / 100 : undefined;
-  const valueString = percentage ? `${percentage}%` : String(value);
+  const valueString = percentage ? `${String(percentage)}%` : String(value);
   return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV(Badge, {
     breakdown,
     title: `${asset} ${yieldType}`,
@@ -36779,7 +36946,7 @@ Button.displayName = "Button";
 // src/components/Card.tsx
 var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
 var Card = ({ children, padding = 6, className = "" }) => /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
-  className: `rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-${padding} shadow-2xl backdrop-blur-xl transition-all duration-400 hover:scale-[1.01] hover:shadow-purple-500/10 ${className}`,
+  className: `rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-${String(padding)} shadow-2xl backdrop-blur-xl transition-all duration-400 hover:scale-[1.01] hover:shadow-purple-500/10 ${className}`,
   children: [
     /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
       className: "absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-600/10 opacity-50 transition-opacity duration-400 hover:opacity-80 pointer-events-none"
@@ -37165,18 +37332,8 @@ ConnectWallet.displayName = "ConnectWallet";
 // src/components/Contracts.tsx
 var import_react37 = __toESM(require_react(), 1);
 var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
-var Contracts = import_react37.memo(({ chain }) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-  className: "rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-6 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:scale-[1.02] hover:shadow-purple-500/10",
+var Contracts = import_react37.memo(({ chain }) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(Card, {
   children: [
-    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-      className: "absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-600/10 opacity-50 transition-opacity duration-700 hover:opacity-80"
-    }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-      className: "absolute right-4 top-4 size-32 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 opacity-60 blur-3xl transition-opacity duration-700 hover:opacity-90"
-    }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
-      className: "absolute bottom-4 left-4 size-24 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 opacity-40 blur-2xl transition-opacity duration-700 hover:opacity-70"
-    }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("h2", {
       className: "mb-2 text-lg font-bold",
       children: "Contract Addresses"
@@ -37270,9 +37427,14 @@ var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
 var ErrorCard = ({ error, setError }) => {
   import_react39.useEffect(() => {
     if (error.length > 0) {
-      const timeout = setTimeout(() => setError(""), 2000);
-      return () => clearTimeout(timeout);
+      const timeout = setTimeout(() => {
+        setError("");
+      }, 2000);
+      return () => {
+        clearTimeout(timeout);
+      };
     }
+    return;
   }, [error, setError]);
   return error.length > 0 ? /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
     className: "absolute right-2 top-2 z-20",
@@ -37472,7 +37634,9 @@ var TokenApproval = import_react41.memo(({ allowance, sendAmount, onApprove, tok
             checked: approveInfinity,
             className: "mr-2",
             id: `approve-infinity-${tokenSymbol}`,
-            onChange: () => setApproveInfinity((v) => !v),
+            onChange: () => {
+              setApproveInfinity((v) => !v);
+            },
             type: "checkbox"
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("label", {
@@ -37561,7 +37725,9 @@ var SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpCurveAmoun
           children: [
             tokenOut !== "MGP" && /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TokenApproval, {
               allowance: allowances[tokenIn],
-              onApprove: (infinity) => approve(tokenOut, tokenIn, infinity),
+              onApprove: (infinity) => {
+                approve(tokenOut, tokenIn, infinity);
+              },
               sendAmount,
               tokenSymbol: tokenIn
             }, undefined, false, undefined, this),
@@ -37585,7 +37751,9 @@ var SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpCurveAmoun
           buy,
           curveAmount,
           nativeRate,
-          onApprove: (infinity) => approve("cMGP", tokenIn, infinity),
+          onApprove: (infinity) => {
+            approve("cMGP", tokenIn, infinity);
+          },
           sendAmount,
           tokenASymbol: tokenIn,
           tokenBSymbol: tokenOut
@@ -37599,7 +37767,9 @@ var SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpCurveAmoun
       buy: convertMGP,
       curveAmount: mgpYmgpCurveAmount,
       nativeRate: 1,
-      onApprove: (infinity) => approve("cMGP", tokenIn, infinity),
+      onApprove: (infinity) => {
+        approve("cMGP", tokenIn, infinity);
+      },
       sendAmount,
       tokenASymbol: tokenIn,
       tokenBSymbol: tokenOut
@@ -37610,7 +37780,9 @@ var SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpCurveAmoun
       buy: sellYMGP,
       curveAmount: ymgpRmgpCurveAmount,
       nativeRate: 1,
-      onApprove: (infinity) => approve("cMGP", tokenIn, infinity),
+      onApprove: (infinity) => {
+        approve("cMGP", tokenIn, infinity);
+      },
       sendAmount,
       tokenASymbol: tokenIn,
       tokenBSymbol: tokenOut
@@ -37621,7 +37793,9 @@ var SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpCurveAmoun
       buy: sellYMGP,
       curveAmount: ymgpMgpCurveAmount,
       nativeRate: 1 / Number(lockedReefiMGP) / Number(rmgpSupply) * 0.9,
-      onApprove: (infinity) => approve("cMGP", tokenIn, infinity),
+      onApprove: (infinity) => {
+        approve("cMGP", tokenIn, infinity);
+      },
       sendAmount,
       tokenASymbol: tokenIn,
       tokenBSymbol: tokenOut
@@ -37637,14 +37811,18 @@ var SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpCurveAmoun
       }, undefined, false, undefined, this),
       tokenIn === "WETH" && /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(TokenApproval, {
         allowance: allowances.odos[tokenIn],
-        onApprove: (infinity) => approve("ODOSRouter", tokenIn, infinity),
+        onApprove: (infinity) => {
+          approve("ODOSRouter", tokenIn, infinity);
+        },
         sendAmount,
         tokenSymbol: tokenIn
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime16.jsxDEV(Button, {
         className: "w-full",
         variant: "secondary",
-        onClick: () => swap(contracts[chain][tokenIn === "ETH" ? "WETH" : tokenIn].address, contracts[chain].MGP.address),
+        onClick: () => {
+          swap(contracts[chain][tokenIn === "ETH" ? "WETH" : tokenIn].address, contracts[chain].MGP.address);
+        },
         type: "submit",
         children: "Swap to MGP With Odos"
       }, undefined, false, undefined, this)
@@ -37666,7 +37844,9 @@ var SwapInput = import_react43.memo(({ label, selectedCoin, onCoinChange, balanc
         setIsDropdownOpen(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
   const estimatedOutput = () => {
     if (value === 0n)
@@ -37716,7 +37896,9 @@ var SwapInput = import_react43.memo(({ label, selectedCoin, onCoinChange, balanc
         children: [
           /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("input", {
             className: "w-3/4 bg-transparent text-xl outline-none",
-            onChange: (event) => onChange(BigInt(Math.round((Number.isNaN(Number.parseFloat(event.target.value)) ? 0 : Number.parseFloat(event.target.value)) * Number(10n ** BigInt(decimals[selectedCoin]))))),
+            onChange: (event) => {
+              onChange(BigInt(Math.round((Number.isNaN(Number.parseFloat(event.target.value)) ? 0 : Number.parseFloat(event.target.value)) * Number(10n ** BigInt(decimals[selectedCoin])))));
+            },
             placeholder: "0",
             type: "text",
             value: value === 0n ? undefined : formatEther(value, decimals[selectedCoin])
@@ -37727,7 +37909,9 @@ var SwapInput = import_react43.memo(({ label, selectedCoin, onCoinChange, balanc
               /* @__PURE__ */ jsx_dev_runtime17.jsxDEV(Button, {
                 size: "xs",
                 variant: "ghost",
-                onClick: () => onChange(balance),
+                onClick: () => {
+                  onChange(balance);
+                },
                 type: "button",
                 children: "MAX"
               }, undefined, false, undefined, this),
@@ -37737,7 +37921,9 @@ var SwapInput = import_react43.memo(({ label, selectedCoin, onCoinChange, balanc
                 children: [
                   /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
                     className: ["flex cursor-pointer items-center rounded-md px-3 py-1 transition-opacity hover:opacity-90", coins[selectedCoin === "ETH" ? "WETH" : selectedCoin].bgColor].join(" "),
-                    onClick: () => setIsDropdownOpen(!isDropdownOpen),
+                    onClick: () => {
+                      setIsDropdownOpen(!isDropdownOpen);
+                    },
                     type: "button",
                     children: [
                       /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
@@ -37768,7 +37954,9 @@ var SwapInput = import_react43.memo(({ label, selectedCoin, onCoinChange, balanc
                       children: [
                         /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
                           className: `flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin ? "bg-gray-700" : ""}`,
-                          onClick: () => handleCoinChange(coin),
+                          onClick: () => {
+                            handleCoinChange(coin);
+                          },
                           type: "button",
                           children: [
                             /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
@@ -37782,7 +37970,9 @@ var SwapInput = import_react43.memo(({ label, selectedCoin, onCoinChange, balanc
                         }, coin, true, undefined, this),
                         coin === "WETH" && /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
                           className: `flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin.replace("W", "") ? "bg-gray-700" : ""}`,
-                          onClick: () => handleCoinChange(coin.replace("W", "")),
+                          onClick: () => {
+                            handleCoinChange(coin.replace("W", ""));
+                          },
                           type: "button",
                           children: [
                             /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
@@ -38181,7 +38371,9 @@ var AmountInput = import_react51.memo(({ label, balance, value, onChange, token,
       children: [
         /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("input", {
           className: "w-3/4 bg-transparent text-xl outline-none",
-          onChange: (event) => onChange(parseEther(Number.isNaN(Number.parseFloat(event.target.value)) ? 0 : Number.parseFloat(event.target.value))),
+          onChange: (event) => {
+            onChange(parseEther(Number.isNaN(Number.parseFloat(event.target.value)) ? 0 : Number.parseFloat(event.target.value)));
+          },
           placeholder: placeholder ?? "0",
           type: "text",
           value: value === 0n ? undefined : formatEther(value)
@@ -38192,7 +38384,9 @@ var AmountInput = import_react51.memo(({ label, balance, value, onChange, token,
             /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(Button, {
               size: "xs",
               variant: "ghost",
-              onClick: () => onChange(balance),
+              onClick: () => {
+                onChange(balance);
+              },
               type: "button",
               children: "MAX"
             }, undefined, false, undefined, this),
@@ -38294,8 +38488,11 @@ var NotificationCard = ({ notification, setNotification }) => {
       const timeout = setTimeout(() => {
         setNotification("");
       }, 2000);
-      return () => clearTimeout(timeout);
+      return () => {
+        clearTimeout(timeout);
+      };
     }
+    return;
   }, [notification, setNotification]);
   return notification.length > 0 ? /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
     className: "absolute right-2 top-2 z-20",
@@ -38355,7 +38552,7 @@ var Gauge = ({ value, label, isHealthy, isWarning, isSpread = false }) => {
         }, undefined, false, undefined, this)
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-        className: "absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-slate-400",
+        className: "absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-slate-400",
         children: label
       }, undefined, false, undefined, this)
     ]
@@ -38421,18 +38618,21 @@ var PegCard = ({ token, data, targetToken }) => {
     { value: marketBuy, pos: buyPos, label: "Buy", color: "blue" },
     { value: marketSell, pos: sellPos, label: "Sell", color: "red" },
     { value: burn, pos: burnPos, label: "Burn", color: "slate" },
-    ...originalMint ? [{ value: originalMint, pos: originalMintPos, label: "Orig Mint", color: "emerald" }] : [],
-    ...originalBurn ? [{ value: originalBurn, pos: originalBurnPos, label: "Orig Burn", color: "gray" }] : []
+    ...originalMint === undefined ? [] : [{ value: originalMint, pos: originalMintPos, label: "Orig Mint", color: "emerald" }],
+    ...originalBurn === undefined ? [] : [{ value: originalBurn, pos: originalBurnPos, label: "Orig Burn", color: "gray" }]
   ];
   const sortedRates = [...allRates].sort((a, b) => b.value - a.value);
-  const topPositions = sortedRates.reduce((accumulator, rate, index2) => {
+  const topPositions = {};
+  let index2 = 0;
+  for (const rate of sortedRates) {
     const topPercent = 20 + index2 * 70 / Math.max(1, sortedRates.length - 1);
-    accumulator[rate.label] = `${topPercent}%`;
-    return accumulator;
-  }, {});
+    topPositions[rate.label] = `${String(topPercent)}%`;
+    index2++;
+  }
   const svgPathPoints = sortedRates.map((rate) => {
-    const topPercent = Number(topPositions[rate.label].replace("%", ""));
-    return `${rate.pos},${topPercent}`;
+    const label = rate.label;
+    const topPercent = Number(topPositions[label].replace("%", ""));
+    return `${String(rate.pos)},${String(topPercent)}`;
   }).join(" L ");
   return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
     className: "relative w-full",
@@ -38529,7 +38729,7 @@ var PegCard = ({ token, data, targetToken }) => {
                       label: rate.label,
                       value: rate.value,
                       show: true,
-                      top: topPositions[rate.label]
+                      top: topPositions[rate.label] ?? 0
                     }, rate.label, false, undefined, this)),
                     /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("svg", {
                       className: "pointer-events-none absolute inset-0 size-full",
@@ -38593,7 +38793,7 @@ var PegCard = ({ token, data, targetToken }) => {
                           className: "drop-shadow-lg transition-all duration-1000 ease-out"
                         }, undefined, false, undefined, this),
                         /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("path", {
-                          d: `M ${buyPos},${Number(topPositions["Buy"].replace("%", ""))} L ${sellPos},${Number(topPositions["Sell"].replace("%", ""))}`,
+                          d: `M ${buyPos},${Number(topPositions.Buy.replace("%", ""))} L ${sellPos},${Number(topPositions.Sell.replace("%", ""))}`,
                           stroke: "#f59e0b",
                           strokeWidth: "2",
                           strokeDasharray: "3,3",
@@ -38624,15 +38824,15 @@ var PegCard = ({ token, data, targetToken }) => {
                     }, undefined, false, undefined, this)
                   ]
                 }, undefined, true, undefined, this),
-                ["Peg Health (vs Mint Rate)", "Spread"].map((label, index2) => {
-                  const value = index2 === 0 ? healthScore : spread;
-                  const colors = index2 === 0 ? { green: isHealthy, orange: isWarning } : { green: spread <= 10, orange: spread <= 20 };
+                ["Peg Health (vs Mint Rate)", "Spread"].map((label, index3) => {
+                  const value = index3 === 0 ? healthScore : spread;
+                  const colors = index3 === 0 ? { green: isHealthy, orange: isWarning } : { green: spread <= 10, orange: spread <= 20 };
                   let color = "red";
                   if (colors.green)
                     color = "green";
                   else if (colors.orange)
                     color = "orange";
-                  const width = index2 === 0 ? value : Math.max(0, 100 - Math.min(spread, 100));
+                  const width = index3 === 0 ? value : Math.max(0, 100 - Math.min(spread, 100));
                   return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
                     className: "mt-6",
                     children: [
@@ -38645,7 +38845,7 @@ var PegCard = ({ token, data, targetToken }) => {
                           }, undefined, false, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
                             className: `text-xs font-bold text-${color}-400`,
-                            children: index2 === 0 ? `${value}%` : `${spread.toFixed(2)}%`
+                            children: index3 === 0 ? `${value}%` : `${spread.toFixed(2)}%`
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
@@ -38771,25 +38971,6 @@ var QASection = () => {
     children: /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
       className: "max-w-4xl",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
-          className: "mb-6 rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4",
-          children: [
-            /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("h3", {
-              className: "mb-2 text-lg font-semibold text-yellow-400",
-              children: "⚠️ Important Notice"
-            }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("p", {
-              className: "text-sm text-gray-300",
-              children: [
-                "Reefi is in ",
-                /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("strong", {
-                  children: "very early beta"
-                }, undefined, false, undefined, this),
-                ". Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution"
-              ]
-            }, undefined, true, undefined, this)
-          ]
-        }, undefined, true, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("h2", {
           className: "mb-4 text-2xl font-bold",
           children: "Frequently Asked Questions"
@@ -38801,7 +38982,9 @@ var QASection = () => {
             children: [
               /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
                 className: "flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-700/30",
-                onClick: () => toggleItem(index2),
+                onClick: () => {
+                  toggleItem(index2);
+                },
                 type: "button",
                 children: [
                   /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("span", {
@@ -39133,7 +39316,7 @@ var TokenCard = import_react58.memo(({ symbol, decimals: decimals2, description,
                 title: "Mint Rate"
               }, undefined, false, undefined, this),
               locked !== undefined && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(TokenStat, {
-                detail: `${Math.round(1e4 * Number(locked) / Number(supply)) / 100}%`,
+                detail: `${String(Math.round(1e4 * Number(locked) / Number(supply)) / 100)}%`,
                 title: "Lock Rate"
               }, undefined, false, undefined, this),
               price !== undefined && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(TokenStat, {
@@ -39291,6 +39474,25 @@ var AppContent = () => {
                 reefiLockedMGP: locked.reefiMGP,
                 vmgpMGPCurveRate: 0.5
               }, undefined, false, undefined, this),
+              /* @__PURE__ */ jsx_dev_runtime36.jsxDEV("div", {
+                className: "rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4",
+                children: [
+                  /* @__PURE__ */ jsx_dev_runtime36.jsxDEV("h3", {
+                    className: "mb-2 text-lg font-semibold text-yellow-400",
+                    children: "⚠️ Important Notice"
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime36.jsxDEV("p", {
+                    className: "text-sm text-gray-300",
+                    children: [
+                      "Reefi is in ",
+                      /* @__PURE__ */ jsx_dev_runtime36.jsxDEV("strong", {
+                        children: "very early beta"
+                      }, undefined, false, undefined, this),
+                      ". Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution"
+                    ]
+                  }, undefined, true, undefined, this)
+                ]
+              }, undefined, true, undefined, this),
               /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Card, {
                 children: [
                   /* @__PURE__ */ jsx_dev_runtime36.jsxDEV("div", {
@@ -39302,28 +39504,36 @@ var AppContent = () => {
                           /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Button, {
                             size: "sm",
                             variant: page === "getMGP" ? "primary" : "clear",
-                            onClick: () => setPage(page === "getMGP" ? undefined : "getMGP"),
+                            onClick: () => {
+                              setPage(page === "getMGP" ? undefined : "getMGP");
+                            },
                             type: "button",
                             children: "Get MGP"
                           }, undefined, false, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Button, {
                             size: "sm",
                             variant: page === "deposit" ? "primary" : "clear",
-                            onClick: () => setPage(page === "deposit" ? undefined : "deposit"),
+                            onClick: () => {
+                              setPage(page === "deposit" ? undefined : "deposit");
+                            },
                             type: "button",
                             children: "Get rMGP"
                           }, undefined, false, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Button, {
                             size: "sm",
                             variant: page === "compoundRMGP" ? "primary" : "clear",
-                            onClick: () => setPage(page === "compoundRMGP" ? undefined : "compoundRMGP"),
+                            onClick: () => {
+                              setPage(page === "compoundRMGP" ? undefined : "compoundRMGP");
+                            },
                             type: "button",
                             children: "Compound Yield"
                           }, undefined, false, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Button, {
                             size: "sm",
                             variant: page === "redeem" ? "primary" : "clear",
-                            onClick: () => setPage(page === "redeem" ? undefined : "redeem"),
+                            onClick: () => {
+                              setPage(page === "redeem" ? undefined : "redeem");
+                            },
                             type: "button",
                             children: "Redeem rMGP"
                           }, undefined, false, undefined, this)
@@ -39336,7 +39546,7 @@ var AppContent = () => {
                           children: [
                             /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(YieldBadge, {
                               apr: rewards.mgpAPR,
-                              asset: "MGP",
+                              asset: "Locked MGP",
                               breakdown: [{ apr: rewards.mgpAPR, asset: "Original vlMGP" }]
                             }, undefined, false, undefined, this),
                             /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(YieldBadge, {
@@ -39455,28 +39665,36 @@ var AppContent = () => {
                           /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Button, {
                             size: "sm",
                             variant: page === "convert" ? "primary" : "clear",
-                            onClick: () => setPage(page === "convert" ? undefined : "convert"),
+                            onClick: () => {
+                              setPage(page === "convert" ? undefined : "convert");
+                            },
                             type: "button",
                             children: "Get yMGP"
                           }, undefined, false, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Button, {
                             size: "sm",
                             variant: page === "lock" ? "primary" : "clear",
-                            onClick: () => setPage(page === "lock" ? undefined : "lock"),
+                            onClick: () => {
+                              setPage(page === "lock" ? undefined : "lock");
+                            },
                             type: "button",
                             children: "Lock yMGP"
                           }, undefined, false, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Button, {
                             size: "sm",
                             variant: page === "claimYMGP" ? "primary" : "clear",
-                            onClick: () => setPage(page === "claimYMGP" ? undefined : "claimYMGP"),
+                            onClick: () => {
+                              setPage(page === "claimYMGP" ? undefined : "claimYMGP");
+                            },
                             type: "button",
                             children: "Claim Yield"
                           }, undefined, false, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Button, {
                             size: "sm",
                             variant: page === "unlock" ? "primary" : "clear",
-                            onClick: () => setPage(page === "unlock" ? undefined : "unlock"),
+                            onClick: () => {
+                              setPage(page === "unlock" ? undefined : "unlock");
+                            },
                             type: "button",
                             children: "Unlock yMGP"
                           }, undefined, false, undefined, this)
@@ -39565,14 +39783,18 @@ var AppContent = () => {
                           /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Button, {
                             size: "sm",
                             variant: page === "buyVotes" ? "primary" : "clear",
-                            onClick: () => setPage(page === "buyVotes" ? undefined : "buyVotes"),
+                            onClick: () => {
+                              setPage(page === "buyVotes" ? undefined : "buyVotes");
+                            },
                             type: "button",
                             children: "Get vMGP"
                           }, undefined, false, undefined, this),
                           /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Button, {
                             size: "sm",
                             variant: page === "vote" ? "primary" : "clear",
-                            onClick: () => setPage(page === "vote" ? undefined : "vote"),
+                            onClick: () => {
+                              setPage(page === "vote" ? undefined : "vote");
+                            },
                             type: "button",
                             children: "Vote"
                           }, undefined, false, undefined, this)
@@ -39611,7 +39833,9 @@ var AppContent = () => {
                         children: /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Button, {
                           size: "sm",
                           variant: page === "supplyLiquidity" ? "primary" : "clear",
-                          onClick: () => setPage(page === "supplyLiquidity" ? undefined : "supplyLiquidity"),
+                          onClick: () => {
+                            setPage(page === "supplyLiquidity" ? undefined : "supplyLiquidity");
+                          },
                           type: "button",
                           children: "Supply Liquidity"
                         }, undefined, false, undefined, this)
@@ -39706,5 +39930,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=559FBAC234F5DA2364756E2164756E21
-//# sourceMappingURL=index-ebfpgxw4.js.map
+//# debugId=D65F91A72254534864756E2164756E21
+//# sourceMappingURL=index-dxtw4bpj.js.map

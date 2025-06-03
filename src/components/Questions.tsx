@@ -74,14 +74,12 @@ export const QASection = (): ReactElement => {
 
   return <Card>
     <div className="max-w-4xl">
-      <div className="mb-6 rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4">
-        <h3 className="mb-2 text-lg font-semibold text-yellow-400">⚠️ Important Notice</h3>
-        <p className="text-sm text-gray-300">Reefi is in <strong>very early beta</strong>. Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution</p>
-      </div>
       <h2 className="mb-4 text-2xl font-bold">Frequently Asked Questions</h2>
       <div className="space-y-2">
         {qaData.map((item, index) => <div className="rounded-lg border border-gray-700" key={item.question}>
-          <button className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-700/30" onClick={() => toggleItem(index)} type="button">
+          <button className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-700/30" onClick={() => {
+            toggleItem(index);
+          }} type="button">
             <span className="font-medium text-gray-200">{item.question}</span>
             <svg className={`size-5 text-gray-400 transition-transform${openItems.has(index) ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}/></svg>
           </button>

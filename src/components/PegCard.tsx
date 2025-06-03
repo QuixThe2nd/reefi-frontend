@@ -62,7 +62,7 @@ const Gauge: React.FC<GaugeProperties> = ({ value, label, isHealthy, isWarning, 
       <div className="absolute inset-0 flex items-center justify-center">
         <span className={`text-xs font-bold ${textColor}`}>{isSpread ? `${value.toFixed(2)}%` : `${Math.round(value)}%`}</span>
       </div>
-      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-slate-400">{label}</div>
+      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-slate-400">{label}</div>
     </div>
   );
 };
@@ -111,8 +111,8 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
     { value: marketBuy, pos: buyPos, label: "Buy", color: "blue" },
     { value: marketSell, pos: sellPos, label: "Sell", color: "red" },
     { value: burn, pos: burnPos, label: "Burn", color: "slate" },
-    ...originalMint ? [{ value: originalMint, pos: originalMintPos!, label: "Orig Mint", color: "emerald" }] : [],
-    ...originalBurn ? [{ value: originalBurn, pos: originalBurnPos!, label: "Orig Burn", color: "gray" }] : []
+    ...originalMint === undefined ? [] : [{ value: originalMint, pos: originalMintPos, label: "Orig Mint", color: "emerald" }],
+    ...originalBurn === undefined ? [] : [{ value: originalBurn, pos: originalBurnPos, label: "Orig Burn", color: "gray" }]
   ] as const;
 
   const sortedRates = [...allRates].sort((a, b) => b.value - a.value);
@@ -123,7 +123,7 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
   let index = 0;
   for (const rate of sortedRates) {
     const topPercent = 20 + index * 70 / Math.max(1, sortedRates.length - 1);
-    topPositions[rate.label as RateLabel] = `${topPercent}%`;
+    topPositions[rate.label as RateLabel] = `${String(topPercent)}%`;
     index++;
   }
 
@@ -131,7 +131,7 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
   const svgPathPoints = sortedRates.map(rate => {
     const label = rate.label as RateLabel;
     const topPercent = Number(topPositions[label].replace("%", ""));
-    return `${rate.pos},${topPercent}`;
+    return `${String(rate.pos)},${String(topPercent)}`;
   }).join(" L ");
 
   return (
@@ -165,7 +165,7 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
                 {[0, 25, 50, 75, 100].map(p => <div key={p} className="absolute inset-y-0 w-px border-l border-slate-500/20 bg-slate-600/30" style={{ left: `${p}%` }}></div>)}
               </div>
 
-              {allRates.map(rate => <Line key={rate.label} pos={rate.pos} color={rate.color} label={rate.label} value={rate.value} show={true} top={topPositions[rate.label]} />)}
+              {allRates.map(rate => <Line key={rate.label} pos={rate.pos} color={rate.color} label={rate.label} value={rate.value} show={true} top={topPositions[rate.label] ?? 0} />)}
 
               <svg className="pointer-events-none absolute inset-0 size-full" viewBox="0 0 100 100" preserveAspectRatio="none">
                 <defs>
@@ -180,7 +180,7 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
                   </linearGradient>
                 </defs>
                 <path d={`M ${svgPathPoints}`} stroke="url(#lineGradient)" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-lg transition-all duration-1000 ease-out"/>
-                <path d={`M ${buyPos},${Number(topPositions["Buy"].replace("%", ""))} L ${sellPos},${Number(topPositions["Sell"].replace("%", ""))}`} stroke="#f59e0b" strokeWidth="2" strokeDasharray="3,3" fill="none" className="opacity-80 transition-all duration-1000 ease-out"/>
+                <path d={`M ${buyPos},${Number(topPositions.Buy.replace("%", ""))} L ${sellPos},${Number(topPositions.Sell.replace("%", ""))}`} stroke="#f59e0b" strokeWidth="2" strokeDasharray="3,3" fill="none" className="opacity-80 transition-all duration-1000 ease-out"/>
               </svg>
 
               <div className="pointer-events-none absolute inset-0">
@@ -211,7 +211,7 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
                     <span className={`text-xs font-bold text-${color}-400`}>{index === 0 ? `${value}%` : `${spread.toFixed(2)}%`}</span>
                   </div>
                   <div className="h-2 overflow-hidden rounded-full border border-slate-700/50 bg-slate-800">
-                    <div className={`h-full rounded-full bg-gradient-to-r from-${color}-500 to-${color === "orange" ? "orange" : (color === 'green' ? 'emerald' : 'red')}-${color === "red" ? "600" : "500"} transition-all duration-1000 ease-out`} style={{ width: `${width}%` }}></div>
+                    <div className={`h-full rounded-full bg-gradient-to-r from-${color}-500 to-${color === "orange" ? "orange" : color === 'green' ? 'emerald' : 'red'}-${color === "red" ? "600" : "500"} transition-all duration-1000 ease-out`} style={{ width: `${width}%` }}></div>
                   </div>
                 </div>
               );
@@ -227,7 +227,7 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
               { color: "slate", label: "Burn", value: burn.toFixed(4) }
             ].map(({ label, value, color }) => <div key={label} className="rounded-lg border border-slate-700/30 bg-slate-800/40 p-2 text-center">
               <div className={`text-xs font-semibold text-${color}-400 mb-1`}>{label}</div>
-              <div className={`font-mono text-xs ${label === "Spread" ? `font-bold ${spread <= 10 ? "text-green-400" : (spread <= 20 ? 'text-orange-400' : 'text-red-400')}` : "text-slate-200"}`}>{value}</div>
+              <div className={`font-mono text-xs ${label === "Spread" ? `font-bold ${spread <= 10 ? "text-green-400" : spread <= 20 ? 'text-orange-400' : 'text-red-400'}` : "text-slate-200"}`}>{value}</div>
               <div className="text-[10px] text-slate-500">{label === "Spread" ? "depeg risk" : targetToken}</div>
             </div>)}
           </div>

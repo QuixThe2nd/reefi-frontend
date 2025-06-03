@@ -43,6 +43,63 @@ interface LineProperties {
   top: string;
 }
 
+interface NoticeProperties {
+  type: "opportunity" | "recommendation" | "caution";
+  title: string;
+  message: string;
+  action: string;
+  icon: string;
+}
+
+const Notice: React.FC<NoticeProperties> = ({ type, title, message, action, icon }) => {
+  const styles = {
+    opportunity: {
+      bg: "bg-gradient-to-r from-emerald-900/20 via-green-900/20 to-emerald-900/20",
+      border: "border-emerald-400/40",
+      titleColor: "text-emerald-300",
+      messageColor: "text-emerald-100",
+      actionColor: "text-emerald-200",
+      iconColor: "text-emerald-400",
+      actionBg: "bg-emerald-500/20"
+    },
+    recommendation: {
+      bg: "bg-gradient-to-r from-blue-900/20 via-cyan-900/20 to-blue-900/20",
+      border: "border-cyan-400/40",
+      titleColor: "text-cyan-300",
+      messageColor: "text-cyan-100",
+      actionColor: "text-cyan-200",
+      iconColor: "text-cyan-400",
+      actionBg: "bg-cyan-500/20"
+    },
+    caution: {
+      bg: "bg-gradient-to-r from-amber-900/20 via-yellow-900/20 to-amber-900/20",
+      border: "border-amber-400/40",
+      titleColor: "text-amber-300",
+      messageColor: "text-amber-100",
+      actionColor: "text-amber-200",
+      iconColor: "text-amber-400",
+      actionBg: "bg-amber-500/20"
+    }
+  };
+
+  const style = styles[type];
+
+  return (
+    <div className={`rounded-xl border ${style.border} ${style.bg} p-4 mb-4 backdrop-blur-sm`}>
+      <div className="flex items-start space-x-4">
+        <div className={`${style.iconColor} text-xl`}>{icon}</div>
+        <div className="flex-1">
+          <div className={`text-sm font-semibold ${style.titleColor} mb-2`}>{title}</div>
+          <div className={`text-xs ${style.messageColor} mb-3 leading-relaxed`}>{message}</div>
+          <div className={`inline-flex items-center px-3 py-1.5 rounded-lg ${style.actionBg} border border-white/10`}>
+            <span className={`text-xs font-medium ${style.actionColor}`}>💡 {action}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Gauge: React.FC<GaugeProperties> = ({ value, label, isHealthy, isWarning, isSpread = false }) => {
   const colors = isSpread ? { green: value <= 10, orange: value <= 20 } : { green: isHealthy, orange: isWarning };
   let color = "rgb(239 68 68)";
@@ -106,6 +163,13 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
   const healthScore = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
   const [isHealthy, isWarning] = [healthScore > 95, healthScore > 75 && healthScore <= 95];
 
+  // Generate actionable recommendations based on spread and health
+  const notices: NoticeProperties[] = [];
+
+  if (spread >= 5) notices.push({ type: "recommendation", title: "Provide Liquidity", message: `The spread between the buy and sell price on Curve is ${spread.toFixed(2)}%.`, action: "Consider supplying liquidity to monetize high spreads and tighten the peg", icon: "💧" });
+  if (mint < marketSell) notices.push({ type: "recommendation", title: "Arbitrage", message: "The mint price is less than the market sell price.", action: `Consider minting ${token} then selling`, icon: "💧" });
+  if (burn > marketBuy) notices.push({ type: "recommendation", title: "Arbitrage", message: "The burn price is higher than the market buy price.", action: `Consider buying ${token} then burning`, icon: "💧" });
+
   const allRates = [
     { value: mint, pos: mintPos, label: "Mint", color: "green" },
     { value: marketBuy, pos: buyPos, label: "Buy", color: "blue" },
@@ -158,6 +222,12 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
               <Gauge value={spread} label="Spread" isHealthy={isHealthy} isWarning={isWarning} isSpread />
             </div>
           </div>
+
+          {notices.length > 0 &&
+            <div className="mb-6">
+              {notices.map((notice, index) => <Notice key={index} {...notice} />)}
+            </div>
+          }
 
           <div className="relative mb-6 rounded-xl border border-slate-700/30 bg-slate-800/20 p-4">
             <div className="relative h-32 overflow-visible rounded-lg border border-slate-700/50 bg-gradient-to-r from-red-900/20 via-slate-800/40 to-green-900/20">

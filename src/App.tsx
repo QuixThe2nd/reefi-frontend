@@ -4,6 +4,7 @@
  * TODO: Coin logo
  * TODO: reefi priority queue. withdraw slot 1 is free, 2: 10 MGP, 3: 100 MGP, 4: 500 MGP, 5: 1000 MGP, 6: 10000 MGP. if lets say 4 withdraw slots are being used, but user only wants to pay when it costs 100 MGP, they can join the queue and be included next time theres only 2 slots being used.
  * TODO: Make *MGP on either chain burnable in exchange for the same coin on another chain. E.g. if you have rMGP on BSC and arbitrum starts performing better, you can burn your BSC *MGP for ARB *MGP. This averages out yields and depegs across chains allowing BSC & ARB to maintain the same yields. If rMGP on arb has performed better than BSC, you can mint on BSC and burn on ARB.
+ * TODO: Burnt yMGP for vMGP should be locked till the community decides what to do with the funds
  */
 
 import { aprToApy, formatEther, formatNumber } from "./utilities";

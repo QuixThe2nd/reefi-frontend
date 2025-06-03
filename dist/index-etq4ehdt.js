@@ -38508,6 +38508,73 @@ var NotificationCard = ({ notification, setNotification }) => {
 
 // src/components/PegCard.tsx
 var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
+var Notice = ({ type, title, message, action, icon }) => {
+  const styles = {
+    opportunity: {
+      bg: "bg-gradient-to-r from-emerald-900/20 via-green-900/20 to-emerald-900/20",
+      border: "border-emerald-400/40",
+      titleColor: "text-emerald-300",
+      messageColor: "text-emerald-100",
+      actionColor: "text-emerald-200",
+      iconColor: "text-emerald-400",
+      actionBg: "bg-emerald-500/20"
+    },
+    recommendation: {
+      bg: "bg-gradient-to-r from-blue-900/20 via-cyan-900/20 to-blue-900/20",
+      border: "border-cyan-400/40",
+      titleColor: "text-cyan-300",
+      messageColor: "text-cyan-100",
+      actionColor: "text-cyan-200",
+      iconColor: "text-cyan-400",
+      actionBg: "bg-cyan-500/20"
+    },
+    caution: {
+      bg: "bg-gradient-to-r from-amber-900/20 via-yellow-900/20 to-amber-900/20",
+      border: "border-amber-400/40",
+      titleColor: "text-amber-300",
+      messageColor: "text-amber-100",
+      actionColor: "text-amber-200",
+      iconColor: "text-amber-400",
+      actionBg: "bg-amber-500/20"
+    }
+  };
+  const style = styles[type];
+  return /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+    className: `rounded-xl border ${style.border} ${style.bg} p-4 mb-4 backdrop-blur-sm`,
+    children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+      className: "flex items-start space-x-4",
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+          className: `${style.iconColor} text-xl`,
+          children: icon
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+          className: "flex-1",
+          children: [
+            /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+              className: `text-sm font-semibold ${style.titleColor} mb-2`,
+              children: title
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+              className: `text-xs ${style.messageColor} mb-3 leading-relaxed`,
+              children: message
+            }, undefined, false, undefined, this),
+            /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+              className: `inline-flex items-center px-3 py-1.5 rounded-lg ${style.actionBg} border border-white/10`,
+              children: /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
+                className: `text-xs font-medium ${style.actionColor}`,
+                children: [
+                  "\uD83D\uDCA1 ",
+                  action
+                ]
+              }, undefined, true, undefined, this)
+            }, undefined, false, undefined, this)
+          ]
+        }, undefined, true, undefined, this)
+      ]
+    }, undefined, true, undefined, this)
+  }, undefined, false, undefined, this);
+};
 var Gauge = ({ value, label, isHealthy, isWarning, isSpread = false }) => {
   const colors = isSpread ? { green: value <= 10, orange: value <= 20 } : { green: isHealthy, orange: isWarning };
   let color = "rgb(239 68 68)";
@@ -38613,6 +38680,13 @@ var PegCard = ({ token, data, targetToken }) => {
   const values = originalMintPos === undefined ? [buyPos, sellPos] : [buyPos, sellPos, originalMintPos];
   const healthScore = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
   const [isHealthy, isWarning] = [healthScore > 95, healthScore > 75 && healthScore <= 95];
+  const notices = [];
+  if (spread >= 5)
+    notices.push({ type: "recommendation", title: "Provide Liquidity", message: `The spread between the buy and sell price on Curve is ${spread.toFixed(2)}%.`, action: "Consider supplying liquidity to monetize high spreads and tighten the peg", icon: "\uD83D\uDCA7" });
+  if (mint < marketSell)
+    notices.push({ type: "recommendation", title: "Arbitrage", message: "The mint price is less than the market sell price.", action: `Consider minting ${token} then selling`, icon: "\uD83D\uDCA7" });
+  if (burn > marketBuy)
+    notices.push({ type: "recommendation", title: "Arbitrage", message: "The burn price is higher than the market buy price.", action: `Consider buying ${token} then burning`, icon: "\uD83D\uDCA7" });
   const allRates = [
     { value: mint, pos: mintPos, label: "Mint", color: "green" },
     { value: marketBuy, pos: buyPos, label: "Buy", color: "blue" },
@@ -38710,6 +38784,12 @@ var PegCard = ({ token, data, targetToken }) => {
                 }, undefined, true, undefined, this)
               ]
             }, undefined, true, undefined, this),
+            notices.length > 0 && /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+              className: "mb-6",
+              children: notices.map((notice, index3) => /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(Notice, {
+                ...notice
+              }, index3, false, undefined, this))
+            }, undefined, false, undefined, this),
             /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
               className: "relative mb-6 rounded-xl border border-slate-700/30 bg-slate-800/20 p-4",
               children: [
@@ -39930,5 +40010,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=D65F91A72254534864756E2164756E21
-//# sourceMappingURL=index-dxtw4bpj.js.map
+//# debugId=5B8B3D44568D0D5864756E2164756E21
+//# sourceMappingURL=index-etq4ehdt.js.map

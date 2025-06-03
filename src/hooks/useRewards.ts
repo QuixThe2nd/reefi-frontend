@@ -65,7 +65,7 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
       setRewards({ estimatedCompoundAmount: simulation.result });
     },
     mgpAPR: async () => {
-      const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${wallet.chain}&rewarder=${contracts[wallet.chain].VLREWARDER.address}`);
+      const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${wallet.chain}&rewarder=${contracts[wallet.chain].vlRewarder.address}`);
       const body = await response.json() as { data: { rewardTokenInfo: { apr: number }[] } };
       let mgpAPR = 0;
       body.data.rewardTokenInfo.forEach(token => {
@@ -75,7 +75,7 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
     },
     pendingRewards: async () => {
       type PendingTokensResponse = [bigint, `0x${string}`[], string[], bigint[]];
-      const data = await contracts[wallet.chain].MASTERMGP.read.allPendingTokens([contracts[wallet.chain].VLMGP.address, contracts[wallet.chain].rMGP.address]) as PendingTokensResponse;
+      const data = await contracts[wallet.chain].masterMGP.read.allPendingTokens([contracts[wallet.chain].vlMGP.address, contracts[wallet.chain].rMGP.address]) as PendingTokensResponse;
       const pendingRewards: Record<string, { address: `0x${string}`; rewards: bigint }> = { MGP: { address: contracts[wallet.chain].MGP.address, rewards: data[0] } };
       data[2].forEach((token, index) => {
         if (data[2][index] && data[3][index] && data[1][index]) pendingRewards[token.replace("Bridged ", "").toUpperCase()] = { address: data[1][index], rewards: data[3][index] };

@@ -30,7 +30,7 @@ const getStatusColor = (mixed: boolean, better: boolean): string => {
 export const CrossChainYieldComparison = memo(({ account, chain }: Properties): ReactElement | undefined => {
   // Fetch MGP APR from both chains
   const [bscMgpAPR] = useCachedUpdateable(async () => {
-    const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=56&rewarder=${contracts[56].VLREWARDER.address}`);
+    const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=56&rewarder=${contracts[56].vlRewarder.address}`);
     const body = await response.json() as { data: { rewardTokenInfo: { apr: number }[] } };
     let apr = 0;
     body.data.rewardTokenInfo.forEach(token => {
@@ -40,7 +40,7 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
   }, [], "BSC MGP APR", 0);
 
   const [arbMgpAPR] = useCachedUpdateable(async () => {
-    const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=42161&rewarder=${contracts[42_161].VLREWARDER.address}`);
+    const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=42161&rewarder=${contracts[42_161].vlRewarder.address}`);
     const body = await response.json() as { data: { rewardTokenInfo: { apr: number }[] } };
     let apr = 0;
     body.data.rewardTokenInfo.forEach(token => {
@@ -66,13 +66,13 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
 
   // Fetch locked amounts for calculating locked yMGP yields
   const [bscLockedAmounts] = useCachedUpdateable(async () => {
-    const reefiMGP = await contracts[56].VLMGP.read.getUserTotalLocked([contracts[56].rMGP.address]);
+    const reefiMGP = await contracts[56].vlMGP.read.getUserTotalLocked([contracts[56].rMGP.address]);
     const lockedYMGP = await contracts[56].yMGP.read.totalLocked();
     return { lockedYMGP, reefiMGP };
   }, [], "BSC Locked Amounts", { lockedYMGP: 0n, reefiMGP: 0n });
 
   const [arbLockedAmounts] = useCachedUpdateable(async () => {
-    const reefiMGP = await contracts[42_161].VLMGP.read.getUserTotalLocked([contracts[42_161].rMGP.address]);
+    const reefiMGP = await contracts[42_161].vlMGP.read.getUserTotalLocked([contracts[42_161].rMGP.address]);
     const lockedYMGP = await contracts[42_161].yMGP.read.totalLocked();
     return { lockedYMGP, reefiMGP };
   }, [], "ARB Locked Amounts", { lockedYMGP: 0n, reefiMGP: 0n });

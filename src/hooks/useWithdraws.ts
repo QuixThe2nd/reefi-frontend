@@ -27,7 +27,7 @@ export const useWithdraws = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseWi
   const [withdraws, setWithdraws] = useStoredObject<Withdraws>("withdraws", { unlockSchedule: [], unsubmitted: 0n, userPending: 0n, userWithdrawable: 0n });
 
   const updateWithdraws = {
-    unlockSchedule: () => contracts[wallet.chain].VLMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].rMGP.address]).then(unlockSchedule => {
+    unlockSchedule: () => contracts[wallet.chain].vlMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].rMGP.address]).then(unlockSchedule => {
       setWithdraws({ unlockSchedule });
     }),
     unsubmitted: () => contracts[wallet.chain].rMGP.read.unsubmittedWithdraws().then(unsubmitted => {

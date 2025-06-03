@@ -2,6 +2,7 @@ import { memo, type ReactElement } from "react";
 
 type Yield = Readonly<{
   asset: string;
+  logo: string;
   suffix?: "+";
 }> & (Readonly<{
   apy: number;
@@ -22,7 +23,7 @@ type Properties = Yield & Readonly<{ breakdown: Yield[] }>;
 const BadgeComponent = ({ title, value, breakdown }: Readonly<{ title: string; value: string; breakdown?: Yield[] }>): ReactElement => <div className="group relative flex cursor-help items-center rounded-lg bg-gray-700 px-3 py-1 text-sm" title={`${title}: ${value}`}>
   <div className="mr-2 size-2 rounded-full bg-green-400" />
   <span>{title}: {value}</span>
-  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-black px-3 py-2 text-xs text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+  <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 min-w-54 -translate-x-1/2 rounded bg-black px-3 py-2 text-xs text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
     <div className="space-y-1">
       {breakdown?.map(item => {
         let displayValue: string | number;
@@ -30,7 +31,10 @@ const BadgeComponent = ({ title, value, breakdown }: Readonly<{ title: string; v
         else if (item.apy === undefined) displayValue = `${((item.apr ?? 0) * 100).toFixed(2)}% APR`;
         else displayValue = `${(item.apy * 100).toFixed(2)}% APY`;
         return <div className="flex justify-between gap-2" key={item.asset}>
-          <span>{item.asset}:</span>
+          <div className="flex gap-1">
+            <img className="size-4" src={item.logo} />
+            <span>{item.asset}:</span>
+          </div>
           <span>{displayValue}
           </span>
         </div>;

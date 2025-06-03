@@ -46,31 +46,31 @@ export const useAllowances = ({ wallet }: Readonly<{ wallet: UseWallet }>) => {
       })
     },
     odos: {
-      CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then(value => {
+      CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => {
         setAllowances(a => ({ odos: { ...a.odos, CKP: value } }));
       }),
-      EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then(value => {
+      EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => {
         setAllowances(a => ({ odos: { ...a.odos, EGP: value } }));
       }),
-      LTP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].LTP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then(value => {
+      LTP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].LTP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => {
         setAllowances(a => ({ odos: { ...a.odos, LTP: value } }));
       }),
-      MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then(value => {
+      MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => {
         setAllowances(a => ({ odos: { ...a.odos, MGP: value } }));
       }),
-      PNP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].PNP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then(value => {
+      PNP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].PNP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => {
         setAllowances(a => ({ odos: { ...a.odos, PNP: value } }));
       }),
-      WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then(value => {
+      WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => {
         setAllowances(a => ({ odos: { ...a.odos, WETH: value } }));
       }),
-      cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then(value => {
+      cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => {
         setAllowances(a => ({ odos: { ...a.odos, cMGP: value } }));
       }),
-      rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then(value => {
+      rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => {
         setAllowances(a => ({ odos: { ...a.odos, rMGP: value } }));
       }),
-      yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then(value => {
+      yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => {
         setAllowances(a => ({ odos: { ...a.odos, yMGP: value } }));
       })
     },

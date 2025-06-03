@@ -33,14 +33,14 @@ export const useLocked = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseLocke
 
   const updateLocked: UpdateLocked = {
     MGP: {
-      42_161: () => contracts[42_161].VLMGP.read.totalLocked().then(value => setLocked(l => ({ MGP: { ...l.MGP, 42_161: value } }))),
-      56: () => contracts[56].VLMGP.read.totalLocked().then(value => setLocked(l => ({ MGP: { ...l.MGP, 56: value } }))),
+      42_161: () => contracts[42_161].vlMGP.read.totalLocked().then(value => setLocked(l => ({ MGP: { ...l.MGP, 42_161: value } }))),
+      56: () => contracts[56].vlMGP.read.totalLocked().then(value => setLocked(l => ({ MGP: { ...l.MGP, 56: value } }))),
       all: async () => {
         await updateLocked.MGP[42_161]();
         await updateLocked.MGP[56]();
       }
     },
-    reefiMGP: () => contracts[wallet.chain].VLMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]).then(reefiMGP => {
+    reefiMGP: () => contracts[wallet.chain].vlMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]).then(reefiMGP => {
       setLocked({ reefiMGP });
     }),
     userYMGP: () => wallet.account ? contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]).then(userYMGP => {

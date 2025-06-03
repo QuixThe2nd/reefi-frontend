@@ -7,7 +7,14 @@
  * TODO: Burnt yMGP for vMGP should be locked till the community decides what to do with the funds
  */
 
+import curve from "../public/icons/curve.png";
+import rMGP from "../public/icons/rMGP.png";
+import vMGP from "../public/icons/vMGP.png";
+import vlMGP from "../public/icons/vlMGP.png";
+import yMGP from "../public/icons/yMGP.png";
+
 import { aprToApy, formatEther, formatNumber } from "./utilities";
+import { coins } from "./config/contracts";
 import { useGlobalContext, GlobalProvider } from "./contexts/GlobalContext";
 import { useState, ReactElement } from "react";
 
@@ -117,8 +124,8 @@ const AppContent = (): ReactElement => {
             </div>
             <div className="flex h-min flex-row-reverse">
               <div className="flex gap-1">
-                <YieldBadge apr={rewards.mgpAPR} asset="Locked MGP" breakdown={[{ apr: rewards.mgpAPR, asset: "Original vlMGP" }]} />
-                <YieldBadge apy={aprToApy(rewards.mgpAPR) * 0.9} asset="rMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "vlMGP" }]} />
+                <YieldBadge apr={rewards.mgpAPR} asset="Locked MGP" breakdown={[{ apr: rewards.mgpAPR, asset: "vlMGP", logo: vlMGP }]} logo={vlMGP} />
+                <YieldBadge apy={aprToApy(rewards.mgpAPR) * 0.9} asset="rMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "vlMGP", logo: vlMGP }]} logo={coins.rMGP.icon} />
               </div>
             </div>
           </div>
@@ -144,8 +151,8 @@ const AppContent = (): ReactElement => {
             </div>
             <div className="flex h-min flex-row-reverse">
               <div className="flex gap-1">
-                <YieldBadge apy={aprToApy(rewards.mgpAPR) * 0.9} asset="yMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP" }]} />
-                <YieldBadge apy={Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.yMGP) + aprToApy(rewards.mgpAPR) * 0.9} asset="Locked yMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "Base vlMGP" }, { apr: Number(locked.reefiMGP) * rewards.mgpAPR * 0.05 / Number(locked.yMGP), asset: "Boosted vlMGP" }, { asset: "Withdrawals", value: "Variable" }]} suffix='+' />
+                <YieldBadge apy={aprToApy(rewards.mgpAPR) * 0.9} asset="yMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }]} logo={coins.yMGP.icon} />
+                <YieldBadge apy={Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.yMGP) + aprToApy(rewards.mgpAPR) * 0.9} asset="Locked yMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "Base vlMGP", logo: vlMGP }, { apr: Number(locked.reefiMGP) * rewards.mgpAPR * 0.05 / Number(locked.yMGP), asset: "Boosted vlMGP", logo: vlMGP }, { asset: "rMGP Withdraws", value: "Variable", logo: coins.rMGP.icon }]} suffix='+' />
               </div>
             </div>
           </div>
@@ -168,11 +175,13 @@ const AppContent = (): ReactElement => {
                 <Badge title="Vote Multiplier" value={`${formatNumber(Number(supplies.rMGP) / Number(supplies.vMGP), 2)}x+`} breakdown={[
                   {
                     asset: "Reefi's vlMGP",
+                    logo: vlMGP,
                     value: formatNumber(formatEther(locked.reefiMGP))
                   },
                   {
                     asset: "Votable vMGP",
-                    value: formatNumber(formatEther(supplies.vMGP))
+                    value: formatNumber(formatEther(supplies.vMGP)),
+                    logo: vMGP
                   }
                 ]} />
               </div>
@@ -191,10 +200,26 @@ const AppContent = (): ReactElement => {
                   apy={rewards.cmgpAPY}
                   asset="cMGP"
                   breakdown={[
-                    { apy: 0, asset: `${(100 * Number(balances.curveMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% MGP` },
-                    { apy: aprToApy(rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% rMGP` },
-                    { apy: aprToApy(rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% yMGP` },
-                    { apy: rewards.cmgpPoolAPY, asset: "Swap Fees" }
+                    {
+                      apy: 0,
+                      asset: `${(100 * Number(balances.curveMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% MGP`,
+                      logo: coins.MGP.icon
+                    },
+                    {
+                      apy: aprToApy(rewards.mgpAPR) * 0.9,
+                      asset: `${(100 * Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% rMGP`,
+                      logo: coins.rMGP.icon
+                    },
+                    {
+                      apy: aprToApy(rewards.mgpAPR) * 0.9,
+                      asset: `${(100 * Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% yMGP`,
+                      logo: coins.yMGP.icon
+                    },
+                    {
+                      apy: rewards.cmgpPoolAPY,
+                      asset: "Swap Fees",
+                      logo: curve
+                    }
                   ]}
                 />
               </div>
@@ -204,8 +229,8 @@ const AppContent = (): ReactElement => {
         </Card>
         <QASection />
         <div className="flex gap-6">
-          <PegCard token="rMGP" data={{ burn: Number(locked.reefiMGP) / Number(supplies.rMGP) * 0.9, marketBuy: 1 / exchangeRates.mgpRMGP, marketSell: exchangeRates.rmgpMGP, mint: Number(locked.reefiMGP) / Number(supplies.rMGP), originalBurn: 0.9, originalMint: 1, spread: 100 / exchangeRates.mgpRMGP / exchangeRates.rmgpMGP - 100 }} targetToken="MGP" />
-          <PegCard token="yMGP" data={{ burn: 0, marketBuy: 1 / exchangeRates.rmgpYMGP, marketSell: exchangeRates.ymgpRMGP, mint: 1, spread: 100 / exchangeRates.rmgpYMGP / exchangeRates.ymgpRMGP - 100 }} targetToken="rMGP" />
+          <PegCard token="rMGP" logo={rMGP} data={{ burn: Number(locked.reefiMGP) / Number(supplies.rMGP) * 0.9, marketBuy: 1 / exchangeRates.mgpRMGP, marketSell: exchangeRates.rmgpMGP, mint: Number(locked.reefiMGP) / Number(supplies.rMGP), originalBurn: 0.9, originalMint: 1, spread: 100 / exchangeRates.mgpRMGP / exchangeRates.rmgpMGP - 100 }} targetToken="MGP" />
+          <PegCard token="yMGP" logo={yMGP} data={{ burn: 0, marketBuy: 1 / exchangeRates.rmgpYMGP, marketSell: exchangeRates.ymgpRMGP, mint: 1, spread: 100 / exchangeRates.rmgpYMGP / exchangeRates.ymgpRMGP - 100 }} targetToken="rMGP" />
         </div>
         <ConversionRates />
         <Contracts chain={chain} />

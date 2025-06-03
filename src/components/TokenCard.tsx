@@ -2,6 +2,7 @@ import { formatEther, formatNumber } from "../utilities";
 import { memo, type ReactElement } from "react";
 
 import { Card } from "./Card";
+import { Coins, coins } from "../config/contracts";
 import { TokenStat } from "./TokenStat";
 
 interface Underlying {
@@ -10,7 +11,7 @@ interface Underlying {
 }
 
 type Properties = {
-  symbol: string;
+  symbol: Coins;
   decimals: number;
   description: string;
   color: "green" | "blue";
@@ -28,7 +29,8 @@ export const TokenCard = memo(({ symbol, decimals, description, price, supply, u
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center">
-            <div className={`${bg} mr-2 flex size-8 items-center justify-center rounded-full`}>{symbol[0]?.toUpperCase()}</div>
+            {/* <div className={`${bg} mr-2 flex  items-center justify-center rounded-full`}>{symbol[0]?.toUpperCase()}</div> */}
+            <img className="size-8 mr-2" src={coins[symbol].icon} />
             <p className="text-lg font-bold">${symbol}</p>
           </div>
         </div>

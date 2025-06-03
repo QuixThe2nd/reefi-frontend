@@ -24552,6 +24552,21 @@ var require_client = __commonJS((exports, module) => {
 // src/index.tsx
 var React2 = __toESM(require_react(), 1);
 
+// public/icons/curve.png
+var curve_default = "./curve-gne01vjr.png";
+
+// public/icons/rMGP.png
+var rMGP_default = "./rMGP-etf6anh5.png";
+
+// public/icons/vMGP.png
+var vMGP_default = "./vMGP-ef9szf8x.png";
+
+// public/icons/vlMGP.png
+var vlMGP_default = "./vlMGP-phmcpd2v.png";
+
+// public/icons/yMGP.png
+var yMGP_default = "./yMGP-pfcv419f.png";
+
 // src/utilities.ts
 var parseEther = (value, decimals = 18) => BigInt(Math.round(value * Number(10n ** BigInt(decimals)) / Number(1n)));
 var formatEther = (value, decimals = 18) => {
@@ -24587,8 +24602,23 @@ var formatTime = (seconds, units = 2) => {
 };
 var aprToApy = (apr) => (1 + apr / 365) ** 365 - 1;
 
-// src/contexts/GlobalContext.tsx
-var import_react31 = __toESM(require_react(), 1);
+// public/icons/CKP.png
+var CKP_default = "./CKP-2gypjdmw.png";
+
+// public/icons/EGP.png
+var EGP_default = "./EGP-egzm3dga.png";
+
+// public/icons/LTP.png
+var LTP_default = "./LTP-t3314x71.png";
+
+// public/icons/MGP.png
+var MGP_default = "./MGP-j0kxdq4n.png";
+
+// public/icons/PNP.png
+var PNP_default = "./PNP-7p0z8kzx.png";
+
+// public/icons/WETH.png
+var WETH_default = "./WETH-kw897kqr.png";
 
 // node_modules/viem/_esm/utils/chain/defineChain.js
 function defineChain(chain) {
@@ -34395,15 +34425,15 @@ var ABIs = {
 // src/config/contracts.ts
 var decimals = { CKP: 18, EGP: 18, ETH: 18, LTP: 18, MGP: 18, PNP: 18, WETH: 18, cMGP: 18, rMGP: 18, yMGP: 18 };
 var coins = {
-  CKP: { bgColor: "bg-pink-600", color: "bg-pink-400", symbol: "CKP" },
-  EGP: { bgColor: "bg-red-600", color: "bg-red-400", symbol: "EGP" },
-  LTP: { bgColor: "bg-teal-600", color: "bg-teal-400", symbol: "LTP" },
-  MGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "MGP" },
-  PNP: { bgColor: "bg-orange-600", color: "bg-orange-400", symbol: "PNP" },
-  WETH: { bgColor: "bg-gray-600", color: "bg-gray-400", symbol: "ETH" },
-  cMGP: { bgColor: "bg-indigo-600", color: "bg-indigo-400", symbol: "CMGP" },
-  rMGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "RMGP" },
-  yMGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "YMGP" }
+  CKP: { bgColor: "bg-pink-600", color: "bg-pink-400", symbol: "CKP", icon: CKP_default },
+  EGP: { bgColor: "bg-red-600", color: "bg-red-400", symbol: "EGP", icon: EGP_default },
+  LTP: { bgColor: "bg-teal-600", color: "bg-teal-400", symbol: "LTP", icon: LTP_default },
+  MGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "MGP", icon: MGP_default },
+  PNP: { bgColor: "bg-orange-600", color: "bg-orange-400", symbol: "PNP", icon: PNP_default },
+  WETH: { bgColor: "bg-gray-600", color: "bg-gray-400", symbol: "ETH", icon: WETH_default },
+  cMGP: { bgColor: "bg-indigo-600", color: "bg-indigo-400", symbol: "CMGP", icon: curve_default },
+  rMGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "RMGP", icon: rMGP_default },
+  yMGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "YMGP", icon: yMGP_default }
 };
 var publicClients = {
   1: createPublicClient({ chain: mainnet, transport: webSocket("wss://eth.drpc.org") }),
@@ -34415,12 +34445,12 @@ var contracts = {
     CKP: getContract({ abi: ABIs.CKP, address: "0x346Af1954e3d6be46B96dA713a1f7fD2d1928F1d", client: publicClients[42161] }),
     EGP: getContract({ abi: ABIs.EGP, address: "0x7E7a7C916c19a45769f6BDAF91087f93c6C12F78", client: publicClients[42161] }),
     LTP: getContract({ abi: ABIs.LTP, address: "0xa73959804651eEd0D4bd04293A675cB832c20454", client: publicClients[42161] }),
-    MASTERMGP: getContract({ abi: ABIs.masterMGP, address: "0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7", client: publicClients[42161] }),
+    masterMGP: getContract({ abi: ABIs.masterMGP, address: "0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7", client: publicClients[42161] }),
     MGP: getContract({ abi: erc20Abi, address: "0xa61F74247455A40b01b0559ff6274441FAfa22A3", client: publicClients[42161] }),
-    ODOSRouter: getContract({ abi: ABIs.ODOSRouter, address: "0xa669e7A0d4b3e4Fa48af2dE86BD4CD7126Be4e13", client: publicClients[42161] }),
+    odosRouter: getContract({ abi: ABIs.ODOSRouter, address: "0xa669e7A0d4b3e4Fa48af2dE86BD4CD7126Be4e13", client: publicClients[42161] }),
     PNP: getContract({ abi: ABIs.PNP, address: "0x2Ac2B254Bc18cD4999f64773a966E4f4869c34Ee", client: publicClients[42161] }),
-    VLMGP: getContract({ abi: ABIs.vlMGP, address: "0x536599497Ce6a35FC65C7503232Fec71A84786b9", client: publicClients[42161] }),
-    VLREWARDER: getContract({ abi: ABIs.vlRewarder, address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45", client: publicClients[42161] }),
+    vlMGP: getContract({ abi: ABIs.vlMGP, address: "0x536599497Ce6a35FC65C7503232Fec71A84786b9", client: publicClients[42161] }),
+    vlRewarder: getContract({ abi: ABIs.vlRewarder, address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45", client: publicClients[42161] }),
     WETH: getContract({ abi: ABIs.WETH, address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", client: publicClients[42161] }),
     cMGP: getContract({ abi: ABIs.cMGP, address: "0xD1465c3489Aa7Eac0e7f9907F93a684840a2F934", client: publicClients[42161] }),
     rMGP: getContract({ abi: ABIs.rMGP, address: "0x3788c8791d826254bAbd49b602C93008468D5695", client: publicClients[42161] }),
@@ -34431,12 +34461,12 @@ var contracts = {
     CKP: getContract({ abi: ABIs.CKP, address: "0x2b5d9adea07b590b638ffc165792b2c610eda649", client: publicClients[56] }),
     EGP: getContract({ abi: ABIs.EGP, address: "0x0cc7288a11c0c31d39d0e05eb59f24e506ad6ad5", client: publicClients[56] }),
     LTP: getContract({ abi: ABIs.LTP, address: "0x56fa5f7bf457454be33d8b978c86a5f5b9dd84c2", client: publicClients[56] }),
-    MASTERMGP: getContract({ abi: ABIs.masterMGP, address: "0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46", client: publicClients[56] }),
+    masterMGP: getContract({ abi: ABIs.masterMGP, address: "0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46", client: publicClients[56] }),
     MGP: getContract({ abi: erc20Abi, address: "0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa", client: publicClients[56] }),
-    ODOSRouter: getContract({ abi: ABIs.ODOSRouter, address: "0x0000000000000000000000000000000000000000", client: publicClients[56] }),
+    odosRouter: getContract({ abi: ABIs.ODOSRouter, address: "0x0000000000000000000000000000000000000000", client: publicClients[56] }),
     PNP: getContract({ abi: ABIs.PNP, address: "0x5012c90f14d190607662ca8344120812aaa2639d", client: publicClients[56] }),
-    VLMGP: getContract({ abi: ABIs.vlMGP, address: "0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6", client: publicClients[56] }),
-    VLREWARDER: getContract({ abi: ABIs.vlRewarder, address: "0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9", client: publicClients[56] }),
+    vlMGP: getContract({ abi: ABIs.vlMGP, address: "0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6", client: publicClients[56] }),
+    vlRewarder: getContract({ abi: ABIs.vlRewarder, address: "0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9", client: publicClients[56] }),
     WETH: getContract({ abi: ABIs.WETH, address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", client: publicClients[56] }),
     cMGP: getContract({ abi: ABIs.cMGP, address: "0x0000000000000000000000000000000000000000", client: publicClients[56] }),
     rMGP: getContract({ abi: ABIs.rMGP, address: "0x0277517658a1dd3899bf926fCf6A633e549eB769", client: publicClients[56] }),
@@ -34444,6 +34474,9 @@ var contracts = {
     yMGP: getContract({ abi: ABIs.yMGP, address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb", client: publicClients[56] })
   }
 };
+
+// src/contexts/GlobalContext.tsx
+var import_react31 = __toESM(require_react(), 1);
 
 // src/hooks/actions/useApprove.ts
 var import_react = __toESM(require_react(), 1);
@@ -36322,31 +36355,31 @@ var useAllowances = ({ wallet }) => {
       })
     },
     odos: {
-      CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+      CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then((value) => {
         setAllowances((a) => ({ odos: { ...a.odos, CKP: value } }));
       }),
-      EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+      EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then((value) => {
         setAllowances((a) => ({ odos: { ...a.odos, EGP: value } }));
       }),
-      LTP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].LTP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+      LTP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].LTP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then((value) => {
         setAllowances((a) => ({ odos: { ...a.odos, LTP: value } }));
       }),
-      MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+      MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then((value) => {
         setAllowances((a) => ({ odos: { ...a.odos, MGP: value } }));
       }),
-      PNP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].PNP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+      PNP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].PNP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then((value) => {
         setAllowances((a) => ({ odos: { ...a.odos, PNP: value } }));
       }),
-      WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+      WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then((value) => {
         setAllowances((a) => ({ odos: { ...a.odos, WETH: value } }));
       }),
-      cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+      cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then((value) => {
         setAllowances((a) => ({ odos: { ...a.odos, cMGP: value } }));
       }),
-      rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+      rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then((value) => {
         setAllowances((a) => ({ odos: { ...a.odos, rMGP: value } }));
       }),
-      yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.allowance([wallet.account, contracts[wallet.chain].ODOSRouter.address]).then((value) => {
+      yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then((value) => {
         setAllowances((a) => ({ odos: { ...a.odos, yMGP: value } }));
       })
     },
@@ -36491,15 +36524,15 @@ var useContracts = ({ wallet }) => {
         EGP: getContract({ abi: ABIs.EGP, address: contracts[42161].EGP.address, client: wallet.clients[42161] }),
         LTP: getContract({ abi: ABIs.LTP, address: contracts[42161].LTP.address, client: wallet.clients[42161] }),
         MGP: getContract({ abi: ABIs.MGP, address: contracts[42161].MGP.address, client: wallet.clients[42161] }),
-        ODOSRouter: getContract({ abi: ABIs.ODOSRouter, address: contracts[42161].ODOSRouter.address, client: wallet.clients[42161] }),
+        ODOSRouter: getContract({ abi: ABIs.ODOSRouter, address: contracts[42161].odosRouter.address, client: wallet.clients[42161] }),
         PNP: getContract({ abi: ABIs.PNP, address: contracts[42161].PNP.address, client: wallet.clients[42161] }),
         WETH: getContract({ abi: ABIs.WETH, address: contracts[42161].WETH.address, client: wallet.clients[42161] }),
         cMGP: getContract({ abi: ABIs.cMGP, address: contracts[42161].cMGP.address, client: wallet.clients[42161] }),
-        masterMGP: getContract({ abi: ABIs.masterMGP, address: contracts[42161].MASTERMGP.address, client: wallet.clients[42161] }),
+        masterMGP: getContract({ abi: ABIs.masterMGP, address: contracts[42161].masterMGP.address, client: wallet.clients[42161] }),
         rMGP: getContract({ abi: ABIs.rMGP, address: contracts[42161].rMGP.address, client: wallet.clients[42161] }),
         vMGP: getContract({ abi: ABIs.vMGP, address: contracts[42161].vMGP.address, client: wallet.clients[42161] }),
-        vlMGP: getContract({ abi: ABIs.vlMGP, address: contracts[42161].VLMGP.address, client: wallet.clients[42161] }),
-        vlRewarder: getContract({ abi: ABIs.vlRewarder, address: contracts[42161].VLREWARDER.address, client: wallet.clients[42161] }),
+        vlMGP: getContract({ abi: ABIs.vlMGP, address: contracts[42161].vlMGP.address, client: wallet.clients[42161] }),
+        vlRewarder: getContract({ abi: ABIs.vlRewarder, address: contracts[42161].vlRewarder.address, client: wallet.clients[42161] }),
         yMGP: getContract({ abi: ABIs.yMGP, address: contracts[42161].yMGP.address, client: wallet.clients[42161] })
       },
       56: {
@@ -36507,15 +36540,15 @@ var useContracts = ({ wallet }) => {
         EGP: getContract({ abi: ABIs.EGP, address: contracts[56].EGP.address, client: wallet.clients[56] }),
         LTP: getContract({ abi: ABIs.LTP, address: contracts[56].LTP.address, client: wallet.clients[56] }),
         MGP: getContract({ abi: ABIs.MGP, address: contracts[56].MGP.address, client: wallet.clients[56] }),
-        ODOSRouter: getContract({ abi: ABIs.ODOSRouter, address: contracts[56].ODOSRouter.address, client: wallet.clients[56] }),
+        ODOSRouter: getContract({ abi: ABIs.ODOSRouter, address: contracts[56].odosRouter.address, client: wallet.clients[56] }),
         PNP: getContract({ abi: ABIs.PNP, address: contracts[56].PNP.address, client: wallet.clients[56] }),
         WETH: getContract({ abi: ABIs.WETH, address: contracts[56].WETH.address, client: wallet.clients[56] }),
         cMGP: getContract({ abi: ABIs.cMGP, address: contracts[56].cMGP.address, client: wallet.clients[56] }),
-        masterMGP: getContract({ abi: ABIs.masterMGP, address: contracts[56].MASTERMGP.address, client: wallet.clients[56] }),
+        masterMGP: getContract({ abi: ABIs.masterMGP, address: contracts[56].masterMGP.address, client: wallet.clients[56] }),
         rMGP: getContract({ abi: ABIs.rMGP, address: contracts[56].rMGP.address, client: wallet.clients[56] }),
         vMGP: getContract({ abi: ABIs.vMGP, address: contracts[56].vMGP.address, client: wallet.clients[56] }),
-        vlMGP: getContract({ abi: ABIs.vlMGP, address: contracts[56].VLMGP.address, client: wallet.clients[56] }),
-        vlRewarder: getContract({ abi: ABIs.vlRewarder, address: contracts[56].VLREWARDER.address, client: wallet.clients[56] }),
+        vlMGP: getContract({ abi: ABIs.vlMGP, address: contracts[56].vlMGP.address, client: wallet.clients[56] }),
+        vlRewarder: getContract({ abi: ABIs.vlRewarder, address: contracts[56].vlRewarder.address, client: wallet.clients[56] }),
         yMGP: getContract({ abi: ABIs.yMGP, address: contracts[56].yMGP.address, client: wallet.clients[56] })
       }
     };
@@ -36529,22 +36562,22 @@ var useExchangeRates = ({ wallet }) => {
   const [exchangeRates, setExchangeRates] = useStoredObject("exchangeRates", { mgpRMGP: 0, mgpYMGP: 0, rmgpMGP: 0, rmgpYMGP: 0, ymgpMGP: 0, ymgpRMGP: 0 });
   const updateExchangeRates = {
     mgpRMGP: async () => {
-      setExchangeRates({ mgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+      setExchangeRates({ mgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)) });
     },
     mgpYMGP: async () => {
-      setExchangeRates({ mgpYMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+      setExchangeRates({ mgpYMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)) });
     },
     rmgpMGP: async () => {
-      setExchangeRates({ rmgpMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+      setExchangeRates({ rmgpMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)) });
     },
     rmgpYMGP: async () => {
-      setExchangeRates({ rmgpYMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+      setExchangeRates({ rmgpYMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)) });
     },
     ymgpMGP: async () => {
-      setExchangeRates({ ymgpMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+      setExchangeRates({ ymgpMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)) });
     },
     ymgpRMGP: async () => {
-      setExchangeRates({ ymgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, parseEther(1)], { account: wallet.account })) / Number(parseEther(1)) });
+      setExchangeRates({ ymgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)) });
     }
   };
   import_react23.useEffect(() => {
@@ -36564,14 +36597,14 @@ var useLocked = ({ wallet }) => {
   const [locked, setLocked] = useStoredObject("locked", { MGP: { 42161: 0n, 56: 0n }, reefiMGP: 0n, userYMGP: 0n, yMGP: 0n });
   const updateLocked = {
     MGP: {
-      42161: () => contracts[42161].VLMGP.read.totalLocked().then((value) => setLocked((l) => ({ MGP: { ...l.MGP, 42161: value } }))),
-      56: () => contracts[56].VLMGP.read.totalLocked().then((value) => setLocked((l) => ({ MGP: { ...l.MGP, 56: value } }))),
+      42161: () => contracts[42161].vlMGP.read.totalLocked().then((value) => setLocked((l) => ({ MGP: { ...l.MGP, 42161: value } }))),
+      56: () => contracts[56].vlMGP.read.totalLocked().then((value) => setLocked((l) => ({ MGP: { ...l.MGP, 56: value } }))),
       all: async () => {
         await updateLocked.MGP[42161]();
         await updateLocked.MGP[56]();
       }
     },
-    reefiMGP: () => contracts[wallet.chain].VLMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]).then((reefiMGP) => {
+    reefiMGP: () => contracts[wallet.chain].vlMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]).then((reefiMGP) => {
       setLocked({ reefiMGP });
     }),
     userYMGP: () => wallet.account ? contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]).then((userYMGP) => {
@@ -36634,7 +36667,7 @@ var useRewards = ({ wallet, prices, balances, locked }) => {
       setRewards({ estimatedCompoundAmount: simulation.result });
     },
     mgpAPR: async () => {
-      const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${wallet.chain}&rewarder=${contracts[wallet.chain].VLREWARDER.address}`);
+      const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${wallet.chain}&rewarder=${contracts[wallet.chain].vlRewarder.address}`);
       const body = await response.json();
       let mgpAPR = 0;
       body.data.rewardTokenInfo.forEach((token) => {
@@ -36643,7 +36676,7 @@ var useRewards = ({ wallet, prices, balances, locked }) => {
       setRewards({ mgpAPR });
     },
     pendingRewards: async () => {
-      const data = await contracts[wallet.chain].MASTERMGP.read.allPendingTokens([contracts[wallet.chain].VLMGP.address, contracts[wallet.chain].rMGP.address]);
+      const data = await contracts[wallet.chain].masterMGP.read.allPendingTokens([contracts[wallet.chain].vlMGP.address, contracts[wallet.chain].rMGP.address]);
       const pendingRewards = { MGP: { address: contracts[wallet.chain].MGP.address, rewards: data[0] } };
       data[2].forEach((token, index2) => {
         if (data[2][index2] && data[3][index2] && data[1][index2])
@@ -36780,7 +36813,7 @@ var import_react30 = __toESM(require_react(), 1);
 var useWithdraws = ({ wallet }) => {
   const [withdraws, setWithdraws] = useStoredObject("withdraws", { unlockSchedule: [], unsubmitted: 0n, userPending: 0n, userWithdrawable: 0n });
   const updateWithdraws = {
-    unlockSchedule: () => contracts[wallet.chain].VLMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].rMGP.address]).then((unlockSchedule) => {
+    unlockSchedule: () => contracts[wallet.chain].vlMGP.read.getUserUnlockingSchedule([contracts[wallet.chain].rMGP.address]).then((unlockSchedule) => {
       setWithdraws({ unlockSchedule });
     }),
     unsubmitted: () => contracts[wallet.chain].rMGP.read.unsubmittedWithdraws().then((unsubmitted) => {
@@ -36855,7 +36888,7 @@ var BadgeComponent = ({ title, value, breakdown }) => /* @__PURE__ */ jsx_dev_ru
       ]
     }, undefined, true, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
-      className: "pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-black px-3 py-2 text-xs text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+      className: "pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 min-w-54 -translate-x-1/2 rounded bg-black px-3 py-2 text-xs text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100",
       children: /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
         className: "space-y-1",
         children: breakdown?.map((item) => {
@@ -36869,10 +36902,19 @@ var BadgeComponent = ({ title, value, breakdown }) => /* @__PURE__ */ jsx_dev_ru
           return /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
             className: "flex justify-between gap-2",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("span", {
+              /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
+                className: "flex gap-1",
                 children: [
-                  item.asset,
-                  ":"
+                  /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("img", {
+                    className: "size-4",
+                    src: item.logo
+                  }, undefined, false, undefined, this),
+                  /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("span", {
+                    children: [
+                      item.asset,
+                      ":"
+                    ]
+                  }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this),
               /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("span", {
@@ -36949,7 +36991,7 @@ var Card = ({ children, padding = 6, className = "" }) => /* @__PURE__ */ jsx_de
   className: `rounded-xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-${String(padding)} shadow-2xl backdrop-blur-xl transition-all duration-400 hover:scale-[1.01] hover:shadow-purple-500/10 ${className}`,
   children: [
     /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
-      className: "absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-600/10 opacity-50 transition-opacity duration-400 hover:opacity-80 pointer-events-none"
+      className: "rounded-xl absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-600/10 opacity-50 transition-opacity duration-400 hover:opacity-80 pointer-events-none"
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
       className: "absolute right-4 top-4 size-32 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 opacity-60 blur-3xl transition-opacity duration-400 hover:opacity-90 pointer-events-none"
@@ -37340,7 +37382,15 @@ var Contracts = import_react37.memo(({ chain }) => /* @__PURE__ */ jsx_dev_runti
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
       className: "grid grid-cols-1 gap-2 text-xs lg:grid-cols-2 xl:grid-cols-3",
-      children: Object.keys(contracts[chain]).map((contract) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
+      children: Object.keys(contracts[chain]).sort((a, b) => {
+        const aIsUpper = a === a.toUpperCase();
+        const bIsUpper = b === b.toUpperCase();
+        if (aIsUpper && !bIsUpper)
+          return 1;
+        if (!aIsUpper && bIsUpper)
+          return -1;
+        return a.localeCompare(b);
+      }).map((contract) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("div", {
         children: [
           /* @__PURE__ */ jsx_dev_runtime10.jsxDEV("span", {
             className: "font-semibold",
@@ -37832,6 +37882,11 @@ var SwapButton = ({ buy, nativeSwap, label, tokenIn, tokenOut, mgpRmgpCurveAmoun
 
 // src/components/SwapInput.tsx
 var import_react43 = __toESM(require_react(), 1);
+
+// public/icons/ETH.svg
+var ETH_default = "./ETH-85jh4e8b.svg";
+
+// src/components/SwapInput.tsx
 var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
 var SwapInput = import_react43.memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin, excludeCoins, prices, ymgpMgpCurveRate, mgpRmgpCurveRate }) => {
   const [isDropdownOpen, setIsDropdownOpen] = import_react43.useState(false);
@@ -37926,9 +37981,9 @@ var SwapInput = import_react43.memo(({ label, selectedCoin, onCoinChange, balanc
                     },
                     type: "button",
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-                        className: ["mr-2 flex size-5 items-center justify-center rounded-full", coins[selectedCoin === "ETH" ? "WETH" : selectedCoin].color].join(" "),
-                        children: selectedCoin[0]?.toUpperCase()
+                      /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("img", {
+                        className: "mr-2 size-5",
+                        src: selectedCoin === "ETH" ? ETH_default : coins[selectedCoin].icon
                       }, undefined, false, undefined, this),
                       /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
                         className: "mr-2",
@@ -37954,14 +38009,12 @@ var SwapInput = import_react43.memo(({ label, selectedCoin, onCoinChange, balanc
                       children: [
                         /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
                           className: `flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin ? "bg-gray-700" : ""}`,
-                          onClick: () => {
-                            handleCoinChange(coin);
-                          },
+                          onClick: () => handleCoinChange(coin),
                           type: "button",
                           children: [
-                            /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-                              className: `mr-2 flex size-5 items-center justify-center rounded-full ${coins[coin].color}`,
-                              children: coin[0]?.toUpperCase()
+                            /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("img", {
+                              className: "mr-2 size-5",
+                              src: coins[coin].icon
                             }, undefined, false, undefined, this),
                             /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
                               children: coin
@@ -37970,14 +38023,12 @@ var SwapInput = import_react43.memo(({ label, selectedCoin, onCoinChange, balanc
                         }, coin, true, undefined, this),
                         coin === "WETH" && /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("button", {
                           className: `flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin.replace("W", "") ? "bg-gray-700" : ""}`,
-                          onClick: () => {
-                            handleCoinChange(coin.replace("W", ""));
-                          },
+                          onClick: () => handleCoinChange(coin.replace("W", "")),
                           type: "button",
                           children: [
-                            /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
-                              className: `mr-2 flex size-5 items-center justify-center rounded-full ${coins[coin].color}`,
-                              children: coin[1]?.toUpperCase()
+                            /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("img", {
+                              className: "mr-2 size-5",
+                              src: ETH_default
                             }, undefined, false, undefined, this),
                             /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("span", {
                               children: coin.replace("W", "")
@@ -38371,9 +38422,7 @@ var AmountInput = import_react51.memo(({ label, balance, value, onChange, token,
       children: [
         /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("input", {
           className: "w-3/4 bg-transparent text-xl outline-none",
-          onChange: (event) => {
-            onChange(parseEther(Number.isNaN(Number.parseFloat(event.target.value)) ? 0 : Number.parseFloat(event.target.value)));
-          },
+          onChange: (event) => onChange(parseEther(Number.isNaN(Number.parseFloat(event.target.value)) ? 0 : Number.parseFloat(event.target.value))),
           placeholder: placeholder ?? "0",
           type: "text",
           value: value === 0n ? undefined : formatEther(value)
@@ -38384,18 +38433,16 @@ var AmountInput = import_react51.memo(({ label, balance, value, onChange, token,
             /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(Button, {
               size: "xs",
               variant: "ghost",
-              onClick: () => {
-                onChange(balance);
-              },
+              onClick: () => onChange(balance),
               type: "button",
               children: "MAX"
             }, undefined, false, undefined, this),
             /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
-              className: `flex items-center rounded-md px-3 py-1 ${token.bgColor}`,
+              className: `flex items-center rounded-md px-3 py-1 ${coins[token.symbol].bgColor}`,
               children: [
-                /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("div", {
-                  className: `mr-2 flex size-5 items-center justify-center rounded-full ${token.color}`,
-                  children: token.symbol[0]?.toUpperCase()
+                /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("img", {
+                  className: "mr-2 size-5",
+                  src: coins[token.symbol].icon
                 }, undefined, false, undefined, this),
                 /* @__PURE__ */ jsx_dev_runtime25.jsxDEV("span", {
                   children: token.symbol
@@ -38659,7 +38706,7 @@ var Marker = ({ pos, top, color, value, show = true }) => show && /* @__PURE__ *
     ]
   }, undefined, true, undefined, this)
 }, undefined, false, undefined, this);
-var PegCard = ({ token, data, targetToken }) => {
+var PegCard = ({ token, logo, data, targetToken }) => {
   const { mint, marketBuy, marketSell, burn, spread, originalMint, originalBurn } = data;
   const [buyDistribution, sellDistribution, burnDistribution, originalMintDistribution, originalBurnDistribution] = [
     Math.abs(marketBuy - mint),
@@ -38731,18 +38778,10 @@ var PegCard = ({ token, data, targetToken }) => {
                 /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
                   className: "flex items-center space-x-4",
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-                      className: "relative flex size-12 items-center justify-center rounded-xl border border-blue-400/30 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 text-sm font-bold text-white shadow-xl",
-                      children: [
-                        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
-                          className: "absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 to-transparent"
-                        }, undefined, false, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("span", {
-                          className: "relative",
-                          children: token
-                        }, undefined, false, undefined, this)
-                      ]
-                    }, undefined, true, undefined, this),
+                    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("img", {
+                      src: logo,
+                      className: "size-12"
+                    }, undefined, false, undefined, this),
                     /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
                       className: "text-slate-300",
                       children: [
@@ -38962,7 +39001,7 @@ var PegCard = ({ token, data, targetToken }) => {
                   }, undefined, false, undefined, this),
                   /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
                     className: "text-[10px] text-slate-500",
-                    children: label === "Spread" ? "depeg risk" : targetToken
+                    children: label === "Spread" ? "Swap Fee" : targetToken
                   }, undefined, false, undefined, this)
                 ]
               }, label, true, undefined, this))
@@ -39361,9 +39400,9 @@ var TokenCard = import_react58.memo(({ symbol, decimals: decimals2, description,
               children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
                 className: "flex items-center",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
-                    className: `${bg} mr-2 flex size-8 items-center justify-center rounded-full`,
-                    children: symbol[0]?.toUpperCase()
+                  /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("img", {
+                    className: "size-8 mr-2",
+                    src: coins[symbol].icon
                   }, undefined, false, undefined, this),
                   /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("p", {
                     className: "text-lg font-bold",
@@ -39627,12 +39666,14 @@ var AppContent = () => {
                             /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(YieldBadge, {
                               apr: rewards.mgpAPR,
                               asset: "Locked MGP",
-                              breakdown: [{ apr: rewards.mgpAPR, asset: "Original vlMGP" }]
+                              breakdown: [{ apr: rewards.mgpAPR, asset: "vlMGP", logo: vlMGP_default }],
+                              logo: vlMGP_default
                             }, undefined, false, undefined, this),
                             /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(YieldBadge, {
                               apy: aprToApy(rewards.mgpAPR) * 0.9,
                               asset: "rMGP",
-                              breakdown: [{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "vlMGP" }]
+                              breakdown: [{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "vlMGP", logo: vlMGP_default }],
+                              logo: coins.rMGP.icon
                             }, undefined, false, undefined, this)
                           ]
                         }, undefined, true, undefined, this)
@@ -39788,12 +39829,13 @@ var AppContent = () => {
                             /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(YieldBadge, {
                               apy: aprToApy(rewards.mgpAPR) * 0.9,
                               asset: "yMGP",
-                              breakdown: [{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP" }]
+                              breakdown: [{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }],
+                              logo: coins.yMGP.icon
                             }, undefined, false, undefined, this),
                             /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(YieldBadge, {
                               apy: Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.yMGP) + aprToApy(rewards.mgpAPR) * 0.9,
                               asset: "Locked yMGP",
-                              breakdown: [{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "Base vlMGP" }, { apr: Number(locked.reefiMGP) * rewards.mgpAPR * 0.05 / Number(locked.yMGP), asset: "Boosted vlMGP" }, { asset: "Withdrawals", value: "Variable" }],
+                              breakdown: [{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "Base vlMGP", logo: vlMGP_default }, { apr: Number(locked.reefiMGP) * rewards.mgpAPR * 0.05 / Number(locked.yMGP), asset: "Boosted vlMGP", logo: vlMGP_default }, { asset: "rMGP Withdraws", value: "Variable", logo: coins.rMGP.icon }],
                               suffix: "+"
                             }, undefined, false, undefined, this)
                           ]
@@ -39890,11 +39932,13 @@ var AppContent = () => {
                             breakdown: [
                               {
                                 asset: "Reefi's vlMGP",
+                                logo: vlMGP_default,
                                 value: formatNumber(formatEther(locked.reefiMGP))
                               },
                               {
                                 asset: "Votable vMGP",
-                                value: formatNumber(formatEther(supplies.vMGP))
+                                value: formatNumber(formatEther(supplies.vMGP)),
+                                logo: vMGP_default
                               }
                             ]
                           }, undefined, false, undefined, this)
@@ -39928,10 +39972,26 @@ var AppContent = () => {
                             apy: rewards.cmgpAPY,
                             asset: "cMGP",
                             breakdown: [
-                              { apy: 0, asset: `${(100 * Number(balances.curveMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% MGP` },
-                              { apy: aprToApy(rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% rMGP` },
-                              { apy: aprToApy(rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(2)}% yMGP` },
-                              { apy: rewards.cmgpPoolAPY, asset: "Swap Fees" }
+                              {
+                                apy: 0,
+                                asset: `${(100 * Number(balances.curveMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% MGP`,
+                                logo: coins.MGP.icon
+                              },
+                              {
+                                apy: aprToApy(rewards.mgpAPR) * 0.9,
+                                asset: `${(100 * Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% rMGP`,
+                                logo: coins.rMGP.icon
+                              },
+                              {
+                                apy: aprToApy(rewards.mgpAPR) * 0.9,
+                                asset: `${(100 * Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% yMGP`,
+                                logo: coins.yMGP.icon
+                              },
+                              {
+                                apy: rewards.cmgpPoolAPY,
+                                asset: "Swap Fees",
+                                logo: curve_default
+                              }
                             ]
                           }, undefined, false, undefined, this)
                         }, undefined, false, undefined, this)
@@ -39961,11 +40021,13 @@ var AppContent = () => {
                 children: [
                   /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(PegCard_default, {
                     token: "rMGP",
+                    logo: rMGP_default,
                     data: { burn: Number(locked.reefiMGP) / Number(supplies.rMGP) * 0.9, marketBuy: 1 / exchangeRates.mgpRMGP, marketSell: exchangeRates.rmgpMGP, mint: Number(locked.reefiMGP) / Number(supplies.rMGP), originalBurn: 0.9, originalMint: 1, spread: 100 / exchangeRates.mgpRMGP / exchangeRates.rmgpMGP - 100 },
                     targetToken: "MGP"
                   }, undefined, false, undefined, this),
                   /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(PegCard_default, {
                     token: "yMGP",
+                    logo: yMGP_default,
                     data: { burn: 0, marketBuy: 1 / exchangeRates.rmgpYMGP, marketSell: exchangeRates.ymgpRMGP, mint: 1, spread: 100 / exchangeRates.rmgpYMGP / exchangeRates.ymgpRMGP - 100 },
                     targetToken: "rMGP"
                   }, undefined, false, undefined, this)
@@ -40010,5 +40072,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=5B8B3D44568D0D5864756E2164756E21
-//# sourceMappingURL=index-etq4ehdt.js.map
+//# debugId=8129C01631C1603C64756E2164756E21
+//# sourceMappingURL=index-6k1ecqgc.js.map

@@ -12,6 +12,7 @@ interface TokenData {
 
 interface PegCardProperties {
   token: string;
+  logo: string;
   data: TokenData;
   targetToken: string;
 }
@@ -138,7 +139,7 @@ const Marker: React.FC<MarkerProperties> = ({ pos, top, color, value, show = tru
     </div>
   </div>;
 
-const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
+const PegCard: React.FC<PegCardProperties> = ({ token, logo, data, targetToken }) => {
   const { mint, marketBuy, marketSell, burn, spread, originalMint, originalBurn } = data;
 
   const [buyDistribution, sellDistribution, burnDistribution, originalMintDistribution, originalBurnDistribution] = [
@@ -208,10 +209,7 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
         <div className="relative z-10">
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="relative flex size-12 items-center justify-center rounded-xl border border-blue-400/30 bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 text-sm font-bold text-white shadow-xl">
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 to-transparent"></div>
-                <span className="relative">{token}</span>
-              </div>
+              <img src={logo} className="size-12" />
               <div className="text-slate-300">
                 <div className="text-sm font-semibold">1 {token}</div>
                 <div className="text-xs text-slate-500">→ {targetToken}</div>
@@ -298,7 +296,7 @@ const PegCard: React.FC<PegCardProperties> = ({ token, data, targetToken }) => {
             ].map(({ label, value, color }) => <div key={label} className="rounded-lg border border-slate-700/30 bg-slate-800/40 p-2 text-center">
               <div className={`text-xs font-semibold text-${color}-400 mb-1`}>{label}</div>
               <div className={`font-mono text-xs ${label === "Spread" ? `font-bold ${spread <= 10 ? "text-green-400" : spread <= 20 ? 'text-orange-400' : 'text-red-400'}` : "text-slate-200"}`}>{value}</div>
-              <div className="text-[10px] text-slate-500">{label === "Spread" ? "depeg risk" : targetToken}</div>
+              <div className="text-[10px] text-slate-500">{label === "Spread" ? "Swap Fee" : targetToken}</div>
             </div>)}
           </div>
         </div>

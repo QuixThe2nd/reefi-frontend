@@ -34425,15 +34425,15 @@ var ABIs = {
 // src/config/contracts.ts
 var decimals = { CKP: 18, EGP: 18, ETH: 18, LTP: 18, MGP: 18, PNP: 18, WETH: 18, cMGP: 18, rMGP: 18, yMGP: 18 };
 var coins = {
-  CKP: { bgColor: "bg-pink-600", color: "bg-pink-400", symbol: "CKP", icon: CKP_default },
-  EGP: { bgColor: "bg-red-600", color: "bg-red-400", symbol: "EGP", icon: EGP_default },
-  LTP: { bgColor: "bg-teal-600", color: "bg-teal-400", symbol: "LTP", icon: LTP_default },
+  CKP: { bgColor: "bg-orange-600", color: "bg-orange-400", symbol: "CKP", icon: CKP_default },
+  EGP: { bgColor: "bg-gray-600", color: "bg-gray-400", symbol: "EGP", icon: EGP_default },
+  LTP: { bgColor: "bg-yellow-600", color: "bg-yellow-400", symbol: "LTP", icon: LTP_default },
   MGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "MGP", icon: MGP_default },
-  PNP: { bgColor: "bg-orange-600", color: "bg-orange-400", symbol: "PNP", icon: PNP_default },
+  PNP: { bgColor: "bg-teal-600", color: "bg-teal-400", symbol: "PNP", icon: PNP_default },
   WETH: { bgColor: "bg-gray-600", color: "bg-gray-400", symbol: "ETH", icon: WETH_default },
   cMGP: { bgColor: "bg-indigo-600", color: "bg-indigo-400", symbol: "CMGP", icon: curve_default },
-  rMGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "RMGP", icon: rMGP_default },
-  yMGP: { bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "YMGP", icon: yMGP_default }
+  rMGP: { bgColor: "bg-green-600", color: "bg-green-400", symbol: "RMGP", icon: rMGP_default },
+  yMGP: { bgColor: "bg-yellow-600", color: "bg-yellow-400", symbol: "YMGP", icon: yMGP_default }
 };
 var publicClients = {
   1: createPublicClient({ chain: mainnet, transport: webSocket("wss://eth.drpc.org") }),
@@ -40072,5 +40072,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=8129C01631C1603C64756E2164756E21
-//# sourceMappingURL=index-6k1ecqgc.js.map
+//# debugId=559B242E5F40C28364756E2164756E21
+//# sourceMappingURL=index-59te7g30.js.map

@@ -4,7 +4,7 @@
  * TODO: reefi priority queue. withdraw slot 1 is free, 2: 10 MGP, 3: 100 MGP, 4: 500 MGP, 5: 1000 MGP, 6: 10000 MGP. if lets say 4 withdraw slots are being used, but user only wants to pay when it costs 100 MGP, they can join the queue and be included next time theres only 2 slots being used.
  * TODO: tokenise each rmgp->mgp withdraw batch with like wmgp-aug-4, that slowly regains its peg with fixed interest
  * TODO: make buttons load during action
- * TODO: Docs
+ * TODO: page urls
  */
 
 import vlMGP from "../public/icons/vlMGP.png";
@@ -12,7 +12,7 @@ import vlMGP from "../public/icons/vlMGP.png";
 import { aprToApy, formatEther, formatNumber } from "./utilities";
 import { coins } from "./config/contracts";
 import { useGlobalContext, GlobalProvider } from "./contexts/GlobalContext";
-import { useState, ReactElement } from "react";
+import { useState, ReactElement, useEffect } from "react";
 
 import { Badge, YieldBadge } from "./components/YieldBadge";
 import { Button } from "./components/Button";
@@ -23,6 +23,7 @@ import { ClaimYield } from "./pages/ClaimYMGPYield";
 import { CompoundYield } from "./pages/CompoundYield";
 import { ConnectWallet } from "./components/ConnectWallet";
 import { Contracts } from "./components/Contracts";
+import { Documentation } from "./components/Documentation";
 import { ErrorCard } from "./components/ErrorCard";
 import { Features } from "./components/Features";
 import { FixedYieldPage } from "./pages/FixedYieldPage";
@@ -75,7 +76,7 @@ declare global {
   }
 }
 
-export type Pages = "getMGP" | "deposit" | "convert" | "lock" | "buyVotes" | "supplyLiquidity" | "unlock" | "redeem" | "claim" | "vote" | "redeemYMGP" | "fixedYield" | "getVMGP" | "lockVMGP" | "bridge" | "unlockVMGP";
+export type Pages = "getMGP" | "deposit" | "convert" | "lock" | "buyVotes" | "supplyLiquidity" | "unlock" | "redeem" | "claim" | "vote" | "redeemYMGP" | "fixedYield" | "getVMGP" | "lockVMGP" | "bridge" | "unlockVMGP" | "documentation";
 
 const Content = ({ page, setPage, error, setError }: { page: Pages | undefined; setPage: (_page: Pages | undefined) => void; error: string; setError: (_error: string) => void }) => {
   const {
@@ -91,6 +92,8 @@ const Content = ({ page, setPage, error, setError }: { page: Pages | undefined; 
     const daysToWithdraw = withdrawalTime / (60 * 60 * 24);
     return `${(fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100).toFixed(2)}%`;
   };
+
+  if (page === "documentation") return <Documentation />;
 
   if (page === "claim") return <div className="flex flex-col h-screen bg-gray-900 text-white">
     <ConnectWallet connectRequired={connectRequired} isConnecting={isConnecting} connectWallet={connectWallet} />
@@ -253,7 +256,10 @@ const Content = ({ page, setPage, error, setError }: { page: Pages | undefined; 
 };
 
 const AppContent = (): ReactElement => {
-  const [page, setPage] = useState<Pages | undefined>("buyVotes");
+  const [page, setPage] = useState<Pages | undefined>(window.location.pathname.replace("/", "") as Pages | null ?? "buyVotes");
+  useEffect(() => {
+    history.pushState(undefined, "", `/${page}`);
+  }, [page]);
   const [error, setError] = useState("");
   const { wallet: { ens, chain, account, isConnecting, setChain, connectWallet, connectRequired }, balances } = useGlobalContext();
   return <div className="flex h-screen bg-gray-900 text-white">

@@ -41,6 +41,13 @@ const getHeaderContent = (page: Pages | undefined, setPage: (_page: Pages | unde
     </>
   );
 
+  if (page === "documentation") return (
+    <>
+      <button onClick={() => setPage(undefined)} className="text-blue-400 hover:text-blue-300" type="button">← Back</button>
+      <h1 className="text-xl font-bold text-blue-400">📖 Documentation</h1>
+    </>
+  );
+
   return (
     <>
       <h1 className="text-xl font-bold text-blue-500">REEFI</h1>
@@ -55,6 +62,7 @@ export const Header = memo(({ ens, chain, page, setPage, account, isConnecting, 
     <button onClick={() => setPage("claim")} className="rounded-lg bg-gradient-to-r from-green-600 via-green-500 to-emerald-600 hover:from-green-500 hover:via-green-400 hover:to-emerald-500 text-white shadow-lg shadow-green-500/25 hover:shadow-green-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105" type="button">💰 Claim</button>
     <button onClick={() => setPage("vote")} className="rounded-lg bg-gradient-to-r from-red-600 via-red-500 to-orange-600 hover:from-red-500 hover:via-red-400 hover:to-orange-500 text-white shadow-lg shadow-green-500/25 hover:shadow-green-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105" type="button">🗳️ Vote</button>
     <button onClick={() => setPage("bridge")} className="rounded-lg bg-gradient-to-r from-blue-600 via-blue-500 to-teal-600 hover:from-blue-500 hover:via-blue-400 hover:to-teal-500 text-white shadow-lg shadow-green-500/25 hover:shadow-blue-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105" type="button">🌐 Bridge</button>
+    <button onClick={() => setPage("documentation")} className="rounded-lg bg-gradient-to-r from-yellow-950 via-yellow-800 to-yellow-700 hover:from-yellow-900 hover:via-yellow-700 hover:to-grey-500 text-white shadow-lg shadow-yellow-700/25 hover:shadow-blue-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105" type="button">📖 Docs</button>
   </div>
   {account === undefined ? <button className="rounded-lg bg-green-600 px-4 py-2 transition-colors hover:bg-green-700" disabled={isConnecting} onClick={connectWallet} type="button">
     {isConnecting ? "Connecting..." : "Connect Wallet"}

@@ -5,7 +5,7 @@ import { useStoredObject } from "./useStoredState";
 import { UseWallet } from "./useWallet";
 
 
-interface Allowance {
+interface Allowances {
   readonly MGP: bigint;
   readonly rMGP: bigint;
   readonly curve: Record<"MGP" | "rMGP" | "yMGP" | "cMGP", bigint>;
@@ -20,12 +20,12 @@ interface UpdateAllowances {
 }
 
 export interface UseAllowances {
-  allowances: Allowance;
+  allowances: Allowances;
   updateAllowances: UpdateAllowances;
 }
 
 export const useAllowances = ({ wallet }: Readonly<{ wallet: UseWallet }>) => {
-  const [allowances, setAllowances] = useStoredObject("allowances", { MGP: 0n, curve: { MGP: 0n, cMGP: 0n, rMGP: 0n, yMGP: 0n }, odos: { CKP: 0n, EGP: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, rMGP: 0n, yMGP: 0n }, rMGP: 0n });
+  const [allowances, setAllowances] = useStoredObject<Allowances>("allowances", { MGP: 0n, curve: { MGP: 0n, cMGP: 0n, rMGP: 0n, yMGP: 0n }, odos: { CKP: 0n, EGP: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, rMGP: 0n, yMGP: 0n, vMGP: 0n }, rMGP: 0n });
 
   const updateAllowances: UpdateAllowances = {
     MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].rMGP.address]).then(value => {
@@ -72,6 +72,9 @@ export const useAllowances = ({ wallet }: Readonly<{ wallet: UseWallet }>) => {
       }),
       yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => {
         setAllowances(a => ({ odos: { ...a.odos, yMGP: value } }));
+      }),
+      vMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].vMGP.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => {
+        setAllowances(a => ({ odos: { ...a.odos, vMGP: value } }));
       })
     },
     rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].yMGP.address]).then(value => {
@@ -94,6 +97,7 @@ export const useAllowances = ({ wallet }: Readonly<{ wallet: UseWallet }>) => {
     updateAllowances.odos.WETH();
     updateAllowances.odos.cMGP();
     updateAllowances.odos.rMGP();
+    updateAllowances.odos.vMGP();
     updateAllowances.odos.yMGP();
   }, [wallet.account, wallet.chain]);
 

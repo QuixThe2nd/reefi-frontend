@@ -5,23 +5,29 @@ import { useStoredObject } from "./useStoredState";
 
 import { UseWallet } from "./useWallet";
 
+interface ExchangeRates {
+  mgpRMGP: number;
+  mgpYMGP: number;
+  rmgpYMGP: number;
+  rmgpMGP: number;
+  ymgpRMGP: number;
+  ymgpMGP: number;
+  ymgpVMGP: number;
+}
+
+interface UpdateExchangeRates {
+  mgpRMGP: () => Promise<void>;
+  mgpYMGP: () => Promise<void>;
+  rmgpYMGP: () => Promise<void>;
+  rmgpMGP: () => Promise<void>;
+  ymgpRMGP: () => Promise<void>;
+  ymgpMGP: () => Promise<void>;
+  ymgpVMGP: () => Promise<void>;
+}
+
 export interface UseExchangeRates {
-  readonly exchangeRates: Readonly<{
-    mgpRMGP: number;
-    mgpYMGP: number;
-    rmgpYMGP: number;
-    rmgpMGP: number;
-    ymgpRMGP: number;
-    ymgpMGP: number;
-  }>;
-  readonly updateExchangeRates: Readonly<{
-    mgpRMGP: () => Promise<void>;
-    mgpYMGP: () => Promise<void>;
-    rmgpYMGP: () => Promise<void>;
-    rmgpMGP: () => Promise<void>;
-    ymgpRMGP: () => Promise<void>;
-    ymgpMGP: () => Promise<void>;
-  }>;
+  readonly exchangeRates: ExchangeRates;
+  readonly updateExchangeRates: UpdateExchangeRates;
 }
 
 interface Properties {
@@ -29,7 +35,7 @@ interface Properties {
 }
 
 export const useExchangeRates = ({ wallet }: Properties): UseExchangeRates => {
-  const [exchangeRates, setExchangeRates] = useStoredObject("exchangeRates", { mgpRMGP: 0, mgpYMGP: 0, rmgpMGP: 0, rmgpYMGP: 0, ymgpMGP: 0, ymgpRMGP: 0 });
+  const [exchangeRates, setExchangeRates] = useStoredObject<ExchangeRates>("exchangeRates", { mgpRMGP: 0, mgpYMGP: 0, rmgpMGP: 0, rmgpYMGP: 0, ymgpMGP: 0, ymgpRMGP: 0, ymgpVMGP: 1.2 });
 
   const updateExchangeRates = {
     mgpRMGP: async () => {
@@ -49,7 +55,8 @@ export const useExchangeRates = ({ wallet }: Properties): UseExchangeRates => {
     },
     ymgpRMGP: async () => {
       setExchangeRates({ ymgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)) });
-    }
+    },
+    ymgpVMGP: async () => {}
   };
 
   useEffect(() => {

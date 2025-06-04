@@ -17,7 +17,7 @@ const features: readonly Feature[] = [
     icon: "💧",
     title: "Liquid Derivatives"
   }, {
-    description: "Lock yMGP to earn additional protocol fees (5% of withdrawals + vlMGP yield) on top of base rMGP returns.",
+    description: "Lock yMGP to earn additional protocol fees (5% of vlMGP yield) on top of base rMGP returns.",
     icon: "📈",
     title: "Enhanced Yields"
   }, {
@@ -67,7 +67,7 @@ export const Features = memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSupply, ree
       <div className="text-xs text-gray-400">Boosted Yield</div>
     </div>
     <div className="rounded-lg border border-blue-600/30 bg-gradient-to-r from-blue-600/20 to-green-600/20 p-3 text-center">
-      <div className="text-lg font-bold text-blue-400">&lt;${(1000 * mgpPrice * vmgpMGPCurveRate * Number(vmgpSupply) / Number(reefiLockedMGP)).toFixed(2)} vs ${(1000 * mgpPrice).toFixed(2)}</div>
+      <div className="text-lg font-bold text-blue-400">${(1000 * mgpPrice * vmgpMGPCurveRate * Number(vmgpSupply) / Number(reefiLockedMGP)).toFixed(2)} vs ${(1000 * mgpPrice).toFixed(2)}</div>
       <div className="text-xs text-gray-400">Vote Price (1k Votes)</div>
     </div>
   </div>

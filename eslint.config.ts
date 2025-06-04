@@ -62,6 +62,7 @@ export default tseslint.config([
       "@stylistic/multiline-ternary": ["error", "never"],
       "@stylistic/newline-per-chained-call": "off",
       "@stylistic/no-confusing-arrow": "off",
+      "sonarjs/no-nested-functions": "off",
       "@stylistic/object-curly-spacing": ["error", "always"],
       "@stylistic/object-property-newline": "off",
       "@stylistic/padded-blocks": ["error", "never"],

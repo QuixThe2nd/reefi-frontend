@@ -10,8 +10,8 @@ import { UsePrices } from "../hooks/usePrices";
 import { UseWithdraws } from "../hooks/useWithdraws";
 
 interface Properties {
-  buyMGP: () => void;
-  redeemRMGP: () => void;
+  buyRMGP: () => void;
+  redeemYMGP: () => void;
   withdrawMGP: () => void;
   unlockSchedule: UseWithdraws["withdraws"]["unlockSchedule"];
   userPendingWithdraws: UseWithdraws["withdraws"]["userPending"];
@@ -40,12 +40,8 @@ interface Properties {
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
 }
 
-export const RedeemRMGPPage = memo(({ buyMGP, redeemRMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info={["rMGP can be redeemed for the underlying MGP through the withdrawal queue or swapped instantly at market rate via Curve.", "The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.", "Only 6 withdrawals can be processed through Magpie at once. If all slots are used, withdrawals will be added to the queue once a new slot is made available making worst case withdrawal time 120 days."]}>
-  <SwapToken buy={buyMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Redeem via Queue" nativeSwap={redeemRMGP} originalTokenIn="rMGP" tokenOut="MGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} sendAmount={sendAmount} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} />
-  <div className="mt-4 flex justify-between text-sm text-gray-400">
-    <span>Native Withdraw Time</span>
-    <span>{unlockSchedule.length === 6 ? formatTime(Number(unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2) : formatTime(60 * 60 * 24 * 30 * 2)}</span>
-  </div>
+export const RedeemYMGPPage = memo(({ buyRMGP, redeemYMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info={["yMGP can be redeemed for 75% of it's underlying rMGP instantly or swapped at market rate via Curve.", "The 25% withdraw fee is distributed to yMGP lockers."]}>
+  <SwapToken buy={buyRMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Redeem" nativeSwap={redeemYMGP} originalTokenIn="yMGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} sendAmount={sendAmount} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} />
   {userPendingWithdraws > 0n ? <>
     <h3 className="mt-4 text-base font-medium">Pending Withdraws</h3>
     <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
@@ -57,4 +53,4 @@ export const RedeemRMGPPage = memo(({ buyMGP, redeemRMGP, withdrawMGP, unlockSch
     <button className="h-min w-full rounded-lg bg-green-600 py-2 transition-colors hover:bg-green-700" onClick={withdrawMGP} type="submit">Withdraw MGP</button>
   </> : ""}
 </Page>);
-RedeemRMGPPage.displayName = "RedeemMGPPage";
+RedeemYMGPPage.displayName = "RedeemYMGPPage";

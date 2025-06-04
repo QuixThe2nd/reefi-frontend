@@ -33,7 +33,7 @@ export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance,
       };
       return formatEther(BigInt(getTotalRecommendedLP() * mgpTarget / (1 - mgpTarget))).toString();
     })()}
-    token={{ bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "MGP" }}
+    token={{ symbol: "MGP" }}
     value={mgpLPAmount}
   />
 
@@ -55,7 +55,7 @@ export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance,
       };
       return formatEther(BigInt(getTotalRecommendedLP() * rmgpTarget / (1 - rmgpTarget))).toString();
     })()}
-    token={{ bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "rMGP" }}
+    token={{ symbol: "rMGP" }}
     value={rmgpLPAmount}
   />
 
@@ -77,7 +77,7 @@ export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance,
       };
       return formatEther(BigInt(getTotalRecommendedLP() * ymgpTarget / (1 - ymgpTarget))).toString();
     })()}
-    token={{ bgColor: "bg-blue-600", color: "bg-blue-400", symbol: "yMGP" }}
+    token={{ symbol: "yMGP" }}
     value={ymgpLPAmount}
   />
   <div className="mb-4 flex justify-between text-sm text-gray-400">

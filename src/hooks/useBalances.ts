@@ -13,7 +13,7 @@ export type UseBalances = Readonly<{
 }>;
 
 export const useBalances = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseBalances => {
-  const [balances, setBalances] = useStoredObject("balances", { CKP: 0n, EGP: 0n, ETH: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, curveMGP: 0n, curveRMGP: 0n, curveYMGP: 0n, rMGP: 0n, yMGP: 0n, ymgpHoldings: 0n });
+  const [balances, setBalances] = useStoredObject<Balances>("balances", { CKP: 0n, EGP: 0n, ETH: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, lyMGP: 0n, curveMGP: 0n, curveRMGP: 0n, curveYMGP: 0n, rMGP: 0n, vMGP: 0n, yMGP: 0n, ymgpHoldings: 0n });
 
   const updateBalances: UpdateBalances = {
     CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]).then(CKP => {
@@ -54,6 +54,12 @@ export const useBalances = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseBal
     }),
     yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.balanceOf([wallet.account]).then(yMGP => {
       setBalances(() => ({ yMGP }));
+    }),
+    lyMGP: () => wallet.account ? contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]).then(lyMGP => {
+      setBalances({ lyMGP });
+    }) : Promise.resolve(),
+    vMGP: () => contracts[wallet.chain].vMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then(vMGP => {
+      setBalances(() => ({ vMGP }));
     }),
     ymgpHoldings: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then(ymgpHoldings => {
       setBalances(() => ({ ymgpHoldings }));

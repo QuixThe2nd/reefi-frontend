@@ -20,7 +20,7 @@ interface Properties {
 
 export const BuyVotesPage = memo(({ sendAmount, ymgpAllowance, ymgpAllowanceCurve, ymgpBalance, ymgpVmgpCurveAmount, onApprove, setSendAmount, depositYMGP, buyVMGP }: Properties): ReactElement => <>
   <div className="rounded-lg">
-    <AmountInput balance={ymgpBalance} label="Get vMGP" onChange={setSendAmount} token={{ bgColor: "bg-green-600", color: "bg-green-400", symbol: "yMGP" }} value={sendAmount} />
+    <AmountInput balance={ymgpBalance} label="Get vMGP" onChange={setSendAmount} token={{ symbol: "yMGP" }} value={sendAmount} />
     <div className="mb-4 grid grid-cols-1 gap-2">
       <div className="grid grid-cols-2 gap-2">
         <div>

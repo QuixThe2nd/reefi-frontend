@@ -12,7 +12,7 @@ interface Properties {
   tokenOut: Coins;
   buy: () => void;
   nativeSwap?: () => void;
-  label?: string;
+  label: string;
   excludeCoins: Coins[];
   setSend: (_send: bigint) => void;
   send: bigint;

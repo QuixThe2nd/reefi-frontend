@@ -19,7 +19,7 @@ interface Properties {
 
 export const CompoundYield = memo(({ uncompoundedMGPYield, estimatedCompoundGasFee, pendingRewards, estimatedCompoundAmount, mgpAPR, reefiMGPLocked, chain, prices, compoundRMGP }: Properties): ReactElement => {
   const textColor = `text-${uncompoundedMGPYield * prices.MGP * 0.01 > estimatedCompoundGasFee ? "green" : "red"}-400`;
-  return <Page info="Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of rMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the button below, you will receive 1% of the pending yield.">
+  return <Page info="Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of rMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the compound button, you will receive 1% of the pending yield.">
     <h3 className="mb-2 font-medium">Uncompounded Yield</h3>
     <div className="rounded-lg bg-gray-700/50 p-2">
       <div className="mb-2 flex items-center justify-between">

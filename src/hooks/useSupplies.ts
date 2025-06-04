@@ -10,19 +10,26 @@ interface Supplies {
   rMGP: bigint;
   yMGP: bigint;
   vMGP: bigint;
+  lyMGP: bigint;
+  lvMGP: bigint;
 }
+
+type UpdateSupplies = Record<keyof Supplies, () => void>;
 
 export interface UseSupplies {
   readonly supplies: Supplies;
-  readonly updateSupplies: { MGP: () => void; rMGP: () => void; yMGP: () => void };
+  readonly updateSupplies: UpdateSupplies;
 }
 
 export const useSupplies = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseSupplies => {
-  const [supplies, setSupplies] = useStoredObject<Supplies>("supplies", { MGP: 0n, rMGP: 0n, vMGP: parseEther(8.5), yMGP: 0n });
-  const updateSupplies = {
+  const [supplies, setSupplies] = useStoredObject<Supplies>("supplies", { MGP: 0n, rMGP: 0n, vMGP: parseEther(8.5), yMGP: 0n, lyMGP: 0n, lvMGP: 0n });
+  const updateSupplies: UpdateSupplies = {
     MGP: () => contracts[56].MGP.read.totalSupply().then(MGP => setSupplies({ MGP })),
     rMGP: () => contracts[wallet.chain].rMGP.read.totalSupply().then(rMGP => setSupplies({ rMGP })),
-    yMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then(yMGP => setSupplies({ yMGP }))
+    yMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then(yMGP => setSupplies({ yMGP })),
+    vMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then(yMGP => setSupplies({ yMGP })),
+    lyMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then(yMGP => setSupplies({ yMGP })),
+    lvMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then(yMGP => setSupplies({ yMGP }))
   };
 
   useEffect(() => {
@@ -32,6 +39,9 @@ export const useSupplies = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseSup
   useEffect(() => {
     updateSupplies.rMGP();
     updateSupplies.yMGP();
+    updateSupplies.vMGP();
+    updateSupplies.lyMGP();
+    updateSupplies.lvMGP();
   }, [wallet.chain]);
   return { supplies, updateSupplies };
 };

@@ -32354,6 +32354,259 @@ var masterMGP = [
   }
 ];
 
+// src/config/ABIs/odosRouter.ts
+var odosRouter = [
+  { inputs: [], stateMutability: "nonpayable", type: "constructor" },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "previousOwner", type: "address" },
+      { indexed: true, internalType: "address", name: "newOwner", type: "address" }
+    ],
+    name: "OwnershipTransferred",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: "address", name: "sender", type: "address" },
+      { indexed: false, internalType: "uint256", name: "inputAmount", type: "uint256" },
+      { indexed: false, internalType: "address", name: "inputToken", type: "address" },
+      { indexed: false, internalType: "uint256", name: "amountOut", type: "uint256" },
+      { indexed: false, internalType: "address", name: "outputToken", type: "address" },
+      { indexed: false, internalType: "int256", name: "slippage", type: "int256" },
+      { indexed: false, internalType: "uint32", name: "referralCode", type: "uint32" }
+    ],
+    name: "Swap",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: "address", name: "sender", type: "address" },
+      { indexed: false, internalType: "uint256[]", name: "amountsIn", type: "uint256[]" },
+      { indexed: false, internalType: "address[]", name: "tokensIn", type: "address[]" },
+      { indexed: false, internalType: "uint256[]", name: "amountsOut", type: "uint256[]" },
+      { indexed: false, internalType: "address[]", name: "tokensOut", type: "address[]" },
+      { indexed: false, internalType: "uint32", name: "referralCode", type: "uint32" }
+    ],
+    name: "SwapMulti",
+    type: "event"
+  },
+  { inputs: [], name: "FEE_DENOM", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "REFERRAL_WITH_FEE_THRESHOLD", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+  { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "addressList", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
+  { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
+  {
+    inputs: [{ internalType: "uint32", name: "", type: "uint32" }],
+    name: "referralLookup",
+    outputs: [
+      { internalType: "uint64", name: "referralFee", type: "uint64" },
+      { internalType: "address", name: "beneficiary", type: "address" },
+      { internalType: "bool", name: "registered", type: "bool" }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      { internalType: "uint32", name: "_referralCode", type: "uint32" },
+      { internalType: "uint64", name: "_referralFee", type: "uint64" },
+      { internalType: "address", name: "_beneficiary", type: "address" }
+    ],
+    name: "registerReferralCode",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" },
+  { inputs: [{ internalType: "uint256", name: "_swapMultiFee", type: "uint256" }], name: "setSwapMultiFee", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [
+      {
+        components: [
+          { internalType: "address", name: "inputToken", type: "address" },
+          { internalType: "uint256", name: "inputAmount", type: "uint256" },
+          { internalType: "address", name: "inputReceiver", type: "address" },
+          { internalType: "address", name: "outputToken", type: "address" },
+          { internalType: "uint256", name: "outputQuote", type: "uint256" },
+          { internalType: "uint256", name: "outputMin", type: "uint256" },
+          { internalType: "address", name: "outputReceiver", type: "address" }
+        ],
+        internalType: "struct OdosRouterV2.swapTokenInfo",
+        name: "tokenInfo",
+        type: "tuple"
+      },
+      { internalType: "bytes", name: "pathDefinition", type: "bytes" },
+      { internalType: "address", name: "executor", type: "address" },
+      { internalType: "uint32", name: "referralCode", type: "uint32" }
+    ],
+    name: "swap",
+    outputs: [{ internalType: "uint256", name: "amountOut", type: "uint256" }],
+    stateMutability: "payable",
+    type: "function"
+  },
+  { inputs: [], name: "swapCompact", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "payable", type: "function" },
+  {
+    inputs: [
+      {
+        components: [
+          { internalType: "address", name: "tokenAddress", type: "address" },
+          { internalType: "uint256", name: "amountIn", type: "uint256" },
+          { internalType: "address", name: "receiver", type: "address" }
+        ],
+        internalType: "struct OdosRouterV2.inputTokenInfo[]",
+        name: "inputs",
+        type: "tuple[]"
+      },
+      {
+        components: [
+          { internalType: "address", name: "tokenAddress", type: "address" },
+          { internalType: "uint256", name: "relativeValue", type: "uint256" },
+          { internalType: "address", name: "receiver", type: "address" }
+        ],
+        internalType: "struct OdosRouterV2.outputTokenInfo[]",
+        name: "outputs",
+        type: "tuple[]"
+      },
+      { internalType: "uint256", name: "valueOutMin", type: "uint256" },
+      { internalType: "bytes", name: "pathDefinition", type: "bytes" },
+      { internalType: "address", name: "executor", type: "address" },
+      { internalType: "uint32", name: "referralCode", type: "uint32" }
+    ],
+    name: "swapMulti",
+    outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }],
+    stateMutability: "payable",
+    type: "function"
+  },
+  { inputs: [], name: "swapMultiCompact", outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }], stateMutability: "payable", type: "function" },
+  { inputs: [], name: "swapMultiFee", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+  {
+    inputs: [
+      {
+        components: [
+          { internalType: "address", name: "contractAddress", type: "address" },
+          { internalType: "uint256", name: "nonce", type: "uint256" },
+          { internalType: "uint256", name: "deadline", type: "uint256" },
+          { internalType: "bytes", name: "signature", type: "bytes" }
+        ],
+        internalType: "struct OdosRouterV2.permit2Info",
+        name: "permit2",
+        type: "tuple"
+      },
+      {
+        components: [
+          { internalType: "address", name: "tokenAddress", type: "address" },
+          { internalType: "uint256", name: "amountIn", type: "uint256" },
+          { internalType: "address", name: "receiver", type: "address" }
+        ],
+        internalType: "struct OdosRouterV2.inputTokenInfo[]",
+        name: "inputs",
+        type: "tuple[]"
+      },
+      {
+        components: [
+          { internalType: "address", name: "tokenAddress", type: "address" },
+          { internalType: "uint256", name: "relativeValue", type: "uint256" },
+          { internalType: "address", name: "receiver", type: "address" }
+        ],
+        internalType: "struct OdosRouterV2.outputTokenInfo[]",
+        name: "outputs",
+        type: "tuple[]"
+      },
+      { internalType: "uint256", name: "valueOutMin", type: "uint256" },
+      { internalType: "bytes", name: "pathDefinition", type: "bytes" },
+      { internalType: "address", name: "executor", type: "address" },
+      { internalType: "uint32", name: "referralCode", type: "uint32" }
+    ],
+    name: "swapMultiPermit2",
+    outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }],
+    stateMutability: "payable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        components: [
+          { internalType: "address", name: "contractAddress", type: "address" },
+          { internalType: "uint256", name: "nonce", type: "uint256" },
+          { internalType: "uint256", name: "deadline", type: "uint256" },
+          { internalType: "bytes", name: "signature", type: "bytes" }
+        ],
+        internalType: "struct OdosRouterV2.permit2Info",
+        name: "permit2",
+        type: "tuple"
+      },
+      {
+        components: [
+          { internalType: "address", name: "inputToken", type: "address" },
+          { internalType: "uint256", name: "inputAmount", type: "uint256" },
+          { internalType: "address", name: "inputReceiver", type: "address" },
+          { internalType: "address", name: "outputToken", type: "address" },
+          { internalType: "uint256", name: "outputQuote", type: "uint256" },
+          { internalType: "uint256", name: "outputMin", type: "uint256" },
+          { internalType: "address", name: "outputReceiver", type: "address" }
+        ],
+        internalType: "struct OdosRouterV2.swapTokenInfo",
+        name: "tokenInfo",
+        type: "tuple"
+      },
+      { internalType: "bytes", name: "pathDefinition", type: "bytes" },
+      { internalType: "address", name: "executor", type: "address" },
+      { internalType: "uint32", name: "referralCode", type: "uint32" }
+    ],
+    name: "swapPermit2",
+    outputs: [{ internalType: "uint256", name: "amountOut", type: "uint256" }],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        components: [
+          { internalType: "address", name: "tokenAddress", type: "address" },
+          { internalType: "uint256", name: "amountIn", type: "uint256" },
+          { internalType: "address", name: "receiver", type: "address" }
+        ],
+        internalType: "struct OdosRouterV2.inputTokenInfo[]",
+        name: "inputs",
+        type: "tuple[]"
+      },
+      {
+        components: [
+          { internalType: "address", name: "tokenAddress", type: "address" },
+          { internalType: "uint256", name: "relativeValue", type: "uint256" },
+          { internalType: "address", name: "receiver", type: "address" }
+        ],
+        internalType: "struct OdosRouterV2.outputTokenInfo[]",
+        name: "outputs",
+        type: "tuple[]"
+      },
+      { internalType: "uint256", name: "valueOutMin", type: "uint256" },
+      { internalType: "bytes", name: "pathDefinition", type: "bytes" },
+      { internalType: "address", name: "executor", type: "address" }
+    ],
+    name: "swapRouterFunds",
+    outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [
+      { internalType: "address[]", name: "tokens", type: "address[]" },
+      { internalType: "uint256[]", name: "amounts", type: "uint256[]" },
+      { internalType: "address", name: "dest", type: "address" }
+    ],
+    name: "transferRouterFunds",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  { inputs: [{ internalType: "address[]", name: "addresses", type: "address[]" }], name: "writeAddressList", outputs: [], stateMutability: "nonpayable", type: "function" },
+  { stateMutability: "payable", type: "receive" }
+];
+
 // src/config/ABIs/RMGP.ts
 var rMGP = [
   {
@@ -33976,259 +34229,6 @@ var yMGP = [
   { inputs: [{ internalType: "address", name: "", type: "address" }], name: "userClaimedYield", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" }
 ];
 
-// src/config/ABIs/ODOSRouter.ts
-var ODOSRouter = [
-  { inputs: [], stateMutability: "nonpayable", type: "constructor" },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: "address", name: "previousOwner", type: "address" },
-      { indexed: true, internalType: "address", name: "newOwner", type: "address" }
-    ],
-    name: "OwnershipTransferred",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: false, internalType: "address", name: "sender", type: "address" },
-      { indexed: false, internalType: "uint256", name: "inputAmount", type: "uint256" },
-      { indexed: false, internalType: "address", name: "inputToken", type: "address" },
-      { indexed: false, internalType: "uint256", name: "amountOut", type: "uint256" },
-      { indexed: false, internalType: "address", name: "outputToken", type: "address" },
-      { indexed: false, internalType: "int256", name: "slippage", type: "int256" },
-      { indexed: false, internalType: "uint32", name: "referralCode", type: "uint32" }
-    ],
-    name: "Swap",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: false, internalType: "address", name: "sender", type: "address" },
-      { indexed: false, internalType: "uint256[]", name: "amountsIn", type: "uint256[]" },
-      { indexed: false, internalType: "address[]", name: "tokensIn", type: "address[]" },
-      { indexed: false, internalType: "uint256[]", name: "amountsOut", type: "uint256[]" },
-      { indexed: false, internalType: "address[]", name: "tokensOut", type: "address[]" },
-      { indexed: false, internalType: "uint32", name: "referralCode", type: "uint32" }
-    ],
-    name: "SwapMulti",
-    type: "event"
-  },
-  { inputs: [], name: "FEE_DENOM", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-  { inputs: [], name: "REFERRAL_WITH_FEE_THRESHOLD", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-  { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "addressList", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  {
-    inputs: [{ internalType: "uint32", name: "", type: "uint32" }],
-    name: "referralLookup",
-    outputs: [
-      { internalType: "uint64", name: "referralFee", type: "uint64" },
-      { internalType: "address", name: "beneficiary", type: "address" },
-      { internalType: "bool", name: "registered", type: "bool" }
-    ],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      { internalType: "uint32", name: "_referralCode", type: "uint32" },
-      { internalType: "uint64", name: "_referralFee", type: "uint64" },
-      { internalType: "address", name: "_beneficiary", type: "address" }
-    ],
-    name: "registerReferralCode",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" },
-  { inputs: [{ internalType: "uint256", name: "_swapMultiFee", type: "uint256" }], name: "setSwapMultiFee", outputs: [], stateMutability: "nonpayable", type: "function" },
-  {
-    inputs: [
-      {
-        components: [
-          { internalType: "address", name: "inputToken", type: "address" },
-          { internalType: "uint256", name: "inputAmount", type: "uint256" },
-          { internalType: "address", name: "inputReceiver", type: "address" },
-          { internalType: "address", name: "outputToken", type: "address" },
-          { internalType: "uint256", name: "outputQuote", type: "uint256" },
-          { internalType: "uint256", name: "outputMin", type: "uint256" },
-          { internalType: "address", name: "outputReceiver", type: "address" }
-        ],
-        internalType: "struct OdosRouterV2.swapTokenInfo",
-        name: "tokenInfo",
-        type: "tuple"
-      },
-      { internalType: "bytes", name: "pathDefinition", type: "bytes" },
-      { internalType: "address", name: "executor", type: "address" },
-      { internalType: "uint32", name: "referralCode", type: "uint32" }
-    ],
-    name: "swap",
-    outputs: [{ internalType: "uint256", name: "amountOut", type: "uint256" }],
-    stateMutability: "payable",
-    type: "function"
-  },
-  { inputs: [], name: "swapCompact", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "payable", type: "function" },
-  {
-    inputs: [
-      {
-        components: [
-          { internalType: "address", name: "tokenAddress", type: "address" },
-          { internalType: "uint256", name: "amountIn", type: "uint256" },
-          { internalType: "address", name: "receiver", type: "address" }
-        ],
-        internalType: "struct OdosRouterV2.inputTokenInfo[]",
-        name: "inputs",
-        type: "tuple[]"
-      },
-      {
-        components: [
-          { internalType: "address", name: "tokenAddress", type: "address" },
-          { internalType: "uint256", name: "relativeValue", type: "uint256" },
-          { internalType: "address", name: "receiver", type: "address" }
-        ],
-        internalType: "struct OdosRouterV2.outputTokenInfo[]",
-        name: "outputs",
-        type: "tuple[]"
-      },
-      { internalType: "uint256", name: "valueOutMin", type: "uint256" },
-      { internalType: "bytes", name: "pathDefinition", type: "bytes" },
-      { internalType: "address", name: "executor", type: "address" },
-      { internalType: "uint32", name: "referralCode", type: "uint32" }
-    ],
-    name: "swapMulti",
-    outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }],
-    stateMutability: "payable",
-    type: "function"
-  },
-  { inputs: [], name: "swapMultiCompact", outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }], stateMutability: "payable", type: "function" },
-  { inputs: [], name: "swapMultiFee", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-  {
-    inputs: [
-      {
-        components: [
-          { internalType: "address", name: "contractAddress", type: "address" },
-          { internalType: "uint256", name: "nonce", type: "uint256" },
-          { internalType: "uint256", name: "deadline", type: "uint256" },
-          { internalType: "bytes", name: "signature", type: "bytes" }
-        ],
-        internalType: "struct OdosRouterV2.permit2Info",
-        name: "permit2",
-        type: "tuple"
-      },
-      {
-        components: [
-          { internalType: "address", name: "tokenAddress", type: "address" },
-          { internalType: "uint256", name: "amountIn", type: "uint256" },
-          { internalType: "address", name: "receiver", type: "address" }
-        ],
-        internalType: "struct OdosRouterV2.inputTokenInfo[]",
-        name: "inputs",
-        type: "tuple[]"
-      },
-      {
-        components: [
-          { internalType: "address", name: "tokenAddress", type: "address" },
-          { internalType: "uint256", name: "relativeValue", type: "uint256" },
-          { internalType: "address", name: "receiver", type: "address" }
-        ],
-        internalType: "struct OdosRouterV2.outputTokenInfo[]",
-        name: "outputs",
-        type: "tuple[]"
-      },
-      { internalType: "uint256", name: "valueOutMin", type: "uint256" },
-      { internalType: "bytes", name: "pathDefinition", type: "bytes" },
-      { internalType: "address", name: "executor", type: "address" },
-      { internalType: "uint32", name: "referralCode", type: "uint32" }
-    ],
-    name: "swapMultiPermit2",
-    outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }],
-    stateMutability: "payable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        components: [
-          { internalType: "address", name: "contractAddress", type: "address" },
-          { internalType: "uint256", name: "nonce", type: "uint256" },
-          { internalType: "uint256", name: "deadline", type: "uint256" },
-          { internalType: "bytes", name: "signature", type: "bytes" }
-        ],
-        internalType: "struct OdosRouterV2.permit2Info",
-        name: "permit2",
-        type: "tuple"
-      },
-      {
-        components: [
-          { internalType: "address", name: "inputToken", type: "address" },
-          { internalType: "uint256", name: "inputAmount", type: "uint256" },
-          { internalType: "address", name: "inputReceiver", type: "address" },
-          { internalType: "address", name: "outputToken", type: "address" },
-          { internalType: "uint256", name: "outputQuote", type: "uint256" },
-          { internalType: "uint256", name: "outputMin", type: "uint256" },
-          { internalType: "address", name: "outputReceiver", type: "address" }
-        ],
-        internalType: "struct OdosRouterV2.swapTokenInfo",
-        name: "tokenInfo",
-        type: "tuple"
-      },
-      { internalType: "bytes", name: "pathDefinition", type: "bytes" },
-      { internalType: "address", name: "executor", type: "address" },
-      { internalType: "uint32", name: "referralCode", type: "uint32" }
-    ],
-    name: "swapPermit2",
-    outputs: [{ internalType: "uint256", name: "amountOut", type: "uint256" }],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        components: [
-          { internalType: "address", name: "tokenAddress", type: "address" },
-          { internalType: "uint256", name: "amountIn", type: "uint256" },
-          { internalType: "address", name: "receiver", type: "address" }
-        ],
-        internalType: "struct OdosRouterV2.inputTokenInfo[]",
-        name: "inputs",
-        type: "tuple[]"
-      },
-      {
-        components: [
-          { internalType: "address", name: "tokenAddress", type: "address" },
-          { internalType: "uint256", name: "relativeValue", type: "uint256" },
-          { internalType: "address", name: "receiver", type: "address" }
-        ],
-        internalType: "struct OdosRouterV2.outputTokenInfo[]",
-        name: "outputs",
-        type: "tuple[]"
-      },
-      { internalType: "uint256", name: "valueOutMin", type: "uint256" },
-      { internalType: "bytes", name: "pathDefinition", type: "bytes" },
-      { internalType: "address", name: "executor", type: "address" }
-    ],
-    name: "swapRouterFunds",
-    outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" },
-  {
-    inputs: [
-      { internalType: "address[]", name: "tokens", type: "address[]" },
-      { internalType: "uint256[]", name: "amounts", type: "uint256[]" },
-      { internalType: "address", name: "dest", type: "address" }
-    ],
-    name: "transferRouterFunds",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  { inputs: [{ internalType: "address[]", name: "addresses", type: "address[]" }], name: "writeAddressList", outputs: [], stateMutability: "nonpayable", type: "function" },
-  { stateMutability: "payable", type: "receive" }
-];
-
 // src/config/ABIs/WETH.ts
 var WETH = [
   {
@@ -34413,7 +34413,7 @@ var ABIs = {
   EGP: erc20Abi,
   LTP: erc20Abi,
   MGP: erc20Abi,
-  ODOSRouter,
+  odosRouter,
   PNP: erc20Abi,
   WETH,
   cMGP,
@@ -34453,7 +34453,7 @@ var contracts = {
     LTP: getContract({ abi: ABIs.LTP, address: "0xa73959804651eEd0D4bd04293A675cB832c20454", client: publicClients[42161] }),
     masterMGP: getContract({ abi: ABIs.masterMGP, address: "0x664cc2BcAe1E057EB1Ec379598c5B743Ad9Db6e7", client: publicClients[42161] }),
     MGP: getContract({ abi: erc20Abi, address: "0xa61F74247455A40b01b0559ff6274441FAfa22A3", client: publicClients[42161] }),
-    odosRouter: getContract({ abi: ABIs.ODOSRouter, address: "0xa669e7A0d4b3e4Fa48af2dE86BD4CD7126Be4e13", client: publicClients[42161] }),
+    odosRouter: getContract({ abi: ABIs.odosRouter, address: "0xa669e7A0d4b3e4Fa48af2dE86BD4CD7126Be4e13", client: publicClients[42161] }),
     PNP: getContract({ abi: ABIs.PNP, address: "0x2Ac2B254Bc18cD4999f64773a966E4f4869c34Ee", client: publicClients[42161] }),
     vlMGP: getContract({ abi: ABIs.vlMGP, address: "0x536599497Ce6a35FC65C7503232Fec71A84786b9", client: publicClients[42161] }),
     vlRewarder: getContract({ abi: ABIs.vlRewarder, address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45", client: publicClients[42161] }),
@@ -34471,7 +34471,7 @@ var contracts = {
     LTP: getContract({ abi: ABIs.LTP, address: "0x56fa5f7bf457454be33d8b978c86a5f5b9dd84c2", client: publicClients[56] }),
     masterMGP: getContract({ abi: ABIs.masterMGP, address: "0xa3B615667CBd33cfc69843Bf11Fbb2A1D926BD46", client: publicClients[56] }),
     MGP: getContract({ abi: erc20Abi, address: "0xD06716E1Ff2E492Cc5034c2E81805562dd3b45fa", client: publicClients[56] }),
-    odosRouter: getContract({ abi: ABIs.ODOSRouter, address: "0x0000000000000000000000000000000000000000", client: publicClients[56] }),
+    odosRouter: getContract({ abi: ABIs.odosRouter, address: "0x0000000000000000000000000000000000000000", client: publicClients[56] }),
     PNP: getContract({ abi: ABIs.PNP, address: "0x5012c90f14d190607662ca8344120812aaa2639d", client: publicClients[56] }),
     vlMGP: getContract({ abi: ABIs.vlMGP, address: "0x9B69b06272980FA6BAd9D88680a71e3c3BeB32c6", client: publicClients[56] }),
     vlRewarder: getContract({ abi: ABIs.vlRewarder, address: "0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9", client: publicClients[56] }),
@@ -35459,8 +35459,8 @@ var useActions = ({ setError, setNotification, wallet, updateBalances, allowance
   const convertMGP = useConvertMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
   const buyMGP = useBuyMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
   const depositRMGP = useDepositRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, updateSupplies, updateYMGPHoldings: updateBalances.ymgpHoldings, writeContracts });
-  const lockYMGP = useLockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateLocked.yMGP, updateUserLockedYMGP: updateLocked.userYMGP, writeContracts });
-  const unlockYMGP = useUnlockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateLocked.yMGP, updateUserLockedYMGP: updateLocked.userYMGP, writeContracts });
+  const lockYMGP = useLockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateSupplies.lyMGP, updateUserLockedYMGP: updateBalances.yMGP, writeContracts });
+  const unlockYMGP = useUnlockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateSupplies.lyMGP, updateUserLockedYMGP: updateBalances.yMGP, writeContracts });
   const redeemRMGP = useRedeemRMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => {
     updateLocked.MGP[56]();
     updateLocked.MGP[42161]();
@@ -36478,54 +36478,24 @@ var import_react21 = __toESM(require_react(), 1);
 var useBalances = ({ wallet }) => {
   const [balances, setBalances] = useStoredObject("balances", { CKP: 0n, EGP: 0n, ETH: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, lyMGP: 0n, curveMGP: 0n, curveRMGP: 0n, curveYMGP: 0n, rMGP: 0n, vMGP: 0n, yMGP: 0n, ymgpHoldings: 0n, vmgpHoldings: parseEther(0.5), lvMGP: parseEther(0.5) });
   const updateBalances = {
-    CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]).then((CKP) => {
-      setBalances(() => ({ CKP }));
-    }),
-    EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.balanceOf([wallet.account]).then((EGP) => {
-      setBalances(() => ({ EGP }));
-    }),
-    ETH: () => wallet.account === undefined ? Promise.resolve() : publicClients[wallet.chain].getBalance({ address: wallet.account }).then((ETH) => {
-      setBalances(() => ({ ETH }));
-    }),
-    LTP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].LTP.read.balanceOf([wallet.account]).then((LTP) => {
-      setBalances(() => ({ LTP }));
-    }),
-    MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.balanceOf([wallet.account]).then((MGP) => {
-      setBalances(() => ({ MGP }));
-    }),
-    PNP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].PNP.read.balanceOf([wallet.account]).then((PNP) => {
-      setBalances(() => ({ PNP }));
-    }),
-    WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.balanceOf([wallet.account]).then((WETH2) => {
-      setBalances(() => ({ WETH: WETH2 }));
-    }),
-    cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.balanceOf([wallet.account]).then((cMGP2) => {
-      setBalances(() => ({ cMGP: cMGP2 }));
-    }),
-    curveMGP: () => contracts[wallet.chain].MGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveMGP) => {
-      setBalances({ curveMGP });
-    }),
-    curveRMGP: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveRMGP) => {
-      setBalances({ curveRMGP });
-    }),
-    curveYMGP: () => contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveYMGP) => {
-      setBalances({ curveYMGP });
-    }),
-    rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.balanceOf([wallet.account]).then((rMGP2) => {
-      setBalances(() => ({ rMGP: rMGP2 }));
-    }),
-    yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.balanceOf([wallet.account]).then((yMGP2) => {
-      setBalances(() => ({ yMGP: yMGP2 }));
-    }),
-    lyMGP: () => wallet.account ? contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]).then((lyMGP) => {
-      setBalances({ lyMGP });
-    }) : Promise.resolve(),
-    vMGP: () => contracts[wallet.chain].vMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then((vMGP2) => {
-      setBalances(() => ({ vMGP: vMGP2 }));
-    }),
-    ymgpHoldings: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then((ymgpHoldings) => {
-      setBalances(() => ({ ymgpHoldings }));
-    })
+    CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]).then((CKP) => setBalances(() => ({ CKP }))),
+    EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.balanceOf([wallet.account]).then((EGP) => setBalances(() => ({ EGP }))),
+    ETH: () => wallet.account === undefined ? Promise.resolve() : publicClients[wallet.chain].getBalance({ address: wallet.account }).then((ETH) => setBalances(() => ({ ETH }))),
+    LTP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].LTP.read.balanceOf([wallet.account]).then((LTP) => setBalances(() => ({ LTP }))),
+    MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.balanceOf([wallet.account]).then((MGP) => setBalances(() => ({ MGP }))),
+    PNP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].PNP.read.balanceOf([wallet.account]).then((PNP) => setBalances(() => ({ PNP }))),
+    WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.balanceOf([wallet.account]).then((WETH2) => setBalances(() => ({ WETH: WETH2 }))),
+    cMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].cMGP.read.balanceOf([wallet.account]).then((cMGP2) => setBalances(() => ({ cMGP: cMGP2 }))),
+    curveMGP: () => contracts[wallet.chain].MGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveMGP) => setBalances({ curveMGP })),
+    curveRMGP: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveRMGP) => setBalances({ curveRMGP })),
+    curveYMGP: () => contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]).then((curveYMGP) => setBalances({ curveYMGP })),
+    rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.balanceOf([wallet.account]).then((rMGP2) => setBalances(() => ({ rMGP: rMGP2 }))),
+    yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.balanceOf([wallet.account]).then((yMGP2) => setBalances(() => ({ yMGP: yMGP2 }))),
+    lyMGP: () => wallet.account ? contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]).then((lyMGP) => setBalances({ lyMGP })) : Promise.resolve(),
+    lvMGP: () => wallet.account ? contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]).then((lyMGP) => setBalances({ lyMGP })) : Promise.resolve(),
+    vMGP: () => contracts[wallet.chain].vMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then((vMGP2) => setBalances(() => ({ vMGP: vMGP2 }))),
+    ymgpHoldings: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then((ymgpHoldings) => setBalances(() => ({ ymgpHoldings }))),
+    vmgpHoldings: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then((ymgpHoldings) => setBalances(() => ({ ymgpHoldings })))
   };
   import_react21.useEffect(() => {
     Object.values(updateBalances).forEach((u) => u());
@@ -36545,7 +36515,7 @@ var useContracts = ({ wallet }) => {
         EGP: getContract({ abi: ABIs.EGP, address: contracts[42161].EGP.address, client: wallet.clients[42161] }),
         LTP: getContract({ abi: ABIs.LTP, address: contracts[42161].LTP.address, client: wallet.clients[42161] }),
         MGP: getContract({ abi: ABIs.MGP, address: contracts[42161].MGP.address, client: wallet.clients[42161] }),
-        ODOSRouter: getContract({ abi: ABIs.ODOSRouter, address: contracts[42161].odosRouter.address, client: wallet.clients[42161] }),
+        odosRouter: getContract({ abi: ABIs.odosRouter, address: contracts[42161].odosRouter.address, client: wallet.clients[42161] }),
         PNP: getContract({ abi: ABIs.PNP, address: contracts[42161].PNP.address, client: wallet.clients[42161] }),
         WETH: getContract({ abi: ABIs.WETH, address: contracts[42161].WETH.address, client: wallet.clients[42161] }),
         cMGP: getContract({ abi: ABIs.cMGP, address: contracts[42161].cMGP.address, client: wallet.clients[42161] }),
@@ -36561,7 +36531,7 @@ var useContracts = ({ wallet }) => {
         EGP: getContract({ abi: ABIs.EGP, address: contracts[56].EGP.address, client: wallet.clients[56] }),
         LTP: getContract({ abi: ABIs.LTP, address: contracts[56].LTP.address, client: wallet.clients[56] }),
         MGP: getContract({ abi: ABIs.MGP, address: contracts[56].MGP.address, client: wallet.clients[56] }),
-        ODOSRouter: getContract({ abi: ABIs.ODOSRouter, address: contracts[56].odosRouter.address, client: wallet.clients[56] }),
+        odosRouter: getContract({ abi: ABIs.odosRouter, address: contracts[56].odosRouter.address, client: wallet.clients[56] }),
         PNP: getContract({ abi: ABIs.PNP, address: contracts[56].PNP.address, client: wallet.clients[56] }),
         WETH: getContract({ abi: ABIs.WETH, address: contracts[56].WETH.address, client: wallet.clients[56] }),
         cMGP: getContract({ abi: ABIs.cMGP, address: contracts[56].cMGP.address, client: wallet.clients[56] }),
@@ -36615,7 +36585,7 @@ var useExchangeRates = ({ wallet }) => {
 // src/hooks/useLocked.ts
 var import_react24 = __toESM(require_react(), 1);
 var useLocked = ({ wallet }) => {
-  const [locked, setLocked] = useStoredObject("locked", { MGP: { 42161: 0n, 56: 0n }, reefiMGP: 0n, yMGP: 0n });
+  const [locked, setLocked] = useStoredObject("locked", { MGP: { 42161: 0n, 56: 0n }, reefiMGP: 0n });
   const updateLocked = {
     MGP: {
       42161: () => contracts[42161].vlMGP.read.totalLocked().then((value) => setLocked((l) => ({ MGP: { ...l.MGP, 42161: value } }))),
@@ -36625,12 +36595,7 @@ var useLocked = ({ wallet }) => {
         await updateLocked.MGP[56]();
       }
     },
-    reefiMGP: () => contracts[wallet.chain].vlMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]).then((reefiMGP) => {
-      setLocked({ reefiMGP });
-    }),
-    yMGP: () => contracts[wallet.chain].yMGP.read.totalLocked().then((yMGP2) => {
-      setLocked({ yMGP: yMGP2 });
-    })
+    reefiMGP: () => contracts[wallet.chain].vlMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]).then((reefiMGP) => setLocked({ reefiMGP }))
   };
   import_react24.useEffect(() => {
     updateLocked.MGP[42161]();
@@ -36638,7 +36603,6 @@ var useLocked = ({ wallet }) => {
   }, []);
   import_react24.useEffect(() => {
     updateLocked.reefiMGP();
-    updateLocked.yMGP();
   }, [wallet.chain]);
   return { locked, updateLocked };
 };
@@ -36718,7 +36682,7 @@ var useRewards = ({ wallet, prices, balances, locked }) => {
   }, [rewards.cmgpPoolAPY, rewards.mgpAPR, balances.curveMGP, balances.curveRMGP, balances.curveYMGP]);
   const uncompoundedMGPYield = import_react26.useMemo(() => Object.keys(rewards.pendingRewards).length > 0 ? Object.keys(rewards.pendingRewards).map((symbol) => prices[symbol] * Number(formatEther(rewards.pendingRewards[symbol]?.rewards ?? 0n, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [rewards.pendingRewards, prices]);
   const estimatedCompoundGasFee = import_react26.useMemo(() => formatEther(rewards.compoundRMGPGas, decimals.WETH) * prices.WETH, [rewards.compoundRMGPGas, prices]);
-  const lockedYmgpAPY = import_react26.useMemo(() => Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.yMGP) + aprToApy(rewards.mgpAPR) * 0.9, [locked.reefiMGP, rewards.mgpAPR, locked.yMGP]);
+  const lockedYmgpAPY = import_react26.useMemo(() => Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(balances.lyMGP) + aprToApy(rewards.mgpAPR) * 0.9, [locked.reefiMGP, rewards.mgpAPR, balances.lyMGP]);
   import_react26.useCallback(() => {
     const interval = setInterval(updateRewards.pendingRewards, 30000);
     return () => {
@@ -36731,11 +36695,14 @@ var useRewards = ({ wallet, prices, balances, locked }) => {
 // src/hooks/useSupplies.ts
 var import_react27 = __toESM(require_react(), 1);
 var useSupplies = ({ wallet }) => {
-  const [supplies, setSupplies] = useStoredObject("supplies", { MGP: 0n, rMGP: 0n, vMGP: parseEther(8.5), yMGP: 0n });
+  const [supplies, setSupplies] = useStoredObject("supplies", { MGP: 0n, rMGP: 0n, vMGP: parseEther(8.5), yMGP: 0n, lyMGP: 0n, lvMGP: 0n });
   const updateSupplies = {
     MGP: () => contracts[56].MGP.read.totalSupply().then((MGP) => setSupplies({ MGP })),
     rMGP: () => contracts[wallet.chain].rMGP.read.totalSupply().then((rMGP2) => setSupplies({ rMGP: rMGP2 })),
-    yMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then((yMGP2) => setSupplies({ yMGP: yMGP2 }))
+    yMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then((yMGP2) => setSupplies({ yMGP: yMGP2 })),
+    vMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then((yMGP2) => setSupplies({ yMGP: yMGP2 })),
+    lyMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then((yMGP2) => setSupplies({ yMGP: yMGP2 })),
+    lvMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then((yMGP2) => setSupplies({ yMGP: yMGP2 }))
   };
   import_react27.useEffect(() => {
     updateSupplies.MGP();
@@ -36743,6 +36710,9 @@ var useSupplies = ({ wallet }) => {
   import_react27.useEffect(() => {
     updateSupplies.rMGP();
     updateSupplies.yMGP();
+    updateSupplies.vMGP();
+    updateSupplies.lyMGP();
+    updateSupplies.lvMGP();
   }, [wallet.chain]);
   return { supplies, updateSupplies };
 };
@@ -37172,7 +37142,7 @@ var getWinningChoice = (marketData) => {
     return "no";
   return "tie";
 };
-var BuyVotesPage = import_react35.memo(({ yMGPBalance, lockedYMGPBalance, totalLockedYMGP, reefiMgpLocked, onSellYesTokens, onSellNoTokens, onRedeemWinningTokens }) => {
+var BuyVotesPage = import_react35.memo(({ yMGPBalance, lockedYMGPBalance, totalLockedYMGP, reefiMgpLocked, onSellYesTokens: onSellYesTokens2, onSellNoTokens: onSellNoTokens2 }) => {
   const [sellYesAmounts, setSellYesAmounts] = import_react35.useState({});
   const [sellNoAmounts, setSellNoAmounts] = import_react35.useState({});
   const [activeAction, setActiveAction] = import_react35.useState();
@@ -37181,7 +37151,7 @@ var BuyVotesPage = import_react35.memo(({ yMGPBalance, lockedYMGPBalance, totalL
     if (!amount || amount === 0n)
       return;
     setActiveAction(`sell-yes-${proposalId}`);
-    await onSellYesTokens(proposalId, amount);
+    await onSellYesTokens2(proposalId, amount);
     setActiveAction(undefined);
   };
   const handleSellNoTokens = async (proposalId) => {
@@ -37189,12 +37159,7 @@ var BuyVotesPage = import_react35.memo(({ yMGPBalance, lockedYMGPBalance, totalL
     if (!amount || amount === 0n)
       return;
     setActiveAction(`sell-no-${proposalId}`);
-    await onSellNoTokens(proposalId, amount);
-    setActiveAction(undefined);
-  };
-  const handleRedeemWinningTokens = async (proposalId) => {
-    setActiveAction(`redeem-${proposalId}`);
-    await onRedeemWinningTokens(proposalId);
+    await onSellNoTokens2(proposalId, amount);
     setActiveAction(undefined);
   };
   const [proposals] = useCachedUpdateable(async () => {
@@ -37468,33 +37433,6 @@ var BuyVotesPage = import_react35.memo(({ yMGPBalance, lockedYMGPBalance, totalL
                   ]
                 }, undefined, true, undefined, this)
               }, undefined, false, undefined, this),
-              isCompleted && marketData && (winningChoice === "yes" && marketData.userYesBalance > 0n || winningChoice === "no" && marketData.userNoBalance > 0n) && /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
-                className: "rounded-lg bg-yellow-900/20 p-4",
-                children: [
-                  /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("h6", {
-                    className: "mb-2 font-medium text-yellow-300",
-                    children: "Redeem Winning Tokens"
-                  }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("p", {
-                    className: "mb-3 text-xs text-gray-400",
-                    children: [
-                      "You have ",
-                      formatNumber(formatEther(winningChoice === "yes" ? marketData.userYesBalance : marketData.userNoBalance)),
-                      " winning ",
-                      winningChoice.toUpperCase(),
-                      " tokens that can be redeemed for MGP"
-                    ]
-                  }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime7.jsxDEV(Button, {
-                    className: "w-full bg-yellow-600 hover:bg-yellow-700",
-                    onClick: () => handleRedeemWinningTokens(proposal.id),
-                    isLoading: activeAction === `redeem-${proposal.id}`,
-                    disabled: activeAction !== undefined,
-                    type: "button",
-                    children: activeAction === `redeem-${proposal.id}` ? "Redeeming..." : `Redeem ${formatNumber(formatEther(winningChoice === "yes" ? marketData.userYesBalance : marketData.userNoBalance))} MGP`
-                  }, undefined, false, undefined, this)
-                ]
-              }, undefined, true, undefined, this),
               /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
                 className: "mt-4 flex justify-between text-xs text-gray-500",
                 children: [
@@ -38274,7 +38212,7 @@ var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmoun
       tokenIn === "WETH" && /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(TokenApproval, {
         allowance: allowances.odos[tokenIn],
         onApprove: (infinity) => {
-          approve("ODOSRouter", tokenIn, infinity);
+          approve("odosRouter", tokenIn, infinity);
         },
         sendAmount,
         tokenSymbol: tokenIn
@@ -40265,7 +40203,7 @@ var getStateClassName2 = (state) => {
     return "bg-red-600/20 text-red-400";
   return "bg-yellow-600/20 text-yellow-400";
 };
-var VotePage = import_react67.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote }) => {
+var VotePage = import_react67.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote: onVote2 }) => {
   const [selectedChoices, setSelectedChoices] = import_react67.useState({});
   const [votingProposal, setVotingProposal] = import_react67.useState();
   const proposalScores = {};
@@ -40274,7 +40212,7 @@ var VotePage = import_react67.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
     if (choice === undefined)
       return;
     setVotingProposal(proposalId);
-    await onVote(proposalId, choice);
+    await onVote2(proposalId, choice);
     setVotingProposal(undefined);
   };
   const votePower = Number(reefiMgpLocked) / Number(vmgpSupply);
@@ -40610,7 +40548,6 @@ var Content = ({ page, setPage, error, setError }) => {
             estimatedCompoundAmount: rewards.estimatedCompoundAmount,
             mgpAPR: rewards.mgpAPR,
             reefiMGPLocked: locked.reefiMGP,
-            chain,
             prices,
             compoundRMGP
           }, undefined, false, undefined, this)
@@ -40626,10 +40563,10 @@ var Content = ({ page, setPage, error, setError }) => {
                 }, undefined, false, undefined, this),
                 /* @__PURE__ */ jsx_dev_runtime43.jsxDEV(ClaimYield, {
                   claimYMGPRewards,
-                  lockedYMGP: locked.yMGP,
+                  lockedYMGP: supplies.lyMGP,
                   unclaimedUserYield: rewards.unclaimedUserYield,
                   uncompoundedMGPYield: rewards.uncompoundedMGPYield,
-                  userLockedYMGP: locked.userYMGP,
+                  userLockedYMGP: balances.lyMGP,
                   ymgpHoldings: balances.ymgpHoldings,
                   ymgpSupply: supplies.yMGP
                 }, undefined, false, undefined, this)
@@ -40678,49 +40615,7 @@ var Content = ({ page, setPage, error, setError }) => {
                   vmgpBalance: balances.vMGP,
                   vmgpSupply: supplies.vMGP,
                   reefiMgpLocked: locked.reefiMGP,
-                  rmgpSupply: supplies.rMGP,
-                  proposals: [
-                    {
-                      id: "0x1234567890abcdef",
-                      title: "Increase vlMGP Lock Duration to 180 Days",
-                      description: "Proposal to extend the maximum lock duration for vlMGP from 120 to 180 days to increase protocol stability and reduce sell pressure.",
-                      choices: ["For", "Against", "Abstain"],
-                      start: Math.floor(Date.now() / 1000) - 86400 * 2,
-                      end: Math.floor(Date.now() / 1000) + 86400 * 5,
-                      state: "active",
-                      scores: [2, 4, 1],
-                      votes: 124
-                    },
-                    {
-                      id: "0xabcdef1234567890",
-                      title: "Add USDC/WETH Pool to Magpie Rewards",
-                      description: "Add the new USDC/WETH liquidity pool to the Magpie rewards program with 15% allocation weight.",
-                      choices: ["Add with 15% weight", "Add with 10% weight", "Add with 20% weight", "Do not add"],
-                      start: Math.floor(Date.now() / 1000) - 86400 * 1,
-                      end: Math.floor(Date.now() / 1000) + 86400 * 6,
-                      state: "active",
-                      scores: [1, 2, 2, 0],
-                      votes: 89
-                    },
-                    {
-                      id: "0x9876543210fedcba",
-                      title: "Treasury Diversification Strategy",
-                      description: "Diversify protocol treasury holdings by allocating 30% to stablecoins and 20% to ETH, reducing MGP concentration risk.",
-                      choices: ["Approve diversification", "Reject diversification"],
-                      start: Math.floor(Date.now() / 1000) - 86400 * 10,
-                      end: Math.floor(Date.now() / 1000) - 86400 * 3,
-                      state: "closed",
-                      scores: [3, 1],
-                      votes: 156
-                    }
-                  ],
-                  onVote: async (proposalId, choice) => {
-                    console.log("Voting on proposal:", proposalId, "choice:", choice);
-                  },
-                  onRefresh: async () => {
-                    console.log("Refreshing proposals");
-                  },
-                  isLoading: false
+                  onVote: () => onVote()
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this),
@@ -40731,12 +40626,12 @@ var Content = ({ page, setPage, error, setError }) => {
                   children: "Buy Votes"
                 }, undefined, false, undefined, this),
                 /* @__PURE__ */ jsx_dev_runtime43.jsxDEV(BuyVotesPage, {
-                  balances,
                   yMGPBalance: balances.yMGP,
                   lockedYMGPBalance: balances.lyMGP,
-                  totalLockedYMGP: locked.yMGP,
+                  totalLockedYMGP: supplies.lyMGP,
                   reefiMgpLocked: locked.reefiMGP,
-                  onBuyVotes: () => onBuyVotes()
+                  onSellYesTokens: () => onSellYesTokens(),
+                  onSellNoTokens: () => onSellNoTokens()
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this)
@@ -40805,7 +40700,7 @@ var Content = ({ page, setPage, error, setError }) => {
         mgpSupply: supplies.MGP,
         rmgpSupply: supplies.rMGP,
         ymgpSupply: supplies.yMGP,
-        ymgpLocked: locked.yMGP,
+        ymgpLocked: supplies.lyMGP,
         reefiMGPLocked: locked.reefiMGP,
         mgpRmgpCurveRate: exchangeRates.mgpRMGP,
         rmgpYmgpCurveRate: exchangeRates.rmgpYMGP,
@@ -41066,9 +40961,9 @@ var Content = ({ page, setPage, error, setError }) => {
                       logo: coins.yMGP.icon
                     }, undefined, false, undefined, this),
                     /* @__PURE__ */ jsx_dev_runtime43.jsxDEV(YieldBadge, {
-                      apy: Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.yMGP) + aprToApy(rewards.mgpAPR) * 0.9,
+                      apy: Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(supplies.lyMGP) + aprToApy(rewards.mgpAPR) * 0.9,
                       asset: "Locked yMGP",
-                      breakdown: [{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }, { apr: Number(locked.reefiMGP) * rewards.mgpAPR * 0.05 / Number(locked.yMGP), asset: "Boosted vlMGP", logo: vlMGP_default }, { asset: "yMGP Withdraws", value: "Variable", logo: coins.yMGP.icon }],
+                      breakdown: [{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }, { apr: Number(locked.reefiMGP) * rewards.mgpAPR * 0.05 / Number(supplies.lyMGP), asset: "Boosted vlMGP", logo: vlMGP_default }, { asset: "yMGP Withdraws", value: "Variable", logo: coins.yMGP.icon }],
                       suffix: "+",
                       logo: coins.yMGP.icon
                     }, undefined, false, undefined, this)
@@ -41110,7 +41005,7 @@ var Content = ({ page, setPage, error, setError }) => {
             lockYMGP,
             mgpAPR: rewards.mgpAPR,
             reefiLockedMGP: locked.reefiMGP,
-            ymgpLocked: locked.yMGP
+            ymgpLocked: supplies.lyMGP
           }, undefined, false, undefined, this),
           page === "unlock" && /* @__PURE__ */ jsx_dev_runtime43.jsxDEV(UnlockPage, {
             sendAmount: amounts.send,
@@ -41257,26 +41152,10 @@ var Content = ({ page, setPage, error, setError }) => {
                     apy: rewards.cmgpAPY,
                     asset: "cMGP",
                     breakdown: [
-                      {
-                        apy: 0,
-                        asset: `${(100 * Number(balances.curveMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% MGP`,
-                        logo: coins.MGP.icon
-                      },
-                      {
-                        apy: aprToApy(rewards.mgpAPR) * 0.9,
-                        asset: `${(100 * Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% rMGP`,
-                        logo: coins.rMGP.icon
-                      },
-                      {
-                        apy: aprToApy(rewards.mgpAPR) * 0.9,
-                        asset: `${(100 * Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% yMGP`,
-                        logo: coins.yMGP.icon
-                      },
-                      {
-                        apy: rewards.cmgpPoolAPY,
-                        asset: "Swap Fees",
-                        logo: coins.cMGP.icon
-                      }
+                      { apy: 0, asset: `${(100 * Number(balances.curveMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% MGP`, logo: coins.MGP.icon },
+                      { apy: aprToApy(rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% rMGP`, logo: coins.rMGP.icon },
+                      { apy: aprToApy(rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% yMGP`, logo: coins.yMGP.icon },
+                      { apy: rewards.cmgpPoolAPY, asset: "Swap Fees", logo: coins.cMGP.icon }
                     ],
                     logo: coins.cMGP.icon
                   }, undefined, false, undefined, this)
@@ -41411,5 +41290,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=B06193238565244564756E2164756E21
-//# sourceMappingURL=index-5qk9c819.js.map
+//# debugId=AB85ABC75CCC391564756E2164756E21
+//# sourceMappingURL=index-arq3p53g.js.map

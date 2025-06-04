@@ -47,7 +47,6 @@ interface Properties {
   readonly reefiMgpLocked: bigint;
   readonly onSellYesTokens: (_proposalId: string, _amount: bigint) => Promise<void>;
   readonly onSellNoTokens: (_proposalId: string, _amount: bigint) => Promise<void>;
-  readonly onRedeemWinningTokens: (_proposalId: string) => Promise<void>;
 }
 
 const MARKET_DATA: Record<string, MarketData> = {
@@ -83,7 +82,7 @@ const getWinningChoice = (marketData: MarketData): "yes" | "no" | "tie" => {
   return "tie";
 };
 
-export const BuyVotesPage = memo(({ yMGPBalance, lockedYMGPBalance, totalLockedYMGP, reefiMgpLocked, onSellYesTokens, onSellNoTokens, onRedeemWinningTokens }: Properties): ReactElement => {
+export const BuyVotesPage = memo(({ yMGPBalance, lockedYMGPBalance, totalLockedYMGP, reefiMgpLocked, onSellYesTokens, onSellNoTokens }: Properties): ReactElement => {
   const [sellYesAmounts, setSellYesAmounts] = useState<Record<string, bigint>>({});
   const [sellNoAmounts, setSellNoAmounts] = useState<Record<string, bigint>>({});
   const [activeAction, setActiveAction] = useState<string | undefined>();
@@ -101,12 +100,6 @@ export const BuyVotesPage = memo(({ yMGPBalance, lockedYMGPBalance, totalLockedY
     if (!amount || amount === 0n) return;
     setActiveAction(`sell-no-${proposalId}`);
     await onSellNoTokens(proposalId, amount);
-    setActiveAction(undefined);
-  };
-
-  const handleRedeemWinningTokens = async (proposalId: string): Promise<void> => {
-    setActiveAction(`redeem-${proposalId}`);
-    await onRedeemWinningTokens(proposalId);
     setActiveAction(undefined);
   };
 
@@ -154,7 +147,6 @@ export const BuyVotesPage = memo(({ yMGPBalance, lockedYMGPBalance, totalLockedY
         const marketData = MARKET_DATA[proposal.id];
         const winningChoice = marketData ? getWinningChoice(marketData) : "tie";
         const isCompleted = proposal.state === "closed";
-
         const sellYesAmount = sellYesAmounts[proposal.id] ?? 0n;
         const sellNoAmount = sellNoAmounts[proposal.id] ?? 0n;
 
@@ -198,7 +190,6 @@ export const BuyVotesPage = memo(({ yMGPBalance, lockedYMGPBalance, totalLockedY
             </div>
             <div className="mt-3 text-xs text-gray-400">Current Rate: 1 yMGP = {formatNumber(formatEther(marketData.lpYesBalance))} vlMGP Votes</div>
           </div>}
-
           {!isCompleted && marketData && <div className="space-y-4">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="rounded-lg bg-green-900/20 p-4">
@@ -213,13 +204,6 @@ export const BuyVotesPage = memo(({ yMGPBalance, lockedYMGPBalance, totalLockedY
               </div>
             </div>
           </div>}
-
-          {isCompleted && marketData && (winningChoice === "yes" && marketData.userYesBalance > 0n || winningChoice === "no" && marketData.userNoBalance > 0n) && <div className="rounded-lg bg-yellow-900/20 p-4">
-            <h6 className="mb-2 font-medium text-yellow-300">Redeem Winning Tokens</h6>
-            <p className="mb-3 text-xs text-gray-400">You have {formatNumber(formatEther(winningChoice === "yes" ? marketData.userYesBalance : marketData.userNoBalance))} winning {winningChoice.toUpperCase()} tokens that can be redeemed for MGP</p>
-            <Button className="w-full bg-yellow-600 hover:bg-yellow-700" onClick={() => handleRedeemWinningTokens(proposal.id)} isLoading={activeAction === `redeem-${proposal.id}`} disabled={activeAction !== undefined} type="button">{activeAction === `redeem-${proposal.id}` ? "Redeeming..." : `Redeem ${formatNumber(formatEther(winningChoice === "yes" ? marketData.userYesBalance : marketData.userNoBalance))} MGP`}</Button>
-          </div>}
-
           <div className="mt-4 flex justify-between text-xs text-gray-500">
             <span>Started: {new Date(proposal.start * 1000).toLocaleDateString()}</span>
             <span>Ends: {new Date(proposal.end * 1000).toLocaleDateString()}</span>

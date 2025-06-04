@@ -1,4 +1,4 @@
-export const ODOSRouter = [
+export const odosRouter = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
     anonymous: false,

@@ -105,7 +105,7 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
   }, [rewards.cmgpPoolAPY, rewards.mgpAPR, balances.curveMGP, balances.curveRMGP, balances.curveYMGP]);
   const uncompoundedMGPYield = useMemo(() => Object.keys(rewards.pendingRewards).length > 0 ? (Object.keys(rewards.pendingRewards) as Coins[]).map(symbol => prices[symbol] * Number(formatEther(rewards.pendingRewards[symbol]?.rewards ?? 0n, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [rewards.pendingRewards, prices]);
   const estimatedCompoundGasFee = useMemo(() => formatEther(rewards.compoundRMGPGas, decimals.WETH) * prices.WETH, [rewards.compoundRMGPGas, prices]);
-  const lockedYmgpAPY = useMemo(() => Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.yMGP) + aprToApy(rewards.mgpAPR) * 0.9, [locked.reefiMGP, rewards.mgpAPR, locked.yMGP]);
+  const lockedYmgpAPY = useMemo(() => Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(balances.lyMGP) + aprToApy(rewards.mgpAPR) * 0.9, [locked.reefiMGP, rewards.mgpAPR, balances.lyMGP]);
 
   useCallback(() => {
     const interval = setInterval(updateRewards.pendingRewards, 30_000);

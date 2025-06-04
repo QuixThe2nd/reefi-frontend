@@ -43,7 +43,7 @@ interface Properties<W extends UseWallet> {
 }
 
 export interface UseActions {
-  approve: (_contract: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _coin: Coins, _infinity: boolean) => Promise<void>;
+  approve: (_contract: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _coin: Exclude<Coins, "lyMGP" | "lvMGP">, _infinity: boolean) => Promise<void>;
   depositMGP: () => Promise<void>;
   buyRMGP: () => Promise<void>;
   buyYMGP: () => Promise<void>;
@@ -71,8 +71,8 @@ export const useActions = <W extends UseWallet>({ setError, setNotification, wal
   const convertMGP = useConvertMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
   const buyMGP = useBuyMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
   const depositRMGP = useDepositRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, updateSupplies, updateYMGPHoldings: updateBalances.ymgpHoldings, writeContracts });
-  const lockYMGP = useLockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateLocked.yMGP, updateUserLockedYMGP: updateLocked.userYMGP, writeContracts });
-  const unlockYMGP = useUnlockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateLocked.yMGP, updateUserLockedYMGP: updateLocked.userYMGP, writeContracts });
+  const lockYMGP = useLockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateSupplies.lyMGP, updateUserLockedYMGP: updateBalances.yMGP, writeContracts });
+  const unlockYMGP = useUnlockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateSupplies.lyMGP, updateUserLockedYMGP: updateBalances.yMGP, writeContracts });
   const redeemRMGP = useRedeemRMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => {
     updateLocked.MGP[56]();
     updateLocked.MGP[42_161]();

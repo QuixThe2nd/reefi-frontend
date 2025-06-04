@@ -9,14 +9,14 @@ interface Allowances {
   readonly MGP: bigint;
   readonly rMGP: bigint;
   readonly curve: Record<"MGP" | "rMGP" | "yMGP" | "cMGP", bigint>;
-  readonly odos: Record<Coins, bigint>;
+  readonly odos: Record<Exclude<Coins, "lyMGP" | "lvMGP">, bigint>;
 }
 
 interface UpdateAllowances {
   readonly MGP: () => Promise<void>;
   readonly rMGP: () => Promise<void>;
   readonly curve: Record<"MGP" | "rMGP" | "yMGP" | "cMGP", () => Promise<void>>;
-  readonly odos: Record<Coins, () => Promise<void>>;
+  readonly odos: Record<Exclude<Coins, "lyMGP" | "lvMGP">, () => Promise<void>>;
 }
 
 export interface UseAllowances {

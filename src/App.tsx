@@ -18,7 +18,7 @@ import { Badge, YieldBadge } from "./components/YieldBadge";
 import { Button } from "./components/Button";
 import { BuyVotesPage } from "./pages/BuyVotesPage";
 import { Card } from "./components/Card";
-import { ClaimVMGPYield, ClaimVMGPYieldComponent } from "./pages/ClaimVMGPYield";
+import { ClaimVMGPYield } from "./pages/ClaimVMGPYield";
 import { ClaimYield } from "./pages/ClaimYMGPYield";
 import { CompoundYield } from "./pages/CompoundYield";
 import { ConnectWallet } from "./components/ConnectWallet";
@@ -96,12 +96,12 @@ const Content = ({ page, setPage, error, setError }: { page: Pages | undefined; 
     <ConnectWallet connectRequired={connectRequired} isConnecting={isConnecting} connectWallet={connectWallet} />
     <ErrorCard error={error} setError={setError} />
     <Card>
-      <CompoundYield uncompoundedMGPYield={rewards.uncompoundedMGPYield} estimatedCompoundGasFee={rewards.estimatedCompoundGasFee} pendingRewards={rewards.pendingRewards} estimatedCompoundAmount={rewards.estimatedCompoundAmount} mgpAPR={rewards.mgpAPR} reefiMGPLocked={locked.reefiMGP} chain={chain} prices={prices} compoundRMGP={compoundRMGP} />
+      <CompoundYield uncompoundedMGPYield={rewards.uncompoundedMGPYield} estimatedCompoundGasFee={rewards.estimatedCompoundGasFee} pendingRewards={rewards.pendingRewards} estimatedCompoundAmount={rewards.estimatedCompoundAmount} mgpAPR={rewards.mgpAPR} reefiMGPLocked={locked.reefiMGP} prices={prices} compoundRMGP={compoundRMGP} />
     </Card>
     <div className="grid grid-cols-1 gap-6 mt-6 lg:grid-cols-2">
       <Card>
         <h2 className="mb-4 text-xl font-bold">Claim yMGP Rewards</h2>
-        <ClaimYield claimYMGPRewards={claimYMGPRewards} lockedYMGP={locked.yMGP} unclaimedUserYield={rewards.unclaimedUserYield} uncompoundedMGPYield={rewards.uncompoundedMGPYield} userLockedYMGP={locked.userYMGP} ymgpHoldings={balances.ymgpHoldings} ymgpSupply={supplies.yMGP} />
+        <ClaimYield claimYMGPRewards={claimYMGPRewards} lockedYMGP={supplies.lyMGP} unclaimedUserYield={rewards.unclaimedUserYield} uncompoundedMGPYield={rewards.uncompoundedMGPYield} userLockedYMGP={balances.lyMGP} ymgpHoldings={balances.ymgpHoldings} ymgpSupply={supplies.yMGP} />
       </Card>
       <Card>
         <h2 className="mb-4 text-xl font-bold">Claim vMGP Rewards</h2>
@@ -116,53 +116,11 @@ const Content = ({ page, setPage, error, setError }: { page: Pages | undefined; 
     <div className="grid grid-cols-1 gap-6 pb-6 lg:grid-cols-2">
       <Card>
         <h2 className="mb-4 text-xl font-bold">Vote</h2>
-        <VotePage vmgpBalance={balances.vMGP} vmgpSupply={supplies.vMGP} reefiMgpLocked={locked.reefiMGP} rmgpSupply={supplies.rMGP} proposals={[
-          {
-            id: "0x1234567890abcdef",
-            title: "Increase vlMGP Lock Duration to 180 Days",
-            description: "Proposal to extend the maximum lock duration for vlMGP from 120 to 180 days to increase protocol stability and reduce sell pressure.",
-            choices: ["For", "Against", "Abstain"],
-            start: Math.floor(Date.now() / 1000) - 86_400 * 2,
-            end: Math.floor(Date.now() / 1000) + 86_400 * 5,
-            state: "active" as const,
-            scores: [2, 4, 1],
-            votes: 124
-          },
-          {
-            id: "0xabcdef1234567890",
-            title: "Add USDC/WETH Pool to Magpie Rewards",
-            description: "Add the new USDC/WETH liquidity pool to the Magpie rewards program with 15% allocation weight.",
-            choices: ["Add with 15% weight", "Add with 10% weight", "Add with 20% weight", "Do not add"],
-            start: Math.floor(Date.now() / 1000) - 86_400 * 1,
-            end: Math.floor(Date.now() / 1000) + 86_400 * 6,
-            state: "active" as const,
-            scores: [1, 2, 2, 0],
-            votes: 89
-          },
-          {
-            id: "0x9876543210fedcba",
-            title: "Treasury Diversification Strategy",
-            description: "Diversify protocol treasury holdings by allocating 30% to stablecoins and 20% to ETH, reducing MGP concentration risk.",
-            choices: ["Approve diversification", "Reject diversification"],
-            start: Math.floor(Date.now() / 1000) - 86_400 * 10,
-            end: Math.floor(Date.now() / 1000) - 86_400 * 3,
-            state: "closed" as const,
-            scores: [3, 1],
-            votes: 156
-          }
-        ]}
-        onVote={async (proposalId: string, choice: number) => {
-          console.log("Voting on proposal:", proposalId, "choice:", choice);
-        }}
-        onRefresh={async () => {
-          console.log("Refreshing proposals");
-        }}
-        isLoading={false}
-        />
+        <VotePage vmgpBalance={balances.vMGP} vmgpSupply={supplies.vMGP} reefiMgpLocked={locked.reefiMGP} onVote={() => onVote()} />
       </Card>
       <Card>
         <h2 className="mb-4 text-xl font-bold">Buy Votes</h2>
-        <BuyVotesPage balances={balances} yMGPBalance={balances.yMGP} lockedYMGPBalance={balances.lyMGP} totalLockedYMGP={locked.yMGP} reefiMgpLocked={locked.reefiMGP} onBuyVotes={() => onBuyVotes()} />
+        <BuyVotesPage yMGPBalance={balances.yMGP} lockedYMGPBalance={balances.lyMGP} totalLockedYMGP={supplies.lyMGP} reefiMgpLocked={locked.reefiMGP} onSellYesTokens={() => onSellYesTokens()} onSellNoTokens={() => onSellNoTokens()} />
       </Card>
     </div>
   </div>;
@@ -187,7 +145,7 @@ const Content = ({ page, setPage, error, setError }: { page: Pages | undefined; 
   </div>;
 
   return <>
-    <TokenCards mgpLocked={locked.MGP[56] + locked.MGP[42_161]} mgpPrice={prices.MGP} mgpSupply={supplies.MGP} rmgpSupply={supplies.rMGP} ymgpSupply={supplies.yMGP} ymgpLocked={locked.yMGP} reefiMGPLocked={locked.reefiMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} rmgpYmgpCurveRate={exchangeRates.rmgpYMGP} ymgpVmgpCurveRate={exchangeRates.ymgpVMGP} vmgpSupply={supplies.vMGP} />
+    <TokenCards mgpLocked={locked.MGP[56] + locked.MGP[42_161]} mgpPrice={prices.MGP} mgpSupply={supplies.MGP} rmgpSupply={supplies.rMGP} ymgpSupply={supplies.yMGP} ymgpLocked={supplies.lyMGP} reefiMGPLocked={locked.reefiMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} rmgpYmgpCurveRate={exchangeRates.rmgpYMGP} ymgpVmgpCurveRate={exchangeRates.ymgpVMGP} vmgpSupply={supplies.vMGP} />
     <Features mgpAPR={rewards.mgpAPR} lockedYmgpAPY={rewards.lockedYmgpAPY} mgpPrice={prices.MGP} vmgpSupply={supplies.vMGP} reefiLockedMGP={locked.reefiMGP} vmgpMGPCurveRate={0.5} />
     <div className="rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4">
       <h3 className="mb-2 text-lg font-semibold text-yellow-400">⚠️ Important Notice</h3>
@@ -224,12 +182,12 @@ const Content = ({ page, setPage, error, setError }: { page: Pages | undefined; 
         <div className="flex h-min flex-row-reverse">
           <div className="flex gap-1">
             <YieldBadge apy={aprToApy(rewards.mgpAPR) * 0.9} asset="yMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }]} logo={coins.yMGP.icon} />
-            <YieldBadge apy={Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(locked.yMGP) + aprToApy(rewards.mgpAPR) * 0.9} asset="Locked yMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }, { apr: Number(locked.reefiMGP) * rewards.mgpAPR * 0.05 / Number(locked.yMGP), asset: "Boosted vlMGP", logo: vlMGP }, { asset: "yMGP Withdraws", value: "Variable", logo: coins.yMGP.icon }]} suffix='+' logo={coins.yMGP.icon} />
+            <YieldBadge apy={Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(supplies.lyMGP) + aprToApy(rewards.mgpAPR) * 0.9} asset="Locked yMGP" breakdown={[{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }, { apr: Number(locked.reefiMGP) * rewards.mgpAPR * 0.05 / Number(supplies.lyMGP), asset: "Boosted vlMGP", logo: vlMGP }, { asset: "yMGP Withdraws", value: "Variable", logo: coins.yMGP.icon }]} suffix='+' logo={coins.yMGP.icon} />
           </div>
         </div>
       </div>
       {page === "convert" && <GetYMGPPage balances={balances} setSend={updateAmounts.send} send={amounts.send} prices={prices} ymgpMgpCurveRate={exchangeRates.ymgpMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} sendAmount={amounts.send} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} buyYMGP={buyYMGP} depositRMGP={depositRMGP} lockedReefiMGP={locked.reefiMGP} rmgpSupply={supplies.rMGP} />}
-      {page === "lock" && <LockPage ymgpBalance={balances.yMGP} setSend={updateAmounts.send} send={amounts.send} lockYMGP={lockYMGP} mgpAPR={rewards.mgpAPR} reefiLockedMGP={locked.reefiMGP} ymgpLocked={locked.yMGP} />}
+      {page === "lock" && <LockPage ymgpBalance={balances.yMGP} setSend={updateAmounts.send} send={amounts.send} lockYMGP={lockYMGP} mgpAPR={rewards.mgpAPR} reefiLockedMGP={locked.reefiMGP} ymgpLocked={supplies.lyMGP} />}
       {page === "unlock" && <UnlockPage sendAmount={amounts.send} setSendAmount={updateAmounts.send} unlockYMGP={unlockYMGP} lymgpBalance={balances.lyMGP} />}
       {page === "redeemYMGP" && <RedeemYMGPPage buyRMGP={buyRMGP} redeemYMGP={() => redeemYMGP} withdrawMGP={withdrawMGP} unlockSchedule={withdraws.unlockSchedule} balances={balances} setSend={updateAmounts.send} send={amounts.send} prices={prices} ymgpMgpCurveRate={exchangeRates.ymgpMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} sendAmount={amounts.send} userPendingWithdraws={withdraws.userPending} userWithdrawable={withdraws.userWithdrawable} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={locked.reefiMGP} rmgpSupply={supplies.rMGP} />}
       <div className="bg-gray-500 w-full h-[0.5px] mt-8" />
@@ -259,26 +217,10 @@ const Content = ({ page, setPage, error, setError }: { page: Pages | undefined; 
               apy={rewards.cmgpAPY}
               asset="cMGP"
               breakdown={[
-                {
-                  apy: 0,
-                  asset: `${(100 * Number(balances.curveMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% MGP`,
-                  logo: coins.MGP.icon
-                },
-                {
-                  apy: aprToApy(rewards.mgpAPR) * 0.9,
-                  asset: `${(100 * Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% rMGP`,
-                  logo: coins.rMGP.icon
-                },
-                {
-                  apy: aprToApy(rewards.mgpAPR) * 0.9,
-                  asset: `${(100 * Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% yMGP`,
-                  logo: coins.yMGP.icon
-                },
-                {
-                  apy: rewards.cmgpPoolAPY,
-                  asset: "Swap Fees",
-                  logo: coins.cMGP.icon
-                }
+                { apy: 0, asset: `${(100 * Number(balances.curveMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% MGP`, logo: coins.MGP.icon },
+                { apy: aprToApy(rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% rMGP`, logo: coins.rMGP.icon },
+                { apy: aprToApy(rewards.mgpAPR) * 0.9, asset: `${(100 * Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) / (Number(balances.curveMGP) + Number(balances.curveRMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP) + Number(balances.curveYMGP) * Number(locked.reefiMGP) / Number(supplies.rMGP))).toFixed(0)}% yMGP`, logo: coins.yMGP.icon },
+                { apy: rewards.cmgpPoolAPY, asset: "Swap Fees", logo: coins.cMGP.icon }
               ]}
               logo={coins.cMGP.icon}
             />

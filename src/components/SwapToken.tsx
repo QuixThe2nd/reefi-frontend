@@ -29,7 +29,7 @@ interface Properties {
   allowances: UseAllowances["allowances"];
   sendAmount: bigint;
   chain: Chains;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: Coins, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;

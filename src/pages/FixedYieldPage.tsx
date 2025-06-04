@@ -30,7 +30,7 @@ interface Properties {
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
   unlockSchedule: UseWithdraws["withdraws"]["unlockSchedule"];
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: Coins, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;

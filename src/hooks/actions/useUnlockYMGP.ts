@@ -13,7 +13,7 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   sendAmount: bigint;
   setConnectRequired: (_value: boolean) => void;
   updateSupplies: UseSupplies["updateSupplies"];
-  updateTotalLockedYMGP: () => Promise<void>;
+  updateTotalLockedYMGP: () => void;
   updateUserLockedYMGP: () => Promise<void>;
   writeContracts: UseContracts;
 }

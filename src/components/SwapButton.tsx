@@ -25,7 +25,7 @@ interface Properties {
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: Coins, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;
@@ -72,7 +72,7 @@ export const SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpC
   return <>
     {tokenIn === "ETH" && <Button className="mb-2 w-full" variant="secondary" onClick={mintWETH} type="submit">Wrap ETH</Button>}
     {tokenIn === "WETH" && <TokenApproval allowance={allowances.odos[tokenIn]} onApprove={infinity => {
-      approve("ODOSRouter", tokenIn, infinity);
+      approve("odosRouter", tokenIn, infinity);
     }} sendAmount={sendAmount} tokenSymbol={tokenIn} />}
     <Button className="w-full" variant="secondary" onClick={() => {
       swap(contracts[chain][tokenIn === "ETH" ? "WETH" : tokenIn].address, contracts[chain].MGP.address);

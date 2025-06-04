@@ -5,6 +5,7 @@
  * TODO: tokenise each rmgp->mgp withdraw batch with like wmgp-aug-4, that slowly regains its peg with fixed interest
  * TODO: make buttons load during action
  * TODO: page urls
+ * TODO: Start with deposit limit, airdrop 1 REEFI for 1 MGP deposited
  */
 
 import vlMGP from "../public/icons/vlMGP.png";

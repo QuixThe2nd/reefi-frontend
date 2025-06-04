@@ -2,14 +2,14 @@ import { useState, type ReactElement } from "react";
 
 import { Card } from "./Card";
 
-interface DocSection {
+interface DocumentSection {
   readonly id: string;
   readonly title: string;
   readonly content: string;
-  readonly subsections?: readonly DocSection[];
+  readonly subsections?: readonly DocumentSection[];
 }
 
-const documentationSections: readonly DocSection[] = [
+const documentationSections: readonly DocumentSection[] = [
   {
     id: "introduction",
     title: "Introduction",
@@ -109,12 +109,12 @@ const documentationSections: readonly DocSection[] = [
       {
         id: "proposals",
         title: "Proposal Participation",
-        content: "Reefi integrates with Snapshot for gasless voting on Magpie proposals. The interface displays current proposals, voting options, and potential impact of different outcomes. Users can see their amplified voting power and participate directly through the Reefi interface. Proposal participation is crucial for maintaining influence over Magpie's direction, including yield distribution, pool additions, and protocol upgrades that directly affect Reefi users."
+        content: "Voting on Magpie proposals is done via Reefi's vote contract. The interface displays current proposals, voting options, and potential impact of different outcomes. Users can see their amplified voting power and participate directly through the Reefi interface. Proposal participation is crucial for maintaining influence over Magpie's direction, including yield distribution, pool additions, and protocol upgrades that directly affect Reefi users."
       },
       {
         id: "dao-structure",
         title: "DAO Structure",
-        content: "Reefi operates as a decentralized organization with no team token allocation - all tokens are backed by underlying MGP contributed by users. Locked yMGP holders vote on Reefi-specific decisions like fee structures, treasury management, and protocol upgrades. The protocol is designed to be community-governed from launch, with major decisions requiring consensus from locked yMGP holders who have the most skin in the game."
+        content: "Reefi's team has no token allocation as all tokens are backed by underlying MGP contributed by users. Locked yMGP holders vote on Reefi-specific decisions like fee structures, treasury management, and protocol upgrades. The protocol is designed to be community-governed from launch, with major decisions requiring consensus from locked yMGP holders who have the most skin in the game."
       }
     ]
   },
@@ -207,20 +207,16 @@ const documentationSections: readonly DocSection[] = [
 ] as const;
 
 interface SidebarProperties {
-  readonly sections: readonly DocSection[];
+  readonly sections: readonly DocumentSection[];
   readonly activeSection: string;
   readonly onSectionChange: (_sectionId: string) => void;
 }
 
 const Sidebar = ({ sections, activeSection, onSectionChange }: SidebarProperties): ReactElement => {
   const getParentSectionId = (sectionId: string): string | undefined => {
-    for (const section of sections) {
-      if (section.subsections) {
-        for (const subsection of section.subsections) {
-          if (subsection.id === sectionId) return section.id;
-        }
-      }
-    }
+    for (const section of sections) if (section.subsections) for (const subsection of section.subsections) if (subsection.id === sectionId) return section.id;
+
+
     return undefined;
   };
 
@@ -240,7 +236,7 @@ const Sidebar = ({ sections, activeSection, onSectionChange }: SidebarProperties
 };
 
 interface ContentProperties {
-  readonly section: DocSection;
+  readonly section: DocumentSection;
 }
 
 const Content = ({ section }: ContentProperties): ReactElement => <div className="flex-1 overflow-auto p-6">
@@ -257,7 +253,7 @@ const Content = ({ section }: ContentProperties): ReactElement => <div className
       <div className="mt-12 rounded-lg border border-gray-700 bg-gray-800/30 p-6">
         <h3 className="mb-3 text-lg font-semibold text-yellow-400">⚠️ Important Notice</h3>
         <p className="text-sm text-gray-300">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
         </p>
       </div>
@@ -265,7 +261,7 @@ const Content = ({ section }: ContentProperties): ReactElement => <div className
   </div>
 </div>;
 
-const findSectionById = (sections: readonly DocSection[], id: string): DocSection | undefined => {
+const findSectionById = (sections: readonly DocumentSection[], id: string): DocumentSection | undefined => {
   for (const section of sections) {
     if (section.id === id) return section;
     if (section.subsections) {

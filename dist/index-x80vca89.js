@@ -34577,11 +34577,11 @@ var useBuyMGP = ({ account, allowances, updateBalances, chain, clients, sendAmou
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.curve.rMGP < sendAmountReference.current) {
+    if (allowancesReference.current.curve.rMGP < (sendAmountReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 0n, sendAmountReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 0n, sendAmountReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.curveMGP();
@@ -34633,11 +34633,11 @@ var useBuyRMGP = ({ account, allowances, updateBalances, chain, clients, sendAmo
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.curve.MGP < sendAmountReference.current) {
+    if (allowancesReference.current.curve.MGP < (sendAmountReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 1n, sendAmountReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 1n, sendAmountReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.curveMGP();
@@ -34689,11 +34689,11 @@ var useBuyYMGP = ({ account, allowances, updateBalances, chain, clients, sendAmo
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.curve.rMGP < sendAmountReference.current) {
+    if (allowancesReference.current.curve.rMGP < (sendAmountReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 2n, sendAmountReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 2n, sendAmountReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.yMGP();
     updateBalancesReference.current.curveRMGP();
@@ -34839,11 +34839,11 @@ var useConvertMGP = ({ account, allowances, updateBalances, chain, clients, send
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.curve.rMGP < sendAmountReference.current) {
+    if (allowancesReference.current.curve.rMGP < (sendAmountReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 2n, sendAmountReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 2n, sendAmountReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.yMGP();
     updateBalancesReference.current.curveRMGP();
@@ -34907,11 +34907,11 @@ var useDepositMGP = ({ account, allowances, updateBalances, chain, clients, send
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.MGP < sendAmountReference.current) {
+    if (allowancesReference.current.MGP < (sendAmountReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].rMGP.write.deposit([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].rMGP.write.deposit([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();
     updateSuppliesReference.current.MGP();
@@ -34973,11 +34973,11 @@ var useDepositRMGP = ({ account, allowances, updateBalances, chain, clients, sen
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.rMGP < sendAmountReference.current) {
+    if (allowancesReference.current.rMGP < (sendAmountReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.yMGP();
     updateSuppliesReference.current.rMGP();
@@ -35030,7 +35030,7 @@ var useLockYMGP = ({ account, chain, clients, sendAmount, setConnectRequired, up
       setConnectRequiredReference.current(true);
       return;
     }
-    await writeContractsReference.current[chainReference.current].yMGP.write.lock([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].yMGP.write.lock([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateSuppliesReference.current.yMGP();
     updateTotalLockedYMGPReference.current();
     updateUserLockedYMGPReference.current();
@@ -35077,7 +35077,7 @@ var useMintWETH = ({ account, allowances, chain, clients, sendAmount, setConnect
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.MGP < sendAmountReference.current) {
+    if (allowancesReference.current.MGP < (sendAmountReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
@@ -35153,7 +35153,7 @@ var useRedeemRMGP = ({ account, updateBalances, chain, clients, sendAmount, setC
       setConnectRequiredReference.current(true);
       return;
     }
-    await writeContractsReference.current[chainReference.current].rMGP.write.startUnlock([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].rMGP.write.startUnlock([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateUnlockScheduleReference.current();
     updateSuppliesReference.current.rMGP();
     updateBalancesReference.current.rMGP();
@@ -35210,11 +35210,11 @@ var useSellRMGP = ({ account, allowances, updateBalances, chain, clients, sendAm
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.curve.yMGP < sendAmountReference.current) {
+    if (allowancesReference.current.curve.yMGP < (sendAmountReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([2n, 1n, sendAmountReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([2n, 1n, sendAmountReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.yMGP();
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.curveYMGP();
@@ -35317,7 +35317,7 @@ var useSwap = ({ account, allowances, chain, clients, sendAmount, setConnectRequ
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.curve.MGP < sendAmountReference.current) {
+    if (allowancesReference.current.curve.MGP < (sendAmountReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
@@ -35389,7 +35389,7 @@ var useUnlockYMGP = ({ account, chain, clients, sendAmount, setConnectRequired, 
       setConnectRequiredReference.current(true);
       return;
     }
-    await writeContractsReference.current[chainReference.current].yMGP.write.unlock([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].yMGP.write.unlock([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateSuppliesReference.current.yMGP();
     updateTotalLockedYMGPReference.current();
     updateUserLockedYMGPReference.current();
@@ -36428,39 +36428,19 @@ var useAmounts = ({ wallet }) => {
   const [amounts, setAmounts] = useStoredObject("amounts", { curve: { mgpRmgp: 0n, mgpYmgp: 0n, rmgpMgp: 0n, rmgpYmgp: 0n, ymgpMgp: 0n, ymgpRmgp: 0n }, lp: { MGP: 0n, rMGP: 0n, yMGP: 0n }, send: parseEther(1) });
   const updateAmounts = {
     curve: {
-      mgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, amounts.send], { account: wallet.account }).then((value) => {
-        setAmounts((a) => ({ curve: { ...a.curve, mgpRmgp: value } }));
-      }),
-      mgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, amounts.send], { account: wallet.account }).then((value) => {
-        setAmounts((a) => ({ curve: { ...a.curve, mgpYmgp: value } }));
-      }),
-      rmgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, amounts.send], { account: wallet.account }).then((value) => {
-        setAmounts((a) => ({ curve: { ...a.curve, rmgpMgp: value } }));
-      }),
-      rmgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, amounts.send], { account: wallet.account }).then((value) => {
-        setAmounts((a) => ({ curve: { ...a.curve, rmgpYmgp: value } }));
-      }),
-      ymgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, amounts.send], { account: wallet.account }).then((value) => {
-        setAmounts((a) => ({ curve: { ...a.curve, ymgpMgp: value } }));
-      }),
-      ymgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, amounts.send], { account: wallet.account }).then((value) => {
-        setAmounts((a) => ({ curve: { ...a.curve, ymgpRmgp: value } }));
-      })
+      mgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, amounts.send ?? 0n], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, mgpRmgp: value } }))),
+      mgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, amounts.send ?? 0n], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, mgpYmgp: value } }))),
+      rmgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, amounts.send ?? 0n], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, rmgpMgp: value } }))),
+      rmgpYmgp: () => contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, amounts.send ?? 0n], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, rmgpYmgp: value } }))),
+      ymgpMgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, amounts.send ?? 0n], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, ymgpMgp: value } }))),
+      ymgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, amounts.send ?? 0n], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, ymgpRmgp: value } })))
     },
     lp: {
-      MGP: (MGP) => {
-        setAmounts((a) => ({ lp: { ...a.lp, MGP } }));
-      },
-      rMGP: (rMGP2) => {
-        setAmounts((a) => ({ lp: { ...a.lp, rMGP: rMGP2 } }));
-      },
-      yMGP: (yMGP2) => {
-        setAmounts((a) => ({ lp: { ...a.lp, yMGP: yMGP2 } }));
-      }
+      MGP: (MGP) => setAmounts((a) => ({ lp: { ...a.lp, MGP } })),
+      rMGP: (rMGP2) => setAmounts((a) => ({ lp: { ...a.lp, rMGP: rMGP2 } })),
+      yMGP: (yMGP2) => setAmounts((a) => ({ lp: { ...a.lp, yMGP: yMGP2 } }))
     },
-    send: (send) => {
-      setAmounts({ send });
-    }
+    send: (send) => setAmounts({ send })
   };
   import_react20.useEffect(() => {
     updateAmounts.curve.mgpRmgp();
@@ -41638,5 +41618,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime45.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=A544DA464E27C66964756E2164756E21
-//# sourceMappingURL=index-2fdyw5vv.js.map
+//# debugId=216894B36E556D6E64756E2164756E21
+//# sourceMappingURL=index-x80vca89.js.map

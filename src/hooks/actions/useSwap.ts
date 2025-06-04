@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 import { Chains } from "../../config/contracts";
 import { UseAllowances } from "../useAllowances";
+import { UseAmounts } from "../useAmounts";
 
 import type { PublicActions, WalletClient } from "viem";
 
@@ -10,7 +11,7 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   allowances: UseAllowances["allowances"];
   chain: Chains;
   clients: Clients;
-  sendAmount: bigint;
+  sendAmount: UseAmounts["amounts"]["send"];
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
   setNotification: (_value: string) => void;
@@ -62,7 +63,7 @@ export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActi
     if (!clientsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    if (allowancesReference.current.curve.MGP < sendAmountReference.current) {
+    if (allowancesReference.current.curve.MGP < (sendAmountReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low"); return;
     }
 

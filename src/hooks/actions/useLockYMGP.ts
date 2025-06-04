@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import { Chains } from "../../config/contracts";
+import { UseAmounts } from "../useAmounts";
 import { UseContracts } from "../useContracts";
 import { UseSupplies } from "../useSupplies";
 
@@ -10,7 +11,7 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   account: `0x${string}` | undefined;
   chain: Chains;
   clients: Clients;
-  sendAmount: bigint;
+  sendAmount: UseAmounts["amounts"]["send"];
   setConnectRequired: (_value: boolean) => void;
   updateSupplies: UseSupplies["updateSupplies"];
   updateTotalLockedYMGP: () => void;
@@ -69,7 +70,7 @@ export const useLockYMGP = <Clients extends Record<Chains, WalletClient & Public
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    await writeContractsReference.current[chainReference.current].yMGP.write.lock([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].yMGP.write.lock([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateSuppliesReference.current.yMGP();
     updateTotalLockedYMGPReference.current();
     updateUserLockedYMGPReference.current();

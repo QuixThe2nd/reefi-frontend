@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 
 import { Chains } from "../../config/contracts";
 import { UseAllowances } from "../useAllowances";
+import { UseAmounts } from "../useAmounts";
 import { UseBalances } from "../useBalances";
 import { UseContracts } from "../useContracts";
 import { UseSupplies } from "../useSupplies";
@@ -14,7 +15,7 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   updateBalances: UseBalances["updateBalances"];
   chain: Chains;
   clients: Clients;
-  sendAmount: bigint;
+  sendAmount: UseAmounts["amounts"]["send"];
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
   updateSupplies: UseSupplies["updateSupplies"];
@@ -89,10 +90,10 @@ export const useDepositMGP = <Clients extends Record<Chains, WalletClient & Publ
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    if (allowancesReference.current.MGP < sendAmountReference.current) {
+    if (allowancesReference.current.MGP < (sendAmountReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low"); return;
     }
-    await writeContractsReference.current[chainReference.current].rMGP.write.deposit([sendAmountReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].rMGP.write.deposit([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();
     updateSuppliesReference.current.MGP();

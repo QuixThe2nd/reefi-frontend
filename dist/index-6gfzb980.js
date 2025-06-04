@@ -38471,7 +38471,7 @@ SwapInput.displayName = "SwapInput";
 
 // src/components/SwapToken.tsx
 var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
-var SwapToken = ({ originalTokenIn, tokenOut, balances, buy, nativeSwap, label, excludeCoins, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => {
+var SwapToken = ({ originalTokenIn, tokenOut, balances, buy, nativeSwap, label, excludeCoins, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => {
   const [tokenIn, setTokenIn] = import_react46.useState(originalTokenIn);
   return /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(jsx_dev_runtime20.Fragment, {
     children: [
@@ -38498,6 +38498,7 @@ var SwapToken = ({ originalTokenIn, tokenOut, balances, buy, nativeSwap, label, 
         rmgpYmgpCurveAmount,
         rmgpMgpCurveAmount,
         mgpYmgpCurveAmount,
+        ymgpVmgpCurveAmount,
         ymgpRmgpCurveAmount,
         ymgpMgpCurveAmount,
         allowances,
@@ -38847,7 +38848,7 @@ GetRMGPPage.displayName = "GetRMGPPage";
 // src/pages/GetVMGPPage.tsx
 var import_react50 = __toESM(require_react(), 1);
 var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
-var GetVMGPPage = import_react50.memo(({ balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, buyVMGP: buyVMGP2, mintVMGP: mintVMGP2, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(Page, {
+var GetVMGPPage = import_react50.memo(({ balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, buyVMGP: buyVMGP2, mintVMGP: mintVMGP2, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(Page, {
   info: "yMGP is backed 1:1 by rMGP. 1 yMGP can be redeemed for 0.75 rMGP. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield.",
   children: /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(SwapToken, {
     buy: buyVMGP2,
@@ -38877,7 +38878,8 @@ var GetVMGPPage = import_react50.memo(({ balances, setSend, send, prices, ymgpMg
     mintWETH,
     swap,
     lockedReefiMGP,
-    rmgpSupply
+    rmgpSupply,
+    ymgpVmgpCurveAmount
   }, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 GetVMGPPage.displayName = "GetVMGPPage";
@@ -41208,9 +41210,10 @@ var Content = ({ page, setPage, error, setError }) => {
             mintWETH,
             swap,
             buyVMGP: () => buyVMGP(),
-            mintVMGP: () => mintVMGP,
+            mintVMGP: () => mintVMGP(),
             lockedReefiMGP: locked.reefiMGP,
-            rmgpSupply: supplies.rMGP
+            rmgpSupply: supplies.rMGP,
+            ymgpVmgpCurveAmount: amounts.send
           }, undefined, false, undefined, this),
           page === "lockVMGP" && /* @__PURE__ */ jsx_dev_runtime43.jsxDEV(LockVMGPPage, {
             vmgpBalance: balances.vMGP,
@@ -41403,5 +41406,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=346EE21993A11E3564756E2164756E21
-//# sourceMappingURL=index-z942ga2m.js.map
+//# debugId=E123CE58FDBD77F964756E2164756E21
+//# sourceMappingURL=index-6gfzb980.js.map

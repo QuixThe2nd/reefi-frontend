@@ -22,7 +22,6 @@ interface UpdateExchangeRates {
   rmgpMGP: () => Promise<void>;
   ymgpRMGP: () => Promise<void>;
   ymgpMGP: () => Promise<void>;
-  ymgpVMGP: () => Promise<void>;
 }
 
 export interface UseExchangeRates {
@@ -55,8 +54,7 @@ export const useExchangeRates = ({ wallet }: Properties): UseExchangeRates => {
     },
     ymgpRMGP: async () => {
       setExchangeRates({ ymgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)) });
-    },
-    ymgpVMGP: async () => {}
+    }
   };
 
   useEffect(() => {

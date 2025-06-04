@@ -34461,6 +34461,8 @@ var contracts = {
     cMGP: getContract({ abi: ABIs.cMGP, address: "0xD1465c3489Aa7Eac0e7f9907F93a684840a2F934", client: publicClients[42161] }),
     rMGP: getContract({ abi: ABIs.rMGP, address: "0x3788c8791d826254bAbd49b602C93008468D5695", client: publicClients[42161] }),
     vMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000", client: publicClients[42161] }),
+    lvMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000", client: publicClients[42161] }),
+    lyMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000", client: publicClients[42161] }),
     yMGP: getContract({ abi: ABIs.yMGP, address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9", client: publicClients[42161] })
   },
   56: {
@@ -34477,6 +34479,8 @@ var contracts = {
     cMGP: getContract({ abi: ABIs.cMGP, address: "0x0000000000000000000000000000000000000000", client: publicClients[56] }),
     rMGP: getContract({ abi: ABIs.rMGP, address: "0x0277517658a1dd3899bf926fCf6A633e549eB769", client: publicClients[56] }),
     vMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000", client: publicClients[56] }),
+    lvMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000", client: publicClients[56] }),
+    lyMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000", client: publicClients[56] }),
     yMGP: getContract({ abi: ABIs.yMGP, address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb", client: publicClients[56] })
   }
 };
@@ -34516,10 +34520,8 @@ var useApprove = ({ account, updateAllowances, chain, clients, sendAmount, setCo
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
   return import_react.useCallback(async (contract, coin, infinity) => {
-    if (clientsReference.current === undefined || !writeContractsReference.current || accountReference.current === undefined) {
-      setConnectRequiredReference.current(true);
-      return;
-    }
+    if (clientsReference.current === undefined || !writeContractsReference.current || accountReference.current === undefined)
+      return setConnectRequiredReference.current(true);
     const amount = infinity ? 2n ** 256n - 1n : sendAmountReference.current;
     await writeContractsReference.current[chainReference.current][coin].write.approve([contracts[chainReference.current][contract].address, amount], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     if (contract === "cMGP")
@@ -35450,9 +35452,7 @@ var useWithdrawMGP = ({ account, updateBalances, chain, clients, setConnectRequi
 // src/hooks/useActions.ts
 var useActions = ({ setError, setNotification, wallet, updateBalances, allowances, updateAllowances, updateSupplies, writeContracts, updateLocked, amounts, updateRewards, updateWithdraws }) => {
   const approve = useApprove({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateAllowances, writeContracts });
-  const depositMGP = useDepositMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => {
-    updateLocked.MGP.all();
-  }, writeContracts });
+  const depositMGP = useDepositMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => updateLocked.MGP.all(), writeContracts });
   const buyRMGP = useBuyRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
   const sellYMGP = useSellRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
   const buyYMGP = useBuyYMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
@@ -36599,8 +36599,7 @@ var useExchangeRates = ({ wallet }) => {
     },
     ymgpRMGP: async () => {
       setExchangeRates({ ymgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)) });
-    },
-    ymgpVMGP: async () => {}
+    }
   };
   import_react23.useEffect(() => {
     updateExchangeRates.mgpRMGP();
@@ -36647,7 +36646,7 @@ var useLocked = ({ wallet }) => {
 // src/hooks/usePrices.ts
 var import_react25 = __toESM(require_react(), 1);
 var usePrices = () => {
-  const [prices, setPrices] = import_react25.useState({ CKP: 0, EGP: 0, LTP: 0, MGP: 0, PNP: 0, WETH: 0, cMGP: 0, rMGP: 0, yMGP: 0, vMGP: 0, lyMGP: 0 });
+  const [prices, setPrices] = import_react25.useState({ CKP: 0, EGP: 0, LTP: 0, MGP: 0, PNP: 0, WETH: 0, cMGP: 0, rMGP: 0, yMGP: 0, vMGP: 0, lyMGP: 0, lvMGP: 0 });
   import_react25.useEffect(() => {
     (async () => {
       const response = await fetch("https://api.magpiexyz.io/getalltokenprice");
@@ -38518,7 +38517,7 @@ var SwapToken = ({ originalTokenIn, tokenOut, balances, buy, nativeSwap, label, 
 
 // src/pages/FixedYieldPage.tsx
 var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
-var FixedYieldPage = import_react47.memo(({ mgpAPR, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, unlockSchedule, buyRMGPAndWithdraw: buyRMGPAndWithdraw2 }) => {
+var FixedYieldPage = import_react47.memo(({ mgpAPR, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, ymgpVmgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, unlockSchedule, buyRMGPAndWithdraw: buyRMGPAndWithdraw2 }) => {
   const burnRate = Number(rmgpSupply) / Number(lockedReefiMGP);
   const fixedYieldPercent = (Number(mgpRmgpCurveAmount) / Number(sendAmount) / burnRate - 1) * 100;
   const withdrawalTime = unlockSchedule.length === 6 ? Number(unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2;
@@ -38549,6 +38548,7 @@ var FixedYieldPage = import_react47.memo(({ mgpAPR, balances, setSend, send, pri
         mgpYmgpCurveAmount,
         ymgpRmgpCurveAmount,
         ymgpMgpCurveAmount,
+        ymgpVmgpCurveAmount,
         allowances,
         sendAmount,
         chain,
@@ -38706,7 +38706,7 @@ FixedYieldPage.displayName = "FixedYieldPage";
 // src/pages/GetMGPPage.tsx
 var import_react48 = __toESM(require_react(), 1);
 var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
-var GetMGPPage = import_react48.memo(({ balances, mgpAPR, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, buyMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(Page, {
+var GetMGPPage = import_react48.memo(({ balances, mgpAPR, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, ymgpVmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, buyMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(Page, {
   info: "MGP is Magpie's governance token. All Reefi derivatives are built around MGP.",
   children: [
     /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(SwapToken, {
@@ -38736,7 +38736,8 @@ var GetMGPPage = import_react48.memo(({ balances, mgpAPR, setSend, send, prices,
       mintWETH,
       swap,
       lockedReefiMGP,
-      rmgpSupply
+      rmgpSupply,
+      ymgpVmgpCurveAmount
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime22.jsxDEV("div", {
       className: "mt-4 text-sm text-gray-400",
@@ -38775,7 +38776,7 @@ GetMGPPage.displayName = "GetMGPPage";
 // src/pages/GetRMGPPage.tsx
 var import_react49 = __toESM(require_react(), 1);
 var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
-var GetRMGPPage = import_react49.memo(({ mgpAPR, depositMGP, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, buyRMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(Page, {
+var GetRMGPPage = import_react49.memo(({ mgpAPR, depositMGP, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpVmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, buyRMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(Page, {
   info: "MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.",
   children: [
     /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(SwapToken, {
@@ -38806,7 +38807,8 @@ var GetRMGPPage = import_react49.memo(({ mgpAPR, depositMGP, balances, setSend, 
       mintWETH,
       swap,
       lockedReefiMGP,
-      rmgpSupply
+      rmgpSupply,
+      ymgpVmgpCurveAmount
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime23.jsxDEV("div", {
       className: "mt-4 text-sm text-gray-400",
@@ -38887,7 +38889,7 @@ GetVMGPPage.displayName = "GetVMGPPage";
 // src/pages/GetYMGPPage.tsx
 var import_react51 = __toESM(require_react(), 1);
 var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
-var GetYMGPPage = import_react51.memo(({ balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, buyYMGP, depositRMGP, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(Page, {
+var GetYMGPPage = import_react51.memo(({ balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, buyYMGP, depositRMGP, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(Page, {
   info: "yMGP is backed 1:1 by rMGP. 1 yMGP can be redeemed for 0.75 rMGP. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield.",
   children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(SwapToken, {
     buy: buyYMGP,
@@ -38917,7 +38919,8 @@ var GetYMGPPage = import_react51.memo(({ balances, setSend, send, prices, ymgpMg
     mintWETH,
     swap,
     lockedReefiMGP,
-    rmgpSupply
+    rmgpSupply,
+    ymgpVmgpCurveAmount
   }, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 GetYMGPPage.displayName = "ConvertPage";
@@ -39770,7 +39773,7 @@ var QASection = () => {
 // src/pages/RedeemRMGPPage.tsx
 var import_react59 = __toESM(require_react(), 1);
 var jsx_dev_runtime34 = __toESM(require_jsx_dev_runtime(), 1);
-var RedeemRMGPPage = import_react59.memo(({ buyMGP, redeemRMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(Page, {
+var RedeemRMGPPage = import_react59.memo(({ buyMGP, redeemRMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, ymgpVmgpCurveAmount, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(Page, {
   info: ["rMGP can be redeemed for the underlying MGP through the withdrawal queue or swapped instantly at market rate via Curve.", "The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.", "Only 6 withdrawals can be processed through Magpie at once. If all slots are used, withdrawals will be added to the queue once a new slot is made available making worst case withdrawal time 120 days."],
   children: [
     /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(SwapToken, {
@@ -39801,7 +39804,8 @@ var RedeemRMGPPage = import_react59.memo(({ buyMGP, redeemRMGP, withdrawMGP, unl
       mintWETH,
       swap,
       lockedReefiMGP,
-      rmgpSupply
+      rmgpSupply,
+      ymgpVmgpCurveAmount
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
       className: "mt-4 flex justify-between text-sm text-gray-400",
@@ -39865,7 +39869,7 @@ RedeemRMGPPage.displayName = "RedeemMGPPage";
 // src/pages/RedeemYMGPPage.tsx
 var import_react60 = __toESM(require_react(), 1);
 var jsx_dev_runtime35 = __toESM(require_jsx_dev_runtime(), 1);
-var RedeemYMGPPage = import_react60.memo(({ buyRMGP, redeemYMGP: redeemYMGP2, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(Page, {
+var RedeemYMGPPage = import_react60.memo(({ buyRMGP, redeemYMGP: redeemYMGP2, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, ymgpVmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(Page, {
   info: ["yMGP can be redeemed for 75% of it's underlying rMGP instantly or swapped at market rate via Curve.", "The 25% withdraw fee is distributed to yMGP lockers."],
   children: [
     /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(SwapToken, {
@@ -39896,7 +39900,8 @@ var RedeemYMGPPage = import_react60.memo(({ buyRMGP, redeemYMGP: redeemYMGP2, wi
       mintWETH,
       swap,
       lockedReefiMGP,
-      rmgpSupply
+      rmgpSupply,
+      ymgpVmgpCurveAmount
     }, undefined, false, undefined, this),
     userPendingWithdraws > 0n ? /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(jsx_dev_runtime35.Fragment, {
       children: [
@@ -41406,5 +41411,5 @@ import_client.default.createRoot(document.querySelector("#root")).render(/* @__P
   children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=E123CE58FDBD77F964756E2164756E21
-//# sourceMappingURL=index-6gfzb980.js.map
+//# debugId=B06193238565244564756E2164756E21
+//# sourceMappingURL=index-5qk9c819.js.map

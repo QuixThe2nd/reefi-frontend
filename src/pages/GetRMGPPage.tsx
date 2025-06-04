@@ -22,6 +22,7 @@ interface Properties {
   rmgpMgpCurveAmount: bigint;
   mgpYmgpCurveAmount: bigint;
   ymgpRmgpCurveAmount: bigint;
+  ymgpVmgpCurveAmount: bigint;
   ymgpMgpCurveAmount: bigint;
   allowances: UseAllowances["allowances"];
   sendAmount: bigint;
@@ -29,15 +30,15 @@ interface Properties {
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
   buyRMGP: () => void;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
 }
 
-export const GetRMGPPage = memo(({ mgpAPR, depositMGP, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, buyRMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info="MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.">
-  <SwapToken buy={buyRMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Mint" nativeSwap={depositMGP} originalTokenIn="MGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} sendAmount={sendAmount} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} />
+export const GetRMGPPage = memo(({ mgpAPR, depositMGP, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpVmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, buyRMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info="MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.">
+  <SwapToken buy={buyRMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Mint" nativeSwap={depositMGP} originalTokenIn="MGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} sendAmount={sendAmount} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} />
   <div className="mt-4 text-sm text-gray-400">
     <div className="mb-1 flex justify-between">
       <span>Original APR</span>

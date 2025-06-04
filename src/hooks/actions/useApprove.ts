@@ -16,7 +16,7 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   writeContracts: UseContracts;
 }
 
-export const useApprove = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateAllowances, chain, clients, sendAmount, setConnectRequired, writeContracts }: Properties<Clients>): (_contract: "rMGP" | "yMGP" | "cMGP" | "odosRouter", _coin: Coins, _infinity: boolean) => Promise<void> => {
+export const useApprove = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateAllowances, chain, clients, sendAmount, setConnectRequired, writeContracts }: Properties<Clients>): (_contract: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _coin: Coins, _infinity: boolean) => Promise<void> => {
   const accountReference = useRef(account);
   const updateAllowancesReference = useRef(updateAllowances);
   const chainReference = useRef(chain);
@@ -53,10 +53,8 @@ export const useApprove = <Clients extends Record<Chains, WalletClient & PublicA
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
 
-  return useCallback(async (contract: "rMGP" | "yMGP" | "cMGP" | "odosRouter", coin: Coins, infinity: boolean): Promise<void> => {
-    if (clientsReference.current === undefined || !writeContractsReference.current || accountReference.current === undefined) {
-      setConnectRequiredReference.current(true); return;
-    }
+  return useCallback(async (contract: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", coin: Coins, infinity: boolean): Promise<void> => {
+    if (clientsReference.current === undefined || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
     const amount = infinity ? 2n ** 256n - 1n : sendAmountReference.current;
     await writeContractsReference.current[chainReference.current][coin].write.approve([contracts[chainReference.current][contract].address, amount], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     if (contract === "cMGP") updateAllowancesReference.current.curve[coin as "MGP" | "rMGP" | "yMGP"]();

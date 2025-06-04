@@ -28,20 +28,21 @@ interface Properties {
   mgpYmgpCurveAmount: bigint;
   ymgpRmgpCurveAmount: bigint;
   ymgpMgpCurveAmount: bigint;
+  ymgpVmgpCurveAmount: bigint;
   allowances: UseAllowances["allowances"];
   sendAmount: bigint;
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
 }
 
-export const RedeemRMGPPage = memo(({ buyMGP, redeemRMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info={["rMGP can be redeemed for the underlying MGP through the withdrawal queue or swapped instantly at market rate via Curve.", "The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.", "Only 6 withdrawals can be processed through Magpie at once. If all slots are used, withdrawals will be added to the queue once a new slot is made available making worst case withdrawal time 120 days."]}>
-  <SwapToken buy={buyMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Redeem via Queue" nativeSwap={redeemRMGP} originalTokenIn="rMGP" tokenOut="MGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} sendAmount={sendAmount} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} />
+export const RedeemRMGPPage = memo(({ buyMGP, redeemRMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, ymgpVmgpCurveAmount, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info={["rMGP can be redeemed for the underlying MGP through the withdrawal queue or swapped instantly at market rate via Curve.", "The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.", "Only 6 withdrawals can be processed through Magpie at once. If all slots are used, withdrawals will be added to the queue once a new slot is made available making worst case withdrawal time 120 days."]}>
+  <SwapToken buy={buyMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Redeem via Queue" nativeSwap={redeemRMGP} originalTokenIn="rMGP" tokenOut="MGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} sendAmount={sendAmount} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} />
   <div className="mt-4 flex justify-between text-sm text-gray-400">
     <span>Native Withdraw Time</span>
     <span>{unlockSchedule.length === 6 ? formatTime(Number(unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2) : formatTime(60 * 60 * 24 * 30 * 2)}</span>

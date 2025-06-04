@@ -23,13 +23,14 @@ interface Properties {
   mgpYmgpCurveAmount: bigint;
   ymgpRmgpCurveAmount: bigint;
   ymgpMgpCurveAmount: bigint;
+  ymgpVmgpCurveAmount: bigint;
   allowances: UseAllowances["allowances"];
   sendAmount: bigint;
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
   unlockSchedule: UseWithdraws["withdraws"]["unlockSchedule"];
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;
@@ -37,7 +38,7 @@ interface Properties {
   buyRMGPAndWithdraw: () => void;
 }
 
-export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, unlockSchedule, buyRMGPAndWithdraw }: Properties): ReactElement => {
+export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, ymgpVmgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, unlockSchedule, buyRMGPAndWithdraw }: Properties): ReactElement => {
   const burnRate = Number(rmgpSupply) / Number(lockedReefiMGP);
   const fixedYieldPercent = (Number(mgpRmgpCurveAmount) / Number(sendAmount) / burnRate - 1) * 100;
   const withdrawalTime = unlockSchedule.length === 6 ? Number(unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2;
@@ -67,6 +68,7 @@ export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, y
       mgpYmgpCurveAmount={mgpYmgpCurveAmount}
       ymgpRmgpCurveAmount={ymgpRmgpCurveAmount}
       ymgpMgpCurveAmount={ymgpMgpCurveAmount}
+      ymgpVmgpCurveAmount={ymgpVmgpCurveAmount}
       allowances={allowances}
       sendAmount={sendAmount}
       chain={chain}

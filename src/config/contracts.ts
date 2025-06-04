@@ -55,6 +55,8 @@ export const contracts = {
     cMGP: getContract({ abi: ABIs.cMGP, address: "0xD1465c3489Aa7Eac0e7f9907F93a684840a2F934" as const, client: publicClients[42_161] }),
     rMGP: getContract({ abi: ABIs.rMGP, address: "0x3788c8791d826254bAbd49b602C93008468D5695" as const, client: publicClients[42_161] }),
     vMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000" as const, client: publicClients[42_161] }),
+    lvMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000" as const, client: publicClients[42_161] }),
+    lyMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000" as const, client: publicClients[42_161] }),
     yMGP: getContract({ abi: ABIs.yMGP, address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9" as const, client: publicClients[42_161] })
   },
   56: {
@@ -71,6 +73,8 @@ export const contracts = {
     cMGP: getContract({ abi: ABIs.cMGP, address: "0x0000000000000000000000000000000000000000" as const, client: publicClients[56] }),
     rMGP: getContract({ abi: ABIs.rMGP, address: "0x0277517658a1dd3899bf926fCf6A633e549eB769" as const, client: publicClients[56] }),
     vMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000" as const, client: publicClients[56] }),
+    lvMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000" as const, client: publicClients[56] }),
+    lyMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000000" as const, client: publicClients[56] }),
     yMGP: getContract({ abi: ABIs.yMGP, address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb" as const, client: publicClients[56] })
   }
 } as const;

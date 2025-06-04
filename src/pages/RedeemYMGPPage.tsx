@@ -28,20 +28,21 @@ interface Properties {
   mgpYmgpCurveAmount: bigint;
   ymgpRmgpCurveAmount: bigint;
   ymgpMgpCurveAmount: bigint;
+  ymgpVmgpCurveAmount: bigint;
   allowances: UseAllowances["allowances"];
   sendAmount: bigint;
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
 }
 
-export const RedeemYMGPPage = memo(({ buyRMGP, redeemYMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info={["yMGP can be redeemed for 75% of it's underlying rMGP instantly or swapped at market rate via Curve.", "The 25% withdraw fee is distributed to yMGP lockers."]}>
-  <SwapToken buy={buyRMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Redeem" nativeSwap={redeemYMGP} originalTokenIn="yMGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} sendAmount={sendAmount} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} />
+export const RedeemYMGPPage = memo(({ buyRMGP, redeemYMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, ymgpVmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info={["yMGP can be redeemed for 75% of it's underlying rMGP instantly or swapped at market rate via Curve.", "The 25% withdraw fee is distributed to yMGP lockers."]}>
+  <SwapToken buy={buyRMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Redeem" nativeSwap={redeemYMGP} originalTokenIn="yMGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} sendAmount={sendAmount} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} />
   {userPendingWithdraws > 0n ? <>
     <h3 className="mt-4 text-base font-medium">Pending Withdraws</h3>
     <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>

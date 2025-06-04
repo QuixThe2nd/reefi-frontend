@@ -1,4 +1,4 @@
-import { aprToApy, formatEther } from "../utilities";
+import { aprToApy, formatEther, parseEther } from "../utilities";
 import { contracts, decimals, publicClients, type Coins } from "../config/contracts";
 import { useCallback, useEffect, useMemo } from "react";
 import { useStoredObject } from "./useStoredState";
@@ -22,6 +22,7 @@ interface Rewards {
   estimatedCompoundAmount: bigint;
   pendingRewards: Record<string, { address: `0x${string}`; rewards: bigint }>;
   unclaimedUserYield: bigint;
+  unclaimedUserVMGPYield: bigint;
 }
 
 interface UpdateRewards {
@@ -44,7 +45,7 @@ export interface UseRewards {
 }
 
 export const useRewards = ({ wallet, prices, balances, locked }: Properties): UseRewards => {
-  const [rewards, setRewards] = useStoredObject<Rewards>("rewards", { cmgpPoolAPY: 0, compoundRMGPGas: 0n, estimatedCompoundAmount: 0n, mgpAPR: 0, pendingRewards: {}, unclaimedUserYield: 0n });
+  const [rewards, setRewards] = useStoredObject<Rewards>("rewards", { cmgpPoolAPY: 0, compoundRMGPGas: 0n, estimatedCompoundAmount: 0n, mgpAPR: 0, pendingRewards: {}, unclaimedUserYield: 0n, unclaimedUserVMGPYield: parseEther(0.5) });
 
   const updateRewards: UpdateRewards = {
     cmgpPoolAPY: async () => {
@@ -82,9 +83,7 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
       });
       setRewards({ pendingRewards });
     },
-    unclaimedUserYield: () => contracts[wallet.chain].yMGP.read.unclaimedUserYield().then(unclaimedUserYield => {
-      setRewards({ unclaimedUserYield });
-    })
+    unclaimedUserYield: () => contracts[wallet.chain].yMGP.read.unclaimedUserYield().then(unclaimedUserYield => setRewards({ unclaimedUserYield }))
   };
 
   useEffect(() => {

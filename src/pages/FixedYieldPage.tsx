@@ -45,10 +45,9 @@ export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, y
   const annualizedYield = fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100;
 
   return <Page info={[
-    "Fixed Yield Strategy: Buy depegged rMGP with MGP, then immediately submit for withdrawal to earn guaranteed yield.",
-    "This strategy monetizes the rMGP depeg by capturing the difference between market price and the 90% burn rate.",
-    "The yield is fixed and known upfront, unlike variable staking yields that can change over time.",
-    "You must wait 60-120 days for withdrawals to process, during which your funds are locked."
+    "Swap MGP to rMGP under the peg, then immediately submit for withdrawal to earn guaranteed yield and wait 60-120 days.",
+    "This strategy monetizes the rMGP depeg by capturing the difference between market price and the burn rate.",
+    "The yield is fixed and known upfront, unlike variable staking yields that can change over time."
   ]}>
     <SwapToken
       buy={buyRMGPAndWithdraw}
@@ -118,17 +117,6 @@ export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, y
         <span>Fixed Yield APR</span>
         <span className="text-green-400">{annualizedYield.toFixed(2)}%</span>
       </div>
-    </div>
-
-    <div className="mt-6 rounded-xl border border-dashed border-blue-700 bg-gray-900/80 p-4">
-      <h3 className="mb-2 text-lg font-semibold text-blue-400">💡 Strategy Explanation</h3>
-      <p className="mb-2 text-sm text-gray-300">Earn fixed yield on your MGP and tighten the rMGP peg.</p>
-      <ul className="mb-2 list-inside list-disc text-xs text-gray-400">
-        <li><strong>Step 1:</strong> Buy rMGP under the peg using the Curve pool</li>
-        <li><strong>Step 2:</strong> Immediately submit rMGP for withdrawal through the native queue</li>
-        <li><strong>Step 3:</strong> Wait 60-120 days and receive the full backing value in MGP</li>
-        <li><strong>Result:</strong> Guaranteed profit (100% - purchase price) with fixed timeline</li>
-      </ul>
     </div>
   </Page>;
 });

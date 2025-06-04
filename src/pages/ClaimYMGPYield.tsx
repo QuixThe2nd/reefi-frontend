@@ -15,8 +15,8 @@ interface Properties {
   readonly ymgpSupply: bigint;
 }
 
-export const ClaimYieldComponent = ({ claimYMGPRewards, unclaimedUserYield, uncompoundedMGPYield, lockedYMGP, userLockedYMGP, ymgpHoldings, ymgpSupply }: Properties): ReactElement => <Page info={["Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.", "To claim pending MGP yield, compound rMGP yield."]}>
-  <h3 className="mb-1 text-base font-medium">Unclaimed Rewards</h3>
+export const ClaimYieldComponent = ({ claimYMGPRewards, unclaimedUserYield, uncompoundedMGPYield, lockedYMGP, userLockedYMGP, ymgpHoldings, ymgpSupply }: Properties): ReactElement => <Page info={["Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.", "To claim pending MGP yield, compound rMGP yield."]} noTopMargin={true}>
+  <h3 className="mt-2 mb-1 text-base font-medium">Unclaimed Rewards</h3>
   <div className="flex justify-between rounded-lg bg-gray-700/50 p-4">
     <div className="flex flex-col">
       <p className="text-lg font-medium">You: {formatNumber(formatEther(unclaimedUserYield, decimals.yMGP), 4)} rMGP</p>

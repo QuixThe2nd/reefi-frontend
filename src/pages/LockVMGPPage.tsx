@@ -9,13 +9,13 @@ interface Properties {
   vmgpBalance: bigint;
   setSend: (_send: bigint) => void;
   send: bigint;
-  lockYMGP: () => void;
+  lockVMGP: () => void;
   mgpAPR: number;
 }
 
-export const LockVMGPPage = memo(({ vmgpBalance, setSend, send, lockYMGP, mgpAPR }: Properties): ReactElement => <Page info={["vMGP can be locked to earn additional yield paid in yMGP. Locked vMGP is rented out to others who are willing to pay to vote for you."]}>
+export const LockVMGPPage = memo(({ vmgpBalance, setSend, send, lockVMGP, mgpAPR }: Properties): ReactElement => <Page info={["vMGP can be locked to earn additional yield paid in yMGP. Locked vMGP can't be voted with as it is rented to those willing to pay to vote for you."]}>
   <AmountInput balance={vmgpBalance} label="Lock vMGP" onChange={setSend} token={{ symbol: "vMGP" }} value={send} />
-  <Button className="w-full" onClick={lockYMGP} type="submit">Lock yMGP</Button>
+  <Button className="w-full" onClick={lockVMGP} type="submit">Lock yMGP</Button>
   <div className="mt-4 text-sm text-gray-400">
     <div className="mb-1 flex justify-between">
       <span>Base APY (Value Appreciation)</span>

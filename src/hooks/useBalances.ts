@@ -1,10 +1,11 @@
 import { contracts, publicClients, Coins } from "../config/contracts";
+import { parseEther } from "../utilities";
 import { useEffect } from "react";
 import { useStoredObject } from "./useStoredState";
 
 import { UseWallet } from "./useWallet";
 
-type Balances = Record<Coins | "ETH" | "curveMGP" | "curveRMGP" | "curveYMGP" | "ymgpHoldings", bigint>;
+type Balances = Record<Coins | "ETH" | "curveMGP" | "curveRMGP" | "curveYMGP" | "ymgpHoldings" | "vmgpHoldings", bigint>;
 type UpdateBalances = Record<keyof Balances, () => Promise<void>>;
 
 export type UseBalances = Readonly<{
@@ -13,7 +14,7 @@ export type UseBalances = Readonly<{
 }>;
 
 export const useBalances = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseBalances => {
-  const [balances, setBalances] = useStoredObject<Balances>("balances", { CKP: 0n, EGP: 0n, ETH: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, lyMGP: 0n, curveMGP: 0n, curveRMGP: 0n, curveYMGP: 0n, rMGP: 0n, vMGP: 0n, yMGP: 0n, ymgpHoldings: 0n });
+  const [balances, setBalances] = useStoredObject<Balances>("balances", { CKP: 0n, EGP: 0n, ETH: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, lyMGP: 0n, curveMGP: 0n, curveRMGP: 0n, curveYMGP: 0n, rMGP: 0n, vMGP: 0n, yMGP: 0n, ymgpHoldings: 0n, vmgpHoldings: parseEther(0.5), lvMGP: parseEther(0.5) });
 
   const updateBalances: UpdateBalances = {
     CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]).then(CKP => {

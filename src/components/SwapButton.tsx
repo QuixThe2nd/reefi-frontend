@@ -21,18 +21,19 @@ interface Properties {
   ymgpMgpCurveAmount: bigint;
   allowances: UseAllowances["allowances"];
   sendAmount: bigint;
+  ymgpVmgpCurveAmount: bigint;
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "ODOSRouter", _tokenIn: Coins, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
 }
 
-export const SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => {
-  if (tokenIn === "MGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "yMGP" || tokenIn === "yMGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "MGP") {
+export const SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, ymgpVmgpCurveAmount }: Properties): ReactElement => {
+  if (tokenIn === "MGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "yMGP" || tokenIn === "yMGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "MGP" || tokenIn === "yMGP" && tokenOut === "vMGP") {
     let nativeRate = 1;
     let curveAmount = 0n;
     if (tokenIn === "MGP" && tokenOut === "rMGP") {
@@ -44,7 +45,8 @@ export const SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpC
     } else if (tokenIn === "yMGP" && tokenOut === "rMGP") {
       nativeRate = 0.75;
       curveAmount = ymgpRmgpCurveAmount;
-    } else if (tokenIn === "rMGP" && tokenOut === "yMGP") curveAmount = rmgpYmgpCurveAmount;
+    } else if (tokenIn === "yMGP" && tokenOut === "vMGP") curveAmount = ymgpVmgpCurveAmount;
+    else if (tokenIn === "rMGP" && tokenOut === "yMGP") curveAmount = rmgpYmgpCurveAmount;
     return <div className="grid grid-cols-2 gap-2">
       <div>
         {tokenOut !== "MGP" && tokenIn !== "yMGP" && tokenOut !== "rMGP" && <TokenApproval allowance={allowances[tokenIn]} onApprove={infinity => {

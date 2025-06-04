@@ -81,7 +81,7 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote 
     "vMGP holders control all of Reefi's vlMGP voting power on Magpie governance proposals.",
     "Your voting power is amplified by Reefi's locked MGP position, giving you more influence per token.",
     "Vote multipliers are displayed as a minimum vote assuming all vMGP votes. If 50% of vMGP votes on a proposal, your vote multiplier doubles."
-  ]}>
+  ]} noTopMargin={true}>
     <div className="mb-6 rounded-lg bg-gray-700/50 p-4">
       <h3 className="mb-2 text-lg font-semibold">Your Voting Power</h3>
       <div className="grid grid-cols-2 gap-4 text-sm">

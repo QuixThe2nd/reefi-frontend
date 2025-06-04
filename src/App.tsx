@@ -37,6 +37,7 @@ import { GetRMGPPage } from "./pages/GetRMGPPage";
 import { GetYMGPPage } from "./pages/GetYMGPPage";
 import { Header } from "./components/Header";
 import { LockPage } from "./pages/LockYMGPPage";
+import { LockVMGPPage } from "./pages/LockVMGPPage";
 import { NotificationCard } from "./components/NotificationCard";
 import PegCard from "./components/PegCard";
 import { QASection } from "./components/Questions";
@@ -48,7 +49,6 @@ import { UnlockPage } from "./pages/UnlockPage";
 import { VotePage } from "./pages/VotePage";
 
 import { type EIP1193EventMap, type EIP1193RequestFn, type EIP1474Methods } from "viem";
-import { LockVMGPPage } from "./pages/LockVMGPPage";
 
 /*
  * Import { Web3Provider } from '@ethersproject/providers';

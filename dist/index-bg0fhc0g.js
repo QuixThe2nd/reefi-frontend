@@ -34426,7 +34426,7 @@ var ABIs = {
 };
 
 // src/config/contracts.ts
-var decimals = { CKP: 18, EGP: 18, ETH: 18, LTP: 18, MGP: 18, PNP: 18, WETH: 18, cMGP: 18, rMGP: 18, vMGP: 18, yMGP: 18, lyMGP: 18, lvMGP: 18 };
+var decimals = { CKP: 18, EGP: 18, ETH: 18, LTP: 18, MGP: 18, PNP: 18, WETH: 18, cMGP: 18, rMGP: 18, vMGP: 18, yMGP: 18, lyMGP: 18, lvMGP: 18, wrMGP: 18 };
 var coins = {
   CKP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: CKP_default },
   EGP: { bgColor: "bg-gray-600", color: "bg-gray-400", icon: EGP_default },
@@ -34439,7 +34439,8 @@ var coins = {
   vMGP: { bgColor: "bg-red-600", color: "bg-red-400", icon: vMGP_default },
   yMGP: { bgColor: "bg-yellow-600", color: "bg-yellow-400", icon: yMGP_default },
   lyMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP_default },
-  lvMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP_default }
+  lvMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP_default },
+  wrMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP_default }
 };
 var publicClients = {
   1: createPublicClient({ chain: mainnet, transport: webSocket("wss://eth.drpc.org") }),
@@ -34486,16 +34487,16 @@ var contracts = {
 };
 
 // src/contexts/GlobalContext.tsx
-var import_react31 = __toESM(require_react(), 1);
+var import_react32 = __toESM(require_react(), 1);
 
 // src/hooks/actions/useApprove.ts
 var import_react = __toESM(require_react(), 1);
-var useApprove = ({ account, updateAllowances, chain, clients, sendAmount, setConnectRequired, writeContracts }) => {
+var useApprove = ({ account, updateAllowances, chain, clients, send, setConnectRequired, writeContracts }) => {
   const accountReference = import_react.useRef(account);
   const updateAllowancesReference = import_react.useRef(updateAllowances);
   const chainReference = import_react.useRef(chain);
   const clientsReference = import_react.useRef(clients);
-  const sendAmountReference = import_react.useRef(sendAmount);
+  const sendReference = import_react.useRef(send);
   const setConnectRequiredReference = import_react.useRef(setConnectRequired);
   const writeContractsReference = import_react.useRef(writeContracts);
   import_react.useEffect(() => {
@@ -34511,8 +34512,8 @@ var useApprove = ({ account, updateAllowances, chain, clients, sendAmount, setCo
     clientsReference.current = clients;
   }, [clients]);
   import_react.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
+    sendReference.current = send;
+  }, [send]);
   import_react.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
@@ -34522,7 +34523,7 @@ var useApprove = ({ account, updateAllowances, chain, clients, sendAmount, setCo
   return import_react.useCallback(async (contract, coin, infinity) => {
     if (clientsReference.current === undefined || !writeContractsReference.current || accountReference.current === undefined)
       return setConnectRequiredReference.current(true);
-    const amount = infinity ? 2n ** 256n - 1n : sendAmountReference.current;
+    const amount = infinity ? 2n ** 256n - 1n : sendReference.current;
     await writeContractsReference.current[chainReference.current][coin].write.approve([contracts[chainReference.current][contract].address, amount], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     if (contract === "cMGP")
       updateAllowancesReference.current.curve[coin]();
@@ -34535,13 +34536,13 @@ var useApprove = ({ account, updateAllowances, chain, clients, sendAmount, setCo
 
 // src/hooks/actions/useBuyMGP.ts
 var import_react2 = __toESM(require_react(), 1);
-var useBuyMGP = ({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }) => {
+var useBuyMGP = ({ account, allowances, updateBalances, chain, clients, send, setConnectRequired, setError, writeContracts }) => {
   const accountReference = import_react2.useRef(account);
   const allowancesReference = import_react2.useRef(allowances);
   const updateBalancesReference = import_react2.useRef(updateBalances);
   const chainReference = import_react2.useRef(chain);
   const clientsReference = import_react2.useRef(clients);
-  const sendAmountReference = import_react2.useRef(sendAmount);
+  const sendReference = import_react2.useRef(send);
   const setConnectRequiredReference = import_react2.useRef(setConnectRequired);
   const setErrorReference = import_react2.useRef(setError);
   const writeContractsReference = import_react2.useRef(writeContracts);
@@ -34561,8 +34562,8 @@ var useBuyMGP = ({ account, allowances, updateBalances, chain, clients, sendAmou
     clientsReference.current = clients;
   }, [clients]);
   import_react2.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
+    sendReference.current = send;
+  }, [send]);
   import_react2.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
@@ -34577,11 +34578,11 @@ var useBuyMGP = ({ account, allowances, updateBalances, chain, clients, sendAmou
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.curve.rMGP < (sendAmountReference.current ?? 0n)) {
+    if (allowancesReference.current.curve.rMGP < (sendReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 0n, sendAmountReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 0n, sendReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.curveMGP();
@@ -34591,13 +34592,13 @@ var useBuyMGP = ({ account, allowances, updateBalances, chain, clients, sendAmou
 
 // src/hooks/actions/useBuyRMGP.ts
 var import_react3 = __toESM(require_react(), 1);
-var useBuyRMGP = ({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }) => {
+var useBuyRMGP = ({ account, allowances, updateBalances, chain, clients, send, setConnectRequired, setError, writeContracts }) => {
   const accountReference = import_react3.useRef(account);
   const allowancesReference = import_react3.useRef(allowances);
   const updateBalancesReference = import_react3.useRef(updateBalances);
   const chainReference = import_react3.useRef(chain);
   const clientsReference = import_react3.useRef(clients);
-  const sendAmountReference = import_react3.useRef(sendAmount);
+  const sendReference = import_react3.useRef(send);
   const setConnectRequiredReference = import_react3.useRef(setConnectRequired);
   const setErrorReference = import_react3.useRef(setError);
   const writeContractsReference = import_react3.useRef(writeContracts);
@@ -34617,8 +34618,8 @@ var useBuyRMGP = ({ account, allowances, updateBalances, chain, clients, sendAmo
     clientsReference.current = clients;
   }, [clients]);
   import_react3.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
+    sendReference.current = send;
+  }, [send]);
   import_react3.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
@@ -34633,11 +34634,11 @@ var useBuyRMGP = ({ account, allowances, updateBalances, chain, clients, sendAmo
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.curve.MGP < (sendAmountReference.current ?? 0n)) {
+    if (allowancesReference.current.curve.MGP < (sendReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 1n, sendAmountReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 1n, sendReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.curveMGP();
@@ -34645,55 +34646,62 @@ var useBuyRMGP = ({ account, allowances, updateBalances, chain, clients, sendAmo
   }, []);
 };
 
-// src/hooks/actions/useBuyYMGP.ts
+// src/hooks/actions/useBuyRMGPAndWithdraw.ts
 var import_react4 = __toESM(require_react(), 1);
-var useBuyYMGP = ({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }) => {
-  const accountReference = import_react4.useRef(account);
-  const allowancesReference = import_react4.useRef(allowances);
-  const updateBalancesReference = import_react4.useRef(updateBalances);
-  const chainReference = import_react4.useRef(chain);
-  const clientsReference = import_react4.useRef(clients);
-  const sendAmountReference = import_react4.useRef(sendAmount);
-  const setConnectRequiredReference = import_react4.useRef(setConnectRequired);
-  const setErrorReference = import_react4.useRef(setError);
-  const writeContractsReference = import_react4.useRef(writeContracts);
-  import_react4.useEffect(() => {
+var useBuyRMGPAndWithdraw = ({ buyRMGP, withdrawMGP }) => import_react4.useCallback(async () => {
+  await buyRMGP();
+  await withdrawMGP();
+}, []);
+
+// src/hooks/actions/useBuyYMGP.ts
+var import_react5 = __toESM(require_react(), 1);
+var useBuyYMGP = ({ account, allowances, updateBalances, chain, clients, send, setConnectRequired, setError, writeContracts }) => {
+  const accountReference = import_react5.useRef(account);
+  const allowancesReference = import_react5.useRef(allowances);
+  const updateBalancesReference = import_react5.useRef(updateBalances);
+  const chainReference = import_react5.useRef(chain);
+  const clientsReference = import_react5.useRef(clients);
+  const sendReference = import_react5.useRef(send);
+  const setConnectRequiredReference = import_react5.useRef(setConnectRequired);
+  const setErrorReference = import_react5.useRef(setError);
+  const writeContractsReference = import_react5.useRef(writeContracts);
+  import_react5.useEffect(() => {
     accountReference.current = account;
   }, [account]);
-  import_react4.useEffect(() => {
+  import_react5.useEffect(() => {
     allowancesReference.current = allowances;
   }, [allowances]);
-  import_react4.useEffect(() => {
+  import_react5.useEffect(() => {
     updateBalancesReference.current = updateBalances;
   }, [updateBalances]);
-  import_react4.useEffect(() => {
+  import_react5.useEffect(() => {
     chainReference.current = chain;
   }, [chain]);
-  import_react4.useEffect(() => {
+  import_react5.useEffect(() => {
     clientsReference.current = clients;
   }, [clients]);
-  import_react4.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
-  import_react4.useEffect(() => {
+  import_react5.useEffect(() => {
+    sendReference.current = send;
+  }, [send]);
+  import_react5.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
-  import_react4.useEffect(() => {
+  import_react5.useEffect(() => {
     setErrorReference.current = setError;
   }, [setError]);
-  import_react4.useEffect(() => {
+  import_react5.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
-  return import_react4.useCallback(async () => {
+  return import_react5.useCallback(async () => {
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.curve.rMGP < (sendAmountReference.current ?? 0n)) {
+    if (allowancesReference.current.curve.rMGP < (sendReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 2n, sendAmountReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 2n, sendReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.yMGP();
     updateBalancesReference.current.curveRMGP();
@@ -34702,28 +34710,28 @@ var useBuyYMGP = ({ account, allowances, updateBalances, chain, clients, sendAmo
 };
 
 // src/hooks/actions/useClaimYMGPRewards.ts
-var import_react5 = __toESM(require_react(), 1);
+var import_react6 = __toESM(require_react(), 1);
 var useClaimYMGPRewards = ({ account, chain, clients, setConnectRequired, updateUnclaimedUserYield, writeContracts }) => {
-  const accountReference = import_react5.useRef(account), chainReference = import_react5.useRef(chain), clientsReference = import_react5.useRef(clients), setConnectRequiredReference = import_react5.useRef(setConnectRequired), updateUnclaimedUserYieldReference = import_react5.useRef(updateUnclaimedUserYield), writeContractsReference = import_react5.useRef(writeContracts);
-  import_react5.useEffect(() => {
+  const accountReference = import_react6.useRef(account), chainReference = import_react6.useRef(chain), clientsReference = import_react6.useRef(clients), setConnectRequiredReference = import_react6.useRef(setConnectRequired), updateUnclaimedUserYieldReference = import_react6.useRef(updateUnclaimedUserYield), writeContractsReference = import_react6.useRef(writeContracts);
+  import_react6.useEffect(() => {
     accountReference.current = account;
   }, [account]);
-  import_react5.useEffect(() => {
+  import_react6.useEffect(() => {
     chainReference.current = chain;
   }, [chain]);
-  import_react5.useEffect(() => {
+  import_react6.useEffect(() => {
     clientsReference.current = clients;
   }, [clients]);
-  import_react5.useEffect(() => {
+  import_react6.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
-  import_react5.useEffect(() => {
+  import_react6.useEffect(() => {
     updateUnclaimedUserYieldReference.current = updateUnclaimedUserYield;
   }, [updateUnclaimedUserYield]);
-  import_react5.useEffect(() => {
+  import_react6.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
-  return import_react5.useCallback(async () => {
+  return import_react6.useCallback(async () => {
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true);
       return;
@@ -34734,53 +34742,53 @@ var useClaimYMGPRewards = ({ account, chain, clients, setConnectRequired, update
 };
 
 // src/hooks/actions/useCompoundRMGP.ts
-var import_react6 = __toESM(require_react(), 1);
+var import_react7 = __toESM(require_react(), 1);
 var useCompoundRMGP = ({ account, updateBalances, chain, clients, setConnectRequired, updateSupplies, updatePendingRewards, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, writeContracts }) => {
-  const accountReference = import_react6.useRef(account);
-  const updateBalancesReference = import_react6.useRef(updateBalances);
-  const chainReference = import_react6.useRef(chain);
-  const clientsReference = import_react6.useRef(clients);
-  const setConnectRequiredReference = import_react6.useRef(setConnectRequired);
-  const updateSuppliesReference = import_react6.useRef(updateSupplies);
-  const updatePendingRewardsReference = import_react6.useRef(updatePendingRewards);
-  const updateReefiLockedMGPReference = import_react6.useRef(updateReefiLockedMGP);
-  const updateTotalLockedMGPReference = import_react6.useRef(updateTotalLockedMGP);
-  const updateUnclaimedUserYieldReference = import_react6.useRef(updateUnclaimedUserYield);
-  const writeContractsReference = import_react6.useRef(writeContracts);
-  import_react6.useEffect(() => {
+  const accountReference = import_react7.useRef(account);
+  const updateBalancesReference = import_react7.useRef(updateBalances);
+  const chainReference = import_react7.useRef(chain);
+  const clientsReference = import_react7.useRef(clients);
+  const setConnectRequiredReference = import_react7.useRef(setConnectRequired);
+  const updateSuppliesReference = import_react7.useRef(updateSupplies);
+  const updatePendingRewardsReference = import_react7.useRef(updatePendingRewards);
+  const updateReefiLockedMGPReference = import_react7.useRef(updateReefiLockedMGP);
+  const updateTotalLockedMGPReference = import_react7.useRef(updateTotalLockedMGP);
+  const updateUnclaimedUserYieldReference = import_react7.useRef(updateUnclaimedUserYield);
+  const writeContractsReference = import_react7.useRef(writeContracts);
+  import_react7.useEffect(() => {
     accountReference.current = account;
   }, [account]);
-  import_react6.useEffect(() => {
+  import_react7.useEffect(() => {
     updateBalancesReference.current = updateBalances;
   }, [updateBalances]);
-  import_react6.useEffect(() => {
+  import_react7.useEffect(() => {
     chainReference.current = chain;
   }, [chain]);
-  import_react6.useEffect(() => {
+  import_react7.useEffect(() => {
     clientsReference.current = clients;
   }, [clients]);
-  import_react6.useEffect(() => {
+  import_react7.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
-  import_react6.useEffect(() => {
+  import_react7.useEffect(() => {
     updateSuppliesReference.current = updateSupplies;
   }, [updateSupplies]);
-  import_react6.useEffect(() => {
+  import_react7.useEffect(() => {
     updatePendingRewardsReference.current = updatePendingRewards;
   }, [updatePendingRewards]);
-  import_react6.useEffect(() => {
+  import_react7.useEffect(() => {
     updateReefiLockedMGPReference.current = updateReefiLockedMGP;
   }, [updateReefiLockedMGP]);
-  import_react6.useEffect(() => {
+  import_react7.useEffect(() => {
     updateTotalLockedMGPReference.current = updateTotalLockedMGP;
   }, [updateTotalLockedMGP]);
-  import_react6.useEffect(() => {
+  import_react7.useEffect(() => {
     updateUnclaimedUserYieldReference.current = updateUnclaimedUserYield;
   }, [updateUnclaimedUserYield]);
-  import_react6.useEffect(() => {
+  import_react7.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
-  return import_react6.useCallback(async () => {
+  return import_react7.useCallback(async () => {
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true);
       return;
@@ -34796,75 +34804,16 @@ var useCompoundRMGP = ({ account, updateBalances, chain, clients, setConnectRequ
 };
 
 // src/hooks/actions/useConvertMGP.ts
-var import_react7 = __toESM(require_react(), 1);
-var useConvertMGP = ({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }) => {
-  const accountReference = import_react7.useRef(account);
-  const allowancesReference = import_react7.useRef(allowances);
-  const updateBalancesReference = import_react7.useRef(updateBalances);
-  const chainReference = import_react7.useRef(chain);
-  const clientsReference = import_react7.useRef(clients);
-  const sendAmountReference = import_react7.useRef(sendAmount);
-  const setConnectRequiredReference = import_react7.useRef(setConnectRequired);
-  const setErrorReference = import_react7.useRef(setError);
-  const writeContractsReference = import_react7.useRef(writeContracts);
-  import_react7.useEffect(() => {
-    accountReference.current = account;
-  }, [account]);
-  import_react7.useEffect(() => {
-    allowancesReference.current = allowances;
-  }, [allowances]);
-  import_react7.useEffect(() => {
-    updateBalancesReference.current = updateBalances;
-  }, [updateBalances]);
-  import_react7.useEffect(() => {
-    chainReference.current = chain;
-  }, [chain]);
-  import_react7.useEffect(() => {
-    clientsReference.current = clients;
-  }, [clients]);
-  import_react7.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
-  import_react7.useEffect(() => {
-    setConnectRequiredReference.current = setConnectRequired;
-  }, [setConnectRequired]);
-  import_react7.useEffect(() => {
-    setErrorReference.current = setError;
-  }, [setError]);
-  import_react7.useEffect(() => {
-    writeContractsReference.current = writeContracts;
-  }, [writeContracts]);
-  return import_react7.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
-      setConnectRequiredReference.current(true);
-      return;
-    }
-    if (allowancesReference.current.curve.rMGP < (sendAmountReference.current ?? 0n)) {
-      setErrorReference.current("Allowance too low");
-      return;
-    }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 2n, sendAmountReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    updateBalancesReference.current.rMGP();
-    updateBalancesReference.current.yMGP();
-    updateBalancesReference.current.curveRMGP();
-    updateBalancesReference.current.curveYMGP();
-  }, []);
-};
-
-// src/hooks/actions/useDepositMGP.ts
 var import_react8 = __toESM(require_react(), 1);
-var useDepositMGP = ({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, updateSupplies, updateReefiLockedMGP, updateTotalLockedMGP, writeContracts }) => {
+var useConvertMGP = ({ account, allowances, updateBalances, chain, clients, send, setConnectRequired, setError, writeContracts }) => {
   const accountReference = import_react8.useRef(account);
   const allowancesReference = import_react8.useRef(allowances);
   const updateBalancesReference = import_react8.useRef(updateBalances);
   const chainReference = import_react8.useRef(chain);
   const clientsReference = import_react8.useRef(clients);
-  const sendAmountReference = import_react8.useRef(sendAmount);
+  const sendReference = import_react8.useRef(send);
   const setConnectRequiredReference = import_react8.useRef(setConnectRequired);
   const setErrorReference = import_react8.useRef(setError);
-  const updateSuppliesReference = import_react8.useRef(updateSupplies);
-  const updateReefiLockedMGPReference = import_react8.useRef(updateReefiLockedMGP);
-  const updateTotalLockedMGPReference = import_react8.useRef(updateTotalLockedMGP);
   const writeContractsReference = import_react8.useRef(writeContracts);
   import_react8.useEffect(() => {
     accountReference.current = account;
@@ -34882,23 +34831,14 @@ var useDepositMGP = ({ account, allowances, updateBalances, chain, clients, send
     clientsReference.current = clients;
   }, [clients]);
   import_react8.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
+    sendReference.current = send;
+  }, [send]);
   import_react8.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
   import_react8.useEffect(() => {
     setErrorReference.current = setError;
   }, [setError]);
-  import_react8.useEffect(() => {
-    updateSuppliesReference.current = updateSupplies;
-  }, [updateSupplies]);
-  import_react8.useEffect(() => {
-    updateReefiLockedMGPReference.current = updateReefiLockedMGP;
-  }, [updateReefiLockedMGP]);
-  import_react8.useEffect(() => {
-    updateTotalLockedMGPReference.current = updateTotalLockedMGP;
-  }, [updateTotalLockedMGP]);
   import_react8.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
@@ -34907,33 +34847,32 @@ var useDepositMGP = ({ account, allowances, updateBalances, chain, clients, send
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.MGP < (sendAmountReference.current ?? 0n)) {
+    if (allowancesReference.current.curve.rMGP < (sendReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].rMGP.write.deposit([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    updateBalancesReference.current.MGP();
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 2n, sendReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.rMGP();
-    updateSuppliesReference.current.MGP();
-    updateSuppliesReference.current.rMGP();
-    updateTotalLockedMGPReference.current();
-    updateReefiLockedMGPReference.current();
+    updateBalancesReference.current.yMGP();
+    updateBalancesReference.current.curveRMGP();
+    updateBalancesReference.current.curveYMGP();
   }, []);
 };
 
-// src/hooks/actions/useDepositRMGP.ts
+// src/hooks/actions/useDepositMGP.ts
 var import_react9 = __toESM(require_react(), 1);
-var useDepositRMGP = ({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, updateSupplies, updateYMGPHoldings, writeContracts }) => {
+var useDepositMGP = ({ account, allowances, updateBalances, chain, clients, send, setConnectRequired, setError, updateSupplies, updateReefiLockedMGP, updateTotalLockedMGP, writeContracts }) => {
   const accountReference = import_react9.useRef(account);
   const allowancesReference = import_react9.useRef(allowances);
   const updateBalancesReference = import_react9.useRef(updateBalances);
   const chainReference = import_react9.useRef(chain);
   const clientsReference = import_react9.useRef(clients);
-  const sendAmountReference = import_react9.useRef(sendAmount);
+  const sendReference = import_react9.useRef(send);
   const setConnectRequiredReference = import_react9.useRef(setConnectRequired);
   const setErrorReference = import_react9.useRef(setError);
   const updateSuppliesReference = import_react9.useRef(updateSupplies);
-  const updateYMGPHoldingsReference = import_react9.useRef(updateYMGPHoldings);
+  const updateReefiLockedMGPReference = import_react9.useRef(updateReefiLockedMGP);
+  const updateTotalLockedMGPReference = import_react9.useRef(updateTotalLockedMGP);
   const writeContractsReference = import_react9.useRef(writeContracts);
   import_react9.useEffect(() => {
     accountReference.current = account;
@@ -34951,8 +34890,8 @@ var useDepositRMGP = ({ account, allowances, updateBalances, chain, clients, sen
     clientsReference.current = clients;
   }, [clients]);
   import_react9.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
+    sendReference.current = send;
+  }, [send]);
   import_react9.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
@@ -34963,8 +34902,11 @@ var useDepositRMGP = ({ account, allowances, updateBalances, chain, clients, sen
     updateSuppliesReference.current = updateSupplies;
   }, [updateSupplies]);
   import_react9.useEffect(() => {
-    updateYMGPHoldingsReference.current = updateYMGPHoldings;
-  }, [updateYMGPHoldings]);
+    updateReefiLockedMGPReference.current = updateReefiLockedMGP;
+  }, [updateReefiLockedMGP]);
+  import_react9.useEffect(() => {
+    updateTotalLockedMGPReference.current = updateTotalLockedMGP;
+  }, [updateTotalLockedMGP]);
   import_react9.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
@@ -34973,11 +34915,77 @@ var useDepositRMGP = ({ account, allowances, updateBalances, chain, clients, sen
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.rMGP < (sendAmountReference.current ?? 0n)) {
+    if (allowancesReference.current.MGP < (sendReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].rMGP.write.deposit([sendReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    updateBalancesReference.current.MGP();
+    updateBalancesReference.current.rMGP();
+    updateSuppliesReference.current.MGP();
+    updateSuppliesReference.current.rMGP();
+    updateTotalLockedMGPReference.current();
+    updateReefiLockedMGPReference.current();
+  }, []);
+};
+
+// src/hooks/actions/useDepositRMGP.ts
+var import_react10 = __toESM(require_react(), 1);
+var useDepositRMGP = ({ account, allowances, updateBalances, chain, clients, send, setConnectRequired, setError, updateSupplies, updateYMGPHoldings, writeContracts }) => {
+  const accountReference = import_react10.useRef(account);
+  const allowancesReference = import_react10.useRef(allowances);
+  const updateBalancesReference = import_react10.useRef(updateBalances);
+  const chainReference = import_react10.useRef(chain);
+  const clientsReference = import_react10.useRef(clients);
+  const sendReference = import_react10.useRef(send);
+  const setConnectRequiredReference = import_react10.useRef(setConnectRequired);
+  const setErrorReference = import_react10.useRef(setError);
+  const updateSuppliesReference = import_react10.useRef(updateSupplies);
+  const updateYMGPHoldingsReference = import_react10.useRef(updateYMGPHoldings);
+  const writeContractsReference = import_react10.useRef(writeContracts);
+  import_react10.useEffect(() => {
+    accountReference.current = account;
+  }, [account]);
+  import_react10.useEffect(() => {
+    allowancesReference.current = allowances;
+  }, [allowances]);
+  import_react10.useEffect(() => {
+    updateBalancesReference.current = updateBalances;
+  }, [updateBalances]);
+  import_react10.useEffect(() => {
+    chainReference.current = chain;
+  }, [chain]);
+  import_react10.useEffect(() => {
+    clientsReference.current = clients;
+  }, [clients]);
+  import_react10.useEffect(() => {
+    sendReference.current = send;
+  }, [send]);
+  import_react10.useEffect(() => {
+    setConnectRequiredReference.current = setConnectRequired;
+  }, [setConnectRequired]);
+  import_react10.useEffect(() => {
+    setErrorReference.current = setError;
+  }, [setError]);
+  import_react10.useEffect(() => {
+    updateSuppliesReference.current = updateSupplies;
+  }, [updateSupplies]);
+  import_react10.useEffect(() => {
+    updateYMGPHoldingsReference.current = updateYMGPHoldings;
+  }, [updateYMGPHoldings]);
+  import_react10.useEffect(() => {
+    writeContractsReference.current = writeContracts;
+  }, [writeContracts]);
+  return import_react10.useCallback(async () => {
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
+    if (allowancesReference.current.rMGP < (sendReference.current ?? 0n)) {
+      setErrorReference.current("Allowance too low");
+      return;
+    }
+    await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.yMGP();
     updateSuppliesReference.current.rMGP();
@@ -34987,88 +34995,41 @@ var useDepositRMGP = ({ account, allowances, updateBalances, chain, clients, sen
 };
 
 // src/hooks/actions/useLockYMGP.ts
-var import_react10 = __toESM(require_react(), 1);
-var useLockYMGP = ({ account, chain, clients, sendAmount, setConnectRequired, updateSupplies, updateTotalLockedYMGP, updateUserLockedYMGP, writeContracts }) => {
-  const accountReference = import_react10.useRef(account);
-  const chainReference = import_react10.useRef(chain);
-  const clientsReference = import_react10.useRef(clients);
-  const sendAmountReference = import_react10.useRef(sendAmount);
-  const setConnectRequiredReference = import_react10.useRef(setConnectRequired);
-  const updateSuppliesReference = import_react10.useRef(updateSupplies);
-  const updateTotalLockedYMGPReference = import_react10.useRef(updateTotalLockedYMGP);
-  const updateUserLockedYMGPReference = import_react10.useRef(updateUserLockedYMGP);
-  const writeContractsReference = import_react10.useRef(writeContracts);
-  import_react10.useEffect(() => {
-    accountReference.current = account;
-  }, [account]);
-  import_react10.useEffect(() => {
-    chainReference.current = chain;
-  }, [chain]);
-  import_react10.useEffect(() => {
-    clientsReference.current = clients;
-  }, [clients]);
-  import_react10.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
-  import_react10.useEffect(() => {
-    setConnectRequiredReference.current = setConnectRequired;
-  }, [setConnectRequired]);
-  import_react10.useEffect(() => {
-    updateSuppliesReference.current = updateSupplies;
-  }, [updateSupplies]);
-  import_react10.useEffect(() => {
-    updateTotalLockedYMGPReference.current = updateTotalLockedYMGP;
-  }, [updateTotalLockedYMGP]);
-  import_react10.useEffect(() => {
-    updateUserLockedYMGPReference.current = updateUserLockedYMGP;
-  }, [updateUserLockedYMGP]);
-  import_react10.useEffect(() => {
-    writeContractsReference.current = writeContracts;
-  }, [writeContracts]);
-  return import_react10.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
-      setConnectRequiredReference.current(true);
-      return;
-    }
-    await writeContractsReference.current[chainReference.current].yMGP.write.lock([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    updateSuppliesReference.current.yMGP();
-    updateTotalLockedYMGPReference.current();
-    updateUserLockedYMGPReference.current();
-  }, []);
-};
-
-// src/hooks/actions/useMintWETH.ts
 var import_react11 = __toESM(require_react(), 1);
-var useMintWETH = ({ account, allowances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }) => {
+var useLockYMGP = ({ account, chain, clients, send, setConnectRequired, updateSupplies, updateTotalLockedYMGP, updateUserLockedYMGP, writeContracts }) => {
   const accountReference = import_react11.useRef(account);
-  const allowancesReference = import_react11.useRef(allowances);
   const chainReference = import_react11.useRef(chain);
   const clientsReference = import_react11.useRef(clients);
-  const sendAmountReference = import_react11.useRef(sendAmount);
+  const sendReference = import_react11.useRef(send);
   const setConnectRequiredReference = import_react11.useRef(setConnectRequired);
-  const setErrorReference = import_react11.useRef(setError);
+  const updateSuppliesReference = import_react11.useRef(updateSupplies);
+  const updateTotalLockedYMGPReference = import_react11.useRef(updateTotalLockedYMGP);
+  const updateUserLockedYMGPReference = import_react11.useRef(updateUserLockedYMGP);
   const writeContractsReference = import_react11.useRef(writeContracts);
   import_react11.useEffect(() => {
     accountReference.current = account;
   }, [account]);
   import_react11.useEffect(() => {
-    allowancesReference.current = allowances;
-  }, [allowances]);
-  import_react11.useEffect(() => {
     chainReference.current = chain;
   }, [chain]);
   import_react11.useEffect(() => {
     clientsReference.current = clients;
   }, [clients]);
   import_react11.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
+    sendReference.current = send;
+  }, [send]);
   import_react11.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
   import_react11.useEffect(() => {
-    setErrorReference.current = setError;
-  }, [setError]);
+    updateSuppliesReference.current = updateSupplies;
+  }, [updateSupplies]);
+  import_react11.useEffect(() => {
+    updateTotalLockedYMGPReference.current = updateTotalLockedYMGP;
+  }, [updateTotalLockedYMGP]);
+  import_react11.useEffect(() => {
+    updateUserLockedYMGPReference.current = updateUserLockedYMGP;
+  }, [updateUserLockedYMGP]);
   import_react11.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
@@ -35077,38 +35038,30 @@ var useMintWETH = ({ account, allowances, chain, clients, sendAmount, setConnect
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.MGP < (sendAmountReference.current ?? 0n)) {
-      setErrorReference.current("Allowance too low");
-      return;
-    }
-    await writeContractsReference.current[chainReference.current].WETH.write.deposit({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain, value: sendAmountReference.current });
+    await writeContractsReference.current[chainReference.current].yMGP.write.lock([sendReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    updateSuppliesReference.current.yMGP();
+    updateTotalLockedYMGPReference.current();
+    updateUserLockedYMGPReference.current();
   }, []);
 };
 
-// src/hooks/actions/useRedeemRMGP.ts
+// src/hooks/actions/useMintWETH.ts
 var import_react12 = __toESM(require_react(), 1);
-var useRedeemRMGP = ({ account, updateBalances, chain, clients, sendAmount, setConnectRequired, updateSupplies, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, updateUnlockSchedule, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }) => {
+var useMintWETH = ({ account, allowances, chain, clients, send, setConnectRequired, setError, writeContracts }) => {
   const accountReference = import_react12.useRef(account);
-  const updateBalancesReference = import_react12.useRef(updateBalances);
+  const allowancesReference = import_react12.useRef(allowances);
   const chainReference = import_react12.useRef(chain);
   const clientsReference = import_react12.useRef(clients);
-  const sendAmountReference = import_react12.useRef(sendAmount);
+  const sendReference = import_react12.useRef(send);
   const setConnectRequiredReference = import_react12.useRef(setConnectRequired);
-  const updateSuppliesReference = import_react12.useRef(updateSupplies);
-  const updateReefiLockedMGPReference = import_react12.useRef(updateReefiLockedMGP);
-  const updateTotalLockedMGPReference = import_react12.useRef(updateTotalLockedMGP);
-  const updateUnclaimedUserYieldReference = import_react12.useRef(updateUnclaimedUserYield);
-  const updateUnlockScheduleReference = import_react12.useRef(updateUnlockSchedule);
-  const updateUnsubmittedWithdrawsReference = import_react12.useRef(updateUnsubmittedWithdraws);
-  const updateUserPendingWithdrawsReference = import_react12.useRef(updateUserPendingWithdraws);
-  const updateUserWithdrawableReference = import_react12.useRef(updateUserWithdrawable);
+  const setErrorReference = import_react12.useRef(setError);
   const writeContractsReference = import_react12.useRef(writeContracts);
   import_react12.useEffect(() => {
     accountReference.current = account;
   }, [account]);
   import_react12.useEffect(() => {
-    updateBalancesReference.current = updateBalances;
-  }, [updateBalances]);
+    allowancesReference.current = allowances;
+  }, [allowances]);
   import_react12.useEffect(() => {
     chainReference.current = chain;
   }, [chain]);
@@ -35116,35 +35069,14 @@ var useRedeemRMGP = ({ account, updateBalances, chain, clients, sendAmount, setC
     clientsReference.current = clients;
   }, [clients]);
   import_react12.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
+    sendReference.current = send;
+  }, [send]);
   import_react12.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
   import_react12.useEffect(() => {
-    updateSuppliesReference.current = updateSupplies;
-  }, [updateSupplies]);
-  import_react12.useEffect(() => {
-    updateReefiLockedMGPReference.current = updateReefiLockedMGP;
-  }, [updateReefiLockedMGP]);
-  import_react12.useEffect(() => {
-    updateTotalLockedMGPReference.current = updateTotalLockedMGP;
-  }, [updateTotalLockedMGP]);
-  import_react12.useEffect(() => {
-    updateUnclaimedUserYieldReference.current = updateUnclaimedUserYield;
-  }, [updateUnclaimedUserYield]);
-  import_react12.useEffect(() => {
-    updateUnlockScheduleReference.current = updateUnlockSchedule;
-  }, [updateUnlockSchedule]);
-  import_react12.useEffect(() => {
-    updateUnsubmittedWithdrawsReference.current = updateUnsubmittedWithdraws;
-  }, [updateUnsubmittedWithdraws]);
-  import_react12.useEffect(() => {
-    updateUserPendingWithdrawsReference.current = updateUserPendingWithdraws;
-  }, [updateUserPendingWithdraws]);
-  import_react12.useEffect(() => {
-    updateUserWithdrawableReference.current = updateUserWithdrawable;
-  }, [updateUserWithdrawable]);
+    setErrorReference.current = setError;
+  }, [setError]);
   import_react12.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
@@ -35153,7 +35085,83 @@ var useRedeemRMGP = ({ account, updateBalances, chain, clients, sendAmount, setC
       setConnectRequiredReference.current(true);
       return;
     }
-    await writeContractsReference.current[chainReference.current].rMGP.write.startUnlock([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    if (allowancesReference.current.MGP < (sendReference.current ?? 0n)) {
+      setErrorReference.current("Allowance too low");
+      return;
+    }
+    await writeContractsReference.current[chainReference.current].WETH.write.deposit({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain, value: sendReference.current });
+  }, []);
+};
+
+// src/hooks/actions/useRedeemRMGP.ts
+var import_react13 = __toESM(require_react(), 1);
+var useRedeemRMGP = ({ account, updateBalances, chain, clients, send, setConnectRequired, updateSupplies, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, updateUnlockSchedule, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }) => {
+  const accountReference = import_react13.useRef(account);
+  const updateBalancesReference = import_react13.useRef(updateBalances);
+  const chainReference = import_react13.useRef(chain);
+  const clientsReference = import_react13.useRef(clients);
+  const sendReference = import_react13.useRef(send);
+  const setConnectRequiredReference = import_react13.useRef(setConnectRequired);
+  const updateSuppliesReference = import_react13.useRef(updateSupplies);
+  const updateReefiLockedMGPReference = import_react13.useRef(updateReefiLockedMGP);
+  const updateTotalLockedMGPReference = import_react13.useRef(updateTotalLockedMGP);
+  const updateUnclaimedUserYieldReference = import_react13.useRef(updateUnclaimedUserYield);
+  const updateUnlockScheduleReference = import_react13.useRef(updateUnlockSchedule);
+  const updateUnsubmittedWithdrawsReference = import_react13.useRef(updateUnsubmittedWithdraws);
+  const updateUserPendingWithdrawsReference = import_react13.useRef(updateUserPendingWithdraws);
+  const updateUserWithdrawableReference = import_react13.useRef(updateUserWithdrawable);
+  const writeContractsReference = import_react13.useRef(writeContracts);
+  import_react13.useEffect(() => {
+    accountReference.current = account;
+  }, [account]);
+  import_react13.useEffect(() => {
+    updateBalancesReference.current = updateBalances;
+  }, [updateBalances]);
+  import_react13.useEffect(() => {
+    chainReference.current = chain;
+  }, [chain]);
+  import_react13.useEffect(() => {
+    clientsReference.current = clients;
+  }, [clients]);
+  import_react13.useEffect(() => {
+    sendReference.current = send;
+  }, [send]);
+  import_react13.useEffect(() => {
+    setConnectRequiredReference.current = setConnectRequired;
+  }, [setConnectRequired]);
+  import_react13.useEffect(() => {
+    updateSuppliesReference.current = updateSupplies;
+  }, [updateSupplies]);
+  import_react13.useEffect(() => {
+    updateReefiLockedMGPReference.current = updateReefiLockedMGP;
+  }, [updateReefiLockedMGP]);
+  import_react13.useEffect(() => {
+    updateTotalLockedMGPReference.current = updateTotalLockedMGP;
+  }, [updateTotalLockedMGP]);
+  import_react13.useEffect(() => {
+    updateUnclaimedUserYieldReference.current = updateUnclaimedUserYield;
+  }, [updateUnclaimedUserYield]);
+  import_react13.useEffect(() => {
+    updateUnlockScheduleReference.current = updateUnlockSchedule;
+  }, [updateUnlockSchedule]);
+  import_react13.useEffect(() => {
+    updateUnsubmittedWithdrawsReference.current = updateUnsubmittedWithdraws;
+  }, [updateUnsubmittedWithdraws]);
+  import_react13.useEffect(() => {
+    updateUserPendingWithdrawsReference.current = updateUserPendingWithdraws;
+  }, [updateUserPendingWithdraws]);
+  import_react13.useEffect(() => {
+    updateUserWithdrawableReference.current = updateUserWithdrawable;
+  }, [updateUserWithdrawable]);
+  import_react13.useEffect(() => {
+    writeContractsReference.current = writeContracts;
+  }, [writeContracts]);
+  return import_react13.useCallback(async () => {
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
+      setConnectRequiredReference.current(true);
+      return;
+    }
+    await writeContractsReference.current[chainReference.current].rMGP.write.startUnlock([sendReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateUnlockScheduleReference.current();
     updateSuppliesReference.current.rMGP();
     updateBalancesReference.current.rMGP();
@@ -35167,54 +35175,54 @@ var useRedeemRMGP = ({ account, updateBalances, chain, clients, sendAmount, setC
 };
 
 // src/hooks/actions/useSellRMGP.ts
-var import_react13 = __toESM(require_react(), 1);
-var useSellRMGP = ({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }) => {
-  const accountReference = import_react13.useRef(account);
-  const allowancesReference = import_react13.useRef(allowances);
-  const updateBalancesReference = import_react13.useRef(updateBalances);
-  const chainReference = import_react13.useRef(chain);
-  const clientsReference = import_react13.useRef(clients);
-  const sendAmountReference = import_react13.useRef(sendAmount);
-  const setConnectRequiredReference = import_react13.useRef(setConnectRequired);
-  const setErrorReference = import_react13.useRef(setError);
-  const writeContractsReference = import_react13.useRef(writeContracts);
-  import_react13.useEffect(() => {
+var import_react14 = __toESM(require_react(), 1);
+var useSellRMGP = ({ account, allowances, updateBalances, chain, clients, send, setConnectRequired, setError, writeContracts }) => {
+  const accountReference = import_react14.useRef(account);
+  const allowancesReference = import_react14.useRef(allowances);
+  const updateBalancesReference = import_react14.useRef(updateBalances);
+  const chainReference = import_react14.useRef(chain);
+  const clientsReference = import_react14.useRef(clients);
+  const sendReference = import_react14.useRef(send);
+  const setConnectRequiredReference = import_react14.useRef(setConnectRequired);
+  const setErrorReference = import_react14.useRef(setError);
+  const writeContractsReference = import_react14.useRef(writeContracts);
+  import_react14.useEffect(() => {
     accountReference.current = account;
   }, [account]);
-  import_react13.useEffect(() => {
+  import_react14.useEffect(() => {
     allowancesReference.current = allowances;
   }, [allowances]);
-  import_react13.useEffect(() => {
+  import_react14.useEffect(() => {
     updateBalancesReference.current = updateBalances;
   }, [updateBalances]);
-  import_react13.useEffect(() => {
+  import_react14.useEffect(() => {
     chainReference.current = chain;
   }, [chain]);
-  import_react13.useEffect(() => {
+  import_react14.useEffect(() => {
     clientsReference.current = clients;
   }, [clients]);
-  import_react13.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
-  import_react13.useEffect(() => {
+  import_react14.useEffect(() => {
+    sendReference.current = send;
+  }, [send]);
+  import_react14.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
-  import_react13.useEffect(() => {
+  import_react14.useEffect(() => {
     setErrorReference.current = setError;
   }, [setError]);
-  import_react13.useEffect(() => {
+  import_react14.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
-  return import_react13.useCallback(async () => {
+  return import_react14.useCallback(async () => {
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.curve.yMGP < (sendAmountReference.current ?? 0n)) {
+    if (allowancesReference.current.curve.yMGP < (sendReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([2n, 1n, sendAmountReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([2n, 1n, sendReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.yMGP();
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.curveYMGP();
@@ -35223,45 +35231,45 @@ var useSellRMGP = ({ account, allowances, updateBalances, chain, clients, sendAm
 };
 
 // src/hooks/actions/useSupplyLiquidity.ts
-var import_react14 = __toESM(require_react(), 1);
+var import_react15 = __toESM(require_react(), 1);
 var useSupplyLiquidity = ({ account, updateBalances, chain, clients, mgpLPAmount, rmgpLPAmount, setConnectRequired, writeContracts, ymgpLPAmount }) => {
-  const accountReference = import_react14.useRef(account);
-  const updateBalancesReference = import_react14.useRef(updateBalances);
-  const chainReference = import_react14.useRef(chain);
-  const clientsReference = import_react14.useRef(clients);
-  const mgpLPAmountReference = import_react14.useRef(mgpLPAmount);
-  const rmgpLPAmountReference = import_react14.useRef(rmgpLPAmount);
-  const setConnectRequiredReference = import_react14.useRef(setConnectRequired);
-  const writeContractsReference = import_react14.useRef(writeContracts);
-  const ymgpLPAmountReference = import_react14.useRef(ymgpLPAmount);
-  import_react14.useEffect(() => {
+  const accountReference = import_react15.useRef(account);
+  const updateBalancesReference = import_react15.useRef(updateBalances);
+  const chainReference = import_react15.useRef(chain);
+  const clientsReference = import_react15.useRef(clients);
+  const mgpLPAmountReference = import_react15.useRef(mgpLPAmount);
+  const rmgpLPAmountReference = import_react15.useRef(rmgpLPAmount);
+  const setConnectRequiredReference = import_react15.useRef(setConnectRequired);
+  const writeContractsReference = import_react15.useRef(writeContracts);
+  const ymgpLPAmountReference = import_react15.useRef(ymgpLPAmount);
+  import_react15.useEffect(() => {
     accountReference.current = account;
   }, [account]);
-  import_react14.useEffect(() => {
+  import_react15.useEffect(() => {
     updateBalancesReference.current = updateBalances;
   }, [updateBalances]);
-  import_react14.useEffect(() => {
+  import_react15.useEffect(() => {
     chainReference.current = chain;
   }, [chain]);
-  import_react14.useEffect(() => {
+  import_react15.useEffect(() => {
     clientsReference.current = clients;
   }, [clients]);
-  import_react14.useEffect(() => {
+  import_react15.useEffect(() => {
     mgpLPAmountReference.current = mgpLPAmount;
   }, [mgpLPAmount]);
-  import_react14.useEffect(() => {
+  import_react15.useEffect(() => {
     rmgpLPAmountReference.current = rmgpLPAmount;
   }, [rmgpLPAmount]);
-  import_react14.useEffect(() => {
+  import_react15.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
-  import_react14.useEffect(() => {
+  import_react15.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
-  import_react14.useEffect(() => {
+  import_react15.useEffect(() => {
     ymgpLPAmountReference.current = ymgpLPAmount;
   }, [ymgpLPAmount]);
-  return import_react14.useCallback(async () => {
+  return import_react15.useCallback(async () => {
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true);
       return;
@@ -35278,46 +35286,46 @@ var useSupplyLiquidity = ({ account, updateBalances, chain, clients, mgpLPAmount
 };
 
 // src/hooks/actions/useSwap.ts
-var import_react15 = __toESM(require_react(), 1);
-var useSwap = ({ account, allowances, chain, clients, sendAmount, setConnectRequired, setError, setNotification }) => {
-  const accountReference = import_react15.useRef(account);
-  const allowancesReference = import_react15.useRef(allowances);
-  const chainReference = import_react15.useRef(chain);
-  const clientsReference = import_react15.useRef(clients);
-  const sendAmountReference = import_react15.useRef(sendAmount);
-  const setConnectRequiredReference = import_react15.useRef(setConnectRequired);
-  const setErrorReference = import_react15.useRef(setError);
-  const setNotificationReference = import_react15.useRef(setNotification);
-  import_react15.useEffect(() => {
+var import_react16 = __toESM(require_react(), 1);
+var useSwap = ({ account, allowances, chain, clients, send, setConnectRequired, setError, setNotification }) => {
+  const accountReference = import_react16.useRef(account);
+  const allowancesReference = import_react16.useRef(allowances);
+  const chainReference = import_react16.useRef(chain);
+  const clientsReference = import_react16.useRef(clients);
+  const sendReference = import_react16.useRef(send);
+  const setConnectRequiredReference = import_react16.useRef(setConnectRequired);
+  const setErrorReference = import_react16.useRef(setError);
+  const setNotificationReference = import_react16.useRef(setNotification);
+  import_react16.useEffect(() => {
     accountReference.current = account;
   }, [account]);
-  import_react15.useEffect(() => {
+  import_react16.useEffect(() => {
     allowancesReference.current = allowances;
   }, [allowances]);
-  import_react15.useEffect(() => {
+  import_react16.useEffect(() => {
     chainReference.current = chain;
   }, [chain]);
-  import_react15.useEffect(() => {
+  import_react16.useEffect(() => {
     clientsReference.current = clients;
   }, [clients]);
-  import_react15.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
-  import_react15.useEffect(() => {
+  import_react16.useEffect(() => {
+    sendReference.current = send;
+  }, [send]);
+  import_react16.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
-  import_react15.useEffect(() => {
+  import_react16.useEffect(() => {
     setErrorReference.current = setError;
   }, [setError]);
-  import_react15.useEffect(() => {
+  import_react16.useEffect(() => {
     setNotificationReference.current = setNotification;
   }, [setNotification]);
-  return import_react15.useCallback(async (tokenIn, tokenOut) => {
+  return import_react16.useCallback(async (tokenIn, tokenOut) => {
     if (!clientsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true);
       return;
     }
-    if (allowancesReference.current.curve.MGP < (sendAmountReference.current ?? 0n)) {
+    if (allowancesReference.current.curve.MGP < (sendReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low");
       return;
     }
@@ -35326,7 +35334,7 @@ var useSwap = ({ account, allowances, chain, clients, sendAmount, setConnectRequ
       chainId: chainReference.current,
       compact: true,
       disableRFQs: true,
-      inputTokens: [{ amount: String(sendAmountReference.current), tokenAddress: tokenIn }],
+      inputTokens: [{ amount: String(sendReference.current), tokenAddress: tokenIn }],
       outputTokens: [{ proportion: 1, tokenAddress: tokenOut }],
       referralCode: 0,
       slippageLimitPercent: 5,
@@ -35346,92 +35354,41 @@ var useSwap = ({ account, allowances, chain, clients, sendAmount, setConnectRequ
 };
 
 // src/hooks/actions/useUnlockYMGP.ts
-var import_react16 = __toESM(require_react(), 1);
-var useUnlockYMGP = ({ account, chain, clients, sendAmount, setConnectRequired, updateSupplies, updateTotalLockedYMGP, updateUserLockedYMGP, writeContracts }) => {
-  const accountReference = import_react16.useRef(account);
-  const chainReference = import_react16.useRef(chain);
-  const clientsReference = import_react16.useRef(clients);
-  const sendAmountReference = import_react16.useRef(sendAmount);
-  const setConnectRequiredReference = import_react16.useRef(setConnectRequired);
-  const updateSuppliesReference = import_react16.useRef(updateSupplies);
-  const updateTotalLockedYMGPReference = import_react16.useRef(updateTotalLockedYMGP);
-  const updateUserLockedYMGPReference = import_react16.useRef(updateUserLockedYMGP);
-  const writeContractsReference = import_react16.useRef(writeContracts);
-  import_react16.useEffect(() => {
-    accountReference.current = account;
-  }, [account]);
-  import_react16.useEffect(() => {
-    chainReference.current = chain;
-  }, [chain]);
-  import_react16.useEffect(() => {
-    clientsReference.current = clients;
-  }, [clients]);
-  import_react16.useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
-  import_react16.useEffect(() => {
-    setConnectRequiredReference.current = setConnectRequired;
-  }, [setConnectRequired]);
-  import_react16.useEffect(() => {
-    updateSuppliesReference.current = updateSupplies;
-  }, [updateSupplies]);
-  import_react16.useEffect(() => {
-    updateTotalLockedYMGPReference.current = updateTotalLockedYMGP;
-  }, [updateTotalLockedYMGP]);
-  import_react16.useEffect(() => {
-    updateUserLockedYMGPReference.current = updateUserLockedYMGP;
-  }, [updateUserLockedYMGP]);
-  import_react16.useEffect(() => {
-    writeContractsReference.current = writeContracts;
-  }, [writeContracts]);
-  return import_react16.useCallback(async () => {
-    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
-      setConnectRequiredReference.current(true);
-      return;
-    }
-    await writeContractsReference.current[chainReference.current].yMGP.write.unlock([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    updateSuppliesReference.current.yMGP();
-    updateTotalLockedYMGPReference.current();
-    updateUserLockedYMGPReference.current();
-  }, []);
-};
-
-// src/hooks/actions/useWithdrawMGP.ts
 var import_react17 = __toESM(require_react(), 1);
-var useWithdrawMGP = ({ account, updateBalances, chain, clients, setConnectRequired, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }) => {
+var useUnlockYMGP = ({ account, chain, clients, send, setConnectRequired, updateSupplies, updateTotalLockedYMGP, updateUserLockedYMGP, writeContracts }) => {
   const accountReference = import_react17.useRef(account);
-  const updateBalancesReference = import_react17.useRef(updateBalances);
   const chainReference = import_react17.useRef(chain);
   const clientsReference = import_react17.useRef(clients);
+  const sendReference = import_react17.useRef(send);
   const setConnectRequiredReference = import_react17.useRef(setConnectRequired);
-  const updateUnsubmittedWithdrawsReference = import_react17.useRef(updateUnsubmittedWithdraws);
-  const updateUserPendingWithdrawsReference = import_react17.useRef(updateUserPendingWithdraws);
-  const updateUserWithdrawableReference = import_react17.useRef(updateUserWithdrawable);
+  const updateSuppliesReference = import_react17.useRef(updateSupplies);
+  const updateTotalLockedYMGPReference = import_react17.useRef(updateTotalLockedYMGP);
+  const updateUserLockedYMGPReference = import_react17.useRef(updateUserLockedYMGP);
   const writeContractsReference = import_react17.useRef(writeContracts);
   import_react17.useEffect(() => {
     accountReference.current = account;
   }, [account]);
   import_react17.useEffect(() => {
-    updateBalancesReference.current = updateBalances;
-  }, [updateBalances]);
-  import_react17.useEffect(() => {
     chainReference.current = chain;
   }, [chain]);
   import_react17.useEffect(() => {
     clientsReference.current = clients;
   }, [clients]);
   import_react17.useEffect(() => {
+    sendReference.current = send;
+  }, [send]);
+  import_react17.useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
   }, [setConnectRequired]);
   import_react17.useEffect(() => {
-    updateUnsubmittedWithdrawsReference.current = updateUnsubmittedWithdraws;
-  }, [updateUnsubmittedWithdraws]);
+    updateSuppliesReference.current = updateSupplies;
+  }, [updateSupplies]);
   import_react17.useEffect(() => {
-    updateUserPendingWithdrawsReference.current = updateUserPendingWithdraws;
-  }, [updateUserPendingWithdraws]);
+    updateTotalLockedYMGPReference.current = updateTotalLockedYMGP;
+  }, [updateTotalLockedYMGP]);
   import_react17.useEffect(() => {
-    updateUserWithdrawableReference.current = updateUserWithdrawable;
-  }, [updateUserWithdrawable]);
+    updateUserLockedYMGPReference.current = updateUserLockedYMGP;
+  }, [updateUserLockedYMGP]);
   import_react17.useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
@@ -35440,6 +35397,55 @@ var useWithdrawMGP = ({ account, updateBalances, chain, clients, setConnectRequi
       setConnectRequiredReference.current(true);
       return;
     }
+    await writeContractsReference.current[chainReference.current].yMGP.write.unlock([sendReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    updateSuppliesReference.current.yMGP();
+    updateTotalLockedYMGPReference.current();
+    updateUserLockedYMGPReference.current();
+  }, []);
+};
+
+// src/hooks/actions/useWithdrawMGP.ts
+var import_react18 = __toESM(require_react(), 1);
+var useWithdrawMGP = ({ account, updateBalances, chain, clients, setConnectRequired, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }) => {
+  const accountReference = import_react18.useRef(account);
+  const updateBalancesReference = import_react18.useRef(updateBalances);
+  const chainReference = import_react18.useRef(chain);
+  const clientsReference = import_react18.useRef(clients);
+  const setConnectRequiredReference = import_react18.useRef(setConnectRequired);
+  const updateUnsubmittedWithdrawsReference = import_react18.useRef(updateUnsubmittedWithdraws);
+  const updateUserPendingWithdrawsReference = import_react18.useRef(updateUserPendingWithdraws);
+  const updateUserWithdrawableReference = import_react18.useRef(updateUserWithdrawable);
+  const writeContractsReference = import_react18.useRef(writeContracts);
+  import_react18.useEffect(() => {
+    accountReference.current = account;
+  }, [account]);
+  import_react18.useEffect(() => {
+    updateBalancesReference.current = updateBalances;
+  }, [updateBalances]);
+  import_react18.useEffect(() => {
+    chainReference.current = chain;
+  }, [chain]);
+  import_react18.useEffect(() => {
+    clientsReference.current = clients;
+  }, [clients]);
+  import_react18.useEffect(() => {
+    setConnectRequiredReference.current = setConnectRequired;
+  }, [setConnectRequired]);
+  import_react18.useEffect(() => {
+    updateUnsubmittedWithdrawsReference.current = updateUnsubmittedWithdraws;
+  }, [updateUnsubmittedWithdraws]);
+  import_react18.useEffect(() => {
+    updateUserPendingWithdrawsReference.current = updateUserPendingWithdraws;
+  }, [updateUserPendingWithdraws]);
+  import_react18.useEffect(() => {
+    updateUserWithdrawableReference.current = updateUserWithdrawable;
+  }, [updateUserWithdrawable]);
+  import_react18.useEffect(() => {
+    writeContractsReference.current = writeContracts;
+  }, [writeContracts]);
+  return import_react18.useCallback(async () => {
+    if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined)
+      return setConnectRequiredReference.current(true);
     await writeContractsReference.current[chainReference.current].rMGP.write.unlock({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     await writeContractsReference.current[chainReference.current].rMGP.write.withdraw({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
@@ -35451,34 +35457,29 @@ var useWithdrawMGP = ({ account, updateBalances, chain, clients, setConnectRequi
 
 // src/hooks/useActions.ts
 var useActions = ({ setError, setNotification, wallet, updateBalances, allowances, updateAllowances, updateSupplies, writeContracts, updateLocked, amounts, updateRewards, updateWithdraws }) => {
-  const approve = useApprove({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateAllowances, writeContracts });
-  const depositMGP = useDepositMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => updateLocked.MGP.all(), writeContracts });
-  const buyRMGP = useBuyRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
-  const sellYMGP = useSellRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
-  const buyYMGP = useBuyYMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
-  const convertMGP = useConvertMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
-  const buyMGP = useBuyMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
-  const depositRMGP = useDepositRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, updateSupplies, updateYMGPHoldings: updateBalances.ymgpHoldings, writeContracts });
-  const lockYMGP = useLockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateSupplies.lyMGP, updateUserLockedYMGP: updateBalances.yMGP, writeContracts });
-  const unlockYMGP = useUnlockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateSupplies.lyMGP, updateUserLockedYMGP: updateBalances.yMGP, writeContracts });
-  const redeemRMGP = useRedeemRMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => {
-    updateLocked.MGP[56]();
-    updateLocked.MGP[42161]();
-  }, updateUnclaimedUserYield: updateRewards.unclaimedUserYield, updateUnlockSchedule: updateWithdraws.unlockSchedule, updateUnsubmittedWithdraws: updateWithdraws.unsubmitted, updateUserPendingWithdraws: updateWithdraws.userPending, updateUserWithdrawable: updateWithdraws.userWithdrawable, writeContracts });
+  const approve = useApprove({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, updateAllowances, writeContracts });
+  const depositMGP = useDepositMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => updateSupplies.vlMGP(), writeContracts });
+  const buyRMGP = useBuyRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
+  const sellYMGP = useSellRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
+  const buyYMGP = useBuyYMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
+  const convertMGP = useConvertMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
+  const buyMGP = useBuyMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, writeContracts });
+  const depositRMGP = useDepositRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, updateBalances, updateSupplies, updateYMGPHoldings: updateBalances.ymgpHoldings, writeContracts });
+  const lockYMGP = useLockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateSupplies.lyMGP, updateUserLockedYMGP: updateBalances.yMGP, writeContracts });
+  const unlockYMGP = useUnlockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, updateSupplies, updateTotalLockedYMGP: updateSupplies.lyMGP, updateUserLockedYMGP: updateBalances.yMGP, writeContracts });
+  const redeemRMGP = useRedeemRMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, updateBalances, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => updateSupplies.vlMGP(), updateUnclaimedUserYield: updateRewards.unclaimedUserYield, updateUnlockSchedule: updateWithdraws.unlockSchedule, updateUnsubmittedWithdraws: updateWithdraws.unsubmitted, updateUserPendingWithdraws: updateWithdraws.userPending, updateUserWithdrawable: updateWithdraws.userWithdrawable, writeContracts });
   const withdrawMGP = useWithdrawMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateBalances, updateUnsubmittedWithdraws: updateWithdraws.unsubmitted, updateUserPendingWithdraws: updateWithdraws.userPending, updateUserWithdrawable: updateWithdraws.userWithdrawable, writeContracts });
-  const compoundRMGP = useCompoundRMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateBalances, updatePendingRewards: updateRewards.pendingRewards, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => {
-    updateLocked.MGP[56]();
-    updateLocked.MGP[42161]();
-  }, updateUnclaimedUserYield: updateRewards.unclaimedUserYield, writeContracts });
+  const compoundRMGP = useCompoundRMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateBalances, updatePendingRewards: updateRewards.pendingRewards, updateReefiLockedMGP: updateLocked.reefiMGP, updateSupplies, updateTotalLockedMGP: () => updateSupplies.vlMGP(), updateUnclaimedUserYield: updateRewards.unclaimedUserYield, writeContracts });
   const claimYMGPRewards = useClaimYMGPRewards({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: wallet.setConnectRequired, updateUnclaimedUserYield: updateRewards.unclaimedUserYield, writeContracts });
   const supplyLiquidity = useSupplyLiquidity({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, mgpLPAmount: amounts.lp.MGP, rmgpLPAmount: amounts.lp.rMGP, setConnectRequired: wallet.setConnectRequired, updateBalances, writeContracts, ymgpLPAmount: amounts.lp.yMGP });
-  const swap = useSwap({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, setNotification });
-  const mintWETH = useMintWETH({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, sendAmount: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts });
-  return { approve, buyMGP, buyRMGP, buyYMGP, claimYMGPRewards, compoundRMGP, convertMGP, depositMGP, depositRMGP, lockYMGP, mintWETH, redeemRMGP, sellYMGP, supplyLiquidity, swap, unlockYMGP, withdrawMGP };
+  const swap = useSwap({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, setNotification });
+  const mintWETH = useMintWETH({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: wallet.setConnectRequired, setError, writeContracts });
+  const buyRMGPAndWithdraw = useBuyRMGPAndWithdraw({ buyRMGP, withdrawMGP });
+  return { approve, buyMGP, buyRMGP, buyYMGP, claimYMGPRewards, compoundRMGP, convertMGP, depositMGP, depositRMGP, lockYMGP, mintWETH, redeemRMGP, sellYMGP, supplyLiquidity, swap, unlockYMGP, withdrawMGP, buyRMGPAndWithdraw };
 };
 
 // src/hooks/useAllowances.ts
-var import_react19 = __toESM(require_react(), 1);
+var import_react20 = __toESM(require_react(), 1);
 
 // node_modules/superjson/dist/double-indexed-kv.js
 class DoubleIndexedKV {
@@ -36254,7 +36255,7 @@ var registerSymbol = SuperJSON.registerSymbol;
 var allowErrorProps = SuperJSON.allowErrorProps;
 
 // src/hooks/useStoredState.ts
-var import_react18 = __toESM(require_react(), 1);
+var import_react19 = __toESM(require_react(), 1);
 
 // node_modules/@uidotdev/usehooks/index.js
 var React = __toESM(require_react(), 1);
@@ -36338,7 +36339,7 @@ var useStoredObject = (key, initialValue) => {
     saveState(SuperJSON.stringify(initialValue));
   }
   const [state, setState] = useObjectState(SuperJSON.parse(savedState));
-  import_react18.useEffect(() => {
+  import_react19.useEffect(() => {
     saveState(SuperJSON.stringify(state));
   }, [state, saveState]);
   return [state, setState];
@@ -36401,7 +36402,7 @@ var useAllowances = ({ wallet }) => {
       setAllowances(() => ({ rMGP: value }));
     })
   };
-  import_react19.useEffect(() => {
+  import_react20.useEffect(() => {
     updateAllowances.MGP();
     updateAllowances.rMGP();
     updateAllowances.curve.MGP();
@@ -36423,9 +36424,9 @@ var useAllowances = ({ wallet }) => {
 };
 
 // src/hooks/useAmounts.ts
-var import_react20 = __toESM(require_react(), 1);
+var import_react21 = __toESM(require_react(), 1);
 var useAmounts = ({ wallet }) => {
-  const [amounts, setAmounts] = useStoredObject("amounts", { curve: { mgpRmgp: 0n, mgpYmgp: 0n, rmgpMgp: 0n, rmgpYmgp: 0n, ymgpMgp: 0n, ymgpRmgp: 0n }, lp: { MGP: 0n, rMGP: 0n, yMGP: 0n }, send: parseEther(1) });
+  const [amounts, setAmounts] = useStoredObject("amounts", { curve: { mgpRmgp: 0n, mgpYmgp: 0n, rmgpMgp: 0n, rmgpYmgp: 0n, ymgpMgp: 0n, ymgpRmgp: 0n, ymgpVmgp: 0n }, lp: { MGP: 0n, rMGP: 0n, yMGP: 0n }, send: parseEther(1) });
   const updateAmounts = {
     curve: {
       mgpRmgp: () => contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, amounts.send ?? 0n], { account: wallet.account }).then((value) => setAmounts((a) => ({ curve: { ...a.curve, mgpRmgp: value } }))),
@@ -36442,7 +36443,7 @@ var useAmounts = ({ wallet }) => {
     },
     send: (send) => setAmounts({ send })
   };
-  import_react20.useEffect(() => {
+  import_react21.useEffect(() => {
     updateAmounts.curve.mgpRmgp();
     updateAmounts.curve.mgpYmgp();
     updateAmounts.curve.rmgpMgp();
@@ -36454,9 +36455,9 @@ var useAmounts = ({ wallet }) => {
 };
 
 // src/hooks/useBalances.ts
-var import_react21 = __toESM(require_react(), 1);
+var import_react22 = __toESM(require_react(), 1);
 var useBalances = ({ wallet }) => {
-  const [balances, setBalances] = useStoredObject("balances", { CKP: 0n, EGP: 0n, ETH: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, lyMGP: 0n, curveMGP: 0n, curveRMGP: 0n, curveYMGP: 0n, rMGP: 0n, vMGP: 0n, yMGP: 0n, ymgpHoldings: 0n, vmgpHoldings: parseEther(0.5), lvMGP: parseEther(0.5) });
+  const [balances, setBalances] = useStoredObject("balances", { CKP: 0n, EGP: 0n, ETH: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, lyMGP: 0n, curveMGP: 0n, curveRMGP: 0n, curveYMGP: 0n, rMGP: 0n, vMGP: 0n, yMGP: 0n, ymgpHoldings: 0n, vmgpHoldings: parseEther(0.5), lvMGP: parseEther(0.5), wrMGP: 0n });
   const updateBalances = {
     CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]).then((CKP) => setBalances(() => ({ CKP }))),
     EGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].EGP.read.balanceOf([wallet.account]).then((EGP) => setBalances(() => ({ EGP }))),
@@ -36477,16 +36478,16 @@ var useBalances = ({ wallet }) => {
     ymgpHoldings: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then((ymgpHoldings) => setBalances(() => ({ ymgpHoldings }))),
     vmgpHoldings: () => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]).then((ymgpHoldings) => setBalances(() => ({ ymgpHoldings })))
   };
-  import_react21.useEffect(() => {
+  import_react22.useEffect(() => {
     Object.values(updateBalances).forEach((u) => u());
   }, [wallet.chain, wallet.account]);
   return { balances, updateBalances };
 };
 
 // src/hooks/useContracts.ts
-var import_react22 = __toESM(require_react(), 1);
+var import_react23 = __toESM(require_react(), 1);
 var useContracts = ({ wallet }) => {
-  const writeContracts = import_react22.useMemo(() => {
+  const writeContracts = import_react23.useMemo(() => {
     if (!wallet.clients)
       return;
     return {
@@ -36528,7 +36529,7 @@ var useContracts = ({ wallet }) => {
 };
 
 // src/hooks/useExchangeRates.ts
-var import_react23 = __toESM(require_react(), 1);
+var import_react24 = __toESM(require_react(), 1);
 var useExchangeRates = ({ wallet }) => {
   const [exchangeRates, setExchangeRates] = useStoredObject("exchangeRates", { mgpRMGP: 0, mgpYMGP: 0, rmgpMGP: 0, rmgpYMGP: 0, ymgpMGP: 0, ymgpRMGP: 0, ymgpVMGP: 1.2 });
   const updateExchangeRates = {
@@ -36551,7 +36552,7 @@ var useExchangeRates = ({ wallet }) => {
       setExchangeRates({ ymgpRMGP: Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)) });
     }
   };
-  import_react23.useEffect(() => {
+  import_react24.useEffect(() => {
     updateExchangeRates.mgpRMGP();
     updateExchangeRates.mgpYMGP();
     updateExchangeRates.rmgpMGP();
@@ -36563,35 +36564,23 @@ var useExchangeRates = ({ wallet }) => {
 };
 
 // src/hooks/useLocked.ts
-var import_react24 = __toESM(require_react(), 1);
+var import_react25 = __toESM(require_react(), 1);
 var useLocked = ({ wallet }) => {
-  const [locked, setLocked] = useStoredObject("locked", { MGP: { 42161: 0n, 56: 0n }, reefiMGP: 0n });
+  const [locked, setLocked] = useStoredObject("locked", { reefiMGP: 0n });
   const updateLocked = {
-    MGP: {
-      42161: () => contracts[42161].vlMGP.read.totalLocked().then((value) => setLocked((l) => ({ MGP: { ...l.MGP, 42161: value } }))),
-      56: () => contracts[56].vlMGP.read.totalLocked().then((value) => setLocked((l) => ({ MGP: { ...l.MGP, 56: value } }))),
-      all: async () => {
-        await updateLocked.MGP[42161]();
-        await updateLocked.MGP[56]();
-      }
-    },
     reefiMGP: () => contracts[wallet.chain].vlMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]).then((reefiMGP) => setLocked({ reefiMGP }))
   };
-  import_react24.useEffect(() => {
-    updateLocked.MGP[42161]();
-    updateLocked.MGP[56]();
-  }, []);
-  import_react24.useEffect(() => {
+  import_react25.useEffect(() => {
     updateLocked.reefiMGP();
   }, [wallet.chain]);
   return { locked, updateLocked };
 };
 
 // src/hooks/usePrices.ts
-var import_react25 = __toESM(require_react(), 1);
+var import_react26 = __toESM(require_react(), 1);
 var usePrices = () => {
-  const [prices, setPrices] = import_react25.useState({ CKP: 0, EGP: 0, LTP: 0, MGP: 0, PNP: 0, WETH: 0, cMGP: 0, rMGP: 0, yMGP: 0, vMGP: 0, lyMGP: 0, lvMGP: 0 });
-  import_react25.useEffect(() => {
+  const [prices, setPrices] = import_react26.useState({ CKP: 0, EGP: 0, LTP: 0, MGP: 0, PNP: 0, WETH: 0, cMGP: 0, rMGP: 0, yMGP: 0, vMGP: 0, lyMGP: 0, lvMGP: 0, wrMGP: 0 });
+  import_react26.useEffect(() => {
     (async () => {
       const response = await fetch("https://api.magpiexyz.io/getalltokenprice");
       response.json().then((body) => {
@@ -36603,7 +36592,7 @@ var usePrices = () => {
 };
 
 // src/hooks/useRewards.ts
-var import_react26 = __toESM(require_react(), 1);
+var import_react27 = __toESM(require_react(), 1);
 var useRewards = ({ wallet, prices, balances, locked }) => {
   const [rewards, setRewards] = useStoredObject("rewards", { cmgpPoolAPY: 0, compoundRMGPGas: 0n, estimatedCompoundAmount: 0n, mgpAPR: 0, pendingRewards: {}, unclaimedUserYield: 0n, unclaimedUserVMGPYield: parseEther(0.5) });
   const updateRewards = {
@@ -36645,25 +36634,25 @@ var useRewards = ({ wallet, prices, balances, locked }) => {
     },
     unclaimedUserYield: () => contracts[wallet.chain].yMGP.read.unclaimedUserYield().then((unclaimedUserYield) => setRewards({ unclaimedUserYield }))
   };
-  import_react26.useEffect(() => {
+  import_react27.useEffect(() => {
     updateRewards.cmgpPoolAPY();
     updateRewards.mgpAPR();
     updateRewards.compoundRMGPGas();
     updateRewards.unclaimedUserYield();
     updateRewards.pendingRewards();
   }, [wallet.chain]);
-  import_react26.useEffect(() => {
+  import_react27.useEffect(() => {
     updateRewards.estimatedCompoundAmount();
   }, [wallet.clients, wallet.chain, wallet.account]);
-  const cmgpAPY = import_react26.useMemo(() => {
+  const cmgpAPY = import_react27.useMemo(() => {
     const yieldBearingUnderlyingPercent = Number(balances.curveRMGP + balances.curveYMGP) / Number(balances.curveMGP + balances.curveRMGP + balances.curveYMGP);
     const underlyingYield = yieldBearingUnderlyingPercent * aprToApy(rewards.mgpAPR) * 0.9;
     return underlyingYield + rewards.cmgpPoolAPY;
   }, [rewards.cmgpPoolAPY, rewards.mgpAPR, balances.curveMGP, balances.curveRMGP, balances.curveYMGP]);
-  const uncompoundedMGPYield = import_react26.useMemo(() => Object.keys(rewards.pendingRewards).length > 0 ? Object.keys(rewards.pendingRewards).map((symbol) => prices[symbol] * Number(formatEther(rewards.pendingRewards[symbol]?.rewards ?? 0n, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [rewards.pendingRewards, prices]);
-  const estimatedCompoundGasFee = import_react26.useMemo(() => formatEther(rewards.compoundRMGPGas, decimals.WETH) * prices.WETH, [rewards.compoundRMGPGas, prices]);
-  const lockedYmgpAPY = import_react26.useMemo(() => Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(balances.lyMGP) + aprToApy(rewards.mgpAPR) * 0.9, [locked.reefiMGP, rewards.mgpAPR, balances.lyMGP]);
-  import_react26.useCallback(() => {
+  const uncompoundedMGPYield = import_react27.useMemo(() => Object.keys(rewards.pendingRewards).length > 0 ? Object.keys(rewards.pendingRewards).map((symbol) => prices[symbol] * Number(formatEther(rewards.pendingRewards[symbol]?.rewards ?? 0n, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [rewards.pendingRewards, prices]);
+  const estimatedCompoundGasFee = import_react27.useMemo(() => formatEther(rewards.compoundRMGPGas, decimals.WETH) * prices.WETH, [rewards.compoundRMGPGas, prices]);
+  const lockedYmgpAPY = import_react27.useMemo(() => Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(balances.lyMGP) + aprToApy(rewards.mgpAPR) * 0.9, [locked.reefiMGP, rewards.mgpAPR, balances.lyMGP]);
+  import_react27.useCallback(() => {
     const interval = setInterval(updateRewards.pendingRewards, 30000);
     return () => {
       clearInterval(interval);
@@ -36673,36 +36662,38 @@ var useRewards = ({ wallet, prices, balances, locked }) => {
 };
 
 // src/hooks/useSupplies.ts
-var import_react27 = __toESM(require_react(), 1);
+var import_react28 = __toESM(require_react(), 1);
 var useSupplies = ({ wallet }) => {
-  const [supplies, setSupplies] = useStoredObject("supplies", { MGP: 0n, rMGP: 0n, vMGP: parseEther(8.5), yMGP: 0n, lyMGP: 0n, lvMGP: 0n });
+  const [supplies, setSupplies] = useStoredObject("supplies", { MGP: 0n, rMGP: 0n, vMGP: parseEther(8.5), yMGP: 0n, lyMGP: 0n, lvMGP: 0n, vlMGP: 0n });
   const updateSupplies = {
     MGP: () => contracts[56].MGP.read.totalSupply().then((MGP) => setSupplies({ MGP })),
     rMGP: () => contracts[wallet.chain].rMGP.read.totalSupply().then((rMGP2) => setSupplies({ rMGP: rMGP2 })),
     yMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then((yMGP2) => setSupplies({ yMGP: yMGP2 })),
     vMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then((yMGP2) => setSupplies({ yMGP: yMGP2 })),
     lyMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then((yMGP2) => setSupplies({ yMGP: yMGP2 })),
-    lvMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then((yMGP2) => setSupplies({ yMGP: yMGP2 }))
+    lvMGP: () => contracts[wallet.chain].yMGP.read.totalSupply().then((yMGP2) => setSupplies({ yMGP: yMGP2 })),
+    vlMGP: () => contracts[wallet.chain].vlMGP.read.totalSupply().then((vlMGP2) => setSupplies({ vlMGP: vlMGP2 }))
   };
-  import_react27.useEffect(() => {
+  import_react28.useEffect(() => {
     updateSupplies.MGP();
   }, []);
-  import_react27.useEffect(() => {
+  import_react28.useEffect(() => {
     updateSupplies.rMGP();
     updateSupplies.yMGP();
     updateSupplies.vMGP();
     updateSupplies.lyMGP();
     updateSupplies.lvMGP();
+    updateSupplies.vlMGP();
   }, [wallet.chain]);
   return { supplies, updateSupplies };
 };
 
 // src/hooks/useUpdateable.ts
-var import_react28 = __toESM(require_react(), 1);
+var import_react29 = __toESM(require_react(), 1);
 function useUpdateable(factory, deps, initial) {
-  const [updateCount, setUpdateCount] = import_react28.useState(0);
-  const [value, setValue] = import_react28.useState(initial);
-  import_react28.useEffect(() => {
+  const [updateCount, setUpdateCount] = import_react29.useState(0);
+  const [value, setValue] = import_react29.useState(initial);
+  import_react29.useEffect(() => {
     (async () => {
       const newValue = await factory();
       if (newValue !== undefined)
@@ -36718,7 +36709,7 @@ function useCachedUpdateable(factory, deps, label, initial) {
   const item = localStorage.getItem(label);
   const initialValue = item === null ? initial : SuperJSON.parse(item);
   const updateable = useUpdateable(factory, deps, initialValue);
-  import_react28.useEffect(() => {
+  import_react29.useEffect(() => {
     if (updateable[0] !== undefined)
       localStorage.setItem(label, SuperJSON.stringify(updateable[0]));
   }, [updateable[0]]);
@@ -36726,20 +36717,20 @@ function useCachedUpdateable(factory, deps, label, initial) {
 }
 
 // src/hooks/useWallet.ts
-var import_react29 = __toESM(require_react(), 1);
+var import_react30 = __toESM(require_react(), 1);
 var useWallet = ({ setError }) => {
-  const [clients, setClients] = import_react29.useState();
-  const [chain, setChain] = import_react29.useState(42161);
+  const [clients, setClients] = import_react30.useState();
+  const [chain, setChain] = import_react30.useState(42161);
   const [account, updateAccount] = useCachedUpdateable(async () => {
     if (!clients)
       return;
     const addresses = await clients[chain].requestAddresses();
     return addresses[0];
   }, [clients], "account");
-  const [isConnecting, setIsConnecting] = import_react29.useState(false);
-  const [connectRequired, setConnectRequired] = import_react29.useState(false);
+  const [isConnecting, setIsConnecting] = import_react30.useState(false);
+  const [connectRequired, setConnectRequired] = import_react30.useState(false);
   const [ens] = useCachedUpdateable(async () => account === undefined ? undefined : await publicClients[1].getEnsName({ address: account }) ?? undefined, [account], "ens");
-  const connectWallet = import_react29.useCallback(() => {
+  const connectWallet = import_react30.useCallback(() => {
     if (window.ethereum === undefined) {
       setError("No wallet found. Please install MetaMask to use Reefi.");
       return;
@@ -36754,14 +36745,14 @@ var useWallet = ({ setError }) => {
     setIsConnecting(false);
     setConnectRequired(false);
   }, []);
-  import_react29.useEffect(() => {
+  import_react30.useEffect(() => {
     if (window.ethereum)
       connectWallet();
     const savedChain = window.localStorage.getItem("chain");
     if (savedChain !== null)
       setChain(Number(savedChain));
   }, []);
-  import_react29.useEffect(() => {
+  import_react30.useEffect(() => {
     if (clients)
       (() => clients[chain].switchChain({ id: chain }))().catch(() => {
         setError("Failed to switch chains");
@@ -36772,7 +36763,7 @@ var useWallet = ({ setError }) => {
 };
 
 // src/hooks/useWithdraws.ts
-var import_react30 = __toESM(require_react(), 1);
+var import_react31 = __toESM(require_react(), 1);
 var useWithdraws = ({ wallet }) => {
   const [withdraws, setWithdraws] = useStoredObject("withdraws", { unlockSchedule: [], unsubmitted: 0n, userPending: 0n, userWithdrawable: 0n });
   const updateWithdraws = {
@@ -36789,12 +36780,12 @@ var useWithdraws = ({ wallet }) => {
       setWithdraws({ userWithdrawable });
     })
   };
-  import_react30.useEffect(() => {
+  import_react31.useEffect(() => {
     updateWithdraws.unlockSchedule();
     updateWithdraws.unsubmitted();
     updateWithdraws.userWithdrawable();
   }, [wallet.chain]);
-  import_react30.useEffect(() => {
+  import_react31.useEffect(() => {
     updateWithdraws.userPending();
   }, [wallet.chain, wallet.account]);
   return { updateWithdraws, withdraws };
@@ -36802,7 +36793,7 @@ var useWithdraws = ({ wallet }) => {
 
 // src/contexts/GlobalContext.tsx
 var jsx_dev_runtime = __toESM(require_jsx_dev_runtime(), 1);
-var GlobalContext = import_react31.createContext(undefined);
+var GlobalContext = import_react32.createContext(undefined);
 GlobalContext.displayName = "GlobalContext";
 var GlobalProvider = ({ children, setError, setNotification }) => {
   const wallet = useWallet({ setError });
@@ -36817,24 +36808,24 @@ var GlobalProvider = ({ children, setError, setNotification }) => {
   const writeContracts = useContracts({ wallet });
   const { rewards, updateRewards } = useRewards({ balances, locked, prices, wallet });
   const actions = useActions({ allowances, amounts, setError, setNotification, updateAllowances, updateBalances, updateLocked, updateRewards, updateSupplies, updateWithdraws, wallet, writeContracts });
-  const value = import_react31.useMemo(() => ({ actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, updateAllowances, updateAmounts, updateBalances, updateLocked, updateSupplies, wallet, withdraws, writeContracts }), [actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, updateAllowances, updateAmounts, updateBalances, updateLocked, updateSupplies, wallet, withdraws, writeContracts]);
+  const value = import_react32.useMemo(() => ({ actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, updateAllowances, updateAmounts, updateBalances, updateLocked, updateSupplies, wallet, withdraws, writeContracts }), [actions, allowances, amounts, balances, exchangeRates, locked, prices, rewards, supplies, updateAllowances, updateAmounts, updateBalances, updateLocked, updateSupplies, wallet, withdraws, writeContracts]);
   return /* @__PURE__ */ jsx_dev_runtime.jsxDEV(GlobalContext, {
     value,
     children
   }, undefined, false, undefined, this);
 };
 var useGlobalContext = () => {
-  const context = import_react31.use(GlobalContext);
+  const context = import_react32.use(GlobalContext);
   if (context === undefined)
     throw new Error("useGlobalContext must be used within a GlobalProvider");
   return context;
 };
 
 // src/App.tsx
-var import_react69 = __toESM(require_react(), 1);
+var import_react72 = __toESM(require_react(), 1);
 
 // src/components/YieldBadge.tsx
-var import_react32 = __toESM(require_react(), 1);
+var import_react33 = __toESM(require_react(), 1);
 var jsx_dev_runtime2 = __toESM(require_jsx_dev_runtime(), 1);
 var BadgeComponent = ({ title, value, breakdown }) => /* @__PURE__ */ jsx_dev_runtime2.jsxDEV("div", {
   className: "group relative flex cursor-help items-center rounded-lg bg-gray-700 px-3 py-1 text-sm",
@@ -36890,8 +36881,8 @@ var BadgeComponent = ({ title, value, breakdown }) => /* @__PURE__ */ jsx_dev_ru
     }, undefined, false, undefined, this)
   ]
 }, undefined, true, undefined, this);
-var Badge = import_react32.memo(BadgeComponent);
-var YieldBadge = import_react32.memo(({ asset, apy, apr, suffix, breakdown, value }) => {
+var Badge = import_react33.memo(BadgeComponent);
+var YieldBadge = import_react33.memo(({ asset, apy, apr, suffix, breakdown, value }) => {
   const yieldType = apy === undefined ? "APR" : "APY";
   const yieldValue = apy ?? apr;
   const percentage = yieldValue ? Math.round(yieldValue * 1e4) / 100 : undefined;
@@ -36949,12 +36940,12 @@ var Button = ({ ref, variant = "primary", size: size5 = "md", isLoading = false,
 Button.displayName = "Button";
 
 // src/pages/BuyVotesPage.tsx
-var import_react35 = __toESM(require_react(), 1);
+var import_react36 = __toESM(require_react(), 1);
 
 // src/components/AmountInput.tsx
-var import_react33 = __toESM(require_react(), 1);
+var import_react34 = __toESM(require_react(), 1);
 var jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime(), 1);
-var AmountInput = import_react33.memo(({ label, balance, value, onChange, token, placeholder }) => /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
+var AmountInput = import_react34.memo(({ label, balance, value, onChange, token, placeholder }) => /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
   className: "mb-4",
   children: [
     /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
@@ -36983,7 +36974,7 @@ var AmountInput = import_react33.memo(({ label, balance, value, onChange, token,
           onChange: (event) => onChange(parseEther(Number.isNaN(Number.parseFloat(event.target.value)) ? 0 : Number.parseFloat(event.target.value))),
           placeholder: placeholder ?? "0",
           type: "text",
-          value: value === 0n ? undefined : formatEther(value)
+          value: value === 0n ? undefined : formatEther(value ?? 0n)
         }, undefined, false, undefined, this),
         /* @__PURE__ */ jsx_dev_runtime4.jsxDEV("div", {
           className: "flex items-center space-x-2",
@@ -37016,9 +37007,9 @@ var AmountInput = import_react33.memo(({ label, balance, value, onChange, token,
 AmountInput.displayName = "AmountInput";
 
 // src/components/InfoCard.tsx
-var import_react34 = __toESM(require_react(), 1);
+var import_react35 = __toESM(require_react(), 1);
 var jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime(), 1);
-var InfoCard = import_react34.memo(({ text }) => {
+var InfoCard = import_react35.memo(({ text }) => {
   const lines = Array.isArray(text) ? text : [text];
   return /* @__PURE__ */ jsx_dev_runtime5.jsxDEV("div", {
     className: "flex w-full items-start rounded-lg border border-green-800/30 bg-indigo-900/20 p-2 text-sm mt-8 max-w-4xl",
@@ -37122,10 +37113,24 @@ var getWinningChoice = (marketData) => {
     return "no";
   return "tie";
 };
-var BuyVotesPage = import_react35.memo(({ yMGPBalance, lockedYMGPBalance, totalLockedYMGP, reefiMgpLocked, onSellYesTokens: onSellYesTokens2, onSellNoTokens: onSellNoTokens2 }) => {
-  const [sellYesAmounts, setSellYesAmounts] = import_react35.useState({});
-  const [sellNoAmounts, setSellNoAmounts] = import_react35.useState({});
-  const [activeAction, setActiveAction] = import_react35.useState();
+var completedColors = (winningChoice) => {
+  if (winningChoice === "yes")
+    return "bg-green-600/20 text-green-400";
+  if (winningChoice === "no")
+    return "bg-red-600/20 text-red-400";
+  return "bg-yellow-600/20 text-yellow-400";
+};
+var completedLabel = (winningChoice) => {
+  if (winningChoice === "yes")
+    return "YES WINS";
+  if (winningChoice === "no")
+    return "NO WINS";
+  return "TIE";
+};
+var BuyVotesPage = import_react36.memo(({ yMGPBalance, lockedYMGPBalance, totalLockedYMGP, reefiMgpLocked, onSellYesTokens: onSellYesTokens2, onSellNoTokens: onSellNoTokens2 }) => {
+  const [sellYesAmounts, setSellYesAmounts] = import_react36.useState({});
+  const [sellNoAmounts, setSellNoAmounts] = import_react36.useState({});
+  const [activeAction, setActiveAction] = import_react36.useState();
   const handleSellYesTokens = async (proposalId) => {
     const amount = sellYesAmounts[proposalId];
     if (!amount || amount === 0n)
@@ -37277,8 +37282,8 @@ var BuyVotesPage = import_react35.memo(({ yMGPBalance, lockedYMGPBalance, totalL
                         children: "Votes Purchased"
                       }, undefined, false, undefined, this),
                       isCompleted && /* @__PURE__ */ jsx_dev_runtime7.jsxDEV("div", {
-                        className: `rounded px-2 py-1 text-xs font-medium ${winningChoice === "yes" ? "bg-green-600/20 text-green-400" : winningChoice === "no" ? "bg-red-600/20 text-red-400" : "bg-yellow-600/20 text-yellow-400"}`,
-                        children: winningChoice === "yes" ? "YES WINS" : winningChoice === "no" ? "NO WINS" : "TIE"
+                        className: `rounded px-2 py-1 text-xs font-medium ${completedColors(winningChoice)}`,
+                        children: completedLabel(winningChoice)
                       }, undefined, false, undefined, this)
                     ]
                   }, undefined, true, undefined, this),
@@ -37471,7 +37476,7 @@ var Card = ({ children, padding = 6, className = "" }) => /* @__PURE__ */ jsx_de
 }, undefined, true, undefined, this);
 
 // src/pages/ClaimVMGPYield.tsx
-var import_react36 = __toESM(require_react(), 1);
+var import_react37 = __toESM(require_react(), 1);
 var jsx_dev_runtime9 = __toESM(require_jsx_dev_runtime(), 1);
 var ClaimVMGPYieldComponent = ({ claimVMGPRewards: claimVMGPRewards2, unclaimedUserVMGPYield, vmgpHoldings }) => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(Page, {
   info: ["Locked vMGP is unable to vote on proposals but instead earns yield by selling it's vote power."],
@@ -37502,7 +37507,7 @@ var ClaimVMGPYieldComponent = ({ claimVMGPRewards: claimVMGPRewards2, unclaimedU
             children: [
               "Total: ",
               formatNumber(formatEther(vmgpHoldings, decimals.yMGP), 4),
-              " YieldBadgeMGP"
+              " yMGP"
             ]
           }, undefined, true, undefined, this)
         }, undefined, false, undefined, this)
@@ -37516,7 +37521,7 @@ var ClaimVMGPYieldComponent = ({ claimVMGPRewards: claimVMGPRewards2, unclaimedU
     }, undefined, false, undefined, this)
   ]
 }, undefined, true, undefined, this);
-var ClaimVMGPYield = import_react36.memo(({ claimVMGPRewards: claimVMGPRewards2, unclaimedUserVMGPYield, vmgpHoldings }) => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(ClaimVMGPYieldComponent, {
+var ClaimVMGPYield = import_react37.memo(({ claimVMGPRewards: claimVMGPRewards2, unclaimedUserVMGPYield, vmgpHoldings }) => /* @__PURE__ */ jsx_dev_runtime9.jsxDEV(ClaimVMGPYieldComponent, {
   claimVMGPRewards: claimVMGPRewards2,
   unclaimedUserVMGPYield,
   vmgpHoldings
@@ -37524,7 +37529,7 @@ var ClaimVMGPYield = import_react36.memo(({ claimVMGPRewards: claimVMGPRewards2,
 ClaimVMGPYield.displayName = "ClaimVMGPYield";
 
 // src/pages/ClaimYMGPYield.tsx
-var import_react37 = __toESM(require_react(), 1);
+var import_react38 = __toESM(require_react(), 1);
 var jsx_dev_runtime10 = __toESM(require_jsx_dev_runtime(), 1);
 var ClaimYieldComponent = ({ claimYMGPRewards, unclaimedUserYield, uncompoundedMGPYield, lockedYMGP, userLockedYMGP, ymgpHoldings, ymgpSupply }) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(Page, {
   info: ["Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.", "To claim pending MGP yield, compound rMGP yield."],
@@ -37589,7 +37594,7 @@ var ClaimYieldComponent = ({ claimYMGPRewards, unclaimedUserYield, uncompoundedM
     }, undefined, false, undefined, this)
   ]
 }, undefined, true, undefined, this);
-var ClaimYield = import_react37.memo(({ claimYMGPRewards, lockedYMGP, unclaimedUserYield, uncompoundedMGPYield, userLockedYMGP, ymgpHoldings, ymgpSupply }) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(ClaimYieldComponent, {
+var ClaimYield = import_react38.memo(({ claimYMGPRewards, lockedYMGP, unclaimedUserYield, uncompoundedMGPYield, userLockedYMGP, ymgpHoldings, ymgpSupply }) => /* @__PURE__ */ jsx_dev_runtime10.jsxDEV(ClaimYieldComponent, {
   claimYMGPRewards,
   lockedYMGP,
   unclaimedUserYield,
@@ -37601,9 +37606,9 @@ var ClaimYield = import_react37.memo(({ claimYMGPRewards, lockedYMGP, unclaimedU
 ClaimYield.displayName = "ClaimYield";
 
 // src/pages/CompoundYield.tsx
-var import_react38 = __toESM(require_react(), 1);
+var import_react39 = __toESM(require_react(), 1);
 var jsx_dev_runtime11 = __toESM(require_jsx_dev_runtime(), 1);
-var CompoundYield = import_react38.memo(({ uncompoundedMGPYield, estimatedCompoundGasFee, pendingRewards, estimatedCompoundAmount, mgpAPR, reefiMGPLocked, prices, compoundRMGP }) => {
+var CompoundYield = import_react39.memo(({ uncompoundedMGPYield, estimatedCompoundGasFee, pendingRewards, estimatedCompoundAmount, mgpAPR, reefiMGPLocked, prices, compoundRMGP }) => {
   const textColor = `text-${uncompoundedMGPYield * prices.MGP * 0.01 > estimatedCompoundGasFee ? "green" : "red"}-400`;
   return /* @__PURE__ */ jsx_dev_runtime11.jsxDEV(Page, {
     info: "Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of rMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the compound button, you will receive 1% of the pending yield.",
@@ -37733,9 +37738,9 @@ var CompoundYield = import_react38.memo(({ uncompoundedMGPYield, estimatedCompou
 CompoundYield.displayName = "CompoundYield";
 
 // src/components/ConnectWallet.tsx
-var import_react39 = __toESM(require_react(), 1);
+var import_react40 = __toESM(require_react(), 1);
 var jsx_dev_runtime12 = __toESM(require_jsx_dev_runtime(), 1);
-var ConnectWallet = import_react39.memo(({ connectRequired, isConnecting, connectWallet }) => connectRequired ? /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
+var ConnectWallet = import_react40.memo(({ connectRequired, isConnecting, connectWallet }) => connectRequired ? /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
   className: "absolute z-10 flex size-full items-center justify-center bg-black",
   children: /* @__PURE__ */ jsx_dev_runtime12.jsxDEV("div", {
     className: "rounded-lg bg-gray-700/50 p-10 text-center",
@@ -37757,9 +37762,9 @@ var ConnectWallet = import_react39.memo(({ connectRequired, isConnecting, connec
 ConnectWallet.displayName = "ConnectWallet";
 
 // src/components/Contracts.tsx
-var import_react40 = __toESM(require_react(), 1);
+var import_react41 = __toESM(require_react(), 1);
 var jsx_dev_runtime13 = __toESM(require_jsx_dev_runtime(), 1);
-var Contracts = import_react40.memo(({ chain }) => /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(Card, {
+var Contracts = import_react41.memo(({ chain }) => /* @__PURE__ */ jsx_dev_runtime13.jsxDEV(Card, {
   children: [
     /* @__PURE__ */ jsx_dev_runtime13.jsxDEV("h2", {
       className: "mb-2 text-lg font-bold",
@@ -37797,7 +37802,7 @@ var Contracts = import_react40.memo(({ chain }) => /* @__PURE__ */ jsx_dev_runti
 Contracts.displayName = "Contracts";
 
 // src/components/Documentation.tsx
-var import_react41 = __toESM(require_react(), 1);
+var import_react42 = __toESM(require_react(), 1);
 var jsx_dev_runtime14 = __toESM(require_jsx_dev_runtime(), 1);
 var documentationSections = [
   {
@@ -38101,7 +38106,7 @@ var findSectionById = (sections, id) => {
   return;
 };
 var Documentation = () => {
-  const [activeSection, setActiveSection] = import_react41.useState("introduction");
+  const [activeSection, setActiveSection] = import_react42.useState("introduction");
   const currentSection = findSectionById(documentationSections, activeSection) ?? documentationSections[0];
   return /* @__PURE__ */ jsx_dev_runtime14.jsxDEV("div", {
     className: "flex h-full",
@@ -38119,10 +38124,10 @@ var Documentation = () => {
 };
 
 // src/components/ErrorCard.tsx
-var import_react42 = __toESM(require_react(), 1);
+var import_react43 = __toESM(require_react(), 1);
 var jsx_dev_runtime15 = __toESM(require_jsx_dev_runtime(), 1);
 var ErrorCard = ({ error, setError }) => {
-  import_react42.useEffect(() => {
+  import_react43.useEffect(() => {
     if (error.length > 0) {
       const timeout = setTimeout(() => {
         setError("");
@@ -38152,7 +38157,7 @@ var ErrorCard = ({ error, setError }) => {
 };
 
 // src/components/Features.tsx
-var import_react43 = __toESM(require_react(), 1);
+var import_react44 = __toESM(require_react(), 1);
 var jsx_dev_runtime16 = __toESM(require_jsx_dev_runtime(), 1);
 var features = [
   {
@@ -38196,7 +38201,7 @@ var features = [
     title: "Risk Management"
   }
 ];
-var Features = import_react43.memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSupply, reefiLockedMGP, vmgpMGPCurveRate }) => /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
+var Features = import_react44.memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSupply, reefiLockedMGP, vmgpMGPCurveRate }) => /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
   className: "flex flex-col items-center",
   children: [
     /* @__PURE__ */ jsx_dev_runtime16.jsxDEV("div", {
@@ -38295,20 +38300,20 @@ var Features = import_react43.memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSuppl
 Features.displayName = "Features";
 
 // src/pages/FixedYieldPage.tsx
-var import_react48 = __toESM(require_react(), 1);
+var import_react49 = __toESM(require_react(), 1);
 
 // src/components/SwapToken.tsx
-var import_react47 = __toESM(require_react(), 1);
+var import_react48 = __toESM(require_react(), 1);
 
 // src/components/BuyOnCurve.tsx
-var import_react45 = __toESM(require_react(), 1);
+var import_react46 = __toESM(require_react(), 1);
 
 // src/components/TokenApproval.tsx
-var import_react44 = __toESM(require_react(), 1);
+var import_react45 = __toESM(require_react(), 1);
 var jsx_dev_runtime17 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenApproval = import_react44.memo(({ allowance, sendAmount, onApprove, tokenSymbol, curve = false, className = "w-full" }) => {
-  const [approveInfinity, setApproveInfinity] = import_react44.useState(false);
-  const [isApproving, setIsApproving] = import_react44.useState(false);
+var TokenApproval = import_react45.memo(({ allowance, send, onApprove, tokenSymbol, curve = false, className = "w-full" }) => {
+  const [approveInfinity, setApproveInfinity] = import_react45.useState(false);
+  const [isApproving, setIsApproving] = import_react45.useState(false);
   const handleApprove = () => {
     setIsApproving(true);
     onApprove(approveInfinity);
@@ -38319,7 +38324,7 @@ var TokenApproval = import_react44.memo(({ allowance, sendAmount, onApprove, tok
     const curveText = curve ? " on Curve" : "";
     return `Approve ${tokenSymbol}${curveText}`;
   };
-  if (allowance >= sendAmount)
+  if (allowance >= (send ?? 0n))
     return;
   return /* @__PURE__ */ jsx_dev_runtime17.jsxDEV("div", {
     className,
@@ -38357,13 +38362,13 @@ TokenApproval.displayName = "TokenApproval";
 
 // src/components/BuyOnCurve.tsx
 var jsx_dev_runtime18 = __toESM(require_jsx_dev_runtime(), 1);
-var BuyOnCurve = import_react45.memo(({ sendAmount, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenASymbol, tokenBSymbol }) => /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
+var BuyOnCurve = import_react46.memo(({ send, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenASymbol, tokenBSymbol }) => /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
   children: [
     /* @__PURE__ */ jsx_dev_runtime18.jsxDEV(TokenApproval, {
       allowance: allowanceCurve,
       curve: true,
       onApprove,
-      sendAmount,
+      send,
       tokenSymbol: tokenASymbol
     }, undefined, false, undefined, this),
     /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("div", {
@@ -38383,7 +38388,7 @@ var BuyOnCurve = import_react45.memo(({ sendAmount, curveAmount, allowanceCurve,
           ]
         }, undefined, true, undefined, this),
         (() => {
-          const directRate = formatEther(sendAmount) * nativeRate;
+          const directRate = formatEther(send ?? 0n) * nativeRate;
           const premiumDiscount = (formatEther(curveAmount) - directRate) / directRate * 100;
           const isPremium = premiumDiscount > 0;
           return Math.abs(premiumDiscount) >= 0.01 ? /* @__PURE__ */ jsx_dev_runtime18.jsxDEV("span", {
@@ -38403,8 +38408,8 @@ BuyOnCurve.displayName = "BuyOnCurve";
 
 // src/components/SwapButton.tsx
 var jsx_dev_runtime19 = __toESM(require_jsx_dev_runtime(), 1);
-var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, ymgpVmgpCurveAmount }) => {
-  if (tokenIn === "MGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "yMGP" || tokenIn === "yMGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "MGP" || tokenIn === "yMGP" && tokenOut === "vMGP") {
+var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, send, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, ymgpVmgpCurveAmount }) => {
+  if (tokenIn === "MGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "yMGP" || tokenIn === "yMGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "MGP" || tokenIn === "yMGP" && tokenOut === "vMGP" || tokenIn === "rMGP" && tokenOut === "wrMGP" || tokenIn === "wrMGP" && tokenOut === "rMGP") {
     let nativeRate = 1;
     let curveAmount = 0n;
     if (tokenIn === "MGP" && tokenOut === "rMGP") {
@@ -38418,10 +38423,14 @@ var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmoun
       curveAmount = ymgpRmgpCurveAmount;
     } else if (tokenIn === "yMGP" && tokenOut === "vMGP")
       curveAmount = ymgpVmgpCurveAmount;
+    else if (tokenIn === "rMGP" && tokenOut === "wrMGP")
+      nativeRate = rmgpSupply === 0n ? 1 : Number(lockedReefiMGP) / Number(rmgpSupply);
+    else if (tokenIn === "wrMGP" && tokenOut === "rMGP")
+      nativeRate = lockedReefiMGP === 0n ? 1 : Number(rmgpSupply) / Number(lockedReefiMGP);
     else if (tokenIn === "rMGP" && tokenOut === "yMGP")
       curveAmount = rmgpYmgpCurveAmount;
     return /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
-      className: "grid grid-cols-2 gap-2",
+      className: `grid ${curveAmount === 0n ? "" : "grid-cols-2"} gap-2`,
       children: [
         /* @__PURE__ */ jsx_dev_runtime19.jsxDEV("div", {
           children: [
@@ -38430,7 +38439,7 @@ var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmoun
               onApprove: (infinity) => {
                 approve(tokenOut, tokenIn, infinity);
               },
-              sendAmount,
+              send,
               tokenSymbol: tokenIn
             }, undefined, false, undefined, this),
             /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(Button, {
@@ -38440,7 +38449,7 @@ var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmoun
               children: [
                 label,
                 " (",
-                formatEther(BigInt(Math.round(Number(sendAmount) * nativeRate))).toFixed(4),
+                formatEther(BigInt(Math.round(Number(send) * nativeRate))).toFixed(4),
                 " ",
                 tokenOut,
                 ")"
@@ -38448,15 +38457,13 @@ var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmoun
             }, undefined, true, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(BuyOnCurve, {
+        curveAmount !== 0n && /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(BuyOnCurve, {
           allowanceCurve: allowances.curve[tokenIn],
           buy,
           curveAmount,
           nativeRate,
-          onApprove: (infinity) => {
-            approve("cMGP", tokenIn, infinity);
-          },
-          sendAmount,
+          onApprove: (infinity) => approve("cMGP", tokenIn, infinity),
+          send,
           tokenASymbol: tokenIn,
           tokenBSymbol: tokenOut
         }, undefined, false, undefined, this)
@@ -38472,7 +38479,7 @@ var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmoun
       onApprove: (infinity) => {
         approve("cMGP", tokenIn, infinity);
       },
-      sendAmount,
+      send,
       tokenASymbol: tokenIn,
       tokenBSymbol: tokenOut
     }, undefined, false, undefined, this);
@@ -38485,7 +38492,7 @@ var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmoun
       onApprove: (infinity) => {
         approve("cMGP", tokenIn, infinity);
       },
-      sendAmount,
+      send,
       tokenASymbol: tokenIn,
       tokenBSymbol: tokenOut
     }, undefined, false, undefined, this);
@@ -38498,7 +38505,7 @@ var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmoun
       onApprove: (infinity) => {
         approve("cMGP", tokenIn, infinity);
       },
-      sendAmount,
+      send,
       tokenASymbol: tokenIn,
       tokenBSymbol: tokenOut
     }, undefined, false, undefined, this);
@@ -38516,7 +38523,7 @@ var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmoun
         onApprove: (infinity) => {
           approve("odosRouter", tokenIn, infinity);
         },
-        sendAmount,
+        send,
         tokenSymbol: tokenIn
       }, undefined, false, undefined, this),
       /* @__PURE__ */ jsx_dev_runtime19.jsxDEV(Button, {
@@ -38533,19 +38540,19 @@ var SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmoun
 };
 
 // src/components/SwapInput.tsx
-var import_react46 = __toESM(require_react(), 1);
+var import_react47 = __toESM(require_react(), 1);
 
 // public/icons/ETH.svg
 var ETH_default = "./ETH-85jh4e8b.svg";
 
 // src/components/SwapInput.tsx
 var jsx_dev_runtime20 = __toESM(require_jsx_dev_runtime(), 1);
-var SwapInput = import_react46.memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin, excludeCoins, prices, ymgpMgpCurveRate, mgpRmgpCurveRate }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = import_react46.useState(false);
-  const dropdownReference = import_react46.useRef(null);
+var SwapInput = import_react47.memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin, excludeCoins, prices, ymgpMgpCurveRate, mgpRmgpCurveRate }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = import_react47.useState(false);
+  const dropdownReference = import_react47.useRef(null);
   excludeCoins.push(outputCoin, "cMGP");
   const availableCoins = Object.keys(coins).filter((coin) => !excludeCoins.includes(coin));
-  import_react46.useEffect(() => {
+  import_react47.useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownReference.current && !dropdownReference.current.contains(event.target))
         setIsDropdownOpen(false);
@@ -38558,12 +38565,16 @@ var SwapInput = import_react46.memo(({ label, selectedCoin, onCoinChange, balanc
   const estimatedOutput = () => {
     if (value === 0n)
       return;
-    const inputAmount = formatEther(value, decimals[selectedCoin]);
+    const inputAmount = formatEther(value ?? 0n, decimals[selectedCoin]);
     if (selectedCoin === "rMGP" && outputCoin === "yMGP")
       return;
     if (selectedCoin === "MGP" && outputCoin === "rMGP")
       return;
     if (selectedCoin === "yMGP" && outputCoin === "rMGP")
+      return;
+    if (selectedCoin === "rMGP" && outputCoin === "wrMGP")
+      return;
+    if (selectedCoin === "wrMGP" && outputCoin === "rMGP")
       return;
     else if (selectedCoin === "yMGP" && outputCoin === "MGP")
       return `${(inputAmount / ymgpMgpCurveRate).toFixed(6)} ${outputCoin}`;
@@ -38608,7 +38619,7 @@ var SwapInput = import_react46.memo(({ label, selectedCoin, onCoinChange, balanc
             },
             placeholder: "0",
             type: "text",
-            value: value === 0n ? undefined : formatEther(value, decimals[selectedCoin])
+            value: value === 0n ? undefined : formatEther(value ?? 0n, decimals[selectedCoin])
           }, undefined, false, undefined, this),
           /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
             className: "flex items-center space-x-2",
@@ -38657,7 +38668,7 @@ var SwapInput = import_react46.memo(({ label, selectedCoin, onCoinChange, balanc
                   }, undefined, true, undefined, this),
                   isDropdownOpen ? /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("div", {
                     className: "absolute right-0 top-full z-50 mt-1 min-w-32 rounded-lg border border-gray-700 bg-gray-800 shadow-xl",
-                    children: availableCoins.map((coin) => /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(import_react46.Fragment, {
+                    children: availableCoins.map((coin) => /* @__PURE__ */ jsx_dev_runtime20.jsxDEV(import_react47.Fragment, {
                       children: [
                         /* @__PURE__ */ jsx_dev_runtime20.jsxDEV("button", {
                           className: `flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin ? "bg-gray-700" : ""}`,
@@ -38710,8 +38721,8 @@ SwapInput.displayName = "SwapInput";
 
 // src/components/SwapToken.tsx
 var jsx_dev_runtime21 = __toESM(require_jsx_dev_runtime(), 1);
-var SwapToken = ({ originalTokenIn, tokenOut, balances, buy, nativeSwap, label, excludeCoins, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => {
-  const [tokenIn, setTokenIn] = import_react47.useState(originalTokenIn);
+var SwapToken = ({ originalTokenIn, tokenOut, balances, buy, nativeSwap, label, excludeCoins, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => {
+  const [tokenIn, setTokenIn] = import_react48.useState(originalTokenIn);
   return /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(jsx_dev_runtime21.Fragment, {
     children: [
       /* @__PURE__ */ jsx_dev_runtime21.jsxDEV(SwapInput, {
@@ -38741,7 +38752,7 @@ var SwapToken = ({ originalTokenIn, tokenOut, balances, buy, nativeSwap, label, 
         ymgpRmgpCurveAmount,
         ymgpMgpCurveAmount,
         allowances,
-        sendAmount,
+        send,
         chain,
         approve,
         convertMGP,
@@ -38757,9 +38768,9 @@ var SwapToken = ({ originalTokenIn, tokenOut, balances, buy, nativeSwap, label, 
 
 // src/pages/FixedYieldPage.tsx
 var jsx_dev_runtime22 = __toESM(require_jsx_dev_runtime(), 1);
-var FixedYieldPage = import_react48.memo(({ mgpAPR, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, ymgpVmgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, unlockSchedule, buyRMGPAndWithdraw: buyRMGPAndWithdraw2 }) => {
+var FixedYieldPage = import_react49.memo(({ mgpAPR, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, ymgpVmgpCurveAmount, allowances, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, unlockSchedule, buyRMGPAndWithdraw }) => {
   const burnRate = Number(rmgpSupply) / Number(lockedReefiMGP);
-  const fixedYieldPercent = (Number(mgpRmgpCurveAmount) / Number(sendAmount) / burnRate - 1) * 100;
+  const fixedYieldPercent = (Number(mgpRmgpCurveAmount) / Number(send) / burnRate - 1) * 100;
   const withdrawalTime = unlockSchedule.length === 6 ? Number(unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2;
   const daysToWithdraw = withdrawalTime / (60 * 60 * 24);
   const annualizedYield = fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100;
@@ -38771,7 +38782,7 @@ var FixedYieldPage = import_react48.memo(({ mgpAPR, balances, setSend, send, pri
     ],
     children: [
       /* @__PURE__ */ jsx_dev_runtime22.jsxDEV(SwapToken, {
-        buy: buyRMGPAndWithdraw2,
+        buy: buyRMGPAndWithdraw,
         excludeCoins: ["CKP", "PNP", "EGP", "LTP", "WETH", "yMGP"],
         label: "Buy & Withdraw",
         originalTokenIn: "MGP",
@@ -38790,7 +38801,6 @@ var FixedYieldPage = import_react48.memo(({ mgpAPR, balances, setSend, send, pri
         ymgpMgpCurveAmount,
         ymgpVmgpCurveAmount,
         allowances,
-        sendAmount,
         chain,
         approve,
         convertMGP,
@@ -38892,13 +38902,13 @@ var FixedYieldPage = import_react48.memo(({ mgpAPR, balances, setSend, send, pri
                 children: "Example:"
               }, undefined, false, undefined, this),
               " Spend ",
-              formatEther(sendAmount).toFixed(2),
+              formatEther(send ?? 0n).toFixed(2),
               " MGP → Get ",
-              (formatEther(sendAmount) / mgpRmgpCurveRate).toFixed(2),
+              (formatEther(send ?? 0n) / mgpRmgpCurveRate).toFixed(2),
               " rMGP → Withdraw ",
-              (formatEther(sendAmount) / mgpRmgpCurveRate * burnRate).toFixed(2),
+              (formatEther(send ?? 0n) / mgpRmgpCurveRate * burnRate).toFixed(2),
               " MGP = +",
-              (formatEther(sendAmount) / mgpRmgpCurveRate * burnRate - formatEther(sendAmount)).toFixed(2),
+              (formatEther(send ?? 0n) / mgpRmgpCurveRate * burnRate - formatEther(send ?? 0n)).toFixed(2),
               " MGP profit"
             ]
           }, undefined, true, undefined, this)
@@ -38944,9 +38954,9 @@ var FixedYieldPage = import_react48.memo(({ mgpAPR, balances, setSend, send, pri
 FixedYieldPage.displayName = "FixedYieldPage";
 
 // src/pages/GetMGPPage.tsx
-var import_react49 = __toESM(require_react(), 1);
+var import_react50 = __toESM(require_react(), 1);
 var jsx_dev_runtime23 = __toESM(require_jsx_dev_runtime(), 1);
-var GetMGPPage = import_react49.memo(({ balances, mgpAPR, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, ymgpVmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, buyMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(Page, {
+var GetMGPPage = import_react50.memo(({ balances, mgpAPR, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, ymgpVmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, buyMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(Page, {
   info: "MGP is Magpie's governance token. All Reefi derivatives are built around MGP.",
   children: [
     /* @__PURE__ */ jsx_dev_runtime23.jsxDEV(SwapToken, {
@@ -38968,7 +38978,6 @@ var GetMGPPage = import_react49.memo(({ balances, mgpAPR, setSend, send, prices,
       ymgpRmgpCurveAmount,
       ymgpMgpCurveAmount,
       allowances,
-      sendAmount,
       chain,
       approve,
       convertMGP,
@@ -39014,9 +39023,9 @@ var GetMGPPage = import_react49.memo(({ balances, mgpAPR, setSend, send, prices,
 GetMGPPage.displayName = "GetMGPPage";
 
 // src/pages/GetRMGPPage.tsx
-var import_react50 = __toESM(require_react(), 1);
+var import_react51 = __toESM(require_react(), 1);
 var jsx_dev_runtime24 = __toESM(require_jsx_dev_runtime(), 1);
-var GetRMGPPage = import_react50.memo(({ mgpAPR, depositMGP, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpVmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, buyRMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(Page, {
+var GetRMGPPage = import_react51.memo(({ mgpAPR, depositMGP, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpVmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, buyRMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(Page, {
   info: "MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.",
   children: [
     /* @__PURE__ */ jsx_dev_runtime24.jsxDEV(SwapToken, {
@@ -39039,7 +39048,6 @@ var GetRMGPPage = import_react50.memo(({ mgpAPR, depositMGP, balances, setSend, 
       ymgpRmgpCurveAmount,
       ymgpMgpCurveAmount,
       allowances,
-      sendAmount,
       chain,
       approve,
       convertMGP,
@@ -39088,9 +39096,9 @@ var GetRMGPPage = import_react50.memo(({ mgpAPR, depositMGP, balances, setSend, 
 GetRMGPPage.displayName = "GetRMGPPage";
 
 // src/pages/GetVMGPPage.tsx
-var import_react51 = __toESM(require_react(), 1);
+var import_react52 = __toESM(require_react(), 1);
 var jsx_dev_runtime25 = __toESM(require_jsx_dev_runtime(), 1);
-var GetVMGPPage = import_react51.memo(({ balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, buyVMGP: buyVMGP2, mintVMGP: mintVMGP2, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(Page, {
+var GetVMGPPage = import_react52.memo(({ balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, approve, convertMGP, sellYMGP, mintWETH, swap, buyVMGP: buyVMGP2, mintVMGP: mintVMGP2, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(Page, {
   info: "yMGP is backed 1:1 by rMGP. 1 yMGP can be redeemed for 0.75 rMGP. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield.",
   children: /* @__PURE__ */ jsx_dev_runtime25.jsxDEV(SwapToken, {
     buy: buyVMGP2,
@@ -39112,7 +39120,6 @@ var GetVMGPPage = import_react51.memo(({ balances, setSend, send, prices, ymgpMg
     ymgpRmgpCurveAmount,
     ymgpMgpCurveAmount,
     allowances,
-    sendAmount,
     chain,
     approve,
     convertMGP,
@@ -39126,12 +39133,51 @@ var GetVMGPPage = import_react51.memo(({ balances, setSend, send, prices, ymgpMg
 }, undefined, false, undefined, this));
 GetVMGPPage.displayName = "GetVMGPPage";
 
-// src/pages/GetYMGPPage.tsx
-var import_react52 = __toESM(require_react(), 1);
+// src/pages/getWRMGP.tsx
+var import_react53 = __toESM(require_react(), 1);
 var jsx_dev_runtime26 = __toESM(require_jsx_dev_runtime(), 1);
-var GetYMGPPage = import_react52.memo(({ balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, buyYMGP, depositRMGP, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Page, {
-  info: "yMGP is backed 1:1 by rMGP. 1 yMGP can be redeemed for 0.75 rMGP. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield.",
+var GetWRMGPPage = import_react53.memo(({ depositMGP, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpVmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, wrapRMGP: wrapRMGP2, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(Page, {
+  info: "rMGP can be wrapped as wrMGP. 1 wrMGP represents 1 vlMGP but earns no yield. wrMGP can be bridged cross-chain.",
+  noTopMargin: true,
   children: /* @__PURE__ */ jsx_dev_runtime26.jsxDEV(SwapToken, {
+    buy: wrapRMGP2,
+    excludeCoins: ["CKP", "PNP", "EGP", "LTP", "WETH"],
+    label: "Wrap",
+    nativeSwap: depositMGP,
+    originalTokenIn: "rMGP",
+    tokenOut: "wrMGP",
+    balances,
+    setSend,
+    send,
+    prices,
+    ymgpMgpCurveRate,
+    mgpRmgpCurveRate,
+    mgpRmgpCurveAmount,
+    rmgpYmgpCurveAmount,
+    rmgpMgpCurveAmount,
+    mgpYmgpCurveAmount,
+    ymgpRmgpCurveAmount,
+    ymgpMgpCurveAmount,
+    allowances,
+    chain,
+    approve,
+    convertMGP,
+    sellYMGP,
+    mintWETH,
+    swap,
+    lockedReefiMGP,
+    rmgpSupply,
+    ymgpVmgpCurveAmount
+  }, undefined, false, undefined, this)
+}, undefined, false, undefined, this));
+GetWRMGPPage.displayName = "GetWRMGPPage";
+
+// src/pages/GetYMGPPage.tsx
+var import_react54 = __toESM(require_react(), 1);
+var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
+var GetYMGPPage = import_react54.memo(({ balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, approve, convertMGP, sellYMGP, mintWETH, swap, buyYMGP, depositRMGP, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(Page, {
+  info: "yMGP is backed 1:1 by rMGP. 1 yMGP can be redeemed for 0.75 rMGP. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield.",
+  children: /* @__PURE__ */ jsx_dev_runtime27.jsxDEV(SwapToken, {
     buy: buyYMGP,
     excludeCoins: ["CKP", "EGP", "PNP", "LTP", "WETH"],
     label: "Mint",
@@ -39151,7 +39197,6 @@ var GetYMGPPage = import_react52.memo(({ balances, setSend, send, prices, ymgpMg
     ymgpRmgpCurveAmount,
     ymgpMgpCurveAmount,
     allowances,
-    sendAmount,
     chain,
     approve,
     convertMGP,
@@ -39166,15 +39211,15 @@ var GetYMGPPage = import_react52.memo(({ balances, setSend, send, prices, ymgpMg
 GetYMGPPage.displayName = "ConvertPage";
 
 // src/components/Header.tsx
-var import_react55 = __toESM(require_react(), 1);
+var import_react57 = __toESM(require_react(), 1);
 
 // src/components/TokenBalances.tsx
-var import_react54 = __toESM(require_react(), 1);
+var import_react56 = __toESM(require_react(), 1);
 
 // src/components/TokenBalance.tsx
-var import_react53 = __toESM(require_react(), 1);
-var jsx_dev_runtime27 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenBalance = import_react53.memo(({ symbol, balance, decimals: decimals2 }) => /* @__PURE__ */ jsx_dev_runtime27.jsxDEV("div", {
+var import_react55 = __toESM(require_react(), 1);
+var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
+var TokenBalance = import_react55.memo(({ symbol, balance, decimals: decimals2 }) => /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
   className: "rounded-lg bg-gray-700 px-3 py-2 text-sm",
   children: [
     symbol,
@@ -39185,26 +39230,26 @@ var TokenBalance = import_react53.memo(({ symbol, balance, decimals: decimals2 }
 TokenBalance.displayName = "TokenBalance";
 
 // src/components/TokenBalances.tsx
-var jsx_dev_runtime28 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenBalances = import_react54.memo(({ mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance }) => /* @__PURE__ */ jsx_dev_runtime28.jsxDEV("div", {
+var jsx_dev_runtime29 = __toESM(require_jsx_dev_runtime(), 1);
+var TokenBalances = import_react56.memo(({ mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance }) => /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
   className: "hidden items-center space-x-2 md:flex",
   children: [
-    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(TokenBalance, {
+    /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(TokenBalance, {
       balance: mgpBalance,
       decimals: decimals.MGP,
       symbol: "MGP"
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(TokenBalance, {
+    /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(TokenBalance, {
       balance: rmgpBalance,
       decimals: decimals.rMGP,
       symbol: "rMGP"
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(TokenBalance, {
+    /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(TokenBalance, {
       balance: ymgpBalance,
       decimals: decimals.yMGP,
       symbol: "yMGP"
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime28.jsxDEV(TokenBalance, {
+    /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(TokenBalance, {
       balance: cmgpBalance,
       decimals: decimals.cMGP,
       symbol: "cMGP"
@@ -39214,107 +39259,107 @@ var TokenBalances = import_react54.memo(({ mgpBalance, rmgpBalance, ymgpBalance,
 TokenBalances.displayName = "TokenBalance";
 
 // src/components/Header.tsx
-var jsx_dev_runtime29 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
 var getHeaderContent = (page, setPage) => {
   if (page === "claim")
-    return /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(jsx_dev_runtime29.Fragment, {
+    return /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(jsx_dev_runtime30.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
           onClick: () => setPage(undefined),
           className: "text-blue-400 hover:text-blue-300",
           type: "button",
           children: "← Back"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("h1", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("h1", {
           className: "text-xl font-bold text-green-400",
           children: "\uD83D\uDCB0 Claim Yield"
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this);
   if (page === "vote")
-    return /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(jsx_dev_runtime29.Fragment, {
+    return /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(jsx_dev_runtime30.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
           onClick: () => setPage(undefined),
           className: "text-blue-400 hover:text-blue-300",
           type: "button",
           children: "← Back"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("h1", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("h1", {
           className: "text-xl font-bold text-red-400",
           children: "\uD83D\uDDF3️ Vote on Proposals"
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this);
   if (page === "bridge")
-    return /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(jsx_dev_runtime29.Fragment, {
+    return /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(jsx_dev_runtime30.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
           onClick: () => setPage(undefined),
           className: "text-blue-400 hover:text-blue-300",
           type: "button",
           children: "← Back"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("h1", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("h1", {
           className: "text-xl font-bold text-blue-400",
           children: "\uD83D\uDDF3️ Bridge rMGP"
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this);
   if (page === "documentation")
-    return /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(jsx_dev_runtime29.Fragment, {
+    return /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(jsx_dev_runtime30.Fragment, {
       children: [
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
           onClick: () => setPage(undefined),
           className: "text-blue-400 hover:text-blue-300",
           type: "button",
           children: "← Back"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("h1", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("h1", {
           className: "text-xl font-bold text-blue-400",
           children: "\uD83D\uDCD6 Documentation"
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this);
-  return /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(jsx_dev_runtime29.Fragment, {
+  return /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(jsx_dev_runtime30.Fragment, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("h1", {
+      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("h1", {
         className: "text-xl font-bold text-blue-500",
         children: "REEFI"
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("p", {
+      /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("p", {
         className: "hidden lg:block",
         children: "Refinance Magpie Yield and Governance"
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
-var Header = import_react55.memo(({ ens, chain, page, setPage, account, isConnecting, setChain, connectWallet, mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance }) => /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
+var Header = import_react57.memo(({ ens, chain, page, setPage, account, isConnecting, setChain, connectWallet, mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance }) => /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
   className: "sticky top-0 z-10 flex w-full items-center justify-between p-4 bg-gray-800",
   children: [
-    /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
       className: "flex items-center gap-4",
       children: [
         getHeaderContent(page, setPage),
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
           onClick: () => setPage("claim"),
           className: "rounded-lg bg-gradient-to-r from-green-600 via-green-500 to-emerald-600 hover:from-green-500 hover:via-green-400 hover:to-emerald-500 text-white shadow-lg shadow-green-500/25 hover:shadow-green-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105",
           type: "button",
           children: "\uD83D\uDCB0 Claim"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
           onClick: () => setPage("vote"),
           className: "rounded-lg bg-gradient-to-r from-red-600 via-red-500 to-orange-600 hover:from-red-500 hover:via-red-400 hover:to-orange-500 text-white shadow-lg shadow-green-500/25 hover:shadow-green-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105",
           type: "button",
           children: "\uD83D\uDDF3️ Vote"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
           onClick: () => setPage("bridge"),
           className: "rounded-lg bg-gradient-to-r from-blue-600 via-blue-500 to-teal-600 hover:from-blue-500 hover:via-blue-400 hover:to-teal-500 text-white shadow-lg shadow-green-500/25 hover:shadow-blue-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105",
           type: "button",
           children: "\uD83C\uDF10 Bridge"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
           onClick: () => setPage("documentation"),
           className: "rounded-lg bg-gradient-to-r from-yellow-950 via-yellow-800 to-yellow-700 hover:from-yellow-900 hover:via-yellow-700 hover:to-grey-500 text-white shadow-lg shadow-yellow-700/25 hover:shadow-blue-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105",
           type: "button",
@@ -39322,26 +39367,26 @@ var Header = import_react55.memo(({ ens, chain, page, setPage, account, isConnec
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this),
-    account === undefined ? /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("button", {
+    account === undefined ? /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("button", {
       className: "rounded-lg bg-green-600 px-4 py-2 transition-colors hover:bg-green-700",
       disabled: isConnecting,
       onClick: connectWallet,
       type: "button",
       children: isConnecting ? "Connecting..." : "Connect Wallet"
-    }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
+    }, undefined, false, undefined, this) : /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
       className: "flex items-center space-x-4",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV(TokenBalances, {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(TokenBalances, {
           mgpBalance,
           rmgpBalance,
           ymgpBalance,
           cmgpBalance
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
           className: "rounded-lg bg-blue-600/20 px-3 py-2 text-sm text-blue-400",
           children: ens ?? `${account.slice(0, 6)}...${account.slice(-4)}`
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("select", {
+        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("select", {
           className: "rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white",
           onChange: (event) => {
             setChain(Number(event.target.value));
@@ -39349,11 +39394,11 @@ var Header = import_react55.memo(({ ens, chain, page, setPage, account, isConnec
           },
           value: chain,
           children: [
-            /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("option", {
+            /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("option", {
               value: "56",
               children: "BNB Chain"
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime29.jsxDEV("option", {
+            /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("option", {
               value: "42161",
               children: "Arbitrum"
             }, undefined, false, undefined, this)
@@ -39366,34 +39411,34 @@ var Header = import_react55.memo(({ ens, chain, page, setPage, account, isConnec
 Header.displayName = "Header";
 
 // src/pages/LockYMGPPage.tsx
-var import_react56 = __toESM(require_react(), 1);
-var jsx_dev_runtime30 = __toESM(require_jsx_dev_runtime(), 1);
-var LockPage = import_react56.memo(({ ymgpBalance, setSend, send, lockYMGP, mgpAPR, reefiLockedMGP, ymgpLocked }) => /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(Page, {
+var import_react58 = __toESM(require_react(), 1);
+var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
+var LockPage = import_react58.memo(({ ymgpBalance, setSend, send, lockYMGP, mgpAPR, reefiLockedMGP, ymgpLocked }) => /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(Page, {
   info: ["yMGP can be locked to earn additional yield paid in rMGP. 5% of protocol yield and 25% of yMGP withdrawals are paid to yMGP lockers.", "Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi's vlMGP."],
   children: [
-    /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(AmountInput, {
+    /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(AmountInput, {
       balance: ymgpBalance,
       label: "Lock yMGP",
       onChange: setSend,
       token: { symbol: "yMGP" },
       value: send
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime30.jsxDEV(Button, {
+    /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(Button, {
       className: "w-full",
       onClick: lockYMGP,
       type: "submit",
       children: "Lock yMGP"
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
       className: "mt-4 text-sm text-gray-400",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
           className: "mb-1 flex justify-between",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
+            /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("span", {
               children: "Base APY"
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
+            /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("span", {
               children: [
                 Math.round(1e4 * aprToApy(mgpAPR) * 0.9) / 100,
                 "%"
@@ -39401,13 +39446,13 @@ var LockPage = import_react56.memo(({ ymgpBalance, setSend, send, lockYMGP, mgpA
             }, undefined, true, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
           className: "mb-1 flex justify-between",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
+            /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("span", {
               children: "Additional APY"
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
+            /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("span", {
               children: [
                 Math.round(1e4 * (Number(reefiLockedMGP) * aprToApy(mgpAPR) * 0.05 / Number(ymgpLocked))) / 100,
                 "%+"
@@ -39415,13 +39460,13 @@ var LockPage = import_react56.memo(({ ymgpBalance, setSend, send, lockYMGP, mgpA
             }, undefined, true, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
           className: "mb-1 flex justify-between",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
+            /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("span", {
               children: "Total APY"
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime30.jsxDEV("span", {
+            /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("span", {
               children: [
                 Math.round(1e4 * (Number(reefiLockedMGP) * aprToApy(mgpAPR) * 0.05 / Number(ymgpLocked) + aprToApy(mgpAPR) * 0.9)) / 100,
                 "%+"
@@ -39436,34 +39481,34 @@ var LockPage = import_react56.memo(({ ymgpBalance, setSend, send, lockYMGP, mgpA
 LockPage.displayName = "LockPage";
 
 // src/pages/LockVMGPPage.tsx
-var import_react57 = __toESM(require_react(), 1);
-var jsx_dev_runtime31 = __toESM(require_jsx_dev_runtime(), 1);
-var LockVMGPPage = import_react57.memo(({ vmgpBalance, setSend, send, lockVMGP: lockVMGP2, mgpAPR }) => /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(Page, {
+var import_react59 = __toESM(require_react(), 1);
+var jsx_dev_runtime32 = __toESM(require_jsx_dev_runtime(), 1);
+var LockVMGPPage = import_react59.memo(({ vmgpBalance, setSend, send, lockVMGP: lockVMGP2, mgpAPR }) => /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(Page, {
   info: ["vMGP can be locked to earn additional yield paid in yMGP. Locked vMGP can't be voted with as it is rented to those willing to pay to vote for you."],
   children: [
-    /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(AmountInput, {
+    /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(AmountInput, {
       balance: vmgpBalance,
       label: "Lock vMGP",
       onChange: setSend,
       token: { symbol: "vMGP" },
       value: send
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime31.jsxDEV(Button, {
+    /* @__PURE__ */ jsx_dev_runtime32.jsxDEV(Button, {
       className: "w-full",
       onClick: lockVMGP2,
       type: "submit",
       children: "Lock yMGP"
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
       className: "mt-4 text-sm text-gray-400",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
           className: "mb-1 flex justify-between",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("span", {
+            /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("span", {
               children: "Base APY (Value Appreciation)"
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("span", {
+            /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("span", {
               children: [
                 Math.round(1e4 * aprToApy(mgpAPR) * 0.9) / 100,
                 "%"
@@ -39471,13 +39516,13 @@ var LockVMGPPage = import_react57.memo(({ vmgpBalance, setSend, send, lockVMGP: 
             }, undefined, true, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
           className: "mb-1 flex justify-between",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("span", {
+            /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("span", {
               children: "Additional APR (Vote Purchases)"
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime31.jsxDEV("span", {
+            /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("span", {
               children: "Variable"
             }, undefined, false, undefined, this)
           ]
@@ -39489,25 +39534,23 @@ var LockVMGPPage = import_react57.memo(({ vmgpBalance, setSend, send, lockVMGP: 
 LockVMGPPage.displayName = "LockVMGPPage";
 
 // src/components/NotificationCard.tsx
-var import_react58 = __toESM(require_react(), 1);
-var jsx_dev_runtime32 = __toESM(require_jsx_dev_runtime(), 1);
+var import_react60 = __toESM(require_react(), 1);
+var jsx_dev_runtime33 = __toESM(require_jsx_dev_runtime(), 1);
 var NotificationCard = ({ notification, setNotification }) => {
-  import_react58.useEffect(() => {
+  import_react60.useEffect(() => {
     if (notification.length > 0) {
       const timeout = setTimeout(() => {
         setNotification("");
       }, 2000);
-      return () => {
-        clearTimeout(timeout);
-      };
+      return () => clearTimeout(timeout);
     }
     return;
   }, [notification, setNotification]);
-  return notification.length > 0 ? /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
+  return notification.length > 0 ? /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
     className: "absolute right-2 top-2 z-20",
-    children: /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("div", {
+    children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
       className: "rounded-lg bg-blue-700 p-4 text-center",
-      children: /* @__PURE__ */ jsx_dev_runtime32.jsxDEV("p", {
+      children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("p", {
         className: "text-sm text-white",
         children: notification
       }, undefined, false, undefined, this)
@@ -39516,35 +39559,35 @@ var NotificationCard = ({ notification, setNotification }) => {
 };
 
 // src/components/PegCard.tsx
-var jsx_dev_runtime33 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime34 = __toESM(require_jsx_dev_runtime(), 1);
 var Notice = ({ type, title, message, action, icon }) => {
   const styles = {
     opportunity: { bg: "bg-gradient-to-r from-emerald-900/20 via-green-900/20 to-emerald-900/20", border: "border-emerald-400/40", titleColor: "text-emerald-300", messageColor: "text-emerald-100", actionColor: "text-emerald-200", iconColor: "text-emerald-400", actionBg: "bg-emerald-500/20" },
     recommendation: { bg: "bg-gradient-to-r from-blue-900/20 via-cyan-900/20 to-blue-900/20", border: "border-cyan-400/40", titleColor: "text-cyan-300", messageColor: "text-cyan-100", actionColor: "text-cyan-200", iconColor: "text-cyan-400", actionBg: "bg-cyan-500/20" }
   };
-  return /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
     className: `rounded-xl border ${styles[type].border} ${styles[type].bg} p-4 mb-4 backdrop-blur-sm`,
-    children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+    children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
       className: "flex items-start space-x-4",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
           className: `${styles[type].iconColor} text-xl`,
           children: icon
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
           className: "flex-1",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
               className: `text-sm font-semibold ${styles[type].titleColor} mb-2`,
               children: title
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
               className: `text-xs ${styles[type].messageColor} mb-3 leading-relaxed`,
               children: message
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
               className: `inline-flex items-center px-3 py-1.5 rounded-lg ${styles[type].actionBg} border border-white/10`,
-              children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("span", {
+              children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("span", {
                 className: `text-xs font-medium ${styles[type].actionColor}`,
                 children: [
                   "\uD83D\uDCA1 ",
@@ -39571,20 +39614,20 @@ var Gauge = ({ value, label, isHealthy, isWarning, isSpread = false }) => {
   else if (colors.orange)
     textColor = "text-orange-400";
   const fillValue = isSpread ? 100 - value * 10 : value;
-  return /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
     className: "relative size-16",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("svg", {
+      /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("svg", {
         className: "size-16 -rotate-90",
         viewBox: "0 0 36 36",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("path", {
+          /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("path", {
             d: "M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831",
             fill: "none",
             stroke: "rgb(71 85 105)",
             strokeWidth: "2"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("path", {
+          /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("path", {
             d: "M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831",
             fill: "none",
             stroke: color,
@@ -39594,49 +39637,49 @@ var Gauge = ({ value, label, isHealthy, isWarning, isSpread = false }) => {
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
         className: "absolute inset-0 flex items-center justify-center",
-        children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("span", {
+        children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("span", {
           className: `text-xs font-bold ${textColor}`,
           children: isSpread ? `${value.toFixed(2)}%` : `${Math.round(value)}%`
         }, undefined, false, undefined, this)
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
         className: "absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-slate-400",
         children: label
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
-var Line = ({ pos, color, label, value, top }) => /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+var Line = ({ pos, color, label, value, top }) => /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
   className: `absolute inset-y-0 w-1 bg-gradient-to-b from-${color}-400/60 via-${color}-500/80 to-${color}-400/60 border border-${color}-400/40 shadow-lg shadow-${color}-500/30 group pointer-events-auto cursor-pointer`,
   style: { left: `${pos}%`, transform: "translateX(-50%)" },
   children: [
-    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
       className: "size-full bg-gradient-to-b from-white/20 to-transparent"
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
       className: `bg-${color}-500 absolute left-1/2 -translate-x-1/2 -translate-y-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 border border-${color}-400/50 rounded px-2 py-1 font-mono text-xs text-white shadow-lg pointer-events-none mb-1 whitespace-nowrap`,
       style: { top },
       children: value.toFixed(4)
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
       className: `text-${color}-400 absolute -bottom-1 left-1/2 -translate-x-1/2 translate-y-full text-xs pointer-events-none mt-1 font-semibold ${label.includes(" ") ? "whitespace-nowrap" : ""}`,
       children: label
     }, undefined, false, undefined, this)
   ]
 }, undefined, true, undefined, this);
-var Marker = ({ pos, top, color, value, show = true }) => show && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+var Marker = ({ pos, top, color, value, show = true }) => show && /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
   className: "absolute transition-all duration-1000 ease-out group",
   style: { left: `${pos}%`, top, transform: "translate(-50%, -80%)" },
-  children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+  children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
     className: "flex flex-col items-center",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
         className: `opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-xs px-2 py-1 rounded font-mono shadow-lg mb-1 pointer-events-none bg-${color}-500 border border-${color}-400/50`,
         children: value.toFixed(4)
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
         className: `size-4 bg-${color}-500 rounded-full border-2 border-white shadow-lg group-hover:scale-125 transition-transform cursor-pointer pointer-events-auto`
       }, undefined, false, undefined, this)
     ]
@@ -39676,44 +39719,44 @@ var PegCard = ({ token, spread, targetToken, rates }) => {
   const sortedRates = [...ratePositions].sort((a, b) => b.value - a.value);
   const topPositions = Object.fromEntries(sortedRates.map((rate, index2) => [rate.label, `${String(20 + index2 * 70 / Math.max(1, sortedRates.length - 1))}%`]));
   const svgPathPoints = sortedRates.map((rate) => `${String(rate.pos)},${String(Number(topPositions[rate.label].replace("%", "")))}`).join(" L ");
-  return /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
     className: "relative w-full",
-    children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+    children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
       className: "relative overflow-hidden rounded-2xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-6 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:scale-[1.02] hover:shadow-purple-500/10",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
           className: "absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-600/10 opacity-50 transition-opacity duration-700 hover:opacity-80"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
           className: "absolute right-4 top-4 size-32 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 opacity-60 blur-3xl transition-opacity duration-700 hover:opacity-90"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
           className: "absolute bottom-4 left-4 size-24 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 opacity-40 blur-2xl transition-opacity duration-700 hover:opacity-70"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
           className: "relative z-10",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
               className: "mb-6 flex items-center justify-between",
               children: [
-                /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                   className: "flex items-center space-x-4",
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("img", {
+                    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("img", {
                       src: coins[token].icon,
                       className: "size-12"
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                       className: "text-slate-300",
                       children: [
-                        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                           className: "text-sm font-semibold",
                           children: [
                             "1 ",
                             token
                           ]
                         }, undefined, true, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                           className: "text-xs text-slate-500",
                           children: [
                             "→ ",
@@ -39724,16 +39767,16 @@ var PegCard = ({ token, spread, targetToken, rates }) => {
                     }, undefined, true, undefined, this)
                   ]
                 }, undefined, true, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                   className: "flex items-center space-x-4",
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(Gauge, {
+                    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(Gauge, {
                       value: pegHealth,
                       label: "Peg Health",
                       isHealthy,
                       isWarning
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(Gauge, {
+                    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(Gauge, {
                       value: spread,
                       label: "Spread",
                       isHealthy,
@@ -39744,26 +39787,26 @@ var PegCard = ({ token, spread, targetToken, rates }) => {
                 }, undefined, true, undefined, this)
               ]
             }, undefined, true, undefined, this),
-            notices.length > 0 && /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+            notices.length > 0 && /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
               className: "mb-6",
-              children: notices.map((notice) => /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(Notice, {
+              children: notices.map((notice) => /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(Notice, {
                 ...notice
               }, notice.title, false, undefined, this))
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
               className: "relative mb-6 rounded-xl border border-slate-700/30 bg-slate-800/20 p-4",
               children: [
-                /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                   className: "relative h-32 overflow-visible rounded-lg border border-slate-700/50 bg-gradient-to-r from-red-900/20 via-slate-800/40 to-green-900/20",
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                       className: "absolute inset-0",
-                      children: [0, 25, 50, 75, 100].map((p) => /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                      children: [0, 25, 50, 75, 100].map((p) => /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                         className: "absolute inset-y-0 w-px border-l border-slate-500/20 bg-slate-600/30",
                         style: { left: `${p}%` }
                       }, p, false, undefined, this))
                     }, undefined, false, undefined, this),
-                    ratePositions.map((rate) => /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(Line, {
+                    ratePositions.map((rate) => /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(Line, {
                       pos: rate.pos,
                       color: rate.color,
                       label: rate.label,
@@ -39771,30 +39814,30 @@ var PegCard = ({ token, spread, targetToken, rates }) => {
                       show: true,
                       top: topPositions[rate.label]
                     }, rate.label, false, undefined, this)),
-                    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("svg", {
+                    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("svg", {
                       className: "pointer-events-none absolute inset-0 size-full",
                       viewBox: "0 0 100 100",
                       preserveAspectRatio: "none",
                       children: [
-                        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("defs", {
-                          children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("linearGradient", {
+                        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("defs", {
+                          children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("linearGradient", {
                             id: "lineGradient",
                             x1: "0%",
                             y1: "0%",
                             x2: "100%",
                             y2: "0%",
                             children: [
-                              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("stop", {
+                              /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("stop", {
                                 offset: "0%",
                                 stopColor: "#ef4444",
                                 stopOpacity: "0.8"
                               }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("stop", {
+                              /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("stop", {
                                 offset: "50%",
                                 stopColor: "#f59e0b",
                                 stopOpacity: "0.8"
                               }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("stop", {
+                              /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("stop", {
                                 offset: "100%",
                                 stopColor: "#10b981",
                                 stopOpacity: "0.8"
@@ -39802,7 +39845,7 @@ var PegCard = ({ token, spread, targetToken, rates }) => {
                             ]
                           }, undefined, true, undefined, this)
                         }, undefined, false, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("path", {
+                        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("path", {
                           d: `M ${svgPathPoints}`,
                           stroke: "url(#lineGradient)",
                           strokeWidth: "3",
@@ -39813,12 +39856,12 @@ var PegCard = ({ token, spread, targetToken, rates }) => {
                         }, undefined, false, undefined, this)
                       ]
                     }, undefined, true, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                       className: "pointer-events-none absolute inset-0",
                       children: ratePositions.map((rate) => {
                         const topPercent = Number(topPositions[rate.label].replace("%", ""));
                         const adjustedTop = `${topPercent}%`;
-                        return /* @__PURE__ */ jsx_dev_runtime33.jsxDEV(Marker, {
+                        return /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(Marker, {
                           pos: rate.pos,
                           top: adjustedTop,
                           color: rate.color,
@@ -39827,9 +39870,9 @@ var PegCard = ({ token, spread, targetToken, rates }) => {
                         }, rate.label, false, undefined, this);
                       })
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                    /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                       className: "absolute inset-x-0 bottom-1 flex justify-end px-2 text-xs text-slate-500",
-                      children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("span", {
+                      children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("span", {
                         children: [
                           "Closer to ",
                           mintRate.label.toLowerCase(),
@@ -39848,25 +39891,25 @@ var PegCard = ({ token, spread, targetToken, rates }) => {
                   else if (colors.orange)
                     color = "orange";
                   const width = index2 === 0 ? value : Math.max(0, 100 - Math.min(spread * 10, 100));
-                  return /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                  return /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                     className: "mt-6",
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                         className: "mb-2 flex items-center justify-between",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("span", {
+                          /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("span", {
                             className: "text-xs text-slate-400",
                             children: label
                           }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("span", {
+                          /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("span", {
                             className: `text-xs font-bold text-${color}-400`,
                             children: index2 === 0 ? `${value}%` : `${spread.toFixed(2)}%`
                           }, undefined, false, undefined, this)
                         ]
                       }, undefined, true, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                         className: "h-2 overflow-hidden rounded-full border border-slate-700/50 bg-slate-800",
-                        children: /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                        children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                           className: `h-full rounded-full bg-gradient-to-r from-${color}-500 to-${gradientColor(color)}-${color === "red" ? "600" : "500"} transition-all duration-1000 ease-out`,
                           style: { width: `${width}%` }
                         }, undefined, false, undefined, this)
@@ -39876,20 +39919,20 @@ var PegCard = ({ token, spread, targetToken, rates }) => {
                 })
               ]
             }, undefined, true, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+            /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
               className: `grid grid-cols-${Math.min(6, rates.length)} gap-3`,
-              children: rates.map((rate) => ({ color: rate.color, label: rate.label, value: rate.value.toFixed(4) })).map(({ label, value, color }) => /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+              children: rates.map((rate) => ({ color: rate.color, label: rate.label, value: rate.value.toFixed(4) })).map(({ label, value, color }) => /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                 className: "rounded-lg border border-slate-700/30 bg-slate-800/40 p-2 text-center",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                     className: `text-xs font-semibold text-${color}-400 mb-1`,
                     children: label
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                     className: `font-mono text-xs ${label === "Spread" ? ["font-bold", getSpreadColor(spread)].join(" ") : "text-slate-200"}`,
                     children: value
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime33.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
                     className: "text-[10px] text-slate-500",
                     children: label === "Spread" ? "Swap Fee" : targetToken
                   }, undefined, false, undefined, this)
@@ -39905,13 +39948,13 @@ var PegCard = ({ token, spread, targetToken, rates }) => {
 var PegCard_default = PegCard;
 
 // src/components/Questions.tsx
-var import_react59 = __toESM(require_react(), 1);
+var import_react61 = __toESM(require_react(), 1);
 
 // public/diagram.svg
 var diagram_default = "./diagram-61tcs965.svg";
 
 // src/components/Questions.tsx
-var jsx_dev_runtime34 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime35 = __toESM(require_jsx_dev_runtime(), 1);
 var qaData = [
   {
     answer: ["Reefi is a protocol that refinances Magpie yield and governance by creating liquid derivatives of vlMGP (vote-locked MGP).", "It allows users to earn auto-compounding yield while maintaining liquidity and boosted yields, as well as boosted governance power."],
@@ -39955,7 +39998,7 @@ var qaData = [
   }
 ];
 var QASection = () => {
-  const [openItems, setOpenItems] = import_react59.useState(() => new Set);
+  const [openItems, setOpenItems] = import_react61.useState(() => new Set);
   const toggleItem = (index2) => {
     const newOpenItems = new Set(openItems);
     if (newOpenItems.has(index2))
@@ -39964,36 +40007,36 @@ var QASection = () => {
       newOpenItems.add(index2);
     setOpenItems(newOpenItems);
   };
-  return /* @__PURE__ */ jsx_dev_runtime34.jsxDEV(Card, {
-    children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(Card, {
+    children: /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
       className: "max-w-4xl",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("h2", {
+        /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("h2", {
           className: "mb-4 text-2xl font-bold",
           children: "Frequently Asked Questions"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
           className: "space-y-2",
-          children: qaData.map((item, index2) => /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
+          children: qaData.map((item, index2) => /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
             className: "rounded-lg border border-gray-700",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("button", {
+              /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
                 className: "flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-700/30",
                 onClick: () => {
                   toggleItem(index2);
                 },
                 type: "button",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("span", {
                     className: "font-medium text-gray-200",
                     children: item.question
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("svg", {
+                  /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("svg", {
                     className: `size-5 text-gray-400 transition-transform${openItems.has(index2) ? "rotate-180" : ""}`,
                     fill: "none",
                     stroke: "currentColor",
                     viewBox: "0 0 24 24",
-                    children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("path", {
+                    children: /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("path", {
                       d: "M19 9l-7 7-7-7",
                       strokeLinecap: "round",
                       strokeLinejoin: "round",
@@ -40002,14 +40045,14 @@ var QASection = () => {
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              openItems.has(index2) && /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
+              openItems.has(index2) && /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
                 className: "px-4 pb-4",
-                children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
+                children: /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
                   className: "border-t border-gray-700 pt-2",
-                  children: Array.isArray(item.answer) ? item.answer.map((paragraph) => /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("p", {
+                  children: Array.isArray(item.answer) ? item.answer.map((paragraph) => /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("p", {
                     className: "mb-2 text-sm text-gray-300 last:mb-0",
                     dangerouslySetInnerHTML: { __html: paragraph }
-                  }, paragraph, false, undefined, this)) : /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("p", {
+                  }, paragraph, false, undefined, this)) : /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("p", {
                     className: "text-sm text-gray-300",
                     dangerouslySetInnerHTML: { __html: item.answer }
                   }, undefined, false, undefined, this)
@@ -40018,9 +40061,9 @@ var QASection = () => {
             ]
           }, item.question, true, undefined, this))
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
           className: "my-4 flex justify-center",
-          children: /* @__PURE__ */ jsx_dev_runtime34.jsxDEV("img", {
+          children: /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("img", {
             alt: "Diagram",
             className: "w-full",
             src: diagram_default
@@ -40032,12 +40075,12 @@ var QASection = () => {
 };
 
 // src/pages/RedeemRMGPPage.tsx
-var import_react60 = __toESM(require_react(), 1);
-var jsx_dev_runtime35 = __toESM(require_jsx_dev_runtime(), 1);
-var RedeemRMGPPage = import_react60.memo(({ buyMGP, redeemRMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, ymgpVmgpCurveAmount, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(Page, {
+var import_react62 = __toESM(require_react(), 1);
+var jsx_dev_runtime36 = __toESM(require_jsx_dev_runtime(), 1);
+var RedeemRMGPPage = import_react62.memo(({ buyMGP, redeemRMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, ymgpVmgpCurveAmount, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Page, {
   info: ["rMGP can be redeemed for the underlying MGP through the withdrawal queue or swapped instantly at market rate via Curve.", "The withdrawal queue is processed directly through Magpie, therefore native withdrawals take at minimum 60 days.", "Only 6 withdrawals can be processed through Magpie at once. If all slots are used, withdrawals will be added to the queue once a new slot is made available making worst case withdrawal time 120 days."],
   children: [
-    /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(SwapToken, {
+    /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(SwapToken, {
       buy: buyMGP,
       excludeCoins: ["CKP", "PNP", "EGP", "LTP", "WETH"],
       label: "Redeem via Queue",
@@ -40057,7 +40100,6 @@ var RedeemRMGPPage = import_react60.memo(({ buyMGP, redeemRMGP, withdrawMGP, unl
       ymgpRmgpCurveAmount,
       ymgpMgpCurveAmount,
       allowances,
-      sendAmount,
       chain,
       approve,
       convertMGP,
@@ -40068,102 +40110,17 @@ var RedeemRMGPPage = import_react60.memo(({ buyMGP, redeemRMGP, withdrawMGP, unl
       rmgpSupply,
       ymgpVmgpCurveAmount
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime36.jsxDEV("div", {
       className: "mt-4 flex justify-between text-sm text-gray-400",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime36.jsxDEV("span", {
           children: "Native Withdraw Time"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime36.jsxDEV("span", {
           children: unlockSchedule.length === 6 ? formatTime(Number(unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2) : formatTime(60 * 60 * 24 * 30 * 2)
         }, undefined, false, undefined, this)
       ]
     }, undefined, true, undefined, this),
-    userPendingWithdraws > 0n ? /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(jsx_dev_runtime35.Fragment, {
-      children: [
-        /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("h3", {
-          className: "mt-4 text-base font-medium",
-          children: "Pending Withdraws"
-        }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("p", {
-          children: [
-            formatEther(userPendingWithdraws, decimals.MGP),
-            " MGP"
-          ]
-        }, undefined, true, undefined, this),
-        unlockSchedule[0] ? /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("p", {
-          children: [
-            " Unlock available in: ",
-            formatTime(Number(unlockSchedule[0].endTime) - Date.now() / 1000),
-            " to ",
-            formatTime(Number(unlockSchedule.at(-1)?.endTime) + 60 * 60 * 24 * 60 - Date.now() / 1000)
-          ]
-        }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("p", {
-          children: "N/A"
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this) : "",
-    userWithdrawable > 0n ? /* @__PURE__ */ jsx_dev_runtime35.jsxDEV(jsx_dev_runtime35.Fragment, {
-      children: [
-        /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("h3", {
-          className: "mt-4 text-base font-medium",
-          children: "Available To Withdraw"
-        }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("p", {
-          children: [
-            formatEther(userWithdrawable, decimals.MGP),
-            " MGP"
-          ]
-        }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime35.jsxDEV("button", {
-          className: "h-min w-full rounded-lg bg-green-600 py-2 transition-colors hover:bg-green-700",
-          onClick: withdrawMGP,
-          type: "submit",
-          children: "Withdraw MGP"
-        }, undefined, false, undefined, this)
-      ]
-    }, undefined, true, undefined, this) : ""
-  ]
-}, undefined, true, undefined, this));
-RedeemRMGPPage.displayName = "RedeemMGPPage";
-
-// src/pages/RedeemYMGPPage.tsx
-var import_react61 = __toESM(require_react(), 1);
-var jsx_dev_runtime36 = __toESM(require_jsx_dev_runtime(), 1);
-var RedeemYMGPPage = import_react61.memo(({ buyRMGP, redeemYMGP: redeemYMGP2, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, ymgpVmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(Page, {
-  info: ["yMGP can be redeemed for 75% of it's underlying rMGP instantly or swapped at market rate via Curve.", "The 25% withdraw fee is distributed to yMGP lockers."],
-  children: [
-    /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(SwapToken, {
-      buy: buyRMGP,
-      excludeCoins: ["CKP", "PNP", "EGP", "LTP", "WETH"],
-      label: "Redeem",
-      nativeSwap: redeemYMGP2,
-      originalTokenIn: "yMGP",
-      tokenOut: "rMGP",
-      balances,
-      setSend,
-      send,
-      prices,
-      ymgpMgpCurveRate,
-      mgpRmgpCurveRate,
-      mgpRmgpCurveAmount,
-      rmgpYmgpCurveAmount,
-      rmgpMgpCurveAmount,
-      mgpYmgpCurveAmount,
-      ymgpRmgpCurveAmount,
-      ymgpMgpCurveAmount,
-      allowances,
-      sendAmount,
-      chain,
-      approve,
-      convertMGP,
-      sellYMGP,
-      mintWETH,
-      swap,
-      lockedReefiMGP,
-      rmgpSupply,
-      ymgpVmgpCurveAmount
-    }, undefined, false, undefined, this),
     userPendingWithdraws > 0n ? /* @__PURE__ */ jsx_dev_runtime36.jsxDEV(jsx_dev_runtime36.Fragment, {
       children: [
         /* @__PURE__ */ jsx_dev_runtime36.jsxDEV("h3", {
@@ -40210,15 +40167,99 @@ var RedeemYMGPPage = import_react61.memo(({ buyRMGP, redeemYMGP: redeemYMGP2, wi
     }, undefined, true, undefined, this) : ""
   ]
 }, undefined, true, undefined, this));
+RedeemRMGPPage.displayName = "RedeemMGPPage";
+
+// src/pages/RedeemYMGPPage.tsx
+var import_react63 = __toESM(require_react(), 1);
+var jsx_dev_runtime37 = __toESM(require_jsx_dev_runtime(), 1);
+var RedeemYMGPPage = import_react63.memo(({ buyRMGP, redeemYMGP: redeemYMGP2, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, ymgpVmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(Page, {
+  info: ["yMGP can be redeemed for 75% of it's underlying rMGP instantly or swapped at market rate via Curve.", "The 25% withdraw fee is distributed to yMGP lockers."],
+  children: [
+    /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(SwapToken, {
+      buy: buyRMGP,
+      excludeCoins: ["CKP", "PNP", "EGP", "LTP", "WETH"],
+      label: "Redeem",
+      nativeSwap: redeemYMGP2,
+      originalTokenIn: "yMGP",
+      tokenOut: "rMGP",
+      balances,
+      setSend,
+      send,
+      prices,
+      ymgpMgpCurveRate,
+      mgpRmgpCurveRate,
+      mgpRmgpCurveAmount,
+      rmgpYmgpCurveAmount,
+      rmgpMgpCurveAmount,
+      mgpYmgpCurveAmount,
+      ymgpRmgpCurveAmount,
+      ymgpMgpCurveAmount,
+      allowances,
+      chain,
+      approve,
+      convertMGP,
+      sellYMGP,
+      mintWETH,
+      swap,
+      lockedReefiMGP,
+      rmgpSupply,
+      ymgpVmgpCurveAmount
+    }, undefined, false, undefined, this),
+    userPendingWithdraws > 0n ? /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(jsx_dev_runtime37.Fragment, {
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("h3", {
+          className: "mt-4 text-base font-medium",
+          children: "Pending Withdraws"
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("p", {
+          children: [
+            formatEther(userPendingWithdraws, decimals.MGP),
+            " MGP"
+          ]
+        }, undefined, true, undefined, this),
+        unlockSchedule[0] ? /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("p", {
+          children: [
+            " Unlock available in: ",
+            formatTime(Number(unlockSchedule[0].endTime) - Date.now() / 1000),
+            " to ",
+            formatTime(Number(unlockSchedule.at(-1)?.endTime) + 60 * 60 * 24 * 60 - Date.now() / 1000)
+          ]
+        }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("p", {
+          children: "N/A"
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this) : "",
+    userWithdrawable > 0n ? /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(jsx_dev_runtime37.Fragment, {
+      children: [
+        /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("h3", {
+          className: "mt-4 text-base font-medium",
+          children: "Available To Withdraw"
+        }, undefined, false, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("p", {
+          children: [
+            formatEther(userWithdrawable, decimals.MGP),
+            " MGP"
+          ]
+        }, undefined, true, undefined, this),
+        /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("button", {
+          className: "h-min w-full rounded-lg bg-green-600 py-2 transition-colors hover:bg-green-700",
+          onClick: withdrawMGP,
+          type: "submit",
+          children: "Withdraw MGP"
+        }, undefined, false, undefined, this)
+      ]
+    }, undefined, true, undefined, this) : ""
+  ]
+}, undefined, true, undefined, this));
 RedeemYMGPPage.displayName = "RedeemYMGPPage";
 
 // src/pages/SupplyLiquidityPage.tsx
-var import_react62 = __toESM(require_react(), 1);
-var jsx_dev_runtime37 = __toESM(require_jsx_dev_runtime(), 1);
-var SupplyLiquidityPage = import_react62.memo(({ mgpBalance, rmgpBalance, ymgpBalance, setMgpLPAmount, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, setRmgpLPAmount, setYmgpLPAmount, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, supplyLiquidity }) => /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(Page, {
+var import_react64 = __toESM(require_react(), 1);
+var jsx_dev_runtime38 = __toESM(require_jsx_dev_runtime(), 1);
+var SupplyLiquidityPage = import_react64.memo(({ mgpBalance, rmgpBalance, ymgpBalance, setMgpLPAmount, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, setRmgpLPAmount, setYmgpLPAmount, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, supplyLiquidity }) => /* @__PURE__ */ jsx_dev_runtime38.jsxDEV(Page, {
   info: 'Supply liquidity to the cMGP Curve pool (MGP/rMGP/yMGP). You can supply liquidity at any ratio of MGP:rMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use <a href="https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/" className="text-blue-400">Curve</a>.',
   children: [
-    /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(AmountInput, {
+    /* @__PURE__ */ jsx_dev_runtime38.jsxDEV(AmountInput, {
       balance: mgpBalance,
       label: "Supply MGP",
       onChange: setMgpLPAmount,
@@ -40236,13 +40277,13 @@ var SupplyLiquidityPage = import_react62.memo(({ mgpBalance, rmgpBalance, ymgpBa
       token: { symbol: "MGP" },
       value: mgpLPAmount
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("div", {
       className: "mb-4 flex justify-between text-sm text-gray-400",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("span", {
           children: "Target"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("span", {
           children: [
             (100 * Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed(0),
             "%"
@@ -40250,7 +40291,7 @@ var SupplyLiquidityPage = import_react62.memo(({ mgpBalance, rmgpBalance, ymgpBa
         }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(AmountInput, {
+    /* @__PURE__ */ jsx_dev_runtime38.jsxDEV(AmountInput, {
       balance: rmgpBalance,
       label: "Supply rMGP",
       onChange: setRmgpLPAmount,
@@ -40268,13 +40309,13 @@ var SupplyLiquidityPage = import_react62.memo(({ mgpBalance, rmgpBalance, ymgpBa
       token: { symbol: "rMGP" },
       value: rmgpLPAmount
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("div", {
       className: "mb-4 flex justify-between text-sm text-gray-400",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("span", {
           children: "Target"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("span", {
           children: [
             (100 * Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed(0),
             "%"
@@ -40282,7 +40323,7 @@ var SupplyLiquidityPage = import_react62.memo(({ mgpBalance, rmgpBalance, ymgpBa
         }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(AmountInput, {
+    /* @__PURE__ */ jsx_dev_runtime38.jsxDEV(AmountInput, {
       balance: ymgpBalance,
       label: "Supply yMGP",
       onChange: setYmgpLPAmount,
@@ -40300,13 +40341,13 @@ var SupplyLiquidityPage = import_react62.memo(({ mgpBalance, rmgpBalance, ymgpBa
       token: { symbol: "yMGP" },
       value: ymgpLPAmount
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("div", {
       className: "mb-4 flex justify-between text-sm text-gray-400",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("span", {
           children: "Target"
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime37.jsxDEV("span", {
+        /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("span", {
           children: [
             (100 * Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed(0),
             "%"
@@ -40314,7 +40355,7 @@ var SupplyLiquidityPage = import_react62.memo(({ mgpBalance, rmgpBalance, ymgpBa
         }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime37.jsxDEV(Button, {
+    /* @__PURE__ */ jsx_dev_runtime38.jsxDEV(Button, {
       className: "w-full",
       onClick: supplyLiquidity,
       type: "submit",
@@ -40325,22 +40366,22 @@ var SupplyLiquidityPage = import_react62.memo(({ mgpBalance, rmgpBalance, ymgpBa
 SupplyLiquidityPage.displayName = "SupplyLiquidityPage";
 
 // src/components/TokenCards.tsx
-var import_react65 = __toESM(require_react(), 1);
+var import_react67 = __toESM(require_react(), 1);
 
 // src/components/TokenCard.tsx
-var import_react64 = __toESM(require_react(), 1);
+var import_react66 = __toESM(require_react(), 1);
 
 // src/components/TokenStat.tsx
-var import_react63 = __toESM(require_react(), 1);
-var jsx_dev_runtime38 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenStat = import_react63.memo(({ title, detail }) => /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("div", {
+var import_react65 = __toESM(require_react(), 1);
+var jsx_dev_runtime39 = __toESM(require_jsx_dev_runtime(), 1);
+var TokenStat = import_react65.memo(({ title, detail }) => /* @__PURE__ */ jsx_dev_runtime39.jsxDEV("div", {
   className: "rounded-lg bg-gradient-to-r from-green-600/20 to-blue-600/20 px-2 py-1",
   children: [
-    /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("p", {
+    /* @__PURE__ */ jsx_dev_runtime39.jsxDEV("p", {
       className: "text-xs text-gray-400",
       children: title
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime38.jsxDEV("p", {
+    /* @__PURE__ */ jsx_dev_runtime39.jsxDEV("p", {
       className: "text-xs font-medium",
       children: detail
     }, undefined, false, undefined, this)
@@ -40349,24 +40390,24 @@ var TokenStat = import_react63.memo(({ title, detail }) => /* @__PURE__ */ jsx_d
 TokenStat.displayName = "TokenStat";
 
 // src/components/TokenCard.tsx
-var jsx_dev_runtime39 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenCard = import_react64.memo(({ symbol, decimals: decimals2, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }) => /* @__PURE__ */ jsx_dev_runtime39.jsxDEV(Card, {
+var jsx_dev_runtime40 = __toESM(require_jsx_dev_runtime(), 1);
+var TokenCard = import_react66.memo(({ symbol, decimals: decimals2, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }) => /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(Card, {
   padding: 4,
   children: [
-    /* @__PURE__ */ jsx_dev_runtime39.jsxDEV("div", {
+    /* @__PURE__ */ jsx_dev_runtime40.jsxDEV("div", {
       className: "xl:grid xl:grid-cols-3 w-full",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime39.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime40.jsxDEV("div", {
           className: "flex items-start justify-between",
-          children: /* @__PURE__ */ jsx_dev_runtime39.jsxDEV("div", {
-            children: /* @__PURE__ */ jsx_dev_runtime39.jsxDEV("div", {
+          children: /* @__PURE__ */ jsx_dev_runtime40.jsxDEV("div", {
+            children: /* @__PURE__ */ jsx_dev_runtime40.jsxDEV("div", {
               className: "flex items-center",
               children: [
-                /* @__PURE__ */ jsx_dev_runtime39.jsxDEV("img", {
+                /* @__PURE__ */ jsx_dev_runtime40.jsxDEV("img", {
                   className: "size-8 mr-2",
                   src: coins[symbol].icon
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime39.jsxDEV("p", {
+                /* @__PURE__ */ jsx_dev_runtime40.jsxDEV("p", {
                   className: "text-lg font-bold",
                   children: [
                     "$",
@@ -40377,38 +40418,38 @@ var TokenCard = import_react64.memo(({ symbol, decimals: decimals2, description,
             }, undefined, true, undefined, this)
           }, undefined, false, undefined, this)
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime39.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime40.jsxDEV("div", {
           className: "col-span-2 mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:mt-0",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime39.jsxDEV(TokenStat, {
+            /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenStat, {
               detail: `${formatNumber(formatEther(supply, decimals2), 3)} ${symbol}`,
               title: "Supply"
             }, undefined, false, undefined, this),
-            price !== undefined && /* @__PURE__ */ jsx_dev_runtime39.jsxDEV(TokenStat, {
+            price !== undefined && /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenStat, {
               detail: `$${price.toFixed(4)}`,
               title: "Price"
             }, undefined, false, undefined, this),
-            underlying !== undefined && /* @__PURE__ */ jsx_dev_runtime39.jsxDEV(TokenStat, {
+            underlying !== undefined && /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenStat, {
               detail: `${formatNumber(formatEther(underlying), 2)} ${underlyingSymbol}`,
               title: "TVL"
             }, undefined, false, undefined, this),
-            underlying !== undefined && underlying !== supply && /* @__PURE__ */ jsx_dev_runtime39.jsxDEV(TokenStat, {
+            underlying !== undefined && underlying !== supply && /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenStat, {
               detail: `${formatNumber(Number(underlying) / Number(supply), 4)} ${underlyingSymbol}`,
               title: "Mint Rate"
             }, undefined, false, undefined, this),
-            locked !== undefined && /* @__PURE__ */ jsx_dev_runtime39.jsxDEV(TokenStat, {
+            locked !== undefined && /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenStat, {
               detail: `${String(Math.round(1e4 * Number(locked) / Number(supply)) / 100)}%`,
               title: "Lock Rate"
             }, undefined, false, undefined, this),
-            price !== undefined && /* @__PURE__ */ jsx_dev_runtime39.jsxDEV(TokenStat, {
+            price !== undefined && /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenStat, {
               detail: `$${formatNumber(price * formatEther(supply, decimals2))}`,
               title: "FDV"
             }, undefined, false, undefined, this),
-            voteMultiplier !== undefined && /* @__PURE__ */ jsx_dev_runtime39.jsxDEV(TokenStat, {
+            voteMultiplier !== undefined && /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenStat, {
               detail: `${formatNumber(voteMultiplier)}x`,
               title: "Vote Multiplier"
             }, undefined, false, undefined, this),
-            marketRate !== undefined && /* @__PURE__ */ jsx_dev_runtime39.jsxDEV(TokenStat, {
+            marketRate !== undefined && /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenStat, {
               detail: `${formatNumber(100 * (Number(underlying) / Number(supply)) / Number(marketRate), 2)}%`,
               title: "Peg"
             }, undefined, false, undefined, this)
@@ -40416,7 +40457,7 @@ var TokenCard = import_react64.memo(({ symbol, decimals: decimals2, description,
         }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime39.jsxDEV("p", {
+    /* @__PURE__ */ jsx_dev_runtime40.jsxDEV("p", {
       className: "mt-2 text-xs text-gray-400 w-full",
       children: description
     }, undefined, false, undefined, this)
@@ -40425,11 +40466,11 @@ var TokenCard = import_react64.memo(({ symbol, decimals: decimals2, description,
 TokenCard.displayName = "TokenCard";
 
 // src/components/TokenCards.tsx
-var jsx_dev_runtime40 = __toESM(require_jsx_dev_runtime(), 1);
-var TokenCards = import_react65.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupply, ymgpSupply, ymgpLocked, reefiMGPLocked, mgpRmgpCurveRate, rmgpYmgpCurveRate, vmgpSupply, ymgpVmgpCurveRate }) => /* @__PURE__ */ jsx_dev_runtime40.jsxDEV("div", {
+var jsx_dev_runtime41 = __toESM(require_jsx_dev_runtime(), 1);
+var TokenCards = import_react67.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupply, ymgpSupply, ymgpLocked, reefiMGPLocked, mgpRmgpCurveRate, rmgpYmgpCurveRate, vmgpSupply, ymgpVmgpCurveRate }) => /* @__PURE__ */ jsx_dev_runtime41.jsxDEV("div", {
   className: "grid grid-cols-2 gap-4 md:grid-cols-4",
   children: [
-    /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenCard, {
+    /* @__PURE__ */ jsx_dev_runtime41.jsxDEV(TokenCard, {
       decimals: decimals.MGP,
       description: "MGP is the underlying asset all derivatives rely on.",
       locked: mgpLocked,
@@ -40437,7 +40478,7 @@ var TokenCards = import_react65.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupp
       supply: mgpSupply,
       symbol: "MGP"
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenCard, {
+    /* @__PURE__ */ jsx_dev_runtime41.jsxDEV(TokenCard, {
       decimals: decimals.rMGP,
       description: "rMGP earns auto compounding yield from locked MGP, while remaining liquid. rMGP can be converted back to MGP.",
       marketRate: mgpRmgpCurveRate,
@@ -40446,7 +40487,7 @@ var TokenCards = import_react65.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupp
       underlying: reefiMGPLocked,
       underlyingSymbol: "MGP"
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenCard, {
+    /* @__PURE__ */ jsx_dev_runtime41.jsxDEV(TokenCard, {
       decimals: decimals.yMGP,
       description: "yMGP is backed 1:1 by rMGP but has a 25% withdraw fee. 5% of vlMGP yield is distributed to locked yMGP paid in rMGP.",
       locked: ymgpLocked,
@@ -40456,7 +40497,7 @@ var TokenCards = import_react65.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupp
       underlying: ymgpSupply + ymgpLocked,
       underlyingSymbol: "rMGP"
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime40.jsxDEV(TokenCard, {
+    /* @__PURE__ */ jsx_dev_runtime41.jsxDEV(TokenCard, {
       decimals: decimals.vMGP,
       description: "vMGP is backed 1:1 by yMGP but cannot be converted back to yMGP. vMGP controls all of Reefi's voting power.",
       symbol: "vMGP",
@@ -40471,19 +40512,19 @@ var TokenCards = import_react65.memo(({ mgpLocked, mgpPrice, mgpSupply, rmgpSupp
 TokenCards.displayName = "TokenCards";
 
 // src/pages/UnlockYMGPPage.tsx
-var import_react66 = __toESM(require_react(), 1);
-var jsx_dev_runtime41 = __toESM(require_jsx_dev_runtime(), 1);
-var UnlockPageComponent = ({ sendAmount, setSendAmount, unlockYMGP, lymgpBalance }) => /* @__PURE__ */ jsx_dev_runtime41.jsxDEV(Page, {
+var import_react68 = __toESM(require_react(), 1);
+var jsx_dev_runtime42 = __toESM(require_jsx_dev_runtime(), 1);
+var UnlockPageComponent = ({ send, setSendAmount, unlockYMGP, lymgpBalance }) => /* @__PURE__ */ jsx_dev_runtime42.jsxDEV(Page, {
   info: ["yMGP can be unlocked instantly. Unlocked yMGP earns the underlying rMGP yield, but forfeits the additional yield."],
   children: [
-    /* @__PURE__ */ jsx_dev_runtime41.jsxDEV(AmountInput, {
+    /* @__PURE__ */ jsx_dev_runtime42.jsxDEV(AmountInput, {
       balance: lymgpBalance,
       label: "Get yMGP",
       onChange: setSendAmount,
       token: { symbol: "lyMGP" },
-      value: sendAmount
+      value: send
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime41.jsxDEV(Button, {
+    /* @__PURE__ */ jsx_dev_runtime42.jsxDEV(Button, {
       className: "w-full",
       onClick: unlockYMGP,
       type: "submit",
@@ -40491,22 +40532,22 @@ var UnlockPageComponent = ({ sendAmount, setSendAmount, unlockYMGP, lymgpBalance
     }, undefined, false, undefined, this)
   ]
 }, undefined, true, undefined, this);
-var UnlockPage = import_react66.memo(UnlockPageComponent);
+var UnlockPage = import_react68.memo(UnlockPageComponent);
 
 // src/pages/UnlockVMGPPage.tsx
-var import_react67 = __toESM(require_react(), 1);
-var jsx_dev_runtime42 = __toESM(require_jsx_dev_runtime(), 1);
-var UnlockVMGPPageComponent = ({ sendAmount, setSendAmount, unlockVMGP: unlockVMGP2, lvmgpBalance }) => /* @__PURE__ */ jsx_dev_runtime42.jsxDEV(Page, {
+var import_react69 = __toESM(require_react(), 1);
+var jsx_dev_runtime43 = __toESM(require_jsx_dev_runtime(), 1);
+var UnlockVMGPPageComponent = ({ send, setSendAmount, unlockVMGP: unlockVMGP2, lvmgpBalance }) => /* @__PURE__ */ jsx_dev_runtime43.jsxDEV(Page, {
   info: ["vMGP can be unlocked instantly. By unlocking your vMGP you won't receive additional yield, but will be able to vote."],
   children: [
-    /* @__PURE__ */ jsx_dev_runtime42.jsxDEV(AmountInput, {
+    /* @__PURE__ */ jsx_dev_runtime43.jsxDEV(AmountInput, {
       balance: lvmgpBalance,
       label: "Get vMGP",
       onChange: setSendAmount,
       token: { symbol: "lvMGP" },
-      value: sendAmount
+      value: send
     }, undefined, false, undefined, this),
-    /* @__PURE__ */ jsx_dev_runtime42.jsxDEV(Button, {
+    /* @__PURE__ */ jsx_dev_runtime43.jsxDEV(Button, {
       className: "w-full",
       onClick: unlockVMGP2,
       type: "submit",
@@ -40514,11 +40555,50 @@ var UnlockVMGPPageComponent = ({ sendAmount, setSendAmount, unlockVMGP: unlockVM
     }, undefined, false, undefined, this)
   ]
 }, undefined, true, undefined, this);
-var UnlockVMGPPage = import_react67.memo(UnlockVMGPPageComponent);
+var UnlockVMGPPage = import_react69.memo(UnlockVMGPPageComponent);
+
+// src/pages/UnwrapWRMGP.tsx
+var import_react70 = __toESM(require_react(), 1);
+var jsx_dev_runtime44 = __toESM(require_jsx_dev_runtime(), 1);
+var UnwrapWRMGPPage = import_react70.memo(({ depositMGP, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpVmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, unwrapWRMGP: unwrapWRMGP2, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }) => /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Page, {
+  info: "wrMGP can be unwrapped for rMGP. 1 wrMGP receives 1 vlMGP worth of rMGP. wrMGP can be unwrapped on any chain.",
+  noTopMargin: true,
+  children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(SwapToken, {
+    buy: unwrapWRMGP2,
+    excludeCoins: ["CKP", "PNP", "EGP", "LTP", "WETH", "MGP", "rMGP", "yMGP", "vMGP", "lyMGP", "lvMGP"],
+    label: "Unwrap",
+    nativeSwap: depositMGP,
+    originalTokenIn: "wrMGP",
+    tokenOut: "rMGP",
+    balances,
+    setSend,
+    send,
+    prices,
+    ymgpMgpCurveRate,
+    mgpRmgpCurveRate,
+    mgpRmgpCurveAmount,
+    rmgpYmgpCurveAmount,
+    rmgpMgpCurveAmount,
+    mgpYmgpCurveAmount,
+    ymgpRmgpCurveAmount,
+    ymgpMgpCurveAmount,
+    allowances,
+    chain,
+    approve,
+    convertMGP,
+    sellYMGP,
+    mintWETH,
+    swap,
+    lockedReefiMGP,
+    rmgpSupply,
+    ymgpVmgpCurveAmount
+  }, undefined, false, undefined, this)
+}, undefined, false, undefined, this));
+UnwrapWRMGPPage.displayName = "UnwrapWRMGPPage";
 
 // src/pages/VotePage.tsx
-var import_react68 = __toESM(require_react(), 1);
-var jsx_dev_runtime43 = __toESM(require_jsx_dev_runtime(), 1);
+var import_react71 = __toESM(require_react(), 1);
+var jsx_dev_runtime45 = __toESM(require_jsx_dev_runtime(), 1);
 var getStateClassName2 = (state) => {
   if (state === "active")
     return "bg-green-600/20 text-green-400";
@@ -40526,9 +40606,9 @@ var getStateClassName2 = (state) => {
     return "bg-red-600/20 text-red-400";
   return "bg-yellow-600/20 text-yellow-400";
 };
-var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote: onVote2 }) => {
-  const [selectedChoices, setSelectedChoices] = import_react68.useState({});
-  const [votingProposal, setVotingProposal] = import_react68.useState();
+var VotePage = import_react71.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote: onVote2 }) => {
+  const [selectedChoices, setSelectedChoices] = import_react71.useState({});
+  const [votingProposal, setVotingProposal] = import_react71.useState();
   const proposalScores = {};
   const handleVote = async (proposalId) => {
     const choice = selectedChoices[proposalId];
@@ -40557,7 +40637,7 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
     const result = await response.json();
     return result.data.proposals;
   }, [], "proposals", []);
-  return /* @__PURE__ */ jsx_dev_runtime43.jsxDEV(Page, {
+  return /* @__PURE__ */ jsx_dev_runtime45.jsxDEV(Page, {
     info: [
       "vMGP holders control all of Reefi's vlMGP voting power on Magpie governance proposals.",
       "Your voting power is amplified by Reefi's locked MGP position, giving you more influence per token.",
@@ -40565,23 +40645,23 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
     ],
     noTopMargin: true,
     children: [
-      /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
         className: "mb-6 rounded-lg bg-gray-700/50 p-4",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("h3", {
+          /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("h3", {
             className: "mb-2 text-lg font-semibold",
             children: "Your Voting Power"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
             className: "grid grid-cols-2 gap-4 text-sm",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
                     className: "text-gray-400",
                     children: "vMGP Balance"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
                     className: "font-medium",
                     children: [
                       formatNumber(formatEther(vmgpBalance)),
@@ -40590,13 +40670,13 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
                   }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
                     className: "text-gray-400",
                     children: "Effective Power"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
                     className: "font-medium",
                     children: [
                       formatNumber(userVotingPower),
@@ -40609,47 +40689,47 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("h3", {
+      /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("h3", {
         className: "mb-4 text-lg font-semibold",
         children: "Recent Proposals"
       }, undefined, false, undefined, this),
-      proposals.length === 0 ? /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+      proposals.length === 0 ? /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
         className: "rounded-lg bg-gray-700/50 p-8 text-center",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
             className: "text-gray-400",
             children: "No active proposals found"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
             className: "mt-2 text-sm text-gray-500",
             children: "Check back later for new governance proposals"
           }, undefined, false, undefined, this)
         ]
-      }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+      }, undefined, true, undefined, this) : /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
         className: "space-y-4",
         children: proposals.map((proposal) => {
           const { minimumMultiplier, currentMultiplier } = getProposalMultipliers(proposal);
-          return /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+          return /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
             className: "rounded-lg border border-gray-700 bg-gray-800/50 p-4",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                 className: "mb-3 flex flex-col items-start justify-between",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                     className: "flex w-full",
                     children: [
-                      /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("h4", {
+                      /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("h4", {
                         className: "font-semibold text-blue-400",
                         children: proposal.title
                       }, undefined, false, undefined, this),
-                      /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+                      /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                         className: "text-right text-xs text-gray-400 w-full",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                             className: `inline-block rounded px-2 py-1 ${getStateClassName2(proposal.state)}`,
                             children: proposal.state.toUpperCase()
                           }, undefined, false, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+                          /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
                             className: "mt-1",
                             children: [
                               (100 * (proposalScores[proposal.id]?.reduce((accumulator, score) => accumulator + score) ?? 0) / formatEther(vmgpSupply)).toFixed(2),
@@ -40660,12 +40740,12 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
                       }, undefined, true, undefined, this)
                     ]
                   }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
                     className: "mt-1 text-sm text-gray-300 w-full",
                     children: [
                       proposal.body.slice(0, 500),
                       "... ",
-                      /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("a", {
+                      /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("a", {
                         className: "text-blue-400",
                         href: `https://snapshot.box/#/s:magpiexyz.eth/proposal/${proposal.id}`,
                         children: "View Proposal"
@@ -40674,15 +40754,15 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
                   }, undefined, true, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                 className: "mb-3 grid grid-cols-2 gap-4 rounded bg-gray-700/30 p-3 text-xs",
-                children: /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+                children: /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+                    /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
                       className: "text-gray-400",
                       children: "Vote Power"
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+                    /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
                       className: "font-medium text-green-300",
                       children: [
                         "1 vMGP = ",
@@ -40693,19 +40773,19 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
                   ]
                 }, undefined, true, undefined, this)
               }, undefined, false, undefined, this),
-              proposal.state === "active" && vmgpBalance > 0n && /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+              proposal.state === "active" && vmgpBalance > 0n && /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                 className: "mb-3",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
                     className: "mb-2 text-sm font-medium",
                     children: "Choose your vote:"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                     className: "grid gap-2",
-                    children: proposal.choices.map((choice, index2) => /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("label", {
+                    children: proposal.choices.map((choice, index2) => /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("label", {
                       className: "flex cursor-pointer items-center rounded border border-gray-600 p-2 hover:bg-gray-700/50",
                       children: [
-                        /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("input", {
+                        /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("input", {
                           type: "radio",
                           name: `proposal-${proposal.id}`,
                           value: index2,
@@ -40713,11 +40793,11 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
                           onChange: () => setSelectedChoices((previous) => ({ ...previous, [proposal.id]: index2 })),
                           className: "mr-3"
                         }, undefined, false, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("span", {
+                        /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("span", {
                           className: "flex-1",
                           children: choice
                         }, undefined, false, undefined, this),
-                        /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("span", {
+                        /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("span", {
                           className: "text-sm text-gray-400",
                           children: [
                             proposalScores[proposal.id]?.[index2] ? formatNumber(proposalScores[proposal.id]?.[index2] ?? 0) : 0,
@@ -40729,29 +40809,29 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              proposal.state === "closed" && /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+              proposal.state === "closed" && /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                 className: "mb-3",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
                     className: "mb-2 text-sm font-medium",
                     children: "Results:"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                     className: "space-y-2",
                     children: proposal.choices.map((choice, index2) => {
                       const score = proposalScores[proposal.id]?.[index2] ?? 0;
                       const totalScore = proposalScores[proposal.id]?.reduce((sum, s) => sum + s, 0) ?? 0;
                       const percentage = totalScore > 0 ? score / totalScore * 100 : 0;
-                      return /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+                      return /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                         className: "rounded border border-gray-600 p-2",
                         children: [
-                          /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                             className: "flex justify-between",
                             children: [
-                              /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("span", {
+                              /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("span", {
                                 children: choice
                               }, undefined, false, undefined, this),
-                              /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("span", {
+                              /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("span", {
                                 className: "text-sm text-gray-400",
                                 children: [
                                   formatNumber(score),
@@ -40762,9 +40842,9 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
                               }, undefined, true, undefined, this)
                             ]
                           }, undefined, true, undefined, this),
-                          /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+                          /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                             className: "mt-1 h-2 rounded bg-gray-700",
-                            children: /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+                            children: /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                               className: "h-full rounded bg-blue-500",
                               style: { width: `${percentage}%` }
                             }, undefined, false, undefined, this)
@@ -40775,7 +40855,7 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              proposal.state === "active" && vmgpBalance > 0n && selectedChoices[proposal.id] !== undefined && /* @__PURE__ */ jsx_dev_runtime43.jsxDEV(Button, {
+              proposal.state === "active" && vmgpBalance > 0n && selectedChoices[proposal.id] !== undefined && /* @__PURE__ */ jsx_dev_runtime45.jsxDEV(Button, {
                 className: "w-full",
                 onClick: () => handleVote(proposal.id),
                 isLoading: votingProposal === proposal.id,
@@ -40783,20 +40863,20 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
                 type: "button",
                 children: votingProposal === proposal.id ? "Voting..." : `Vote with ${formatNumber(formatEther(vmgpBalance))} vMGP (${formatNumber(formatEther(vmgpBalance) * votePower)} - ${formatNumber(formatEther(vmgpBalance) * currentMultiplier)} vlMGP)`
               }, undefined, false, undefined, this),
-              proposal.state === "active" && vmgpBalance === 0n && /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+              proposal.state === "active" && vmgpBalance === 0n && /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                 className: "rounded bg-yellow-600/20 p-3 text-center text-sm text-yellow-300",
                 children: "You need vMGP tokens to vote on this proposal"
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
                 className: "mt-3 flex justify-between text-xs text-gray-500",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("span", {
                     children: [
                       "Started: ",
                       new Date(proposal.start * 1000).toLocaleDateString()
                     ]
                   }, undefined, true, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("span", {
+                  /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("span", {
                     children: [
                       "Ends: ",
                       new Date(proposal.end * 1000).toLocaleDateString()
@@ -40808,14 +40888,14 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
           }, proposal.id, true, undefined, this);
         })
       }, undefined, false, undefined, this),
-      vmgpBalance === 0n && /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("div", {
+      vmgpBalance === 0n && /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("div", {
         className: "mt-6 rounded-lg bg-blue-600/20 p-4 text-center",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
             className: "text-blue-300",
             children: "Get vMGP tokens to participate in governance"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime43.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime45.jsxDEV("p", {
             className: "mt-2 text-sm text-blue-400",
             children: "Convert yMGP to vMGP to unlock voting power and control Reefi's vlMGP position"
           }, undefined, false, undefined, this)
@@ -40827,10 +40907,10 @@ var VotePage = import_react68.memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, o
 VotePage.displayName = "VotePage";
 
 // src/App.tsx
-var jsx_dev_runtime44 = __toESM(require_jsx_dev_runtime(), 1);
+var jsx_dev_runtime46 = __toESM(require_jsx_dev_runtime(), 1);
 var Content2 = ({ page, setPage, error, setError }) => {
   const {
-    actions: { depositMGP, buyMGP, redeemRMGP, withdrawMGP, compoundRMGP, lockYMGP, claimYMGPRewards, unlockYMGP, supplyLiquidity, approve, convertMGP, sellYMGP, mintWETH, swap, buyRMGP, buyYMGP, depositRMGP },
+    actions: { depositMGP, buyMGP, redeemRMGP, withdrawMGP, compoundRMGP, lockYMGP, claimYMGPRewards, unlockYMGP, supplyLiquidity, approve, convertMGP, sellYMGP, mintWETH, swap, buyRMGP, buyYMGP, depositRMGP, buyRMGPAndWithdraw },
     wallet: { chain, isConnecting, connectWallet, connectRequired },
     allowances,
     amounts,
@@ -40851,22 +40931,22 @@ var Content2 = ({ page, setPage, error, setError }) => {
     return `${(fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100).toFixed(2)}%`;
   };
   if (page === "documentation")
-    return /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Documentation, {}, undefined, false, undefined, this);
+    return /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Documentation, {}, undefined, false, undefined, this);
   if (page === "claim")
-    return /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+    return /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
       className: "flex flex-col h-screen bg-gray-900 text-white",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(ConnectWallet, {
+        /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(ConnectWallet, {
           connectRequired,
           isConnecting,
           connectWallet
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(ErrorCard, {
+        /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(ErrorCard, {
           error,
           setError
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Card, {
-          children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(CompoundYield, {
+        /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Card, {
+          children: /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(CompoundYield, {
             uncompoundedMGPYield: rewards.uncompoundedMGPYield,
             estimatedCompoundGasFee: rewards.estimatedCompoundGasFee,
             pendingRewards: rewards.pendingRewards,
@@ -40877,16 +40957,16 @@ var Content2 = ({ page, setPage, error, setError }) => {
             compoundRMGP
           }, undefined, false, undefined, this)
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
           className: "grid grid-cols-1 gap-6 mt-6 lg:grid-cols-2",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Card, {
+            /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Card, {
               children: [
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("h2", {
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("h2", {
                   className: "mb-4 text-xl font-bold",
                   children: "Claim yMGP Rewards"
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(ClaimYield, {
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(ClaimYield, {
                   claimYMGPRewards,
                   lockedYMGP: supplies.lyMGP,
                   unclaimedUserYield: rewards.unclaimedUserYield,
@@ -40897,13 +40977,13 @@ var Content2 = ({ page, setPage, error, setError }) => {
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Card, {
+            /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Card, {
               children: [
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("h2", {
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("h2", {
                   className: "mb-4 text-xl font-bold",
                   children: "Claim vMGP Rewards"
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(ClaimVMGPYield, {
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(ClaimVMGPYield, {
                   claimVMGPRewards: () => claimVMGPRewards(),
                   unclaimedUserVMGPYield: rewards.unclaimedUserVMGPYield,
                   vmgpHoldings: balances.vmgpHoldings
@@ -40915,28 +40995,28 @@ var Content2 = ({ page, setPage, error, setError }) => {
       ]
     }, undefined, true, undefined, this);
   if (page === "vote")
-    return /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+    return /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
       className: "flex flex-col h-screen bg-gray-900 text-white",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(ConnectWallet, {
+        /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(ConnectWallet, {
           connectRequired,
           isConnecting,
           connectWallet
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(ErrorCard, {
+        /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(ErrorCard, {
           error,
           setError
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
           className: "grid grid-cols-1 gap-6 pb-6 lg:grid-cols-2",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Card, {
+            /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Card, {
               children: [
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("h2", {
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("h2", {
                   className: "mb-4 text-xl font-bold",
                   children: "Vote"
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(VotePage, {
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(VotePage, {
                   vmgpBalance: balances.vMGP,
                   vmgpSupply: supplies.vMGP,
                   reefiMgpLocked: locked.reefiMGP,
@@ -40944,13 +41024,13 @@ var Content2 = ({ page, setPage, error, setError }) => {
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Card, {
+            /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Card, {
               children: [
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("h2", {
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("h2", {
                   className: "mb-4 text-xl font-bold",
                   children: "Buy Votes"
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(BuyVotesPage, {
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(BuyVotesPage, {
                   yMGPBalance: balances.yMGP,
                   lockedYMGPBalance: balances.lyMGP,
                   totalLockedYMGP: supplies.lyMGP,
@@ -40965,51 +41045,97 @@ var Content2 = ({ page, setPage, error, setError }) => {
       ]
     }, undefined, true, undefined, this);
   if (page === "bridge")
-    return /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+    return /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
       className: "flex flex-col h-screen bg-gray-900 text-white",
       children: [
-        /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(ConnectWallet, {
+        /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(ConnectWallet, {
           connectRequired,
           isConnecting,
           connectWallet
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(ErrorCard, {
+        /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(ErrorCard, {
           error,
           setError
         }, undefined, false, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Card, {
+        /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Card, {
           children: [
-            /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("h2", {
+            /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("h2", {
               className: "mb-4 text-xl font-bold",
               children: "Bridge wrMGP"
             }, undefined, false, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("p", {
+            /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("p", {
               children: "Issue wrMGP on BSC and ARB. Bridge both coins with wormhole, so each chain has a wrMGP and a bridged wrMGP. Add unbridge() function on wrMGP that takes the whitelisted bridged wrMGP and swaps it to the chains native wrMGP."
             }, undefined, false, undefined, this)
           ]
         }, undefined, true, undefined, this),
-        /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+        /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
           className: "grid grid-cols-1 gap-6 mt-6 lg:grid-cols-2",
           children: [
-            /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Card, {
+            /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Card, {
               children: [
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("h2", {
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("h2", {
                   className: "mb-4 text-xl font-bold",
                   children: "Wrap rMGP"
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("p", {
-                  children: "1 rMGP = 1 MGP, by wrapping 1 rMGP youll get 1.5 wrMGP if MGP/rMGP mint rate is 1.5."
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(GetWRMGPPage, {
+                  depositMGP,
+                  balances,
+                  setSend: updateAmounts.send,
+                  send: amounts.send,
+                  prices,
+                  ymgpMgpCurveRate: exchangeRates.ymgpMGP,
+                  mgpRmgpCurveRate: exchangeRates.mgpRMGP,
+                  mgpRmgpCurveAmount: amounts.curve.mgpRmgp,
+                  rmgpYmgpCurveAmount: amounts.curve.rmgpYmgp,
+                  rmgpMgpCurveAmount: amounts.curve.rmgpMgp,
+                  mgpYmgpCurveAmount: amounts.curve.mgpYmgp,
+                  ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
+                  ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
+                  allowances,
+                  chain,
+                  wrapRMGP: () => wrapRMGP(),
+                  approve,
+                  convertMGP,
+                  sellYMGP,
+                  mintWETH,
+                  swap,
+                  lockedReefiMGP: locked.reefiMGP,
+                  rmgpSupply: supplies.rMGP,
+                  ymgpVmgpCurveAmount: amounts.curve.ymgpVmgp
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this),
-            /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Card, {
+            /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Card, {
               children: [
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("h2", {
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("h2", {
                   className: "mb-4 text-xl font-bold",
                   children: "Unwrap wrMGP"
                 }, undefined, false, undefined, this),
-                /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("p", {
-                  children: "On unwrap, you receive 1 MGP's worth of rMGP for each wrMGP. wrMGP does receive any yield."
+                /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(UnwrapWRMGPPage, {
+                  depositMGP,
+                  balances,
+                  setSend: updateAmounts.send,
+                  send: amounts.send,
+                  prices,
+                  ymgpMgpCurveRate: exchangeRates.ymgpMGP,
+                  mgpRmgpCurveRate: exchangeRates.mgpRMGP,
+                  mgpRmgpCurveAmount: amounts.curve.mgpRmgp,
+                  rmgpYmgpCurveAmount: amounts.curve.rmgpYmgp,
+                  rmgpMgpCurveAmount: amounts.curve.rmgpMgp,
+                  mgpYmgpCurveAmount: amounts.curve.mgpYmgp,
+                  ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
+                  ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
+                  allowances,
+                  chain,
+                  unwrapWRMGP: () => unwrapWRMGP(),
+                  approve,
+                  convertMGP,
+                  sellYMGP,
+                  mintWETH,
+                  swap,
+                  lockedReefiMGP: locked.reefiMGP,
+                  rmgpSupply: supplies.rMGP,
+                  ymgpVmgpCurveAmount: amounts.curve.ymgpVmgp
                 }, undefined, false, undefined, this)
               ]
             }, undefined, true, undefined, this)
@@ -41017,10 +41143,10 @@ var Content2 = ({ page, setPage, error, setError }) => {
         }, undefined, true, undefined, this)
       ]
     }, undefined, true, undefined, this);
-  return /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(jsx_dev_runtime44.Fragment, {
+  return /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(jsx_dev_runtime46.Fragment, {
     children: [
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(TokenCards, {
-        mgpLocked: locked.MGP[56] + locked.MGP[42161],
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(TokenCards, {
+        mgpLocked: supplies.vlMGP,
         mgpPrice: prices.MGP,
         mgpSupply: supplies.MGP,
         rmgpSupply: supplies.rMGP,
@@ -41032,7 +41158,7 @@ var Content2 = ({ page, setPage, error, setError }) => {
         ymgpVmgpCurveRate: exchangeRates.ymgpVMGP,
         vmgpSupply: supplies.vMGP
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Features, {
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Features, {
         mgpAPR: rewards.mgpAPR,
         lockedYmgpAPY: rewards.lockedYmgpAPY,
         mgpPrice: prices.MGP,
@@ -41040,18 +41166,18 @@ var Content2 = ({ page, setPage, error, setError }) => {
         reefiLockedMGP: locked.reefiMGP,
         vmgpMGPCurveRate: 0.5
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
         className: "rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("h3", {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("h3", {
             className: "mb-2 text-lg font-semibold text-yellow-400",
             children: "⚠️ Important Notice"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("p", {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("p", {
             className: "text-sm text-gray-300",
             children: [
               "Reefi is in ",
-              /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("strong", {
+              /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("strong", {
                 children: "very early beta"
               }, undefined, false, undefined, this),
               ". Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution"
@@ -41059,36 +41185,36 @@ var Content2 = ({ page, setPage, error, setError }) => {
           }, undefined, true, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Card, {
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Card, {
         children: [
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
             className: "flex flex-col-reverse justify-between gap-2 lg:flex-row w-full",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                 className: "flex rounded-lg bg-gray-700 p-1",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                  /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                     size: "sm",
                     variant: page === "getMGP" ? "primary" : "clear",
                     onClick: () => setPage(page === "getMGP" ? undefined : "getMGP"),
                     type: "button",
                     children: "Get MGP"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                  /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                     size: "sm",
                     variant: page === "deposit" ? "primary" : "clear",
                     onClick: () => setPage(page === "deposit" ? undefined : "deposit"),
                     type: "button",
                     children: "Get rMGP"
                   }, undefined, false, undefined, this),
-                  balances.rMGP > 0n && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                  balances.rMGP > 0n && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                     size: "sm",
                     variant: page === "redeem" ? "primary" : "clear",
                     onClick: () => setPage(page === "redeem" ? undefined : "redeem"),
                     type: "button",
                     children: "Redeem rMGP"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                  /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                     size: "sm",
                     variant: page === "fixedYield" ? "primary" : "clear",
                     onClick: () => setPage(page === "fixedYield" ? undefined : "fixedYield"),
@@ -41097,24 +41223,24 @@ var Content2 = ({ page, setPage, error, setError }) => {
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                 className: "flex h-min flex-row-reverse",
-                children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+                children: /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                   className: "flex gap-1",
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(YieldBadge, {
+                    /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(YieldBadge, {
                       apr: rewards.mgpAPR,
                       asset: "Locked MGP",
                       breakdown: [{ apr: rewards.mgpAPR, asset: "vlMGP", logo: vlMGP_default }],
                       logo: vlMGP_default
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(YieldBadge, {
+                    /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(YieldBadge, {
                       apy: aprToApy(rewards.mgpAPR) * 0.9,
                       asset: "rMGP",
                       breakdown: [{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "vlMGP", logo: vlMGP_default }],
                       logo: coins.rMGP.icon
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(YieldBadge, {
+                    /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(YieldBadge, {
                       value: calculateFixedYield(),
                       asset: "rMGP Fixed Yield",
                       breakdown: [{ value: `${((exchangeRates.mgpRMGP / (Number(locked.reefiMGP) / Number(supplies.rMGP)) - 1) * 100).toFixed(2)}%`, asset: "rMGP Discount", logo: coins.rMGP.icon }],
@@ -41125,7 +41251,7 @@ var Content2 = ({ page, setPage, error, setError }) => {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          page === "getMGP" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(GetMGPPage, {
+          page === "getMGP" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(GetMGPPage, {
             mgpAPR: rewards.mgpAPR,
             balances,
             setSend: updateAmounts.send,
@@ -41140,7 +41266,6 @@ var Content2 = ({ page, setPage, error, setError }) => {
             ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
             ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
             allowances,
-            sendAmount: amounts.send,
             chain,
             buyMGP,
             approve,
@@ -41149,9 +41274,10 @@ var Content2 = ({ page, setPage, error, setError }) => {
             mintWETH,
             swap,
             lockedReefiMGP: locked.reefiMGP,
-            rmgpSupply: supplies.rMGP
+            rmgpSupply: supplies.rMGP,
+            ymgpVmgpCurveAmount: amounts.curve.ymgpVmgp
           }, undefined, false, undefined, this),
-          page === "deposit" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(GetRMGPPage, {
+          page === "deposit" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(GetRMGPPage, {
             mgpAPR: rewards.mgpAPR,
             depositMGP,
             balances,
@@ -41167,7 +41293,6 @@ var Content2 = ({ page, setPage, error, setError }) => {
             ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
             ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
             allowances,
-            sendAmount: amounts.send,
             chain,
             buyRMGP,
             approve,
@@ -41176,9 +41301,10 @@ var Content2 = ({ page, setPage, error, setError }) => {
             mintWETH,
             swap,
             lockedReefiMGP: locked.reefiMGP,
-            rmgpSupply: supplies.rMGP
+            rmgpSupply: supplies.rMGP,
+            ymgpVmgpCurveAmount: amounts.curve.ymgpVmgp
           }, undefined, false, undefined, this),
-          page === "redeem" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(RedeemRMGPPage, {
+          page === "redeem" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(RedeemRMGPPage, {
             buyMGP,
             redeemRMGP,
             withdrawMGP,
@@ -41196,7 +41322,6 @@ var Content2 = ({ page, setPage, error, setError }) => {
             ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
             ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
             allowances,
-            sendAmount: amounts.send,
             userPendingWithdraws: withdraws.userPending,
             userWithdrawable: withdraws.userWithdrawable,
             chain,
@@ -41206,9 +41331,10 @@ var Content2 = ({ page, setPage, error, setError }) => {
             mintWETH,
             swap,
             lockedReefiMGP: locked.reefiMGP,
-            rmgpSupply: supplies.rMGP
+            rmgpSupply: supplies.rMGP,
+            ymgpVmgpCurveAmount: amounts.curve.ymgpVmgp
           }, undefined, false, undefined, this),
-          page === "fixedYield" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(FixedYieldPage, {
+          page === "fixedYield" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(FixedYieldPage, {
             mgpAPR: rewards.mgpAPR,
             balances,
             setSend: updateAmounts.send,
@@ -41223,7 +41349,6 @@ var Content2 = ({ page, setPage, error, setError }) => {
             ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
             ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
             allowances,
-            sendAmount: amounts.send,
             chain,
             lockedReefiMGP: locked.reefiMGP,
             rmgpSupply: supplies.rMGP,
@@ -41233,39 +41358,40 @@ var Content2 = ({ page, setPage, error, setError }) => {
             sellYMGP,
             mintWETH,
             swap,
-            buyRMGPAndWithdraw: () => buyRMGPAndWithdraw()
+            buyRMGPAndWithdraw,
+            ymgpVmgpCurveAmount: amounts.curve.ymgpVmgp
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
             className: "bg-gray-500 w-full h-[0.5px] mt-8"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
             className: "flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                 className: "flex rounded-lg bg-gray-700 p-1",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                  /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                     size: "sm",
                     variant: page === "convert" ? "primary" : "clear",
                     onClick: () => setPage(page === "convert" ? undefined : "convert"),
                     type: "button",
                     children: "Get yMGP"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                  /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                     size: "sm",
                     variant: page === "lock" ? "primary" : "clear",
                     onClick: () => setPage(page === "lock" ? undefined : "lock"),
                     type: "button",
                     children: "Lock yMGP"
                   }, undefined, false, undefined, this),
-                  balances.lyMGP > 0n && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                  balances.lyMGP > 0n && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                     size: "sm",
                     variant: page === "unlock" ? "primary" : "clear",
                     onClick: () => setPage(page === "unlock" ? undefined : "unlock"),
                     type: "button",
                     children: "Unlock yMGP"
                   }, undefined, false, undefined, this),
-                  balances.yMGP > 0n && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                  balances.yMGP > 0n && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                     size: "sm",
                     variant: page === "redeemYMGP" ? "primary" : "clear",
                     onClick: () => setPage(page === "redeemYMGP" ? undefined : "redeemYMGP"),
@@ -41274,18 +41400,18 @@ var Content2 = ({ page, setPage, error, setError }) => {
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                 className: "flex h-min flex-row-reverse",
-                children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+                children: /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                   className: "flex gap-1",
                   children: [
-                    /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(YieldBadge, {
+                    /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(YieldBadge, {
                       apy: aprToApy(rewards.mgpAPR) * 0.9,
                       asset: "yMGP",
                       breakdown: [{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }],
                       logo: coins.yMGP.icon
                     }, undefined, false, undefined, this),
-                    /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(YieldBadge, {
+                    /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(YieldBadge, {
                       apy: Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(supplies.lyMGP) + aprToApy(rewards.mgpAPR) * 0.9,
                       asset: "Locked yMGP",
                       breakdown: [{ apy: aprToApy(rewards.mgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }, { apr: Number(locked.reefiMGP) * rewards.mgpAPR * 0.05 / Number(supplies.lyMGP), asset: "Boosted vlMGP", logo: vlMGP_default }, { asset: "yMGP Withdraws", value: "Variable", logo: coins.yMGP.icon }],
@@ -41297,7 +41423,7 @@ var Content2 = ({ page, setPage, error, setError }) => {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          page === "convert" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(GetYMGPPage, {
+          page === "convert" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(GetYMGPPage, {
             balances,
             setSend: updateAmounts.send,
             send: amounts.send,
@@ -41311,7 +41437,6 @@ var Content2 = ({ page, setPage, error, setError }) => {
             ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
             ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
             allowances,
-            sendAmount: amounts.send,
             chain,
             approve,
             convertMGP,
@@ -41321,9 +41446,10 @@ var Content2 = ({ page, setPage, error, setError }) => {
             buyYMGP,
             depositRMGP,
             lockedReefiMGP: locked.reefiMGP,
-            rmgpSupply: supplies.rMGP
+            rmgpSupply: supplies.rMGP,
+            ymgpVmgpCurveAmount: amounts.curve.ymgpVmgp
           }, undefined, false, undefined, this),
-          page === "lock" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(LockPage, {
+          page === "lock" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(LockPage, {
             ymgpBalance: balances.yMGP,
             setSend: updateAmounts.send,
             send: amounts.send,
@@ -41332,15 +41458,15 @@ var Content2 = ({ page, setPage, error, setError }) => {
             reefiLockedMGP: locked.reefiMGP,
             ymgpLocked: supplies.lyMGP
           }, undefined, false, undefined, this),
-          page === "unlock" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(UnlockPage, {
-            sendAmount: amounts.send,
+          page === "unlock" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(UnlockPage, {
+            send: amounts.send,
             setSendAmount: updateAmounts.send,
             unlockYMGP,
             lymgpBalance: balances.lyMGP
           }, undefined, false, undefined, this),
-          page === "redeemYMGP" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(RedeemYMGPPage, {
+          page === "redeemYMGP" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(RedeemYMGPPage, {
             buyRMGP,
-            redeemYMGP: () => redeemYMGP,
+            redeemYMGP: () => redeemYMGP(),
             withdrawMGP,
             unlockSchedule: withdraws.unlockSchedule,
             balances,
@@ -41356,7 +41482,6 @@ var Content2 = ({ page, setPage, error, setError }) => {
             ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
             ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
             allowances,
-            sendAmount: amounts.send,
             userPendingWithdraws: withdraws.userPending,
             userWithdrawable: withdraws.userWithdrawable,
             chain,
@@ -41366,32 +41491,33 @@ var Content2 = ({ page, setPage, error, setError }) => {
             mintWETH,
             swap,
             lockedReefiMGP: locked.reefiMGP,
-            rmgpSupply: supplies.rMGP
+            rmgpSupply: supplies.rMGP,
+            ymgpVmgpCurveAmount: amounts.curve.ymgpVmgp
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
             className: "bg-gray-500 w-full h-[0.5px] mt-8"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
             className: "flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                 className: "flex rounded-lg bg-gray-700 p-1",
                 children: [
-                  /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                  /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                     size: "sm",
                     variant: page === "getVMGP" ? "primary" : "clear",
                     onClick: () => setPage(page === "getVMGP" ? undefined : "getVMGP"),
                     type: "button",
                     children: "Get vMGP"
                   }, undefined, false, undefined, this),
-                  /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                  /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                     size: "sm",
                     variant: page === "lockVMGP" ? "primary" : "clear",
                     onClick: () => setPage(page === "lockVMGP" ? undefined : "lockVMGP"),
                     type: "button",
                     children: "Lock vMGP"
                   }, undefined, false, undefined, this),
-                  balances.lvMGP !== 0n && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                  balances.lvMGP !== 0n && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                     size: "sm",
                     variant: page === "unlockVMGP" ? "primary" : "clear",
                     onClick: () => setPage(page === "unlockVMGP" ? undefined : "unlockVMGP"),
@@ -41400,11 +41526,11 @@ var Content2 = ({ page, setPage, error, setError }) => {
                   }, undefined, false, undefined, this)
                 ]
               }, undefined, true, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                 className: "flex h-min flex-row-reverse",
-                children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+                children: /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                   className: "flex gap-1",
-                  children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Badge, {
+                  children: /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Badge, {
                     title: "Vote Multiplier",
                     value: `${formatNumber(Number(locked.reefiMGP) / Number(supplies.vMGP), 2)}x`,
                     breakdown: [{ asset: "Reefi's vlMGP", logo: vlMGP_default, value: formatNumber(formatEther(locked.reefiMGP)) }, { asset: "Votable vMGP", value: formatNumber(formatEther(supplies.vMGP)), logo: coins.vMGP.icon }]
@@ -41413,7 +41539,7 @@ var Content2 = ({ page, setPage, error, setError }) => {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          page === "getVMGP" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(GetVMGPPage, {
+          page === "getVMGP" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(GetVMGPPage, {
             balances,
             setSend: updateAmounts.send,
             send: amounts.send,
@@ -41427,7 +41553,6 @@ var Content2 = ({ page, setPage, error, setError }) => {
             ymgpRmgpCurveAmount: amounts.curve.ymgpRmgp,
             ymgpMgpCurveAmount: amounts.curve.ymgpMgp,
             allowances,
-            sendAmount: amounts.send,
             chain,
             approve,
             convertMGP,
@@ -41438,30 +41563,30 @@ var Content2 = ({ page, setPage, error, setError }) => {
             mintVMGP: () => mintVMGP(),
             lockedReefiMGP: locked.reefiMGP,
             rmgpSupply: supplies.rMGP,
-            ymgpVmgpCurveAmount: amounts.send
+            ymgpVmgpCurveAmount: amounts.curve.ymgpVmgp
           }, undefined, false, undefined, this),
-          page === "lockVMGP" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(LockVMGPPage, {
+          page === "lockVMGP" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(LockVMGPPage, {
             vmgpBalance: balances.vMGP,
             setSend: updateAmounts.send,
             send: amounts.send,
             lockYMGP: () => lockVMGP(),
             mgpAPR: rewards.mgpAPR
           }, undefined, false, undefined, this),
-          page === "unlockVMGP" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(UnlockVMGPPage, {
-            sendAmount: amounts.send,
+          page === "unlockVMGP" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(UnlockVMGPPage, {
+            send: amounts.send,
             setSendAmount: updateAmounts.send,
             unlockVMGP: () => unlockVMGP(),
             lvmgpBalance: balances.lvMGP
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
             className: "bg-gray-500 w-full h-[0.5px] mt-8"
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
             className: "flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full",
             children: [
-              /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                 className: "flex rounded-lg bg-gray-700 p-1",
-                children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Button, {
+                children: /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Button, {
                   size: "sm",
                   variant: page === "supplyLiquidity" ? "primary" : "clear",
                   onClick: () => setPage(page === "supplyLiquidity" ? undefined : "supplyLiquidity"),
@@ -41469,11 +41594,11 @@ var Content2 = ({ page, setPage, error, setError }) => {
                   children: "Supply Liquidity"
                 }, undefined, false, undefined, this)
               }, undefined, false, undefined, this),
-              /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+              /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                 className: "flex h-min flex-row-reverse",
-                children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+                children: /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
                   className: "flex gap-1",
-                  children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(YieldBadge, {
+                  children: /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(YieldBadge, {
                     apy: rewards.cmgpAPY,
                     asset: "cMGP",
                     breakdown: [
@@ -41488,7 +41613,7 @@ var Content2 = ({ page, setPage, error, setError }) => {
               }, undefined, false, undefined, this)
             ]
           }, undefined, true, undefined, this),
-          page === "supplyLiquidity" && /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(SupplyLiquidityPage, {
+          page === "supplyLiquidity" && /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(SupplyLiquidityPage, {
             mgpBalance: balances.MGP,
             rmgpBalance: balances.rMGP,
             ymgpBalance: balances.yMGP,
@@ -41505,11 +41630,11 @@ var Content2 = ({ page, setPage, error, setError }) => {
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(QASection, {}, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(QASection, {}, undefined, false, undefined, this),
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
         className: "flex gap-6",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(PegCard_default, {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(PegCard_default, {
             token: "rMGP",
             targetToken: "MGP",
             spread: 100 / exchangeRates.mgpRMGP / exchangeRates.rmgpMGP - 100,
@@ -41521,7 +41646,7 @@ var Content2 = ({ page, setPage, error, setError }) => {
               { label: "Target", value: Number(supplies.rMGP) / Number(locked.reefiMGP) / (1 + aprToApy(rewards.mgpAPR) * (withdraws.unlockSchedule.length === 6 ? Number(withdraws.unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2 / (60 * 60 * 24)) / 365), color: "purple", required: true }
             ]
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(PegCard_default, {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(PegCard_default, {
             token: "yMGP",
             targetToken: "rMGP",
             spread: 100 / exchangeRates.rmgpYMGP / exchangeRates.ymgpRMGP - 100,
@@ -41534,35 +41659,35 @@ var Content2 = ({ page, setPage, error, setError }) => {
           }, undefined, false, undefined, this)
         ]
       }, undefined, true, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Contracts, {
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Contracts, {
         chain
       }, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
 var AppContent = () => {
-  const [page, setPage] = import_react69.useState(window.location.pathname.replace("/", "") ?? "buyVotes");
-  import_react69.useEffect(() => {
+  const [page, setPage] = import_react72.useState(window.location.pathname.replace("/", "") ?? "buyVotes");
+  import_react72.useEffect(() => {
     history.pushState(undefined, "", `/${page}`);
   }, [page]);
-  const [error, setError] = import_react69.useState("");
+  const [error, setError] = import_react72.useState("");
   const { wallet: { ens, chain, account, isConnecting, setChain, connectWallet, connectRequired }, balances } = useGlobalContext();
-  return /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+  return /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
     className: "flex h-screen bg-gray-900 text-white",
     children: [
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(ConnectWallet, {
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(ConnectWallet, {
         connectRequired,
         isConnecting,
         connectWallet
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(ErrorCard, {
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(ErrorCard, {
         error,
         setError
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
         className: "grow overflow-auto",
         children: [
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Header, {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Header, {
             ens,
             chain,
             page,
@@ -41576,9 +41701,9 @@ var AppContent = () => {
             ymgpBalance: balances.yMGP,
             cmgpBalance: balances.cMGP
           }, undefined, false, undefined, this),
-          /* @__PURE__ */ jsx_dev_runtime44.jsxDEV("div", {
+          /* @__PURE__ */ jsx_dev_runtime46.jsxDEV("div", {
             className: "flex flex-col gap-6 p-4 md:mx-16 md:p-6 lg:mx-24 xl:mx-28",
-            children: /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(Content2, {
+            children: /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(Content2, {
               page,
               setPage,
               error,
@@ -41591,21 +41716,21 @@ var AppContent = () => {
   }, undefined, true, undefined, this);
 };
 var App = () => {
-  const [error, setError] = import_react69.useState("");
-  const [notification, setNotification] = import_react69.useState("");
-  return /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(GlobalProvider, {
+  const [error, setError] = import_react72.useState("");
+  const [notification, setNotification] = import_react72.useState("");
+  return /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(GlobalProvider, {
     setError,
     setNotification,
     children: [
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(ErrorCard, {
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(ErrorCard, {
         error,
         setError
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(NotificationCard, {
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(NotificationCard, {
         notification,
         setNotification
       }, undefined, false, undefined, this),
-      /* @__PURE__ */ jsx_dev_runtime44.jsxDEV(AppContent, {}, undefined, false, undefined, this)
+      /* @__PURE__ */ jsx_dev_runtime46.jsxDEV(AppContent, {}, undefined, false, undefined, this)
     ]
   }, undefined, true, undefined, this);
 };
@@ -41613,10 +41738,10 @@ var App_default = App;
 
 // src/index.tsx
 var import_client = __toESM(require_client(), 1);
-var jsx_dev_runtime45 = __toESM(require_jsx_dev_runtime(), 1);
-import_client.default.createRoot(document.querySelector("#root")).render(/* @__PURE__ */ jsx_dev_runtime45.jsxDEV(React2.StrictMode, {
-  children: /* @__PURE__ */ jsx_dev_runtime45.jsxDEV(App_default, {}, undefined, false, undefined, this)
+var jsx_dev_runtime47 = __toESM(require_jsx_dev_runtime(), 1);
+import_client.default.createRoot(document.querySelector("#root")).render(/* @__PURE__ */ jsx_dev_runtime47.jsxDEV(React2.StrictMode, {
+  children: /* @__PURE__ */ jsx_dev_runtime47.jsxDEV(App_default, {}, undefined, false, undefined, this)
 }, undefined, false, undefined, this));
 
-//# debugId=216894B36E556D6E64756E2164756E21
-//# sourceMappingURL=index-x80vca89.js.map
+//# debugId=1524A586DC9033A564756E2164756E21
+//# sourceMappingURL=index-bg0fhc0g.js.map

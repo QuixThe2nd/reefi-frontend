@@ -18,7 +18,7 @@ const ClaimVMGPYieldComponent = ({ claimVMGPRewards, unclaimedUserVMGPYield, vmg
       <p className="text-lg font-medium">You: {formatNumber(formatEther(unclaimedUserVMGPYield, decimals.yMGP), 4)} yMGP</p>
     </div>
     <div className="flex flex-col text-right">
-      <p className="text-lg font-medium">Total: {formatNumber(formatEther(vmgpHoldings, decimals.yMGP), 4)} YieldBadgeMGP</p>
+      <p className="text-lg font-medium">Total: {formatNumber(formatEther(vmgpHoldings, decimals.yMGP), 4)} yMGP</p>
     </div>
   </div>
   <Button className="mt-4 w-full" onClick={claimVMGPRewards} type="button">Claim Rewards</Button>

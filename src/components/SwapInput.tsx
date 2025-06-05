@@ -4,6 +4,7 @@ import { memo, useEffect, useRef, useState, Fragment, type ReactElement } from "
 
 import { Button } from "./Button";
 import ETH from "../../public/icons/ETH.svg";
+import { UseAmounts } from "../hooks/useAmounts";
 import { UsePrices } from "../hooks/usePrices";
 
 interface Properties {
@@ -11,7 +12,7 @@ interface Properties {
   readonly selectedCoin: Coins | "ETH";
   readonly onCoinChange: (_coin: Coins | "ETH") => void;
   readonly balance: bigint;
-  readonly value: bigint;
+  readonly value: UseAmounts["amounts"]["send"];
   readonly onChange: (_value: bigint) => void;
   readonly outputCoin: Coins;
   readonly excludeCoins: Coins[];
@@ -37,10 +38,12 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
 
   const estimatedOutput = (): string | undefined => {
     if (value === 0n) return undefined;
-    const inputAmount = formatEther(value, decimals[selectedCoin]);
+    const inputAmount = formatEther(value ?? 0n, decimals[selectedCoin]);
     if (selectedCoin === "rMGP" && outputCoin === "yMGP") return undefined;
     if (selectedCoin === "MGP" && outputCoin === "rMGP") return undefined;
     if (selectedCoin === "yMGP" && outputCoin === "rMGP") return undefined;
+    if (selectedCoin === "rMGP" && outputCoin === "wrMGP") return undefined;
+    if (selectedCoin === "wrMGP" && outputCoin === "rMGP") return undefined;
     else if (selectedCoin === "yMGP" && outputCoin === "MGP") return `${(inputAmount / ymgpMgpCurveRate).toFixed(6)} ${outputCoin}`;
     else if (outputCoin === "rMGP") {
       const priceKey = selectedCoin === "ETH" ? "WETH" : selectedCoin;
@@ -62,7 +65,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
     <div className="flex items-center justify-between rounded-lg bg-gray-900 p-4">
       <input className="w-3/4 bg-transparent text-xl outline-none" onChange={event => {
         onChange(BigInt(Math.round((Number.isNaN(Number.parseFloat(event.target.value)) ? 0 : Number.parseFloat(event.target.value)) * Number(10n ** BigInt(decimals[selectedCoin])))));
-      }} placeholder='0' type="text" value={value === 0n ? undefined : formatEther(value, decimals[selectedCoin])} />
+      }} placeholder='0' type="text" value={value === 0n ? undefined : formatEther(value ?? 0n, decimals[selectedCoin])} />
       <div className="flex items-center space-x-2">
         <Button size="xs" variant="ghost" onClick={() => {
           onChange(balance);

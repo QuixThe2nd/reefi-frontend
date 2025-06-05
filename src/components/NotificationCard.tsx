@@ -8,9 +8,7 @@ export const NotificationCard = ({ notification, setNotification }: Readonly<{ n
       const timeout = setTimeout(() => {
         setNotification("");
       }, 2000);
-      return () => {
-        clearTimeout(timeout);
-      };
+      return () => clearTimeout(timeout);
     }
     return undefined;
   }, [notification, setNotification]);

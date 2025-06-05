@@ -82,6 +82,18 @@ const getWinningChoice = (marketData: MarketData): "yes" | "no" | "tie" => {
   return "tie";
 };
 
+const completedColors = (winningChoice: string) => {
+  if (winningChoice === "yes") return "bg-green-600/20 text-green-400";
+  if (winningChoice === "no") return "bg-red-600/20 text-red-400";
+  return "bg-yellow-600/20 text-yellow-400";
+};
+
+const completedLabel = (winningChoice: string) => {
+  if (winningChoice === "yes") return "YES WINS";
+  if (winningChoice === "no") return "NO WINS";
+  return "TIE";
+};
+
 export const BuyVotesPage = memo(({ yMGPBalance, lockedYMGPBalance, totalLockedYMGP, reefiMgpLocked, onSellYesTokens, onSellNoTokens }: Properties): ReactElement => {
   const [sellYesAmounts, setSellYesAmounts] = useState<Record<string, bigint>>({});
   const [sellNoAmounts, setSellNoAmounts] = useState<Record<string, bigint>>({});
@@ -164,9 +176,7 @@ export const BuyVotesPage = memo(({ yMGPBalance, lockedYMGPBalance, totalLockedY
           {marketData && <div className="mb-4 rounded-lg bg-gray-700/30 p-4">
             <div className="mb-3 flex items-center justify-between">
               <h5 className="font-medium">Votes Purchased</h5>
-              {isCompleted && <div className={`rounded px-2 py-1 text-xs font-medium ${winningChoice === "yes" ? "bg-green-600/20 text-green-400" : (winningChoice === "no" ? "bg-red-600/20 text-red-400" : "bg-yellow-600/20 text-yellow-400")}`}>
-                {winningChoice === "yes" ? "YES WINS" : (winningChoice === "no" ? "NO WINS" : "TIE")}
-              </div>}
+              {isCompleted && <div className={`rounded px-2 py-1 text-xs font-medium ${completedColors(winningChoice)}`}>{completedLabel(winningChoice)}</div>}
             </div>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="rounded bg-green-900/30 p-3">

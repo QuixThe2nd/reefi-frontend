@@ -2,6 +2,8 @@ import { useState, type ReactElement } from "react";
 
 import { Card } from "./Card";
 
+type NonEmptyArray<T> = [T, ...T[]];
+
 interface DocumentSection {
   readonly id: string;
   readonly title: string;
@@ -9,7 +11,7 @@ interface DocumentSection {
   readonly subsections?: readonly DocumentSection[];
 }
 
-const documentationSections: readonly DocumentSection[] = [
+const documentationSections: NonEmptyArray<DocumentSection> = [
   {
     id: "introduction",
     title: "Introduction",
@@ -274,7 +276,7 @@ const findSectionById = (sections: readonly DocumentSection[], id: string): Docu
 
 export const Documentation = (): ReactElement => {
   const [activeSection, setActiveSection] = useState("introduction");
-  const currentSection = findSectionById(documentationSections, activeSection) ?? documentationSections[0];
+  const currentSection: DocumentSection = findSectionById(documentationSections, activeSection) ?? documentationSections[0];
   return <div className="flex h-full">
     <Sidebar sections={documentationSections} activeSection={activeSection} onSectionChange={setActiveSection} />
     <Content section={currentSection} />

@@ -13,6 +13,7 @@ interface Amounts {
     rmgpYmgp: bigint;
     ymgpMgp: bigint;
     ymgpRmgp: bigint;
+    ymgpVmgp: bigint;
   };
   lp: {
     MGP: bigint;
@@ -45,7 +46,7 @@ export interface UseAmounts {
 }
 
 export const useAmounts = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseAmounts => {
-  const [amounts, setAmounts] = useStoredObject<Amounts>("amounts", { curve: { mgpRmgp: 0n, mgpYmgp: 0n, rmgpMgp: 0n, rmgpYmgp: 0n, ymgpMgp: 0n, ymgpRmgp: 0n }, lp: { MGP: 0n, rMGP: 0n, yMGP: 0n }, send: parseEther(1) });
+  const [amounts, setAmounts] = useStoredObject<Amounts>("amounts", { curve: { mgpRmgp: 0n, mgpYmgp: 0n, rmgpMgp: 0n, rmgpYmgp: 0n, ymgpMgp: 0n, ymgpRmgp: 0n, ymgpVmgp: 0n }, lp: { MGP: 0n, rMGP: 0n, yMGP: 0n }, send: parseEther(1) });
 
   const updateAmounts: UpdateAmounts = {
     curve: {

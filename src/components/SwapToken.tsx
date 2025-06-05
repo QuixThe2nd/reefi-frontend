@@ -4,6 +4,7 @@ import { Chains, Coins } from "../config/contracts";
 import { SwapButton } from "./SwapButton";
 import { SwapInput } from "./SwapInput";
 import { UseAllowances } from "../hooks/useAllowances";
+import { UseAmounts } from "../hooks/useAmounts";
 import { UseBalances } from "../hooks/useBalances";
 import { UsePrices } from "../hooks/usePrices";
 
@@ -15,7 +16,7 @@ interface Properties {
   label: string;
   excludeCoins: Coins[];
   setSend: (_send: bigint) => void;
-  send: bigint;
+  send: UseAmounts["amounts"]["send"];
   prices: UsePrices;
   ymgpMgpCurveRate: number;
   mgpRmgpCurveRate: number;
@@ -27,9 +28,8 @@ interface Properties {
   ymgpRmgpCurveAmount: bigint;
   ymgpMgpCurveAmount: bigint;
   allowances: UseAllowances["allowances"];
-  sendAmount: bigint;
   chain: Chains;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: Exclude<Coins, "lyMGP" | "lvMGP">, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;
@@ -39,10 +39,10 @@ interface Properties {
   rmgpSupply: bigint;
 }
 
-export const SwapToken = ({ originalTokenIn, tokenOut, balances, buy, nativeSwap, label, excludeCoins, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => {
+export const SwapToken = ({ originalTokenIn, tokenOut, balances, buy, nativeSwap, label, excludeCoins, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => {
   const [tokenIn, setTokenIn] = useState<Coins | "ETH">(originalTokenIn);
   return <>
     <SwapInput balance={balances[tokenIn]} excludeCoins={excludeCoins} label={`Get ${tokenOut}`} onChange={setSend} onCoinChange={setTokenIn} outputCoin={tokenOut} selectedCoin={tokenIn} value={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} />
-    <SwapButton buy={buy} label={label} nativeSwap={nativeSwap} tokenIn={tokenIn} tokenOut={tokenOut} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} sendAmount={sendAmount} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} />
+    <SwapButton buy={buy} label={label} nativeSwap={nativeSwap} tokenIn={tokenIn} tokenOut={tokenOut} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} send={send} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} />
   </>;
 };

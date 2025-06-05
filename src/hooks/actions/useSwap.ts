@@ -11,18 +11,18 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   allowances: UseAllowances["allowances"];
   chain: Chains;
   clients: Clients;
-  sendAmount: UseAmounts["amounts"]["send"];
+  send: UseAmounts["amounts"]["send"];
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
   setNotification: (_value: string) => void;
 }
 
-export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, sendAmount, setConnectRequired, setError, setNotification }: Properties<Clients>): (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => Promise<void> => {
+export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, send, setConnectRequired, setError, setNotification }: Properties<Clients>): (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => Promise<void> => {
   const accountReference = useRef(account);
   const allowancesReference = useRef(allowances);
   const chainReference = useRef(chain);
   const clientsReference = useRef(clients);
-  const sendAmountReference = useRef(sendAmount);
+  const sendReference = useRef(send);
   const setConnectRequiredReference = useRef(setConnectRequired);
   const setErrorReference = useRef(setError);
   const setNotificationReference = useRef(setNotification);
@@ -44,8 +44,8 @@ export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActi
   }, [clients]);
 
   useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
+    sendReference.current = send;
+  }, [send]);
 
   useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
@@ -63,7 +63,7 @@ export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActi
     if (!clientsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    if (allowancesReference.current.curve.MGP < (sendAmountReference.current ?? 0n)) {
+    if (allowancesReference.current.curve.MGP < (sendReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low"); return;
     }
 
@@ -72,7 +72,7 @@ export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActi
       chainId: chainReference.current,
       compact: true,
       disableRFQs: true,
-      inputTokens: [{ amount: String(sendAmountReference.current), tokenAddress: tokenIn }],
+      inputTokens: [{ amount: String(sendReference.current), tokenAddress: tokenIn }],
       outputTokens: [{ proportion: 1, tokenAddress: tokenOut }],
       referralCode: 0,
       slippageLimitPercent: 5,

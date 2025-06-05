@@ -13,7 +13,7 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   updateBalances: UseBalances["updateBalances"];
   chain: Chains;
   clients: Clients;
-  sendAmount: UseAmounts["amounts"]["send"];
+  send: UseAmounts["amounts"]["send"];
   setConnectRequired: (_value: boolean) => void;
   updateSupplies: UseSupplies["updateSupplies"];
   updateReefiLockedMGP: () => Promise<void>;
@@ -26,12 +26,12 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   writeContracts: UseContracts;
 }
 
-export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateBalances, chain, clients, sendAmount, setConnectRequired, updateSupplies, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, updateUnlockSchedule, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }: Properties<Clients>): () => Promise<void> => {
+export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, updateBalances, chain, clients, send, setConnectRequired, updateSupplies, updateReefiLockedMGP, updateTotalLockedMGP, updateUnclaimedUserYield, updateUnlockSchedule, updateUnsubmittedWithdraws, updateUserPendingWithdraws, updateUserWithdrawable, writeContracts }: Properties<Clients>): () => Promise<void> => {
   const accountReference = useRef(account);
   const updateBalancesReference = useRef(updateBalances);
   const chainReference = useRef(chain);
   const clientsReference = useRef(clients);
-  const sendAmountReference = useRef(sendAmount);
+  const sendReference = useRef(send);
   const setConnectRequiredReference = useRef(setConnectRequired);
   const updateSuppliesReference = useRef(updateSupplies);
   const updateReefiLockedMGPReference = useRef(updateReefiLockedMGP);
@@ -60,8 +60,8 @@ export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & Publ
   }, [clients]);
 
   useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
+    sendReference.current = send;
+  }, [send]);
 
   useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
@@ -107,7 +107,7 @@ export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & Publ
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    await writeContractsReference.current[chainReference.current].rMGP.write.startUnlock([sendAmountReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].rMGP.write.startUnlock([sendReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateUnlockScheduleReference.current();
     updateSuppliesReference.current.rMGP();
     updateBalancesReference.current.rMGP();

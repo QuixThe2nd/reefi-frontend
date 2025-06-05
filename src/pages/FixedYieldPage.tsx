@@ -5,6 +5,7 @@ import { Chains, Coins } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 import { UseAllowances } from "../hooks/useAllowances";
+import { UseAmounts } from "../hooks/useAmounts";
 import { UseBalances } from "../hooks/useBalances";
 import { UsePrices } from "../hooks/usePrices";
 import { UseWithdraws } from "../hooks/useWithdraws";
@@ -13,7 +14,7 @@ interface Properties {
   mgpAPR: number;
   balances: UseBalances["balances"];
   setSend: (_send: bigint) => void;
-  send: bigint;
+  send: UseAmounts["amounts"]["send"];
   prices: UsePrices;
   ymgpMgpCurveRate: number;
   mgpRmgpCurveRate: number;
@@ -25,12 +26,11 @@ interface Properties {
   ymgpMgpCurveAmount: bigint;
   ymgpVmgpCurveAmount: bigint;
   allowances: UseAllowances["allowances"];
-  sendAmount: bigint;
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
   unlockSchedule: UseWithdraws["withdraws"]["unlockSchedule"];
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: Coins, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: Exclude<Coins, "lyMGP" | "lvMGP">, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;
@@ -38,9 +38,9 @@ interface Properties {
   buyRMGPAndWithdraw: () => void;
 }
 
-export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, ymgpVmgpCurveAmount, allowances, sendAmount, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, unlockSchedule, buyRMGPAndWithdraw }: Properties): ReactElement => {
+export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, ymgpVmgpCurveAmount, allowances, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, unlockSchedule, buyRMGPAndWithdraw }: Properties): ReactElement => {
   const burnRate = Number(rmgpSupply) / Number(lockedReefiMGP);
-  const fixedYieldPercent = (Number(mgpRmgpCurveAmount) / Number(sendAmount) / burnRate - 1) * 100;
+  const fixedYieldPercent = (Number(mgpRmgpCurveAmount) / Number(send) / burnRate - 1) * 100;
   const withdrawalTime = unlockSchedule.length === 6 ? Number(unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2;
   const daysToWithdraw = withdrawalTime / (60 * 60 * 24);
   const annualizedYield = fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100;
@@ -70,7 +70,6 @@ export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, y
       ymgpMgpCurveAmount={ymgpMgpCurveAmount}
       ymgpVmgpCurveAmount={ymgpVmgpCurveAmount}
       allowances={allowances}
-      sendAmount={sendAmount}
       chain={chain}
       approve={approve}
       convertMGP={convertMGP}
@@ -106,7 +105,7 @@ export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, y
         </div>
       </div>
       <div className="mt-3 rounded bg-green-900/30 p-2 text-xs text-green-200">
-        <strong>Example:</strong> Spend {formatEther(sendAmount).toFixed(2)} MGP → Get {(formatEther(sendAmount) / mgpRmgpCurveRate).toFixed(2)} rMGP → Withdraw {(formatEther(sendAmount) / mgpRmgpCurveRate * burnRate).toFixed(2)} MGP = +{(formatEther(sendAmount) / mgpRmgpCurveRate * burnRate - formatEther(sendAmount)).toFixed(2)} MGP profit
+        <strong>Example:</strong> Spend {formatEther(send ?? 0n).toFixed(2)} MGP → Get {(formatEther(send ?? 0n) / mgpRmgpCurveRate).toFixed(2)} rMGP → Withdraw {(formatEther(send ?? 0n) / mgpRmgpCurveRate * burnRate).toFixed(2)} MGP = +{(formatEther(send ?? 0n) / mgpRmgpCurveRate * burnRate - formatEther(send ?? 0n)).toFixed(2)} MGP profit
       </div>
     </div>
 

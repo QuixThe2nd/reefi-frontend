@@ -14,7 +14,7 @@ export type UseBalances = Readonly<{
 }>;
 
 export const useBalances = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseBalances => {
-  const [balances, setBalances] = useStoredObject<Balances>("balances", { CKP: 0n, EGP: 0n, ETH: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, lyMGP: 0n, curveMGP: 0n, curveRMGP: 0n, curveYMGP: 0n, rMGP: 0n, vMGP: 0n, yMGP: 0n, ymgpHoldings: 0n, vmgpHoldings: parseEther(0.5), lvMGP: parseEther(0.5) });
+  const [balances, setBalances] = useStoredObject<Balances>("balances", { CKP: 0n, EGP: 0n, ETH: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n, cMGP: 0n, lyMGP: 0n, curveMGP: 0n, curveRMGP: 0n, curveYMGP: 0n, rMGP: 0n, vMGP: 0n, yMGP: 0n, ymgpHoldings: 0n, vmgpHoldings: parseEther(0.5), lvMGP: parseEther(0.5), wrMGP: 0n });
 
   const updateBalances: UpdateBalances = {
     CKP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].CKP.read.balanceOf([wallet.account]).then(CKP => setBalances(() => ({ CKP }))),

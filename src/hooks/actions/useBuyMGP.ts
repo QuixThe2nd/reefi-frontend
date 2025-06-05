@@ -14,19 +14,19 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   updateBalances: UseBalances["updateBalances"];
   chain: Chains;
   clients: Clients;
-  sendAmount: UseAmounts["amounts"]["send"];
+  send: UseAmounts["amounts"]["send"];
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
   writeContracts: UseContracts;
 }
 
-export const useBuyMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, sendAmount, setConnectRequired, setError, writeContracts }: Properties<Clients>): () => Promise<void> => {
+export const useBuyMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, send, setConnectRequired, setError, writeContracts }: Properties<Clients>): () => Promise<void> => {
   const accountReference = useRef(account);
   const allowancesReference = useRef(allowances);
   const updateBalancesReference = useRef(updateBalances);
   const chainReference = useRef(chain);
   const clientsReference = useRef(clients);
-  const sendAmountReference = useRef(sendAmount);
+  const sendReference = useRef(send);
   const setConnectRequiredReference = useRef(setConnectRequired);
   const setErrorReference = useRef(setError);
   const writeContractsReference = useRef(writeContracts);
@@ -52,8 +52,8 @@ export const useBuyMGP = <Clients extends Record<Chains, WalletClient & PublicAc
   }, [clients]);
 
   useEffect(() => {
-    sendAmountReference.current = sendAmount;
-  }, [sendAmount]);
+    sendReference.current = send;
+  }, [send]);
 
   useEffect(() => {
     setConnectRequiredReference.current = setConnectRequired;
@@ -71,10 +71,10 @@ export const useBuyMGP = <Clients extends Record<Chains, WalletClient & PublicAc
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    if (allowancesReference.current.curve.rMGP < (sendAmountReference.current ?? 0n)) {
+    if (allowancesReference.current.curve.rMGP < (sendReference.current ?? 0n)) {
       setErrorReference.current("Allowance too low"); return;
     }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 0n, sendAmountReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([1n, 0n, sendReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current.MGP();
     updateBalancesReference.current.rMGP();
     updateBalancesReference.current.curveMGP();

@@ -1,17 +1,18 @@
 import { memo, useState, type ReactElement } from "react";
 
 import { Button } from "./Button";
+import { UseAmounts } from "../hooks/useAmounts";
 
 interface TokenApprovalProperties {
   readonly allowance: bigint;
-  readonly sendAmount: bigint;
+  readonly send: UseAmounts["amounts"]["send"];
   readonly onApprove: (_infinity: boolean) => void;
   readonly tokenSymbol: string;
   readonly curve?: boolean;
   readonly className?: string;
 }
 
-export const TokenApproval = memo(({ allowance, sendAmount, onApprove, tokenSymbol, curve = false, className = "w-full" }: TokenApprovalProperties): ReactElement | undefined => {
+export const TokenApproval = memo(({ allowance, send, onApprove, tokenSymbol, curve = false, className = "w-full" }: TokenApprovalProperties): ReactElement | undefined => {
   const [approveInfinity, setApproveInfinity] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
   const handleApprove = (): void => {
@@ -24,7 +25,7 @@ export const TokenApproval = memo(({ allowance, sendAmount, onApprove, tokenSymb
     return `Approve ${tokenSymbol}${curveText}`;
   };
 
-  if (allowance >= sendAmount) return;
+  if (allowance >= (send ?? 0n)) return;
 
   return <div className={className}>
     <div className="flex items-center">

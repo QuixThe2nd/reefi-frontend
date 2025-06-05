@@ -37,6 +37,8 @@
     "@ethersproject/providers": "^5.8.0",
     "@snapshot-labs/snapshot.js": "^0.12.62",
     "@uidotdev/usehooks": "^2.4.1",
+    "@wormhole-foundation/sdk": "^1.23.0",
+    "@wormhole-foundation/wormhole-connect": "^3.0.0",
     "jiti": "^2.4.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

@@ -16,6 +16,7 @@ import { useGlobalContext, GlobalProvider } from "./contexts/GlobalContext";
 import { useState, ReactElement, useEffect } from "react";
 
 import { Badge, YieldBadge } from "./components/YieldBadge";
+import { BridgePage } from "./pages/BridgePage";
 import { Button } from "./components/Button";
 import { BuyVotesPage } from "./pages/BuyVotesPage";
 import { Card } from "./components/Card";
@@ -136,7 +137,7 @@ const Content = ({ page, setPage, error, setError }: { page: Pages | undefined; 
     <ErrorCard error={error} setError={setError} />
     <Card>
       <h2 className="mb-4 text-xl font-bold">Bridge wrMGP</h2>
-      <p>Issue wrMGP on BSC and ARB. Bridge both coins with wormhole, so each chain has a wrMGP and a bridged wrMGP. Add unbridge() function on wrMGP that takes the whitelisted bridged wrMGP and swaps it to the chains native wrMGP.</p>
+      <BridgePage rMGPBalance={balances.rMGP} wrMGPBalance={balances.wrMGP} setSend={updateAmounts.send} send={amounts.send} onBridge={() => onBridge()} currentChain={chain} />
     </Card>
     <div className="grid grid-cols-1 gap-6 mt-6 lg:grid-cols-2">
       <Card>

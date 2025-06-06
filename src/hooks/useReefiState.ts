@@ -1,15 +1,9 @@
+import { useAsyncReducer } from "./useAsyncReducer";
 import { useState } from "react";
 
-import { AllCoin, CoreCoin, LockedCoinReefi, PrimaryCoin, SecondaryCoin } from "../config/contracts";
+import { AllCoin, contracts, CoreCoin, LockedCoinReefi, PrimaryCoin, publicClients, SecondaryCoin } from "../config/contracts";
 
 interface TokenState {
-  balances: {
-    user: Record<AllCoin, bigint>;
-    rMGP: { MGP: bigint };
-    yMGP: { rMGP: bigint };
-    vMGP: { yMGP: bigint };
-    curve: Record<PrimaryCoin, bigint>;
-  };
   prices: Record<SecondaryCoin, number>;
   supplies: Record<CoreCoin, bigint>;
   allowances: {
@@ -70,25 +64,56 @@ interface Amounts {
 }
 
 export const useReefiState = () => {
-  const [tokenState, setTokenState] = useState<TokenState>({
-    balances: {
-      user: {
-        MGP: 0n, rMGP: 0n, yMGP: 0n, vMGP: 0n,
-        vlMGP: 0n, lyMGP: 0n, lvMGP: 0n,
-        wrMGP: 0n, cMGP: 0n,
-        CKP: 0n, EGP: 0n, LTP: 0n, PNP: 0n,
-        WETH: 0n, ETH: 0n
-      },
-      rMGP: { MGP: 0n },
-      yMGP: { rMGP: 0n },
-      vMGP: { yMGP: 0n },
-      curve: {
-        MGP: 0n,
-        rMGP: 0n,
-        yMGP: 0n,
-        vMGP: 0n
-      }
+  const [wallet, setWallet] = useState<{ chain: 56 | 42_161; connectionRequired: boolean; isConnecting: boolean; ens: string | undefined; account: `0x${string}` | undefined }>({
+    chain: 42_161,
+    connectionRequired: false,
+    isConnecting: false,
+    ens: undefined,
+    account: undefined
+  });
+
+  const [userBalances, updateUserBalances] = useAsyncReducer<{ user: Record<AllCoin, bigint>; rMGP: { MGP: bigint }; yMGP: { rMGP: bigint }; vMGP: { yMGP: bigint }; curve: Record<PrimaryCoin, bigint> }>(async () => ({
+    user: {
+      CKP: wallet.account === undefined ? 0n : await contracts[wallet.chain].CKP.read.balanceOf([wallet.account]),
+      EGP: wallet.account === undefined ? 0n : await contracts[wallet.chain].EGP.read.balanceOf([wallet.account]),
+      LTP: wallet.account === undefined ? 0n : await contracts[wallet.chain].LTP.read.balanceOf([wallet.account]),
+      MGP: wallet.account === undefined ? 0n : await contracts[wallet.chain].MGP.read.balanceOf([wallet.account]),
+      PNP: wallet.account === undefined ? 0n : await contracts[wallet.chain].PNP.read.balanceOf([wallet.account]),
+      WETH: wallet.account === undefined ? 0n : await contracts[wallet.chain].WETH.read.balanceOf([wallet.account]),
+      cMGP: wallet.account === undefined ? 0n : await contracts[wallet.chain].cMGP.read.balanceOf([wallet.account]),
+      rMGP: wallet.account === undefined ? 0n : await contracts[wallet.chain].rMGP.read.balanceOf([wallet.account]),
+      yMGP: wallet.account === undefined ? 0n : await contracts[wallet.chain].yMGP.read.balanceOf([wallet.account]),
+      lyMGP: wallet.account === undefined ? 0n : await contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]),
+      wrMGP: wallet.account === undefined ? 0n : await contracts[wallet.chain].wrMGP.read.balanceOf([wallet.account]),
+      vlMGP: wallet.account === undefined ? 0n : await contracts[wallet.chain].vlMGP.read.balanceOf([wallet.account]),
+      lvMGP: wallet.account === undefined ? 0n : await contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account]),
+      ETH: wallet.account === undefined ? 0n : await publicClients[wallet.chain].getBalance({ address: wallet.account }),
+      vMGP: await contracts[wallet.chain].vMGP.read.balanceOf([contracts[wallet.chain].yMGP.address])
     },
+    curve: {
+      MGP: await contracts[wallet.chain].MGP.read.balanceOf([contracts[wallet.chain].cMGP.address]),
+      rMGP: await contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]),
+      yMGP: await contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].cMGP.address]),
+      vMGP: await contracts[wallet.chain].vMGP.read.balanceOf([contracts[wallet.chain].cMGP.address])
+    },
+    rMGP: { MGP: await contracts[wallet.chain].vlMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address]) },
+    yMGP: { rMGP: await contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address]) },
+    vMGP: { yMGP: await contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].vMGP.address]) }
+  }), [wallet.account, wallet.chain], {
+    user: {
+      MGP: 0n, rMGP: 0n, yMGP: 0n, vMGP: 0n,
+      vlMGP: 0n, lyMGP: 0n, lvMGP: 0n,
+      wrMGP: 0n, cMGP: 0n,
+      CKP: 0n, EGP: 0n, LTP: 0n, PNP: 0n,
+      WETH: 0n, ETH: 0n
+    },
+    rMGP: { MGP: 0n },
+    yMGP: { rMGP: 0n },
+    vMGP: { yMGP: 0n },
+    curve: { MGP: 0n, rMGP: 0n, yMGP: 0n, vMGP: 0n }
+  });
+
+  const [tokenState, setTokenState] = useState<TokenState>({
     supplies: {
       MGP: 0n, rMGP: 0n, yMGP: 0n, vMGP: 0n,
       vlMGP: 0n, lyMGP: 0n, lvMGP: 0n
@@ -153,16 +178,8 @@ export const useReefiState = () => {
     },
     lp: { MGP: 0n, rMGP: 0n, yMGP: 0n, vMGP: 0n }
   });
-
-  const [wallet, setWallet] = useState<{ chain: 56 | 42_161; connectionRequired: boolean; isConnecting: boolean; ens: string | undefined; account: `0x${string}` | undefined }>({
-    chain: 42_161,
-    connectionRequired: false,
-    isConnecting: false,
-    ens: undefined,
-    account: undefined
-  });
-
   return {
+    userBalances, updateUserBalances,
     token: [tokenState, setTokenState],
     protocol: [protocolState, setProtocolState],
     amounts: [amounts, setAmounts],

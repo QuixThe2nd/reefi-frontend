@@ -1,7 +1,7 @@
-import { coins, decimals, type Coins } from "../config/contracts";
 import { formatEther } from "../utilities";
 import { memo, useEffect, useRef, useState, Fragment, type ReactElement } from "react";
 
+import { AllCoin, coins, decimals, TradeableCoin } from "../config/contracts";
 import { Button } from "./Button";
 import ETH from "../../public/icons/ETH.svg";
 import { UseAmounts } from "../hooks/useAmounts";
@@ -9,13 +9,13 @@ import { UsePrices } from "../hooks/usePrices";
 
 interface Properties {
   readonly label: string;
-  readonly selectedCoin: Coins | "ETH";
-  readonly onCoinChange: (_coin: Coins | "ETH") => void;
+  readonly selectedCoin: TradeableCoin;
+  readonly onCoinChange: (_coin: TradeableCoin) => void;
   readonly balance: bigint;
   readonly value: UseAmounts["amounts"]["send"];
   readonly onChange: (_value: bigint) => void;
-  readonly outputCoin: Coins;
-  readonly excludeCoins: Coins[];
+  readonly outputCoin: TradeableCoin;
+  readonly excludeCoins: TradeableCoin[];
   readonly prices: UsePrices;
   readonly ymgpMgpCurveRate: number;
   readonly mgpRmgpCurveRate: number;
@@ -25,7 +25,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownReference = useRef<HTMLDivElement>(null);
   excludeCoins.push(outputCoin, "cMGP");
-  const availableCoins = (Object.keys(coins) as Coins[]).filter(coin => !excludeCoins.includes(coin));
+  const availableCoins = (Object.keys(coins) as AllCoin[]).filter(coin => !excludeCoins.includes(coin));
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
       if (dropdownReference.current && !dropdownReference.current.contains(event.target as Node)) setIsDropdownOpen(false);
@@ -52,7 +52,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
     return undefined;
   };
 
-  const handleCoinChange = (coin: Coins | "ETH") => {
+  const handleCoinChange = (coin: FullCoins) => {
     onCoinChange(coin);
     setIsDropdownOpen(false);
   };

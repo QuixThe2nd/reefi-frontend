@@ -1,4 +1,4 @@
-import { contracts, Chains, Coins } from "../../config/contracts";
+import { contracts, Chains, TransferrableCoin } from "../../config/contracts";
 import { useCallback, useEffect, useRef } from "react";
 
 import { UseAllowances } from "../useAllowances";
@@ -54,7 +54,7 @@ export const useApprove = <Clients extends Record<Chains, WalletClient & PublicA
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
 
-  return useCallback(async (contract: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", coin: Exclude<Coins, "lyMGP" | "lvMGP">, infinity: boolean): Promise<void> => {
+  return useCallback(async (coin: TransferrableCoin, spender: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", infinity: boolean): Promise<void> => {
     if (clientsReference.current === undefined || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
     const amount = infinity ? 2n ** 256n - 1n : sendReference.current;
     await writeContractsReference.current[chainReference.current][coin].write.approve([contracts[chainReference.current][contract].address, amount], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });

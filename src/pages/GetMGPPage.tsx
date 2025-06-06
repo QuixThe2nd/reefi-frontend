@@ -25,7 +25,7 @@ interface Properties {
   allowances: UseAllowances["allowances"];
   chain: Chains;
   buyMGP: () => void;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: Exclude<Coins, "lyMGP" | "lvMGP">, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TransferrableCoin, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;

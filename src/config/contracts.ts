@@ -8,30 +8,52 @@ import curve from "../../public/icons/curve.png";
 import lyMGP from "../../public/icons/lyMGP.png";
 import rMGP from "../../public/icons/rMGP.png";
 import vMGP from "../../public/icons/vMGP.png";
+import vlMGP from "../../public/icons/vlMGP.png";
 import yMGP from "../../public/icons/yMGP.png";
 
 import { arbitrum, bsc, mainnet } from "viem/chains";
 import { createPublicClient, erc20Abi, getContract, webSocket } from "viem";
 
 import { ABIs } from "./ABIs/abis";
+import ETH from "../../public/icons/ETH.svg";
 
 export type Chains = 56 | 42_161;
-export type Coins = "MGP" | "rMGP" | "yMGP" | "vMGP" | "cMGP" | "CKP" | "PNP" | "EGP" | "LTP" | "WETH" | "lyMGP" | "lvMGP" | "wrMGP";
 
-export const decimals: Record<Coins | "ETH", number> = { CKP: 18, EGP: 18, ETH: 18, LTP: 18, MGP: 18, PNP: 18, WETH: 18, cMGP: 18, rMGP: 18, vMGP: 18, yMGP: 18, lyMGP: 18, lvMGP: 18, wrMGP: 18 };
-export const coins: Record<Coins, { color: string; bgColor: string; icon: `${string}.png` }> = {
+export type PrimaryCoinMagpie = "MGP";
+export type PrimaryCoinReefi = "rMGP" | "yMGP" | "vMGP";
+export type PrimaryCoin = PrimaryCoinReefi | PrimaryCoinMagpie;
+
+export type LockedCoinMagpie = "vlMGP";
+export type LockedCoinReefi = "lyMGP" | "lvMGP";
+export type LockedCoin = LockedCoinReefi | LockedCoinMagpie;
+
+export type CoreCoin = PrimaryCoin | LockedCoin;
+
+export type SecondaryCoin = "CKP" | "PNP" | "EGP" | "LTP" | "WETH" | PrimaryCoinMagpie;
+export type TradeableCoin = PrimaryCoin | SecondaryCoin;
+
+export type NonTradeableCoin = "wrMGP" | "cMGP";
+export type TransferrableCoin = TradeableCoin | NonTradeableCoin;
+
+export type AllERC20 = LockedCoin | TransferrableCoin;
+export type AllCoin = LockedCoin | TransferrableCoin | "ETH";
+
+export const decimals: Record<AllCoin, number> = { CKP: 18, EGP: 18, ETH: 18, LTP: 18, MGP: 18, PNP: 18, WETH: 18, cMGP: 18, rMGP: 18, vMGP: 18, yMGP: 18, lyMGP: 18, lvMGP: 18, wrMGP: 18, vlMGP: 18 };
+export const coins: Record<AllCoin, { color: string; bgColor: string; icon: `${string}.${"png" | "svg"}` }> = {
   CKP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: CKP },
   EGP: { bgColor: "bg-gray-600", color: "bg-gray-400", icon: EGP },
   LTP: { bgColor: "bg-yellow-600", color: "bg-yellow-400", icon: LTP },
   MGP: { bgColor: "bg-blue-600", color: "bg-blue-400", icon: MGP },
   PNP: { bgColor: "bg-teal-600", color: "bg-teal-400", icon: PNP },
   WETH: { bgColor: "bg-gray-600", color: "bg-gray-400", icon: WETH },
+  ETH: { bgColor: "bg-gray-600", color: "bg-gray-400", icon: ETH },
   cMGP: { bgColor: "bg-indigo-600", color: "bg-indigo-400", icon: curve },
   rMGP: { bgColor: "bg-green-600", color: "bg-green-400", icon: rMGP },
   vMGP: { bgColor: "bg-red-600", color: "bg-red-400", icon: vMGP },
   yMGP: { bgColor: "bg-yellow-600", color: "bg-yellow-400", icon: yMGP },
   lyMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP },
   lvMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP },
+  vlMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: vlMGP },
   wrMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP }
 } as const;
 

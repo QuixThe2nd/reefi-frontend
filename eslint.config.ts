@@ -61,6 +61,7 @@ export default tseslint.config([
       "@stylistic/multiline-comment-style": "off",
       "@stylistic/multiline-ternary": ["error", "never"],
       "@stylistic/newline-per-chained-call": "off",
+      "@stylistic/lines-between-class-members": "off",
       "@stylistic/no-confusing-arrow": "off",
       "sonarjs/no-nested-functions": "off",
       "@stylistic/object-curly-spacing": ["error", "always"],

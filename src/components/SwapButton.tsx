@@ -1,4 +1,4 @@
-import { contracts, Coins, Chains } from "../config/contracts";
+import { contracts, Coins, Chains, UnlockedCoin, TransferrableCoin } from "../config/contracts";
 import { formatEther } from "../utilities";
 
 import { Button } from "./Button";
@@ -12,8 +12,8 @@ interface Properties {
   buy: () => void;
   nativeSwap: undefined | (() => void);
   label: string;
-  tokenIn: Coins | "ETH";
-  tokenOut: Coins;
+  tokenIn: UnlockedCoin;
+  tokenOut: UnlockedCoin;
   mgpRmgpCurveAmount: bigint;
   rmgpYmgpCurveAmount: bigint;
   rmgpMgpCurveAmount: bigint;
@@ -26,7 +26,7 @@ interface Properties {
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: Exclude<Coins, "lyMGP" | "lvMGP">, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: TransferrableCoin, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;

@@ -17,7 +17,7 @@ import { useSwap } from "./actions/useSwap";
 import { useUnlockYMGP } from "./actions/useUnlockYMGP";
 import { useWithdrawMGP } from "./actions/useWithdrawMGP";
 
-import { Coins } from "../config/contracts";
+import { TransferrableCoin } from "../config/contracts";
 import { UseAllowances } from "./useAllowances";
 import { UseAmounts } from "./useAmounts";
 import { UseBalances } from "./useBalances";
@@ -44,7 +44,7 @@ interface Properties<W extends UseWallet> {
 }
 
 export interface UseActions {
-  approve: (_contract: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _coin: Exclude<Coins, "lyMGP" | "lvMGP">, _infinity: boolean) => Promise<void>;
+  approve: (_contract: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _coin: TransferrableCoin, _infinity: boolean) => Promise<void>;
   depositMGP: () => Promise<void>;
   buyRMGP: () => Promise<void>;
   buyYMGP: () => Promise<void>;

@@ -1,6 +1,6 @@
 import { memo, type ReactElement } from "react";
 
-import { Chains, Coins } from "../config/contracts";
+import { Chains, TransferrableCoin } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 import { UseAllowances } from "../hooks/useAllowances";
@@ -28,7 +28,7 @@ interface Properties {
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
   unwrapWRMGP: () => void;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: Exclude<Coins, "lyMGP" | "lvMGP">, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TransferrableCoin, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;

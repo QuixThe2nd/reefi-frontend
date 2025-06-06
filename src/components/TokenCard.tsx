@@ -1,12 +1,12 @@
+import { coins, PrimaryCoin } from "../config/contracts";
 import { formatEther, formatNumber } from "../utilities";
 import { memo, type ReactElement } from "react";
 
 import { Card } from "./Card";
-import { Coins, coins } from "../config/contracts";
 import { TokenStat } from "./TokenStat";
 
 interface Properties {
-  symbol: Coins;
+  symbol: PrimaryCoin;
   decimals: number;
   description: string;
   price?: number;

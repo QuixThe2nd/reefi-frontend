@@ -1,8 +1,8 @@
+import { coins, TradeableCoin } from "../config/contracts";
 import { formatEther, parseEther } from "../utilities";
 import { memo, ReactElement } from "react";
 
 import { Button } from "./Button";
-import { Coins, coins } from "../config/contracts";
 import { UseAmounts } from "../hooks/useAmounts";
 
 interface AmountInputProperties {
@@ -10,7 +10,7 @@ interface AmountInputProperties {
   readonly balance: bigint;
   readonly value: UseAmounts["amounts"]["send"];
   readonly onChange: (_value: bigint) => void;
-  readonly token: Readonly<{ symbol: Coins }>;
+  readonly token: Readonly<{ symbol: TradeableCoin }>;
   readonly placeholder?: string;
 }
 

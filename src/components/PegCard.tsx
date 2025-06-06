@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { coins, Coins } from "../config/contracts";
+import { coins, TradeableCoin } from "../config/contracts";
 
 interface NoticeProperties {
   type: "recommendation" | "opportunity";
@@ -76,8 +76,8 @@ const getSpreadColor = (value: number): string => {
 };
 
 const PegCard = <Label extends string>({ token, spread, targetToken, rates }: {
-  token: Coins;
-  targetToken: Coins;
+  token: TradeableCoin;
+  targetToken: TradeableCoin;
   spread: number;
   rates: {
     value: number;

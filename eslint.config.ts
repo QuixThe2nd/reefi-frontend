@@ -12,6 +12,7 @@ import splitAndSortImports from "@sngn/eslint-plugin-split-and-sort-imports";
 import stylistic from "@stylistic/eslint-plugin";
 import tailwind from "eslint-plugin-tailwindcss";
 import tseslint from "typescript-eslint";
+import zod from "eslint-plugin-zod";
 
 export default tseslint.config([
   eslintPluginUnicorn.configs.all,
@@ -38,7 +39,7 @@ export default tseslint.config([
         tsconfigRootDir: import.meta.dirname
       }
     },
-    plugins: { depend },
+    plugins: { depend, zod },
     rules: {
       "@eslint-react/avoid-shorthand-fragment": "off",
       "@eslint-react/naming-convention/filename": "off",
@@ -108,6 +109,7 @@ export default tseslint.config([
       "sonarjs/cognitive-complexity": "off",
       "sonarjs/different-types-comparison": "off",
       "sonarjs/no-unused-vars": "off",
+      "unicorn/prevent-abbreviations": "off",
       "sonarjs/slow-regex": "off",
       "sonarjs/todo-tag": "off",
       "sort-imports": "off",

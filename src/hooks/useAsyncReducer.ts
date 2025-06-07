@@ -1,22 +1,11 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useReducer, useCallback } from "react";
 
-export const useAsyncReducer = <T> (asyncFunction: () => Promise<T>, deps: React.DependencyList, initialValue: T): [T, () => void] => {
-  const [state, setState] = useState<T>(initialValue);
+export const useAsyncReducer = <S> (reducer: () => Promise<S>, initialState: S): [S, () => void] => {
+  const [asyncState, dispatch] = useReducer((_: S, action: S) => action, initialState);
 
-  const mountedReference = useRef(true);
+  const asyncDispatch = useCallback(async () => {
+    dispatch(await reducer());
+  }, [reducer]);
 
-  const execute = useCallback(async () => {
-    const result = await asyncFunction();
-    if (mountedReference.current) setState(result);
-  }, [asyncFunction]);
-
-  useEffect(() => {
-    execute();
-  }, deps);
-
-  useEffect(() => () => {
-    mountedReference.current = false;
-  }, []);
-
-  return [state, execute];
+  return [asyncState, asyncDispatch];
 };

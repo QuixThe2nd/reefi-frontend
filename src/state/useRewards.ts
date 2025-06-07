@@ -68,7 +68,6 @@ export const useRewards = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0]
   // }, [rewards.cmgpPoolAPY, rewards.vlmgpAPR, balances.curve.MGP, balances.curve.rMGP, balances.curve.yMGP]);
   // const uncompoundedMGPYield = useMemo(() => Object.keys(rewards.reefi.vlMGP.pendingRewards).length > 0 ? (Object.keys(rewards.reefi.vlMGP.pendingRewards) as Coins[]).map(symbol => prices[symbol] * Number(formatEther(rewards.reefi.vlMGP.pendingRewards[symbol]?.rewards ?? 0n, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [rewards.reefi.vlMGP.pendingRewards, prices]);
   // const estimatedCompoundGasFee = useMemo(() => formatEther(rewards.compoundRMGPGas, decimals.WETH) * tokenState.prices.WETH, [rewards.compoundRMGPGas, prices]);
-  // const lockedYmgpAPY = useMemo(() => Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(balances.lyMGP) + aprToApy(rewards.mgpAPR) * 0.9, [locked.reefiMGP, rewards.mgpAPR, balances.lyMGP]);
 
   return [rewards] as const;
 };

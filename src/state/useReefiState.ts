@@ -1,14 +1,14 @@
 import { useBalances } from "./useBalances";
 import { useExchangeRates } from "./useExchangeRates";
+import { usePrices } from "./usePrices";
 import { useRewards } from "./useRewards";
 import { useState } from "react";
+import { useSupplies } from "./useSupplies";
 import { useWallet } from "./useWallet";
 
 import { PrimaryCoin, SecondaryCoin } from "../config/contracts";
-import { useSupplies } from "./useSupplies";
 
 interface TokenState {
-  prices: Record<SecondaryCoin, number>;
   allowances: {
     rMGP: { MGP: bigint };
     yMGP: { rMGP: bigint };
@@ -46,14 +46,14 @@ interface Amounts {
 }
 
 export const useReefiState = ({ setError }: { setError: (_message: string) => void }) => {
-  const [wallet] = useWallet({ setError });
+  const [wallet, walletActions] = useWallet({ setError });
   const [balances] = useBalances({ wallet });
   const [rewards] = useRewards({ wallet });
   const [supplies] = useSupplies({ wallet });
   const [exchangeRates] = useExchangeRates({ wallet });
+  const [prices] = usePrices();
 
   const [tokenState, setTokenState] = useState<TokenState>({
-    prices: { MGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, WETH: 0 },
     allowances: {
       rMGP: { MGP: 0n },
       yMGP: { rMGP: 0n },
@@ -95,9 +95,10 @@ export const useReefiState = ({ setError }: { setError: (_message: string) => vo
     rewards,
     supplies,
     exchangeRates,
+    prices,
     token: [tokenState],
     protocol: [protocolState],
     amounts,
-    wallet
+    wallet, walletActions
   } as const;
 };

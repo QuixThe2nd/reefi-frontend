@@ -179,7 +179,7 @@ const App = () => {
                 <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row w-full">
                   <div className="flex rounded-lg bg-gray-700 p-1">
                     <Button size="sm" variant={page === "getMGP" ? "primary" : "clear"} onClick={() => setPage(page === "getMGP" ? undefined : "getMGP")} type="button">Get MGP</Button>
-                    <Button size="sm" variant={page === "migrateVLMGP" ? "primary" : "clear"} onClick={() => setPage(page === "migrateVLMGP" ? undefined : "migrateVLMGP")} type="button">Migrate vlMGP</Button>
+                    {balances.user.vlMGP > 0n && <Button size="sm" variant={page === "migrateVLMGP" ? "primary" : "clear"} onClick={() => setPage(page === "migrateVLMGP" ? undefined : "migrateVLMGP")} type="button">Migrate vlMGP</Button>}
                     <Button size="sm" variant={page === "deposit" ? "primary" : "clear"} onClick={() => setPage(page === "deposit" ? undefined : "deposit")} type="button">Get rMGP</Button>
                     {balances.user.rMGP > 0n && <Button size="sm" variant={page === "redeem" ? "primary" : "clear"} onClick={() => setPage(page === "redeem" ? undefined : "redeem")} type="button">Redeem rMGP</Button>}
                     <Button size="sm" variant={page === "fixedYield" ? "primary" : "clear"} onClick={() => setPage(page === "fixedYield" ? undefined : "fixedYield")} type="button">Fixed Yield</Button>

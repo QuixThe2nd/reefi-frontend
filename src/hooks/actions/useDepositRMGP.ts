@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef } from "react";
 
 import { Chains } from "../../config/contracts";
 import { UseAllowances } from "../useAllowances";
-import { UseAmounts } from "../useAmounts";
 import { UseContracts } from "../useContracts";
 
 import type { PublicActions, WalletClient } from "viem";
@@ -13,7 +12,7 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   updateBalances: UseBalances["updateBalances"];
   chain: Chains;
   clients: Clients;
-  send: UseAmounts["amounts"]["send"];
+  send: bigint;
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
   updateSupplies: UseSupplies["updateSupplies"];

@@ -1,17 +1,17 @@
 import { memo, type ReactElement } from "react";
+import { useBalances } from "../state/useBalances";
 
-import { Chains, TransferrableCoin } from "../config/contracts";
+import { Chains, TradeableCoin } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 import { UseAllowances } from "../hooks/useAllowances";
-import { UseAmounts } from "../hooks/useAmounts";
 import { UsePrices } from "../hooks/usePrices";
 
 interface Properties {
   depositMGP: () => void;
-  balances: UseBalances["balances"];
+  balances: ReturnType<typeof useBalances>[0];
   setSend: (_send: bigint) => void;
-  send: UseAmounts["amounts"]["send"];
+  send: bigint;
   prices: UsePrices;
   ymgpMgpCurveRate: number;
   mgpRmgpCurveRate: number;
@@ -27,7 +27,7 @@ interface Properties {
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
   wrapRMGP: () => void;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TransferrableCoin, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TradeableCoin, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;

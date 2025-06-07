@@ -4,12 +4,11 @@ import { memo, type ReactElement } from "react";
 import { AmountInput } from "../components/AmountInput";
 import { Button } from "../components/Button";
 import { Page } from "../components/Page";
-import { UseAmounts } from "../hooks/useAmounts";
 
 interface Properties {
   ymgpBalance: bigint;
   setSend: (_send: bigint) => void;
-  send: UseAmounts["amounts"]["send"];
+  send: bigint;
   lockYMGP: () => void;
   mgpAPR: number;
   reefiLockedMGP: bigint;

@@ -22,7 +22,7 @@ export interface UseAllowances {
   updateAllowances: UpdateAllowances;
 }
 
-export const useAllowances = ({ wallet }: Readonly<{ wallet: UseWallet }>) => {
+export const useAllowances = ({ wallet }: Readonly<{ wallet: ReturnType<typeof useWallet>[0] }>) => {
   const [allowances, setAllowances] = useStoredObject<Allowances>("allowances", { MGP: 0n, curve: { MGP: 0n, rMGP: 0n, yMGP: 0n, vMGP: 0n }, odos: { CKP: 0n, EGP: 0n, LTP: 0n, MGP: 0n, PNP: 0n, WETH: 0n }, rMGP: 0n });
 
   const updateAllowances: UpdateAllowances = {

@@ -21,7 +21,7 @@ export interface UseWithdraws {
   updateWithdraws: UpdateWithdraws;
 }
 
-export const useWithdraws = ({ wallet }: Readonly<{ wallet: UseWallet }>): UseWithdraws => {
+export const useWithdraws = ({ wallet }: Readonly<{ wallet: ReturnType<typeof useWallet>[0] }>): UseWithdraws => {
   const [withdraws, setWithdraws] = useStoredObject<Withdraws>("withdraws", { unlockSchedule: [], unsubmitted: 0n, userPending: 0n, userWithdrawable: 0n });
 
   const updateWithdraws = {

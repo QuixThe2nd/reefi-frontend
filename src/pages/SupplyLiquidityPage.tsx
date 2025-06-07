@@ -1,17 +1,16 @@
 import { formatEther } from "../utilities";
-import { memo, type ReactElement } from "react";
 
 import { AmountInput } from "../components/AmountInput";
 import { Button } from "../components/Button";
+import { Dispatch, memo, SetStateAction, type ReactElement } from "react";
 import { Page } from "../components/Page";
+import { PrimaryCoin } from "../config/contracts";
 
 interface Properties {
   mgpBalance: bigint;
   rmgpBalance: bigint;
   ymgpBalance: bigint;
-  setMgpLPAmount: (_value: bigint) => void;
-  setRmgpLPAmount: (_value: bigint) => void;
-  setYmgpLPAmount: (_value: bigint) => void;
+  setLPAmounts: Dispatch<SetStateAction<Record<PrimaryCoin, bigint>>>;
   mgpLPAmount: bigint;
   rmgpLPAmount: bigint;
   ymgpLPAmount: bigint;
@@ -21,15 +20,17 @@ interface Properties {
   supplyLiquidity: () => void;
 }
 
-export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance, setMgpLPAmount, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, setRmgpLPAmount, setYmgpLPAmount, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, supplyLiquidity }: Properties): ReactElement => <Page info='Supply liquidity to the cMGP Curve pool (MGP/rMGP/yMGP). You can supply liquidity at any ratio of MGP:rMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use <a href="https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/" className="text-blue-400">Curve</a>.'>
+export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance, setLPAmounts, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, supplyLiquidity }: Properties): ReactElement => <Page info='Supply liquidity to the cMGP Curve pool (MGP/rMGP/yMGP). You can supply liquidity at any ratio of MGP:rMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use <a href="https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/" className="text-blue-400">Curve</a>.'>
   <AmountInput balance={mgpBalance} label="Supply MGP"
-    onChange={setMgpLPAmount}
+    onChange={setLPAmounts}
     placeholder={((): string => {
-      const mgpTarget = Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
+      const mgpTarget = mgpCurveBalance === 0n ? 0 : Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
       const getTotalRecommendedLP = (): number => {
-        if (rmgpLPAmount === 0n) return Number(ymgpLPAmount) / (Number(ymgpCurveBalance) / Number(rmgpCurveBalance + ymgpCurveBalance));
-        if (ymgpLPAmount === 0n) return Number(rmgpLPAmount) / (Number(rmgpCurveBalance) / Number(rmgpCurveBalance + ymgpCurveBalance));
-        return Number(rmgpLPAmount + ymgpLPAmount);
+        let val = Number(rmgpLPAmount + ymgpLPAmount);
+        if (rmgpLPAmount === 0n) val = Number(ymgpLPAmount) / (Number(ymgpCurveBalance) / Number(rmgpCurveBalance + ymgpCurveBalance));
+        if (ymgpLPAmount === 0n) val = Number(rmgpLPAmount) / (Number(rmgpCurveBalance) / Number(rmgpCurveBalance + ymgpCurveBalance));
+        if (Number.isNaN(val)) return 0;
+        return val;
       };
       return formatEther(BigInt(getTotalRecommendedLP() * mgpTarget / (1 - mgpTarget))).toString();
     })()}
@@ -45,13 +46,15 @@ export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance,
   <AmountInput
     balance={rmgpBalance}
     label="Supply rMGP"
-    onChange={setRmgpLPAmount}
+    onChange={setLPAmounts}
     placeholder={((): string => {
-      const rmgpTarget = Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
+      const rmgpTarget = rmgpCurveBalance === 0n ? 0 : Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
       const getTotalRecommendedLP = (): number => {
-        if (mgpLPAmount === 0n) return Number(ymgpLPAmount) / (Number(ymgpCurveBalance) / Number(mgpCurveBalance + ymgpCurveBalance));
-        if (ymgpLPAmount === 0n) return Number(mgpLPAmount) / (Number(mgpCurveBalance) / Number(mgpCurveBalance + ymgpCurveBalance));
-        return Number(rmgpLPAmount + ymgpLPAmount);
+        let val = Number(rmgpLPAmount + ymgpLPAmount);
+        if (mgpLPAmount === 0n) val = Number(ymgpLPAmount) / (Number(ymgpCurveBalance) / Number(mgpCurveBalance + ymgpCurveBalance));
+        if (ymgpLPAmount === 0n) val = Number(mgpLPAmount) / (Number(mgpCurveBalance) / Number(mgpCurveBalance + ymgpCurveBalance));
+        if (Number.isNaN(val)) return 0;
+        return val;
       };
       return formatEther(BigInt(getTotalRecommendedLP() * rmgpTarget / (1 - rmgpTarget))).toString();
     })()}
@@ -67,13 +70,15 @@ export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance,
   <AmountInput
     balance={ymgpBalance}
     label="Supply yMGP"
-    onChange={setYmgpLPAmount}
+    onChange={setLPAmounts}
     placeholder={((): string => {
-      const ymgpTarget = Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
+      const ymgpTarget = ymgpCurveBalance === 0n ? 0 : Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
       const getTotalRecommendedLP = (): number => {
-        if (rmgpLPAmount === 0n) return Number(mgpLPAmount) / (Number(mgpCurveBalance) / Number(rmgpCurveBalance + mgpCurveBalance));
-        if (mgpLPAmount === 0n) return Number(rmgpLPAmount) / (Number(rmgpCurveBalance) / Number(rmgpCurveBalance + mgpCurveBalance));
-        return Number(rmgpLPAmount + ymgpLPAmount);
+        let val = Number(rmgpLPAmount + ymgpLPAmount);
+        if (rmgpLPAmount === 0n) val = Number(mgpLPAmount) / (Number(mgpCurveBalance) / Number(rmgpCurveBalance + mgpCurveBalance));
+        if (mgpLPAmount === 0n) val = Number(rmgpLPAmount) / (Number(rmgpCurveBalance) / Number(rmgpCurveBalance + mgpCurveBalance));
+        if (Number.isNaN(val)) return 0;
+        return val;
       };
       return formatEther(BigInt(getTotalRecommendedLP() * ymgpTarget / (1 - ymgpTarget))).toString();
     })()}

@@ -3,10 +3,9 @@ import { formatEther } from "../utilities";
 import { Button } from "./Button";
 import { JSX, memo, ReactElement } from "react";
 import { TokenApproval } from "./TokenApproval";
-import { UseAmounts } from "../hooks/useAmounts";
 
 interface Properties {
-  readonly send: UseAmounts["amounts"]["send"];
+  readonly send: bigint;
   readonly curveAmount: bigint;
   readonly allowanceCurve: bigint;
   readonly nativeRate: number;

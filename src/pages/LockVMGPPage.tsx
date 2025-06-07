@@ -4,12 +4,11 @@ import { memo, type ReactElement } from "react";
 import { AmountInput } from "../components/AmountInput";
 import { Button } from "../components/Button";
 import { Page } from "../components/Page";
-import { UseAmounts } from "../hooks/useAmounts";
 
 interface Properties {
   vmgpBalance: bigint;
   setSend: (_send: bigint) => void;
-  send: UseAmounts["amounts"]["send"];
+  send: bigint;
   lockVMGP: () => void;
   mgpAPR: number;
 }

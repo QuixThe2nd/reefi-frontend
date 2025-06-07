@@ -1,13 +1,13 @@
 import { getContract, GetContractReturnType, PublicActions, WalletClient } from "viem";
 import { useMemo } from "react";
+import { useWallet } from "../state/useWallet";
 
 import { ABIs } from "../config/ABIs/abis";
 import { Chains, contracts } from "../config/contracts";
-import { UseWallet } from "./useWallet";
 
 export type UseContracts = Record<Chains, { [K in keyof typeof ABIs]: GetContractReturnType<typeof ABIs[K], WalletClient & PublicActions> }> | undefined;
 
-export const useContracts = ({ wallet }: { wallet: UseWallet }): UseContracts => {
+export const useContracts = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0] }): UseContracts => {
   const writeContracts = useMemo(() => {
     if (!wallet.clients) return;
 

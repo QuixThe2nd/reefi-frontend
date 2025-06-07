@@ -3,10 +3,9 @@ import { memo, type ReactElement } from "react";
 import { AmountInput } from "../components/AmountInput";
 import { Button } from "../components/Button";
 import { Page } from "../components/Page";
-import { UseAmounts } from "../hooks/useAmounts";
 
 interface Properties {
-  readonly send: UseAmounts["amounts"]["send"];
+  readonly send: bigint;
   readonly setSendAmount: (_amount: bigint) => void;
   readonly unlockYMGP: () => void;
   readonly lymgpBalance: bigint;

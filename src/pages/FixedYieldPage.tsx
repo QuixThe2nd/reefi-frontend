@@ -1,19 +1,19 @@
 import { formatEther, formatTime } from "../utilities";
 import { memo, type ReactElement } from "react";
+import { useBalances } from "../state/useBalances";
 
-import { Chains } from "../config/contracts";
+import { Chains, TradeableCoin } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 import { UseAllowances } from "../hooks/useAllowances";
-import { UseAmounts } from "../hooks/useAmounts";
 import { UsePrices } from "../hooks/usePrices";
 import { UseWithdraws } from "../hooks/useWithdraws";
 
 interface Properties {
   mgpAPR: number;
-  balances: UseBalances["balances"];
+  balances: ReturnType<typeof useBalances>[0];
   setSend: (_send: bigint) => void;
-  send: UseAmounts["amounts"]["send"];
+  send: bigint;
   prices: UsePrices;
   ymgpMgpCurveRate: number;
   mgpRmgpCurveRate: number;
@@ -29,7 +29,7 @@ interface Properties {
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
   unlockSchedule: UseWithdraws["withdraws"]["unlockSchedule"];
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TransferrableCoin, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TradeableCoin, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;
@@ -104,7 +104,7 @@ export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, y
         </div>
       </div>
       <div className="mt-3 rounded bg-green-900/30 p-2 text-xs text-green-200">
-        <strong>Example:</strong> Spend {formatEther(send ?? 0n).toFixed(2)} MGP → Get {(formatEther(send ?? 0n) / mgpRmgpCurveRate).toFixed(2)} rMGP → Withdraw {(formatEther(send ?? 0n) / mgpRmgpCurveRate * burnRate).toFixed(2)} MGP = +{(formatEther(send ?? 0n) / mgpRmgpCurveRate * burnRate - formatEther(send ?? 0n)).toFixed(2)} MGP profit
+        <strong>Example:</strong> Spend {formatEther(send).toFixed(2)} MGP → Get {(formatEther(send) / mgpRmgpCurveRate).toFixed(2)} rMGP → Withdraw {(formatEther(send) / mgpRmgpCurveRate * burnRate).toFixed(2)} MGP = +{(formatEther(send) / mgpRmgpCurveRate * burnRate - formatEther(send)).toFixed(2)} MGP profit
       </div>
     </div>
 

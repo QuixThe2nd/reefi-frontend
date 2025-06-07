@@ -1,10 +1,10 @@
+import { useBalances } from "../state/useBalances";
 import { useState, ReactElement } from "react";
 
-import { Chains, TransferrableCoin } from "../config/contracts";
+import { Chains, TradeableCoin, TransferrableCoin } from "../config/contracts";
 import { SwapButton } from "./SwapButton";
 import { SwapInput } from "./SwapInput";
 import { UseAllowances } from "../hooks/useAllowances";
-import { UseAmounts } from "../hooks/useAmounts";
 import { UsePrices } from "../hooks/usePrices";
 
 interface Properties {
@@ -15,7 +15,7 @@ interface Properties {
   label: string;
   excludeCoins: TransferrableCoin[];
   setSend: (_send: bigint) => void;
-  send: UseAmounts["amounts"]["send"];
+  send: bigint;
   prices: UsePrices;
   ymgpMgpCurveRate: number;
   mgpRmgpCurveRate: number;
@@ -28,12 +28,12 @@ interface Properties {
   ymgpMgpCurveAmount: bigint;
   allowances: UseAllowances["allowances"];
   chain: Chains;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: TransferrableCoin, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: TradeableCoin, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
-  balances: UseBalances["balances"];
+  balances: ReturnType<typeof useBalances>[0];
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
 }

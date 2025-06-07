@@ -3,7 +3,6 @@ import { formatEther, parseEther } from "../utilities";
 import { memo, ReactElement } from "react";
 
 import { Button } from "./Button";
-import { UseAmounts } from "../hooks/useAmounts";
 
 interface AmountInputProperties {
   readonly label: string;

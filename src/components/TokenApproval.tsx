@@ -1,11 +1,10 @@
 import { memo, useState, type ReactElement } from "react";
 
 import { Button } from "./Button";
-import { UseAmounts } from "../hooks/useAmounts";
 
 interface TokenApprovalProperties {
   readonly allowance: bigint;
-  readonly send: UseAmounts["amounts"]["send"];
+  readonly send: bigint;
   readonly onApprove: (_infinity: boolean) => void;
   readonly tokenSymbol: string;
   readonly curve?: boolean;

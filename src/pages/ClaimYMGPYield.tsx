@@ -8,7 +8,7 @@ import { Page } from "../components/Page";
 interface Properties {
   readonly claimYMGPRewards: () => void;
   readonly unclaimedUserYield: bigint;
-  readonly uncompoundedMGPYield: number;
+  readonly uncompoundedMGPYield: bigint;
   readonly lockedYMGP: bigint;
   readonly userLockedYMGP: bigint;
   readonly ymgpHoldings: bigint;
@@ -20,11 +20,11 @@ export const ClaimYieldComponent = ({ claimYMGPRewards, unclaimedUserYield, unco
   <div className="flex justify-between rounded-lg bg-gray-700/50 p-4">
     <div className="flex flex-col">
       <p className="text-lg font-medium">You: {formatNumber(formatEther(unclaimedUserYield, decimals.yMGP), 4)} rMGP</p>
-      <p className="text-sm text-gray-400">+{formatNumber(0.05 * uncompoundedMGPYield * (Number(userLockedYMGP) / Number(lockedYMGP)), 4)} MGP</p>
+      <p className="text-sm text-gray-400">+{formatNumber(0.05 * formatEther(uncompoundedMGPYield) * (Number(userLockedYMGP) / Number(lockedYMGP)), 4)} MGP</p>
     </div>
     <div className="flex flex-col text-right">
       <p className="text-lg font-medium">Total: {formatNumber(formatEther(ymgpHoldings - ymgpSupply - lockedYMGP, decimals.yMGP), 4)} rMGP</p>
-      <p className="text-sm text-gray-400">+{formatNumber(uncompoundedMGPYield * 0.05, 4)} MGP</p>
+      <p className="text-sm text-gray-400">+{formatNumber(formatEther(uncompoundedMGPYield) * 0.05, 4)} MGP</p>
     </div>
   </div>
   <Button className="mt-4 w-full" onClick={claimYMGPRewards} type="button">Claim Rewards</Button>

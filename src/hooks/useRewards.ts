@@ -1,15 +1,16 @@
 import { aprToApy, formatEther, parseEther } from "../utilities";
 import { contracts, decimals, publicClients } from "../config/contracts";
+import { useBalances } from "../state/useBalances";
 import { useCallback, useEffect, useMemo } from "react";
 import { useStoredObject } from "./useStoredState";
+import { useWallet } from "../state/useWallet";
 
 import { UsePrices } from "./usePrices";
 
 interface Properties {
-  readonly wallet: UseWallet;
+  readonly wallet: ReturnType<typeof useWallet>[0];
   readonly prices: UsePrices;
-  readonly balances: UseBalances["balances"];
-  readonly locked: UseLocked["locked"];
+  readonly balances: ReturnType<typeof useBalances>[0];
 }
 
 interface Rewards {
@@ -41,7 +42,7 @@ export interface UseRewards {
   updateRewards: UpdateRewards;
 }
 
-export const useRewards = ({ wallet, prices, balances, locked }: Properties): UseRewards => {
+export const useRewards = ({ wallet, prices, balances }: Properties): UseRewards => {
   const [rewards, setRewards] = useStoredObject<Rewards>("rewards", { cmgpPoolAPY: 0, compoundRMGPGas: 0n, estimatedCompoundAmount: 0n, mgpAPR: 0, pendingRewards: {}, unclaimedUserYield: 0n, unclaimedUserVMGPYield: parseEther(0.5) });
 
   const updateRewards: UpdateRewards = {
@@ -96,10 +97,10 @@ export const useRewards = ({ wallet, prices, balances, locked }: Properties): Us
   }, [wallet.clients, wallet.chain, wallet.account]);
 
   const cmgpAPY = useMemo(() => {
-    const yieldBearingUnderlyingPercent = Number(balances.curveRMGP + balances.curveYMGP) / Number(balances.curveMGP + balances.curveRMGP + balances.curveYMGP);
+    const yieldBearingUnderlyingPercent = Number(balances.curve.rMGP + balances.curve.yMGP) / Number(balances.curve.MGP + balances.curve.rMGP + balances.curveyMGP);
     const underlyingYield = yieldBearingUnderlyingPercent * aprToApy(rewards.mgpAPR) * 0.9;
     return underlyingYield + rewards.cmgpPoolAPY;
-  }, [rewards.cmgpPoolAPY, rewards.mgpAPR, balances.curveMGP, balances.curveRMGP, balances.curveYMGP]);
+  }, [rewards.cmgpPoolAPY, rewards.mgpAPR, balances.curve.MGP, balances.curve.rMGP, balances.curve.yMGP]);
   const uncompoundedMGPYield = useMemo(() => Object.keys(rewards.pendingRewards).length > 0 ? (Object.keys(rewards.pendingRewards) as Coins[]).map(symbol => prices[symbol] * Number(formatEther(rewards.pendingRewards[symbol]?.rewards ?? 0n, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [rewards.pendingRewards, prices]);
   const estimatedCompoundGasFee = useMemo(() => formatEther(rewards.compoundRMGPGas, decimals.WETH) * prices.WETH, [rewards.compoundRMGPGas, prices]);
   const lockedYmgpAPY = useMemo(() => Number(locked.reefiMGP) * aprToApy(rewards.mgpAPR) * 0.05 / Number(balances.lyMGP) + aprToApy(rewards.mgpAPR) * 0.9, [locked.reefiMGP, rewards.mgpAPR, balances.lyMGP]);

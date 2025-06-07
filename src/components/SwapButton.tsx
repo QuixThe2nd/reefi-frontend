@@ -1,4 +1,4 @@
-import { contracts, Chains, TradeableCoin } from "../config/contracts";
+import { contracts, Chains, TransferrableCoin } from "../config/contracts";
 import { formatEther } from "../utilities";
 
 import { Button } from "./Button";
@@ -6,14 +6,13 @@ import { BuyOnCurve } from "./BuyOnCurve";
 import { ReactElement } from "react";
 import { TokenApproval } from "./TokenApproval";
 import { UseAllowances } from "../hooks/useAllowances";
-import { UseAmounts } from "../hooks/useAmounts";
 
 interface Properties {
   buy: () => void;
   nativeSwap: undefined | (() => void);
   label: string;
-  tokenIn: TradeableCoin;
-  tokenOut: TradeableCoin;
+  tokenIn: TransferrableCoin;
+  tokenOut: TransferrableCoin;
   mgpRmgpCurveAmount: bigint;
   rmgpYmgpCurveAmount: bigint;
   rmgpMgpCurveAmount: bigint;
@@ -21,12 +20,12 @@ interface Properties {
   ymgpRmgpCurveAmount: bigint;
   ymgpMgpCurveAmount: bigint;
   allowances: UseAllowances["allowances"];
-  send: UseAmounts["amounts"]["send"];
+  send: bigint;
   ymgpVmgpCurveAmount: bigint;
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: TradeableCoin, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: TransferrableCoin, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;
@@ -41,7 +40,7 @@ export const SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpC
       nativeRate = lockedReefiMGP === 0n ? 1 : Number(rmgpSupply) / Number(lockedReefiMGP);
       curveAmount = mgpRmgpCurveAmount;
     } else if (tokenIn === "rMGP" && tokenOut === "MGP") {
-      nativeRate = Number(lockedReefiMGP) / Number(rmgpSupply);
+      nativeRate = rmgpSupply === 0n ? 1 : Number(lockedReefiMGP) / Number(rmgpSupply);
       curveAmount = rmgpMgpCurveAmount;
     } else if (tokenIn === "yMGP" && tokenOut === "rMGP") {
       nativeRate = 0.75;

@@ -2,7 +2,7 @@ import { useBalances } from "../../state/useBalances";
 import { useCallback, useEffect, useRef } from "react";
 
 import { Chains } from "../../config/contracts";
-import { UseContracts } from "../useContracts";
+import { UseContracts } from "../../state/useContracts";
 
 import type { PublicActions, WalletClient } from "viem";
 

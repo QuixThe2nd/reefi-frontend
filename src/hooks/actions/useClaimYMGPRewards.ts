@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 
 import { Chains } from "../../config/contracts";
-import { UseContracts } from "../useContracts";
+import { UseContracts } from "../../state/useContracts";
 
 import type { PublicActions, WalletClient } from "viem";
 
@@ -10,17 +10,15 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   chain: Chains;
   clients: Clients;
   setConnectRequired: (_value: boolean) => void;
-  updateUnclaimedUserYield: () => Promise<void>;
   writeContracts: UseContracts;
 }
 
-export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, setConnectRequired, updateUnclaimedUserYield, writeContracts }: Properties<Clients>): () => Promise<void> => {
-  const accountReference = useRef(account),
-    chainReference = useRef(chain),
-    clientsReference = useRef(clients),
-    setConnectRequiredReference = useRef(setConnectRequired),
-    updateUnclaimedUserYieldReference = useRef(updateUnclaimedUserYield),
-    writeContractsReference = useRef(writeContracts);
+export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, setConnectRequired, writeContracts }: Properties<Clients>): () => Promise<void> => {
+  const accountReference = useRef(account);
+  const chainReference = useRef(chain);
+  const clientsReference = useRef(clients);
+  const setConnectRequiredReference = useRef(setConnectRequired);
+  const writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
     accountReference.current = account;
@@ -39,10 +37,6 @@ export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient 
   }, [setConnectRequired]);
 
   useEffect(() => {
-    updateUnclaimedUserYieldReference.current = updateUnclaimedUserYield;
-  }, [updateUnclaimedUserYield]);
-
-  useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
 
@@ -51,6 +45,5 @@ export const useClaimYMGPRewards = <Clients extends Record<Chains, WalletClient 
       setConnectRequiredReference.current(true); return;
     }
     await writeContractsReference.current[chainReference.current].yMGP.write.claim({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    updateUnclaimedUserYieldReference.current();
   }, []);
 };

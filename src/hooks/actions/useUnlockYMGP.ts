@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { useSupplies } from "../../state/useSupplies";
 
 import { Chains } from "../../config/contracts";
-import { UseContracts } from "../useContracts";
+import { UseContracts } from "../../state/useContracts";
 
 import type { PublicActions, WalletClient } from "viem";
 
@@ -13,20 +13,17 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   send: bigint;
   setConnectRequired: (_value: boolean) => void;
   updateSupplies: ReturnType<typeof useSupplies>[1];
-  updateTotalLockedYMGP: () => void;
-  updateUserLockedYMGP: () => Promise<void>;
+  updateBalances: () => void;
   writeContracts: UseContracts;
 }
 
-export const useUnlockYMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, send, setConnectRequired, updateSupplies, updateTotalLockedYMGP, updateUserLockedYMGP, writeContracts }: Properties<Clients>): () => Promise<void> => {
+export const useUnlockYMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, chain, clients, send, setConnectRequired, updateSupplies, updateBalances, writeContracts }: Properties<Clients>): () => Promise<void> => {
   const accountReference = useRef(account);
   const chainReference = useRef(chain);
   const clientsReference = useRef(clients);
   const sendReference = useRef(send);
   const setConnectRequiredReference = useRef(setConnectRequired);
   const updateSuppliesReference = useRef(updateSupplies);
-  const updateTotalLockedYMGPReference = useRef(updateTotalLockedYMGP);
-  const updateUserLockedYMGPReference = useRef(updateUserLockedYMGP);
   const writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
@@ -54,14 +51,6 @@ export const useUnlockYMGP = <Clients extends Record<Chains, WalletClient & Publ
   }, [updateSupplies]);
 
   useEffect(() => {
-    updateTotalLockedYMGPReference.current = updateTotalLockedYMGP;
-  }, [updateTotalLockedYMGP]);
-
-  useEffect(() => {
-    updateUserLockedYMGPReference.current = updateUserLockedYMGP;
-  }, [updateUserLockedYMGP]);
-
-  useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
 
@@ -70,7 +59,6 @@ export const useUnlockYMGP = <Clients extends Record<Chains, WalletClient & Publ
       setConnectRequiredReference.current(true); return;
     }
     await writeContractsReference.current[chainReference.current].yMGP.write.unlock([sendReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    updateTotalLockedYMGPReference.current();
-    updateUserLockedYMGPReference.current();
+    updateBalances();
   }, []);
 };

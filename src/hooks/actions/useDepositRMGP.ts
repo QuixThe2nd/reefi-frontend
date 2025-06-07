@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { useSupplies } from "../../state/useSupplies";
 
 import { Chains } from "../../config/contracts";
-import { UseContracts } from "../useContracts";
+import { UseContracts } from "../../state/useContracts";
 
 import type { PublicActions, WalletClient } from "viem";
 
@@ -18,11 +18,10 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
   updateSupplies: ReturnType<typeof useSupplies>[1];
-  updateYMGPHoldings: () => Promise<void>;
   writeContracts: UseContracts;
 }
 
-export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, send, setConnectRequired, setError, updateSupplies, updateYMGPHoldings, writeContracts }: Properties<Clients>): () => Promise<void> => {
+export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, updateBalances, chain, clients, send, setConnectRequired, setError, updateSupplies, writeContracts }: Properties<Clients>): () => Promise<void> => {
   const accountReference = useRef(account);
   const allowancesReference = useRef(allowances);
   const updateBalancesReference = useRef(updateBalances);
@@ -32,7 +31,6 @@ export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & Pub
   const setConnectRequiredReference = useRef(setConnectRequired);
   const setErrorReference = useRef(setError);
   const updateSuppliesReference = useRef(updateSupplies);
-  const updateYMGPHoldingsReference = useRef(updateYMGPHoldings);
   const writeContractsReference = useRef(writeContracts);
 
   useEffect(() => {
@@ -72,10 +70,6 @@ export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & Pub
   }, [updateSupplies]);
 
   useEffect(() => {
-    updateYMGPHoldingsReference.current = updateYMGPHoldings;
-  }, [updateYMGPHoldings]);
-
-  useEffect(() => {
     writeContractsReference.current = writeContracts;
   }, [writeContracts]);
 
@@ -87,6 +81,6 @@ export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & Pub
       setErrorReference.current("Allowance too low"); return;
     }
     await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    updateYMGPHoldingsReference.current();
+    updateBalancesReference.current();
   }, []);
 };

@@ -5,18 +5,18 @@ import { usePrices } from "../state/usePrices";
 
 import { Button } from "../components/Button";
 import { Page } from "../components/Page";
+
 interface Properties {
   uncompoundedMGPYield: bigint;
   estimatedCompoundGasFee: bigint;
   pendingRewards: Record<SecondaryCoin, { rewards: bigint }>;
-  estimatedCompoundAmount: bigint;
   mgpAPR: number;
   prices: ReturnType<typeof usePrices>[0];
   compoundRMGP: () => void;
   reefiMGPLocked: bigint;
 }
 
-export const CompoundYield = memo(({ uncompoundedMGPYield, estimatedCompoundGasFee, pendingRewards, estimatedCompoundAmount, mgpAPR, reefiMGPLocked, prices, compoundRMGP }: Properties): ReactElement => {
+export const CompoundYield = memo(({ uncompoundedMGPYield, estimatedCompoundGasFee, pendingRewards, mgpAPR, reefiMGPLocked, prices, compoundRMGP }: Properties): ReactElement => {
   const textColor = `text-${formatEther(uncompoundedMGPYield) * prices.MGP * 0.01 > estimatedCompoundGasFee ? "green" : "red"}-400`;
   return <Page info="Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of rMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the compound button, you will receive 1% of the pending yield." noTopMargin={true}>
     <h3 className="mb-2 font-medium">Uncompounded Yield</h3>
@@ -30,7 +30,7 @@ export const CompoundYield = memo(({ uncompoundedMGPYield, estimatedCompoundGasF
         <p className="text-xs">{formatNumber(prices[symbol] * Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 4)} MGP</p>
       </div>)}
     </div>
-    <Button className="mt-4 w-full" onClick={compoundRMGP} type="button">Compound Yield (Get ~{Number(estimatedCompoundAmount) / 100} yMGP)</Button>
+    <Button className="mt-4 w-full" onClick={compoundRMGP} type="button">Compound Yield (Get ~{Number(uncompoundedMGPYield) / 100} yMGP)</Button> {/* TODO: convert uncompoundedMGPYield to yMGP */}
     <div className="mt-4 text-sm text-gray-400">
       <div className="mb-1 flex justify-between">
         <span>Estimated Payout</span>

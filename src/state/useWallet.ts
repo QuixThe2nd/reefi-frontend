@@ -40,7 +40,7 @@ export const useWallet = ({ setError }: { setError: (_msg: string) => void }) =>
     window.localStorage.setItem("chain", String(newChain));
   };
 
-  // const setConnectRequired = (required: boolean): void => setWallet(previous => ({ ...previous, connectRequired: required }));
+  const setConnectRequired = (required: boolean): void => setWallet(previous => ({ ...previous, connectRequired: required }));
 
   useEffect(() => {
     (async () => {
@@ -71,5 +71,5 @@ export const useWallet = ({ setError }: { setError: (_msg: string) => void }) =>
     if (savedChain !== null) setChain(Number(savedChain) as 56 | 42_161);
   }, []);
 
-  return [wallet, { connectWallet, setChain }] as const;
+  return [wallet, { connectWallet, setChain, setConnectRequired }] as const;
 };

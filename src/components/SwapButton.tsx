@@ -9,9 +9,8 @@ import { TokenApproval } from "./TokenApproval";
 
 interface Properties {
   buy: () => void;
-  nativeSwap: undefined | (() => void);
   label: string;
-  tokenIn: TradeableCoinExtendedETH;
+  tokenIn: TradeableCoinExtendedETH | "vlMGP";
   tokenOut: TradeableCoinExtendedETH;
   mgpRmgpCurveAmount: bigint;
   rmgpYmgpCurveAmount: bigint;
@@ -32,8 +31,8 @@ interface Properties {
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
 }
 
-export const SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, send, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, ymgpVmgpCurveAmount }: Properties): ReactElement => {
-  if (tokenIn === "MGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "yMGP" || tokenIn === "yMGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "MGP" || tokenIn === "yMGP" && tokenOut === "vMGP" || tokenIn === "rMGP" && tokenOut === "wrMGP" || tokenIn === "wrMGP" && tokenOut === "rMGP") {
+export const SwapButton = ({ buy, tokenIn, tokenOut, label, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, send, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, ymgpVmgpCurveAmount }: Properties): ReactElement => {
+  if (tokenIn === "MGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "yMGP" || tokenIn === "yMGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "MGP" || tokenIn === "yMGP" && tokenOut === "vMGP" || tokenIn === "rMGP" && tokenOut === "wrMGP" || tokenIn === "wrMGP" && tokenOut === "rMGP" || tokenIn === "vlMGP" && tokenOut === "MGP") {
     let nativeRate = 1;
     let curveAmount = 0n;
     if (tokenIn === "MGP" && tokenOut === "rMGP") {
@@ -51,10 +50,8 @@ export const SwapButton = ({ buy, nativeSwap, tokenIn, tokenOut, label, mgpRmgpC
     else if (tokenIn === "rMGP" && tokenOut === "yMGP") curveAmount = rmgpYmgpCurveAmount;
     return <div className={`grid ${curveAmount === 0n ? "" : "grid-cols-2"} gap-2`}>
       <div>
-        {tokenOut !== "MGP" && tokenIn !== "yMGP" && tokenOut !== "rMGP" && <TokenApproval allowance={allowances[tokenIn]} onApprove={infinity => {
-          approve(tokenOut, tokenIn, infinity);
-        }} send={send} tokenSymbol={tokenIn} />}
-        <Button className="w-full" onClick={nativeSwap} type="submit">{label} ({formatEther(BigInt(Math.round(Number(send) * nativeRate))).toFixed(4)} {tokenOut})</Button>
+        {tokenOut !== "MGP" && tokenIn !== "yMGP" && tokenOut !== "rMGP" && <TokenApproval allowance={allowances[tokenIn]} onApprove={infinity => approve(tokenOut, tokenIn, infinity)} send={send} tokenSymbol={tokenIn} />}
+        <Button className="w-full" onClick={buy} type="submit">{label} ({formatEther(BigInt(Math.round(Number(send) * nativeRate))).toFixed(4)} {tokenOut})</Button>
       </div>
       {curveAmount !== 0n && <BuyOnCurve allowanceCurve={allowances.curve[tokenIn]} buy={buy} curveAmount={curveAmount} nativeRate={nativeRate} onApprove={infinity => approve("cMGP", tokenIn, infinity)} send={send} tokenASymbol={tokenIn} tokenBSymbol={tokenOut} />}
     </div>;

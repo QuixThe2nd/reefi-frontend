@@ -8,7 +8,7 @@ import { SwapButton } from "./SwapButton";
 import { SwapInput } from "./SwapInput";
 
 interface Properties {
-  originalTokenIn: TradeableCoinExtendedETH;
+  originalTokenIn: TradeableCoinExtendedETH | "vlMGP";
   tokenOut: TradeableCoinExtendedETH;
   buy: () => void;
   nativeSwap?: () => void;
@@ -39,7 +39,7 @@ interface Properties {
 }
 
 export const SwapToken = ({ originalTokenIn, tokenOut, balances, buy, nativeSwap, label, excludeCoins, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, ymgpVmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => {
-  const [tokenIn, setTokenIn] = useState<TradeableCoinExtendedETH>(originalTokenIn);
+  const [tokenIn, setTokenIn] = useState<TradeableCoinExtendedETH | "vlMGP">(originalTokenIn);
   return <>
     <SwapInput balance={balances.user[tokenIn]} excludeCoins={excludeCoins} label={`Get ${tokenOut}`} onChange={setSend} onCoinChange={setTokenIn} outputCoin={tokenOut} selectedCoin={tokenIn} value={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} />
     <SwapButton buy={buy} label={label} nativeSwap={nativeSwap} tokenIn={tokenIn} tokenOut={tokenOut} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} send={send} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} />

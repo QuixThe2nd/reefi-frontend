@@ -2,7 +2,7 @@ import { contracts, Chains, TransferrableCoin } from "../../config/contracts";
 import { useAllowances } from "../../state/useAllowances";
 import { useCallback, useEffect, useRef } from "react";
 
-import { UseContracts } from "../useContracts";
+import { UseContracts } from "../../state/useContracts";
 
 import type { PublicActions, WalletClient } from "viem";
 

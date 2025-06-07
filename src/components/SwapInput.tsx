@@ -8,7 +8,7 @@ import ETH from "../../public/icons/ETH.svg";
 
 interface Properties {
   readonly label: string;
-  readonly selectedCoin: TradeableCoinExtendedETH;
+  readonly selectedCoin: TradeableCoinExtendedETH | "vlMGP";
   readonly onCoinChange: (_coin: TradeableCoinExtendedETH) => void;
   readonly balance: bigint;
   readonly value: bigint;
@@ -45,7 +45,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
     else if (selectedCoin === "yMGP" && outputCoin === "MGP") return `${(inputAmount / ymgpMgpCurveRate).toFixed(6)} ${outputCoin}`;
     else if (outputCoin === "rMGP") {
       const priceKey = selectedCoin === "ETH" ? "WETH" : selectedCoin;
-      return `${(inputAmount * prices[priceKey] / prices.MGP / mgpRmgpCurveRate).toFixed(6)} ${outputCoin}`;
+      return `${(inputAmount * prices[priceKey === "vlMGP" ? "MGP" : priceKey] / prices.MGP / mgpRmgpCurveRate).toFixed(6)} ${outputCoin}`;
     }
     return undefined;
   };

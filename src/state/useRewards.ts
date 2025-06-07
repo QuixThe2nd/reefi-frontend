@@ -51,13 +51,13 @@ export const useRewards = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0]
 
   useEffect(() => {
     (async () => {
-      const [gasPrice, gas] = await Promise.all([publicClients[wallet.chain].getGasPrice(), wallet.account === undefined ? 0n : contracts[wallet.chain].rMGP.estimateGas.claim({ account: wallet.account })]);
-      setRewards(y => ({ ...y, reefi: { ...y.reefi, vlMGP: { ...y.reefi.vlMGP, estimatedGas: gasPrice * gas } } }));
-    })();
-    (async () => {
       if (wallet.clients === undefined || wallet.account === undefined) return;
       const simulation = await contracts[wallet.chain].rMGP.simulate.claim({ account: wallet.account, chain: wallet.clients[wallet.chain].chain });
       setRewards(y => ({ ...y, reefi: { ...y.reefi, vlMGP: { ...y.reefi.vlMGP, estimatedMGP: simulation.result } } }));
+    })();
+    (async () => {
+      const [gasPrice, gas] = await Promise.all([publicClients[wallet.chain].getGasPrice(), wallet.account === undefined ? 0n : contracts[wallet.chain].rMGP.estimateGas.claim({ account: wallet.account })]);
+      setRewards(y => ({ ...y, reefi: { ...y.reefi, vlMGP: { ...y.reefi.vlMGP, estimatedGas: gasPrice * gas } } }));
     })();
   }, [wallet.account, wallet.chain]);
 
@@ -68,6 +68,5 @@ export const useRewards = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0]
   // }, [rewards.cmgpPoolAPY, rewards.vlmgpAPR, balances.curve.MGP, balances.curve.rMGP, balances.curve.yMGP]);
   // const uncompoundedMGPYield = useMemo(() => Object.keys(rewards.reefi.vlMGP.pendingRewards).length > 0 ? (Object.keys(rewards.reefi.vlMGP.pendingRewards) as Coins[]).map(symbol => prices[symbol] * Number(formatEther(rewards.reefi.vlMGP.pendingRewards[symbol]?.rewards ?? 0n, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP : 0, [rewards.reefi.vlMGP.pendingRewards, prices]);
   // const estimatedCompoundGasFee = useMemo(() => formatEther(rewards.compoundRMGPGas, decimals.WETH) * tokenState.prices.WETH, [rewards.compoundRMGPGas, prices]);
-
   return [rewards] as const;
 };

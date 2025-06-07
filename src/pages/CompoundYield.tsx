@@ -6,7 +6,7 @@ import { Button } from "../components/Button";
 import { Page } from "../components/Page";
 import { UsePrices } from "../hooks/usePrices";
 interface Properties {
-  uncompoundedMGPYield: number;
+  uncompoundedMGPYield: bigint;
   estimatedCompoundGasFee: number;
   pendingRewards: Record<Coins, { rewards: bigint }>;
   estimatedCompoundAmount: bigint;

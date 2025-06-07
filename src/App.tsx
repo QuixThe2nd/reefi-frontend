@@ -12,7 +12,7 @@ import vlMGP from "../public/icons/vlMGP.png";
 
 import { aprToApy, formatEther, formatNumber } from "./utilities";
 import { coins } from "./config/contracts";
-import { useReefiState } from "./hooks/useReefiState";
+import { useReefiState } from "./state/useReefiState";
 import { useState, useEffect } from "react";
 
 import { Badge, YieldBadge } from "./components/YieldBadge";
@@ -85,17 +85,21 @@ const App = () => {
   const [error, setError] = useState("");
   const [notification, setNotification] = useState("");
   const [page, setPage] = useState<Pages | undefined>(window.location.pathname.replace("/", "") as Pages | null ?? "buyVotes");
+  const reefiState = useReefiState({ setError });
   const {
     balances,
+    rewards,
+    exchangeRates,
+    supplies,
     token: [token],
     protocol: [protocol],
-    amounts: [amounts],
-    wallet: [wallet]
-  } = useReefiState({ setError });
+    amounts,
+    wallet
+  } = reefiState;
 
   const calculateFixedYield = () => {
-    const burnRate = Number(balances.rMGP.MGP) / Number(token.supplies.rMGP);
-    const fixedYieldPercent = (protocol.exchangeRates.mgpRMGP / burnRate - 1) * 100;
+    const burnRate = Number(balances.rMGP.MGP) / Number(supplies.rMGP);
+    const fixedYieldPercent = (exchangeRates.mgpRMGP / burnRate - 1) * 100;
     const withdrawalTime = protocol.withdraws.reefi.unlockSchedule.length === 6 ? Number(protocol.withdraws.reefi.unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2;
     const daysToWithdraw = withdrawalTime / (60 * 60 * 24);
     return `${(fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100).toFixed(2)}%`;
@@ -121,16 +125,16 @@ const App = () => {
               <ConnectWallet connectRequired={wallet.connectionRequired} isConnecting={wallet.isConnecting} connectWallet={() => connectWallet()} />
               <ErrorCard error={error} setError={setError} />
               <Card>
-                <CompoundYield uncompoundedMGPYield={protocol.yield.uncompoundedMGPYield} estimatedCompoundGasFee={protocol.yield.estimatedCompoundGasFee} pendingRewards={protocol.yield.pendingRewards} estimatedCompoundAmount={protocol.yield.estimatedCompoundAmount} mgpAPR={protocol.yield.vlmgpAPR} reefiMGPLocked={balances.rMGP.MGP} prices={token.prices} compoundRMGP={compoundRMGP} />
+                <CompoundYield uncompoundedMGPYield={rewards.reefi.vlMGP.estimatedMGP} estimatedCompoundGasFee={rewards.reefi.vlMGP.estimatedGas} pendingRewards={rewards.reefi.vlMGP.pendingRewards} estimatedCompoundAmount={rewards.estimatedCompoundAmount} mgpAPR={rewards.vlmgpAPR} reefiMGPLocked={balances.rMGP.MGP} prices={token.prices} compoundRMGP={compoundRMGP} />
               </Card>
               <div className="grid grid-cols-1 gap-6 mt-6 lg:grid-cols-2">
                 <Card>
                   <h2 className="mb-4 text-xl font-bold">Claim yMGP Rewards</h2>
-                  <ClaimYield claimYMGPRewards={() => claimYMGPRewards()} lockedYMGP={token.supplies.lyMGP} unclaimedUserYield={protocol.yield.unclaimedUserYield} uncompoundedMGPYield={protocol.yield.uncompoundedMGPYield} userLockedYMGP={balances.user.lyMGP} ymgpHoldings={balances.user.ymgpHoldings} ymgpSupply={token.supplies.yMGP} />
+                  <ClaimYield claimYMGPRewards={() => claimYMGPRewards()} lockedYMGP={supplies.lyMGP} unclaimedUserYield={rewards.unclaimedUserYield} uncompoundedMGPYield={rewards.uncompoundedMGPYield} userLockedYMGP={balances.user.lyMGP} ymgpHoldings={balances.user.ymgpHoldings} ymgpSupply={supplies.yMGP} />
                 </Card>
                 <Card>
                   <h2 className="mb-4 text-xl font-bold">Claim vMGP Rewards</h2>
-                  <ClaimVMGPYield claimVMGPRewards={() => claimVMGPRewards()} unclaimedUserVMGPYield={protocol.yield.user.lvMGP} vmgpHoldings={balances.user.vmgpHoldings} />
+                  <ClaimVMGPYield claimVMGPRewards={() => claimVMGPRewards()} unclaimedUserVMGPYield={rewards.user.lvMGP} vmgpHoldings={balances.user.vmgpHoldings} />
                 </Card>
               </div>
             </div>;
@@ -138,7 +142,7 @@ const App = () => {
             if (page === "vote") return <div className="flex flex-col h-screen bg-gray-900 text-white">
               <ConnectWallet connectRequired={wallet.connectionRequired} isConnecting={wallet.isConnecting} connectWallet={() => connectWallet()} />
               <ErrorCard error={error} setError={setError} />
-              <VotePage vmgpBalance={balances.user.vMGP} vmgpSupply={token.supplies.vMGP} lvmgpSupply={token.supplies.lvMGP} reefiMgpLocked={balances.rMGP.MGP} onVote={() => onVote()} ymgpBalance={balances.user.yMGP} />
+              <VotePage vmgpBalance={balances.user.vMGP} vmgpSupply={supplies.vMGP} lvmgpSupply={supplies.lvMGP} reefiMgpLocked={balances.rMGP.MGP} onVote={() => onVote()} ymgpBalance={balances.user.yMGP} />
             </div>;
 
             if (page === "bridge") return <div className="flex flex-col h-screen bg-gray-900 text-white">
@@ -151,18 +155,18 @@ const App = () => {
               <div className="grid grid-cols-1 gap-6 pb-6 mt-6 lg:grid-cols-2">
                 <Card>
                   <h2 className="mb-4 text-xl font-bold">Wrap rMGP</h2>
-                  <GetWRMGPPage depositMGP={() => depositMGP()} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={protocol.exchangeRates.ymgpMGP} mgpRmgpCurveRate={protocol.exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} wrapRMGP={() => wrapRMGP()} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={token.supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />
+                  <GetWRMGPPage depositMGP={() => depositMGP()} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={exchangeRates.ymgpMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} wrapRMGP={() => wrapRMGP()} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />
                 </Card>
                 <Card>
                   <h2 className="mb-4 text-xl font-bold">Unwrap wrMGP</h2>
-                  <UnwrapWRMGPPage depositMGP={() => depositMGP()} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={protocol.exchangeRates.ymgpMGP} mgpRmgpCurveRate={protocol.exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} unwrapWRMGP={() => unwrapWRMGP()} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={token.supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />
+                  <UnwrapWRMGPPage depositMGP={() => depositMGP()} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={exchangeRates.ymgpMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} unwrapWRMGP={() => unwrapWRMGP()} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />
                 </Card>
               </div>
             </div>;
 
             return <>
-              <TokenCards mgpLocked={token.supplies.vlMGP} mgpPrice={token.prices.MGP} mgpSupply={token.supplies.MGP} rmgpSupply={token.supplies.rMGP} ymgpSupply={token.supplies.yMGP} ymgpLocked={token.supplies.lyMGP} reefiMGPLocked={balances.rMGP.MGP} mgpRmgpCurveRate={protocol.exchangeRates.mgpRMGP} rmgpYmgpCurveRate={protocol.exchangeRates.rmgpYMGP} ymgpVmgpCurveRate={protocol.exchangeRates.ymgpVMGP} vmgpSupply={token.supplies.vMGP} />
-              <Features mgpAPR={protocol.yield.vlmgpAPR} lockedYmgpAPY={protocol.yield.lockedYmgpAPY} mgpPrice={token.prices.MGP} vmgpSupply={token.supplies.vMGP} reefiLockedMGP={balances.rMGP.MGP} vmgpMGPCurveRate={0.5} />
+              <TokenCards mgpLocked={supplies.vlMGP} mgpPrice={token.prices.MGP} mgpSupply={supplies.MGP} rmgpSupply={supplies.rMGP} ymgpSupply={supplies.yMGP} ymgpLocked={supplies.lyMGP} reefiMGPLocked={balances.rMGP.MGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} rmgpYmgpCurveRate={exchangeRates.rmgpYMGP} ymgpVmgpCurveRate={exchangeRates.ymgpVMGP} vmgpSupply={supplies.vMGP} />
+              <Features mgpAPR={rewards.vlmgpAPR} lockedYmgpAPY={rewards.lockedYmgpAPY} mgpPrice={token.prices.MGP} vmgpSupply={supplies.vMGP} reefiLockedMGP={balances.rMGP.MGP} vmgpMGPCurveRate={0.5} />
               <div className="rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4">
                 <h3 className="mb-2 text-lg font-semibold text-yellow-400">⚠️ Important Notice</h3>
                 <p className="text-sm text-gray-300">Reefi is in <strong>very early beta</strong>. Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution</p>
@@ -177,16 +181,16 @@ const App = () => {
                   </div>
                   <div className="flex h-min flex-row-reverse">
                     <div className="flex gap-1">
-                      <YieldBadge apr={protocol.yield.vlmgpAPR} asset="Locked MGP" breakdown={[{ apr: protocol.yield.vlmgpAPR, asset: "vlMGP", logo: vlMGP }]} logo={vlMGP} />
-                      <YieldBadge apy={aprToApy(protocol.yield.vlmgpAPR) * 0.9} asset="rMGP" breakdown={[{ apy: aprToApy(protocol.yield.vlmgpAPR) * 0.9, asset: "vlMGP", logo: vlMGP }]} logo={coins.rMGP.icon} />
-                      <YieldBadge value={calculateFixedYield()} asset="rMGP Fixed Yield" breakdown={[{ value: `${((protocol.exchangeRates.mgpRMGP / (Number(balances.rMGP.MGP) / Number(token.supplies.rMGP)) - 1) * 100).toFixed(2)}%`, asset: "rMGP Discount", logo: coins.rMGP.icon }]} logo={coins.rMGP.icon} />
+                      <YieldBadge apr={rewards.vlmgpAPR} asset="Locked MGP" breakdown={[{ apr: rewards.vlmgpAPR, asset: "vlMGP", logo: vlMGP }]} logo={vlMGP} />
+                      <YieldBadge apy={aprToApy(rewards.vlmgpAPR) * 0.9} asset="rMGP" breakdown={[{ apy: aprToApy(rewards.vlmgpAPR) * 0.9, asset: "vlMGP", logo: vlMGP }]} logo={coins.rMGP.icon} />
+                      <YieldBadge value={calculateFixedYield()} asset="rMGP Fixed Yield" breakdown={[{ value: `${((exchangeRates.mgpRMGP / (Number(balances.rMGP.MGP) / Number(supplies.rMGP)) - 1) * 100).toFixed(2)}%`, asset: "rMGP Discount", logo: coins.rMGP.icon }]} logo={coins.rMGP.icon} />
                     </div>
                   </div>
                 </div>
-                {page === "getMGP" && <GetMGPPage mgpAPR={protocol.yield.vlmgpAPR} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={protocol.exchangeRates.ymgpMGP} mgpRmgpCurveRate={protocol.exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} buyMGP={buyMGP} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={token.supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
-                {page === "deposit" && <GetRMGPPage mgpAPR={protocol.yield.vlmgpAPR} depositMGP={depositMGP} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={protocol.exchangeRates.ymgpMGP} mgpRmgpCurveRate={protocol.exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} buyRMGP={buyRMGP} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={token.supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
-                {page === "redeem" && <RedeemRMGPPage buyMGP={() => buyMGP()} redeemRMGP={redeemRMGP} withdrawMGP={withdrawMGP} unlockSchedule={withdraws.unlockSchedule} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={protocol.exchangeRates.ymgpMGP} mgpRmgpCurveRate={protocol.exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} userPendingWithdraws={withdraws.userPending} userWithdrawable={withdraws.userWithdrawable} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={token.supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
-                {page === "fixedYield" && <FixedYieldPage mgpAPR={protocol.yield.vlmgpAPR} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={protocol.exchangeRates.ymgpMGP} mgpRmgpCurveRate={protocol.exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={token.supplies.rMGP} unlockSchedule={withdraws.unlockSchedule} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} buyRMGPAndWithdraw={buyRMGPAndWithdraw} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
+                {page === "getMGP" && <GetMGPPage mgpAPR={rewards.vlmgpAPR} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={exchangeRates.ymgpMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} buyMGP={buyMGP} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
+                {page === "deposit" && <GetRMGPPage mgpAPR={rewards.vlmgpAPR} depositMGP={depositMGP} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={exchangeRates.ymgpMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} buyRMGP={buyRMGP} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
+                {page === "redeem" && <RedeemRMGPPage buyMGP={() => buyMGP()} redeemRMGP={redeemRMGP} withdrawMGP={withdrawMGP} unlockSchedule={withdraws.unlockSchedule} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={exchangeRates.ymgpMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} userPendingWithdraws={withdraws.userPending} userWithdrawable={withdraws.userWithdrawable} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
+                {page === "fixedYield" && <FixedYieldPage mgpAPR={rewards.vlmgpAPR} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={exchangeRates.ymgpMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={supplies.rMGP} unlockSchedule={withdraws.unlockSchedule} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} buyRMGPAndWithdraw={buyRMGPAndWithdraw} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
                 <div className="bg-gray-500 w-full h-[0.5px] mt-8" />
                 <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full">
                   <div className="flex rounded-lg bg-gray-700 p-1">
@@ -197,15 +201,15 @@ const App = () => {
                   </div>
                   <div className="flex h-min flex-row-reverse">
                     <div className="flex gap-1">
-                      <YieldBadge apy={aprToApy(protocol.yield.vlmgpAPR) * 0.9} asset="yMGP" breakdown={[{ apy: aprToApy(protocol.yield.vlmgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }]} logo={coins.yMGP.icon} />
-                      <YieldBadge apy={Number(balances.rMGP.MGP) * aprToApy(protocol.yield.vlmgpAPR) * 0.05 / Number(token.supplies.lyMGP) + aprToApy(protocol.yield.vlmgpAPR) * 0.9} asset="Locked yMGP" breakdown={[{ apy: aprToApy(protocol.yield.vlmgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }, { apr: Number(balances.rMGP.MGP) * protocol.yield.vlmgpAPR * 0.05 / Number(token.supplies.lyMGP), asset: "Boosted vlMGP", logo: vlMGP }, { asset: "yMGP Withdraws", value: "Variable", logo: coins.yMGP.icon }]} suffix='+' logo={coins.yMGP.icon} />
+                      <YieldBadge apy={aprToApy(rewards.vlmgpAPR) * 0.9} asset="yMGP" breakdown={[{ apy: aprToApy(rewards.vlmgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }]} logo={coins.yMGP.icon} />
+                      <YieldBadge apy={Number(balances.rMGP.MGP) * aprToApy(rewards.vlmgpAPR) * 0.05 / Number(supplies.lyMGP) + aprToApy(rewards.vlmgpAPR) * 0.9} asset="Locked yMGP" breakdown={[{ apy: aprToApy(rewards.vlmgpAPR) * 0.9, asset: "rMGP", logo: coins.rMGP.icon }, { apr: Number(balances.rMGP.MGP) * rewards.vlmgpAPR * 0.05 / Number(supplies.lyMGP), asset: "Boosted vlMGP", logo: vlMGP }, { asset: "yMGP Withdraws", value: "Variable", logo: coins.yMGP.icon }]} suffix='+' logo={coins.yMGP.icon} />
                     </div>
                   </div>
                 </div>
-                {page === "convert" && <GetYMGPPage balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={protocol.exchangeRates.ymgpMGP} mgpRmgpCurveRate={protocol.exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} buyYMGP={buyYMGP} depositRMGP={depositRMGP} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={token.supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
-                {page === "lock" && <LockPage ymgpBalance={balances.user.yMGP} setSend={updateAmounts.send} send={amounts.send} lockYMGP={() => lockYMGP()} mgpAPR={protocol.yield.vlmgpAPR} reefiLockedMGP={balances.rMGP.MGP} ymgpLocked={token.supplies.lyMGP} />}
+                {page === "convert" && <GetYMGPPage balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={exchangeRates.ymgpMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} buyYMGP={buyYMGP} depositRMGP={depositRMGP} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
+                {page === "lock" && <LockPage ymgpBalance={balances.user.yMGP} setSend={updateAmounts.send} send={amounts.send} lockYMGP={() => lockYMGP()} mgpAPR={rewards.vlmgpAPR} reefiLockedMGP={balances.rMGP.MGP} ymgpLocked={supplies.lyMGP} />}
                 {page === "unlock" && <UnlockPage send={amounts.send} setSendAmount={updateAmounts.send} unlockYMGP={unlockYMGP} lymgpBalance={balances.user.lyMGP} />}
-                {page === "redeemYMGP" && <RedeemYMGPPage buyRMGP={() => buyRMGP()} redeemYMGP={() => redeemYMGP()} withdrawMGP={() => withdrawMGP()} unlockSchedule={withdraws.unlockSchedule} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={protocol.exchangeRates.ymgpMGP} mgpRmgpCurveRate={protocol.exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} userPendingWithdraws={withdraws.userPending} userWithdrawable={withdraws.userWithdrawable} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={token.supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
+                {page === "redeemYMGP" && <RedeemYMGPPage buyRMGP={() => buyRMGP()} redeemYMGP={() => redeemYMGP()} withdrawMGP={() => withdrawMGP()} unlockSchedule={withdraws.unlockSchedule} balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={exchangeRates.ymgpMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} userPendingWithdraws={withdraws.userPending} userWithdrawable={withdraws.userWithdrawable} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
                 <div className="bg-gray-500 w-full h-[0.5px] mt-8" />
                 <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full">
                   <div className="flex rounded-lg bg-gray-700 p-1">
@@ -215,12 +219,12 @@ const App = () => {
                   </div>
                   <div className="flex h-min flex-row-reverse">
                     <div className="flex gap-1">
-                      <Badge title="Vote Multiplier" value={`${formatNumber(Number(balances.rMGP.MGP) / Number(token.supplies.vMGP), 2)}x`} breakdown={[{ asset: "Reefi's vlMGP", logo: vlMGP, value: formatNumber(formatEther(balances.rMGP.MGP)) }, { asset: "Votable vMGP", value: formatNumber(formatEther(token.supplies.vMGP)), logo: coins.vMGP.icon }]} />
+                      <Badge title="Vote Multiplier" value={`${formatNumber(Number(balances.rMGP.MGP) / Number(supplies.vMGP), 2)}x`} breakdown={[{ asset: "Reefi's vlMGP", logo: vlMGP, value: formatNumber(formatEther(balances.rMGP.MGP)) }, { asset: "Votable vMGP", value: formatNumber(formatEther(supplies.vMGP)), logo: coins.vMGP.icon }]} />
                     </div>
                   </div>
                 </div>
-                {page === "getVMGP" && <GetVMGPPage balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={protocol.exchangeRates.ymgpMGP} mgpRmgpCurveRate={protocol.exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} buyVMGP={() => buyVMGP()} mintVMGP={() => mintVMGP()} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={token.supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
-                {page === "lockVMGP" && <LockVMGPPage vmgpBalance={balances.user.vMGP} setSend={updateAmounts.send} send={amounts.send} lockYMGP={() => lockVMGP()} mgpAPR={protocol.yield.vlmgpAPR} />}
+                {page === "getVMGP" && <GetVMGPPage balances={balances.user} setSend={updateAmounts.send} send={amounts.send} prices={token.prices} ymgpMgpCurveRate={exchangeRates.ymgpMGP} mgpRmgpCurveRate={exchangeRates.mgpRMGP} mgpRmgpCurveAmount={amounts.curve.mgpRmgp} rmgpYmgpCurveAmount={amounts.curve.rmgpYmgp} rmgpMgpCurveAmount={amounts.curve.rmgpMgp} mgpYmgpCurveAmount={amounts.curve.mgpYmgp} ymgpRmgpCurveAmount={amounts.curve.ymgpRmgp} ymgpMgpCurveAmount={amounts.curve.ymgpMgp} allowances={allowances} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} buyVMGP={() => buyVMGP()} mintVMGP={() => mintVMGP()} lockedReefiMGP={balances.rMGP.MGP} rmgpSupply={supplies.rMGP} ymgpVmgpCurveAmount={amounts.curve.ymgpVmgp} />}
+                {page === "lockVMGP" && <LockVMGPPage vmgpBalance={balances.user.vMGP} setSend={updateAmounts.send} send={amounts.send} lockYMGP={() => lockVMGP()} mgpAPR={rewards.vlmgpAPR} />}
                 {page === "unlockVMGP" && <UnlockVMGPPage send={amounts.send} setSendAmount={updateAmounts.send} unlockVMGP={() => unlockVMGP()} lvmgpBalance={balances.user.lvMGP} />}
                 <div className="bg-gray-500 w-full h-[0.5px] mt-8" />
                 <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full">
@@ -230,13 +234,13 @@ const App = () => {
                   <div className="flex h-min flex-row-reverse">
                     <div className="flex gap-1">
                       <YieldBadge
-                        apy={protocol.yield.cmgpPoolAPY}
+                        apy={rewards.cmgpPoolAPY}
                         asset="cMGP"
                         breakdown={[
-                          { apy: 0, asset: `${(100 * Number(balances.curve.MGP) * Number(balances.rMGP.MGP) / Number(token.supplies.rMGP) / (Number(balances.curve.MGP) + Number(balances.curve.rMGP) * Number(balances.rMGP.MGP) / Number(token.supplies.rMGP) + Number(balances.curve.yMGP) * Number(balances.rMGP.MGP) / Number(token.supplies.rMGP))).toFixed(0)}% MGP`, logo: coins.MGP.icon },
-                          { apy: aprToApy(protocol.yield.vlmgpAPR) * 0.9, asset: `${(100 * Number(balances.curve.rMGP) * Number(balances.rMGP.MGP) / Number(token.supplies.rMGP) / (Number(balances.curve.MGP) + Number(balances.curve.rMGP) * Number(balances.rMGP.MGP) / Number(token.supplies.rMGP) + Number(balances.curve.yMGP) * Number(balances.rMGP.MGP) / Number(token.supplies.rMGP))).toFixed(0)}% rMGP`, logo: coins.rMGP.icon },
-                          { apy: aprToApy(protocol.yield.vlmgpAPR) * 0.9, asset: `${(100 * Number(balances.curve.yMGP) * Number(balances.rMGP.MGP) / Number(token.supplies.rMGP) / (Number(balances.curve.MGP) + Number(balances.curve.rMGP) * Number(balances.rMGP.MGP) / Number(token.supplies.rMGP) + Number(balances.curve.yMGP) * Number(balances.rMGP.MGP) / Number(token.supplies.rMGP))).toFixed(0)}% yMGP`, logo: coins.yMGP.icon },
-                          { apy: protocol.yield.cmgpPoolAPY, asset: "Swap Fees", logo: coins.cMGP.icon }
+                          { apy: 0, asset: `${(100 * Number(balances.curve.MGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP) / (Number(balances.curve.MGP) + Number(balances.curve.rMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP) + Number(balances.curve.yMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP))).toFixed(0)}% MGP`, logo: coins.MGP.icon },
+                          { apy: aprToApy(rewards.vlmgpAPR) * 0.9, asset: `${(100 * Number(balances.curve.rMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP) / (Number(balances.curve.MGP) + Number(balances.curve.rMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP) + Number(balances.curve.yMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP))).toFixed(0)}% rMGP`, logo: coins.rMGP.icon },
+                          { apy: aprToApy(rewards.vlmgpAPR) * 0.9, asset: `${(100 * Number(balances.curve.yMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP) / (Number(balances.curve.MGP) + Number(balances.curve.rMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP) + Number(balances.curve.yMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP))).toFixed(0)}% yMGP`, logo: coins.yMGP.icon },
+                          { apy: rewards.cmgpPoolAPY, asset: "Swap Fees", logo: coins.cMGP.icon }
                         ]}
                         logo={coins.cMGP.icon}
                       />
@@ -247,20 +251,20 @@ const App = () => {
               </Card>
               <QASection />
               <div className="flex gap-6">
-                <PegCard token="rMGP" targetToken="MGP" spread={100 / protocol.exchangeRates.mgpRMGP / protocol.exchangeRates.rmgpMGP - 100}
+                <PegCard token="rMGP" targetToken="MGP" spread={100 / exchangeRates.mgpRMGP / exchangeRates.rmgpMGP - 100}
                   rates={[
-                    { label: "Mint", value: Number(balances.rMGP.MGP) / Number(token.supplies.rMGP), color: "green", required: true },
-                    { label: "Buy", value: 1 / protocol.exchangeRates.mgpRMGP, color: "blue", required: true },
-                    { label: "Sell", value: protocol.exchangeRates.rmgpMGP, color: "red", required: true },
+                    { label: "Mint", value: Number(balances.rMGP.MGP) / Number(supplies.rMGP), color: "green", required: true },
+                    { label: "Buy", value: 1 / exchangeRates.mgpRMGP, color: "blue", required: true },
+                    { label: "Sell", value: exchangeRates.rmgpMGP, color: "red", required: true },
                     { label: "Orig Mint", value: 1, color: "emerald" },
-                    { label: "Target", value: Number(token.supplies.rMGP) / Number(balances.rMGP.MGP) / (1 + aprToApy(protocol.yield.vlmgpAPR) * (protocol.withdraws.reefi.unlockSchedule.length === 6 ? Number(protocol.withdraws.reefi.unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2 / (60 * 60 * 24)) / 365), color: "purple", required: true }
+                    { label: "Target", value: Number(supplies.rMGP) / Number(balances.rMGP.MGP) / (1 + aprToApy(rewards.vlmgpAPR) * (protocol.withdraws.reefi.unlockSchedule.length === 6 ? Number(protocol.withdraws.reefi.unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2 / (60 * 60 * 24)) / 365), color: "purple", required: true }
                   ]}
                 />
-                <PegCard token="yMGP" targetToken="rMGP" spread={100 / protocol.exchangeRates.rmgpYMGP / protocol.exchangeRates.ymgpRMGP - 100}
+                <PegCard token="yMGP" targetToken="rMGP" spread={100 / exchangeRates.rmgpYMGP / exchangeRates.ymgpRMGP - 100}
                   rates={[
                     { label: "Mint", value: 1, color: "green", required: true },
-                    { label: "Buy", value: 1 / protocol.exchangeRates.rmgpYMGP, color: "blue", required: true },
-                    { label: "Sell", value: protocol.exchangeRates.ymgpRMGP, color: "red", required: true },
+                    { label: "Buy", value: 1 / exchangeRates.rmgpYMGP, color: "blue", required: true },
+                    { label: "Sell", value: exchangeRates.ymgpRMGP, color: "red", required: true },
                     { label: "Burn", value: 0.75, color: "purple", required: true }
                   ]} />
               </div>

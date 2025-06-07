@@ -24,7 +24,6 @@ interface Properties {
 export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin, excludeCoins, prices, ymgpMgpCurveRate, mgpRmgpCurveRate }: Properties): ReactElement => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownReference = useRef<HTMLDivElement>(null);
-  excludeCoins.push(outputCoin, "cMGP");
   const availableCoins = (Object.keys(coins) as AllCoin[]).filter(coin => !excludeCoins.includes(coin));
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {

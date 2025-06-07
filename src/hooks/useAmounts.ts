@@ -3,8 +3,6 @@ import { parseEther } from "../utilities";
 import { useEffect } from "react";
 import { useStoredObject } from "./useStoredState";
 
-import { UseWallet } from "./useWallet";
-
 interface Amounts {
   curve: {
     mgpRmgp: bigint;

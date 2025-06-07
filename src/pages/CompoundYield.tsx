@@ -1,4 +1,4 @@
-import { decimals, type Coins } from "../config/contracts";
+import { decimals } from "../config/contracts";
 import { formatEther, formatNumber, formatTime } from "../utilities";
 import { memo, type ReactElement } from "react";
 

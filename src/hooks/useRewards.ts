@@ -1,12 +1,9 @@
 import { aprToApy, formatEther, parseEther } from "../utilities";
-import { contracts, decimals, publicClients, type Coins } from "../config/contracts";
+import { contracts, decimals, publicClients } from "../config/contracts";
 import { useCallback, useEffect, useMemo } from "react";
 import { useStoredObject } from "./useStoredState";
 
-import { UseBalances } from "./useBalances";
-import { UseLocked } from "./useLocked";
 import { UsePrices } from "./usePrices";
-import { UseWallet } from "./useWallet";
 
 interface Properties {
   readonly wallet: UseWallet;

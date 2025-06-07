@@ -3,9 +3,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { Chains } from "../../config/contracts";
 import { UseAllowances } from "../useAllowances";
 import { UseAmounts } from "../useAmounts";
-import { UseBalances } from "../useBalances";
 import { UseContracts } from "../useContracts";
-import { UseSupplies } from "../useSupplies";
 
 import type { PublicActions, WalletClient } from "viem";
 

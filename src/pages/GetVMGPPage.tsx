@@ -1,11 +1,10 @@
 import { memo, type ReactElement } from "react";
 
-import { Chains, Coins } from "../config/contracts";
+import { Chains } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 import { UseAllowances } from "../hooks/useAllowances";
 import { UseAmounts } from "../hooks/useAmounts";
-import { UseBalances } from "../hooks/useBalances";
 import { UsePrices } from "../hooks/usePrices";
 
 interface Properties {

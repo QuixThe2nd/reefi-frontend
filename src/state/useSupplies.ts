@@ -12,11 +12,9 @@ export const useSupplies = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0
       contracts[wallet.chain].vMGP.read.totalSupply(),
       contracts[wallet.chain].yMGP.read.totalLocked(),
       contracts[wallet.chain].lvMGP.read.totalSupply(),
-      await contracts[56].vlMGP.read.totalSupply() + await contracts[42_161].vlMGP.read.totalSupply()
+      Promise.resolve(await contracts[56].vlMGP.read.totalSupply() + await contracts[42_161].vlMGP.read.totalSupply())
     ]);
-
-    const [MGP, rMGP, yMGP, vMGP, lyMGP, lvMGP, vlMGP] = results.map(result => result.status === "fulfilled" ? result.value : 0n);
-
+    const [MGP, rMGP, yMGP, vMGP, lyMGP, lvMGP, vlMGP] = results.map(result => result.status === "fulfilled" ? result.value : 0n) as [bigint, bigint, bigint, bigint, bigint, bigint, bigint];
     return { MGP, rMGP, yMGP, vMGP, lyMGP, lvMGP, vlMGP };
   }, { MGP: 0n, rMGP: 0n, yMGP: 0n, vMGP: 0n, vlMGP: 0n, lyMGP: 0n, lvMGP: 0n });
 

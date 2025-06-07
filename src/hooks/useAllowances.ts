@@ -2,8 +2,6 @@ import { contracts, PrimaryCoin, SecondaryCoin } from "../config/contracts";
 import { useEffect } from "react";
 import { useStoredObject } from "./useStoredState";
 
-import { UseWallet } from "./useWallet";
-
 
 interface Allowances {
   readonly MGP: bigint;

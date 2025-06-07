@@ -2,8 +2,6 @@ import { contracts } from "../config/contracts";
 import { useEffect } from "react";
 import { useStoredObject } from "./useStoredState";
 
-import { UseWallet } from "./useWallet";
-
 interface Withdraws {
   userPending: bigint;
   unsubmitted: bigint;

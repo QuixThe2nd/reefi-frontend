@@ -71,5 +71,5 @@ export const useWallet = ({ setError }: { setError: (_msg: string) => void }) =>
     if (savedChain !== null) setChain(Number(savedChain) as 56 | 42_161);
   }, []);
 
-  return [wallet, { connectWallet }] as const;
+  return [wallet, { connectWallet, setChain }] as const;
 };

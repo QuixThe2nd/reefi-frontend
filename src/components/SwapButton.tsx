@@ -1,31 +1,31 @@
-import { contracts, Chains, TransferrableCoin } from "../config/contracts";
+import { contracts, Chains, TradeableCoinExtended, TradeableCoinExtendedETH } from "../config/contracts";
 import { formatEther } from "../utilities";
+import { useAllowances } from "../state/useAllowances";
 
 import { Button } from "./Button";
 import { BuyOnCurve } from "./BuyOnCurve";
 import { ReactElement } from "react";
 import { TokenApproval } from "./TokenApproval";
-import { UseAllowances } from "../hooks/useAllowances";
 
 interface Properties {
   buy: () => void;
   nativeSwap: undefined | (() => void);
   label: string;
-  tokenIn: TransferrableCoin;
-  tokenOut: TransferrableCoin;
+  tokenIn: TradeableCoinExtendedETH;
+  tokenOut: TradeableCoinExtendedETH;
   mgpRmgpCurveAmount: bigint;
   rmgpYmgpCurveAmount: bigint;
   rmgpMgpCurveAmount: bigint;
   mgpYmgpCurveAmount: bigint;
   ymgpRmgpCurveAmount: bigint;
   ymgpMgpCurveAmount: bigint;
-  allowances: UseAllowances["allowances"];
+  allowances: ReturnType<typeof useAllowances>[0];
   send: bigint;
   ymgpVmgpCurveAmount: bigint;
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: TransferrableCoin, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: TradeableCoinExtended, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;

@@ -1,15 +1,16 @@
+import { useAllowances } from "../../state/useAllowances";
+import { useBalances } from "../../state/useBalances";
 import { useCallback, useEffect, useRef } from "react";
 
 import { Chains } from "../../config/contracts";
-import { UseAllowances } from "../useAllowances";
 import { UseContracts } from "../useContracts";
 
 import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  allowances: UseAllowances["allowances"];
-  updateBalances: UseBalances["updateBalances"];
+  allowances: ReturnType<typeof useAllowances>[0];
+  updateBalances: ReturnType<typeof useBalances>[1];
   chain: Chains;
   clients: Clients;
   send: bigint;
@@ -69,13 +70,9 @@ export const useBuyRMGP = <Clients extends Record<Chains, WalletClient & PublicA
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    if (allowancesReference.current.curve.MGP < (sendReference.current ?? 0n)) {
+    if (allowancesReference.current.cMGP.MGP < sendReference.current) {
       setErrorReference.current("Allowance too low"); return;
     }
-    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 1n, sendReference.current ?? 0n, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    updateBalancesReference.current.MGP();
-    updateBalancesReference.current.rMGP();
-    updateBalancesReference.current.curveMGP();
-    updateBalancesReference.current.curveRMGP();
+    await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 1n, sendReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
   }, []);
 };

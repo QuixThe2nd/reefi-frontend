@@ -1,20 +1,20 @@
 import { formatEther, formatTime } from "../utilities";
 import { memo, type ReactElement } from "react";
+import { useAllowances } from "../state/useAllowances";
 import { useBalances } from "../state/useBalances";
+import { usePrices } from "../state/usePrices";
+import { useWithdraws } from "../state/useWithdraws";
 
-import { Chains, TradeableCoin } from "../config/contracts";
+import { Chains, TradeableCoinExtended } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
-import { UseAllowances } from "../hooks/useAllowances";
-import { UsePrices } from "../hooks/usePrices";
-import { UseWithdraws } from "../hooks/useWithdraws";
 
 interface Properties {
   mgpAPR: number;
   balances: ReturnType<typeof useBalances>[0];
   setSend: (_send: bigint) => void;
   send: bigint;
-  prices: UsePrices;
+  prices: ReturnType<typeof usePrices>[0];
   ymgpMgpCurveRate: number;
   mgpRmgpCurveRate: number;
   mgpRmgpCurveAmount: bigint;
@@ -24,12 +24,12 @@ interface Properties {
   ymgpRmgpCurveAmount: bigint;
   ymgpMgpCurveAmount: bigint;
   ymgpVmgpCurveAmount: bigint;
-  allowances: UseAllowances["allowances"];
+  allowances: ReturnType<typeof useAllowances>[0];
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
-  unlockSchedule: UseWithdraws["withdraws"]["unlockSchedule"];
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TradeableCoin, _infinity: boolean) => void;
+  unlockSchedule: ReturnType<typeof useWithdraws>[0]["reefi"]["unlockSchedule"];
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TradeableCoinExtended, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;

@@ -1,3 +1,4 @@
+import { useBalances } from "../../state/useBalances";
 import { useCallback, useEffect, useRef } from "react";
 
 import { Chains } from "../../config/contracts";
@@ -7,7 +8,7 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  updateBalances: UseBalances["updateBalances"];
+  updateBalances: ReturnType<typeof useBalances>[1];
   chain: Chains;
   clients: Clients;
   mgpLPAmount: bigint;
@@ -69,12 +70,5 @@ export const useSupplyLiquidity = <Clients extends Record<Chains, WalletClient &
       setConnectRequiredReference.current(true); return;
     }
     await writeContractsReference.current[chainReference.current].cMGP.write.add_liquidity([[mgpLPAmountReference.current, rmgpLPAmountReference.current, ymgpLPAmountReference.current], 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    updateBalancesReference.current.MGP();
-    updateBalancesReference.current.rMGP();
-    updateBalancesReference.current.yMGP();
-    updateBalancesReference.current.cMGP();
-    updateBalancesReference.current.curveMGP();
-    updateBalancesReference.current.curveRMGP();
-    updateBalancesReference.current.curveYMGP();
   }, []);
 };

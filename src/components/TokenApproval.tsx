@@ -24,7 +24,7 @@ export const TokenApproval = memo(({ allowance, send, onApprove, tokenSymbol, cu
     return `Approve ${tokenSymbol}${curveText}`;
   };
 
-  if (allowance >= (send ?? 0n)) return;
+  if (allowance >= send) return;
 
   return <div className={className}>
     <div className="flex items-center">

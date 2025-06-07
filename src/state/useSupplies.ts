@@ -21,5 +21,5 @@ export const useSupplies = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0
   useEffect(() => {
     updateSupplies();
   }, [wallet.chain]);
-  return [supplies] as const;
+  return [supplies, updateSupplies] as const;
 };

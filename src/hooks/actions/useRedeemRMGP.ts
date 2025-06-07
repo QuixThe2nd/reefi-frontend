@@ -1,4 +1,6 @@
+import { useBalances } from "../../state/useBalances";
 import { useCallback, useEffect, useRef } from "react";
+import { useSupplies } from "../../state/useSupplies";
 
 import { Chains } from "../../config/contracts";
 import { UseContracts } from "../useContracts";
@@ -7,12 +9,12 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  updateBalances: UseBalances["updateBalances"];
+  updateBalances: ReturnType<typeof useBalances>[1];
   chain: Chains;
   clients: Clients;
   send: bigint;
   setConnectRequired: (_value: boolean) => void;
-  updateSupplies: UseSupplies["updateSupplies"];
+  updateSupplies: ReturnType<typeof useSupplies>[1];
   updateReefiLockedMGP: () => Promise<void>;
   updateTotalLockedMGP: () => void;
   updateUnclaimedUserYield: () => Promise<void>;
@@ -104,10 +106,8 @@ export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & Publ
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    await writeContractsReference.current[chainReference.current].rMGP.write.startUnlock([sendReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].rMGP.write.startUnlock([sendReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateUnlockScheduleReference.current();
-    updateSuppliesReference.current.rMGP();
-    updateBalancesReference.current.rMGP();
     updateTotalLockedMGPReference.current();
     updateReefiLockedMGPReference.current();
     updateUserPendingWithdrawsReference.current();

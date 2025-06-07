@@ -1,14 +1,14 @@
 import { contracts, Chains, TransferrableCoin } from "../../config/contracts";
+import { useAllowances } from "../../state/useAllowances";
 import { useCallback, useEffect, useRef } from "react";
 
-import { UseAllowances } from "../useAllowances";
 import { UseContracts } from "../useContracts";
 
 import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  updateAllowances: UseAllowances["updateAllowances"];
+  updateAllowances: ReturnType<typeof useAllowances>[1];
   chain: Chains;
   clients: Clients;
   send: bigint;

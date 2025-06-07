@@ -16,7 +16,7 @@ export const useReefiState = ({ setError }: { setError: (_message: string) => vo
   const [exchangeRates] = useExchangeRates({ wallet });
   const [prices] = usePrices();
   const [amounts, amountsActions] = useAmounts({ wallet });
-  const [allowances] = useAllowances();
+  const [allowances] = useAllowances({ wallet });
   const [withdraws] = useWithdraws();
 
   return {

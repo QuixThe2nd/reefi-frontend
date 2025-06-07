@@ -1,14 +1,14 @@
+import { useAllowances } from "../../state/useAllowances";
 import { useCallback, useEffect, useRef } from "react";
 
 import { Chains } from "../../config/contracts";
-import { UseAllowances } from "../useAllowances";
 import { UseContracts } from "../useContracts";
 
 import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  allowances: UseAllowances["allowances"];
+  allowances: ReturnType<typeof useAllowances>[0];
   chain: Chains;
   clients: Clients;
   send: bigint;
@@ -63,9 +63,7 @@ export const useMintWETH = <Clients extends Record<Chains, WalletClient & Public
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    if (allowancesReference.current.MGP < (sendReference.current ?? 0n)) {
-      setErrorReference.current("Allowance too low"); return;
-    }
+    if (allowancesReference.current.rMGP.MGP < sendReference.current) return setErrorReference.current("Allowance too low");
     await writeContractsReference.current[chainReference.current].WETH.write.deposit({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain, value: sendReference.current });
   }, []);
 };

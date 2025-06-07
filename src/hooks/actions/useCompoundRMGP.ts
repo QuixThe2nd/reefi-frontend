@@ -1,4 +1,6 @@
+import { useBalances } from "../../state/useBalances";
 import { useCallback, useEffect, useRef } from "react";
+import { useSupplies } from "../../state/useSupplies";
 
 import { Chains } from "../../config/contracts";
 import { UseContracts } from "../useContracts";
@@ -7,11 +9,11 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  updateBalances: UseBalances["updateBalances"];
+  updateBalances: ReturnType<typeof useBalances>[1];
   chain: Chains;
   clients: Clients;
   setConnectRequired: (_value: boolean) => void;
-  updateSupplies: UseSupplies["updateSupplies"];
+  updateSupplies: ReturnType<typeof useSupplies>[1];
   updatePendingRewards: () => Promise<void>;
   updateReefiLockedMGP: () => Promise<void>;
   updateTotalLockedMGP: () => void;
@@ -83,8 +85,6 @@ export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & Pu
     await writeContractsReference.current[chainReference.current].rMGP.write.claim({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updatePendingRewardsReference.current();
     updateUnclaimedUserYieldReference.current();
-    updateSuppliesReference.current.rMGP();
-    updateBalancesReference.current.rMGP();
     updateTotalLockedMGPReference.current();
     updateReefiLockedMGPReference.current();
   }, []);

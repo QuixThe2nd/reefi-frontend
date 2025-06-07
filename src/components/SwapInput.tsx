@@ -1,21 +1,21 @@
+import { coins, decimals, TradeableCoinExtendedETH } from "../config/contracts";
 import { formatEther } from "../utilities";
 import { memo, useEffect, useRef, useState, Fragment, type ReactElement } from "react";
+import { usePrices } from "../state/usePrices";
 
-import { AllCoin, coins, decimals, TradeableCoin } from "../config/contracts";
 import { Button } from "./Button";
 import ETH from "../../public/icons/ETH.svg";
-import { UsePrices } from "../hooks/usePrices";
 
 interface Properties {
   readonly label: string;
-  readonly selectedCoin: TradeableCoin;
-  readonly onCoinChange: (_coin: TradeableCoin) => void;
+  readonly selectedCoin: TradeableCoinExtendedETH;
+  readonly onCoinChange: (_coin: TradeableCoinExtendedETH) => void;
   readonly balance: bigint;
   readonly value: bigint;
   readonly onChange: (_value: bigint) => void;
-  readonly outputCoin: TradeableCoin;
-  readonly excludeCoins: TradeableCoin[];
-  readonly prices: UsePrices;
+  readonly outputCoin: TradeableCoinExtendedETH;
+  readonly excludeCoins: TradeableCoinExtendedETH[];
+  readonly prices: ReturnType<typeof usePrices>[0];
   readonly ymgpMgpCurveRate: number;
   readonly mgpRmgpCurveRate: number;
 }
@@ -23,7 +23,7 @@ interface Properties {
 export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, value, onChange, outputCoin, excludeCoins, prices, ymgpMgpCurveRate, mgpRmgpCurveRate }: Properties): ReactElement => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownReference = useRef<HTMLDivElement>(null);
-  const availableCoins = (Object.keys(coins) as AllCoin[]).filter(coin => !excludeCoins.includes(coin));
+  const availableCoins = (Object.keys(coins) as TradeableCoinExtendedETH[]).filter(coin => !excludeCoins.includes(coin));
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
       if (dropdownReference.current && !dropdownReference.current.contains(event.target as Node)) setIsDropdownOpen(false);
@@ -50,7 +50,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
     return undefined;
   };
 
-  const handleCoinChange = (coin: FullCoins) => {
+  const handleCoinChange = (coin: TradeableCoinExtendedETH) => {
     onCoinChange(coin);
     setIsDropdownOpen(false);
   };
@@ -63,7 +63,7 @@ export const SwapInput = memo(({ label, selectedCoin, onCoinChange, balance, val
     <div className="flex items-center justify-between rounded-lg bg-gray-900 p-4">
       <input className="w-3/4 bg-transparent text-xl outline-none" onChange={event => {
         onChange(BigInt(Math.round((Number.isNaN(Number.parseFloat(event.target.value)) ? 0 : Number.parseFloat(event.target.value)) * Number(10n ** BigInt(decimals[selectedCoin])))));
-      }} placeholder='0' type="text" value={value === 0n ? undefined : formatEther(value ?? 0n, decimals[selectedCoin])} />
+      }} placeholder='0' type="text" value={value === 0n ? undefined : formatEther(value, decimals[selectedCoin])} />
       <div className="flex items-center space-x-2">
         <Button size="xs" variant="ghost" onClick={() => {
           onChange(balance);

@@ -1,12 +1,12 @@
 import { aprToApy } from "../utilities";
 import { memo, type ReactElement } from "react";
+import { useAllowances } from "../state/useAllowances";
 import { useBalances } from "../state/useBalances";
+import { usePrices } from "../state/usePrices";
 
-import { Chains, TradeableCoin } from "../config/contracts";
+import { Chains, TradeableCoinExtended } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
-import { UseAllowances } from "../hooks/useAllowances";
-import { UsePrices } from "../hooks/usePrices";
 
 interface Properties {
   mgpAPR: number;
@@ -14,7 +14,7 @@ interface Properties {
   balances: ReturnType<typeof useBalances>[0];
   setSend: (_send: bigint) => void;
   send: bigint;
-  prices: UsePrices;
+  prices: ReturnType<typeof usePrices>[0];
   ymgpMgpCurveRate: number;
   mgpRmgpCurveRate: number;
   mgpRmgpCurveAmount: bigint;
@@ -24,12 +24,12 @@ interface Properties {
   ymgpRmgpCurveAmount: bigint;
   ymgpVmgpCurveAmount: bigint;
   ymgpMgpCurveAmount: bigint;
-  allowances: UseAllowances["allowances"];
+  allowances: ReturnType<typeof useAllowances>[0];
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
   buyRMGP: () => void;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TradeableCoin, _infinity: boolean) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TradeableCoinExtended, _infinity: boolean) => void;
   convertMGP: () => void;
   sellYMGP: () => void;
   mintWETH: () => void;

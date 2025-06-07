@@ -1,17 +1,17 @@
 import { decimals, SecondaryCoin } from "../config/contracts";
 import { formatEther, formatNumber, formatTime } from "../utilities";
 import { memo, type ReactElement } from "react";
+import { usePrices } from "../state/usePrices";
 
 import { Button } from "../components/Button";
 import { Page } from "../components/Page";
-import { UsePrices } from "../hooks/usePrices";
 interface Properties {
   uncompoundedMGPYield: bigint;
   estimatedCompoundGasFee: bigint;
   pendingRewards: Record<SecondaryCoin, { rewards: bigint }>;
   estimatedCompoundAmount: bigint;
   mgpAPR: number;
-  prices: UsePrices;
+  prices: ReturnType<typeof usePrices>[0];
   compoundRMGP: () => void;
   reefiMGPLocked: bigint;
 }

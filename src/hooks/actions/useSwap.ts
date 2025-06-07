@@ -1,13 +1,13 @@
+import { useAllowances } from "../../state/useAllowances";
 import { useCallback, useEffect, useRef } from "react";
 
 import { Chains } from "../../config/contracts";
-import { UseAllowances } from "../useAllowances";
 
 import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  allowances: UseAllowances["allowances"];
+  allowances: ReturnType<typeof useAllowances>[0];
   chain: Chains;
   clients: Clients;
   send: bigint;
@@ -62,7 +62,7 @@ export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActi
     if (!clientsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    if (allowancesReference.current.curve.MGP < (sendReference.current ?? 0n)) {
+    if (allowancesReference.current.cMGP.MGP < sendReference.current) {
       setErrorReference.current("Allowance too low"); return;
     }
 
@@ -71,7 +71,7 @@ export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActi
       chainId: chainReference.current,
       compact: true,
       disableRFQs: true,
-      inputTokens: [{ amount: String(sendReference.current), tokenAddress: tokenIn }],
+      inputTokens: [{ amount: sendReference.current, tokenAddress: tokenIn }],
       outputTokens: [{ proportion: 1, tokenAddress: tokenOut }],
       referralCode: 0,
       slippageLimitPercent: 5,

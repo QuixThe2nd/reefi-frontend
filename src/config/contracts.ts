@@ -31,15 +31,17 @@ export type CoreCoin = PrimaryCoin | LockedCoin;
 
 export type SecondaryCoin = "CKP" | "PNP" | "EGP" | "LTP" | "WETH" | PrimaryCoinMagpie;
 export type TradeableCoin = PrimaryCoin | SecondaryCoin;
+export type TradeableCoinExtended = TradeableCoin | "wrMGP";
+export type TradeableCoinExtendedETH = TradeableCoinExtended | "ETH";
 
-export type NonTradeableCoin = "wrMGP" | "cMGP";
-export type TransferrableCoin = TradeableCoin | NonTradeableCoin;
+export type NonTradeableCoin = "cMGP";
+export type TransferrableCoin = TradeableCoinExtended | NonTradeableCoin;
 
-export type AllERC20 = LockedCoin | TransferrableCoin;
-export type AllCoin = LockedCoin | TransferrableCoin | "ETH";
+export type AllCoin = LockedCoin | TransferrableCoin;
+export type AllCoinETH = AllCoin | "ETH";
 
-export const decimals: Record<AllCoin, number> = { CKP: 18, EGP: 18, ETH: 18, LTP: 18, MGP: 18, PNP: 18, WETH: 18, cMGP: 18, rMGP: 18, vMGP: 18, yMGP: 18, lyMGP: 18, lvMGP: 18, wrMGP: 18, vlMGP: 18 };
-export const coins: Record<AllCoin, { color: string; bgColor: string; icon: `${string}.${"png" | "svg"}` }> = {
+export const decimals: Record<AllCoinETH, number> = { CKP: 18, EGP: 18, ETH: 18, LTP: 18, MGP: 18, PNP: 18, WETH: 18, cMGP: 18, rMGP: 18, vMGP: 18, yMGP: 18, lyMGP: 18, lvMGP: 18, wrMGP: 18, vlMGP: 18 };
+export const coins: Record<AllCoinETH, { color: string; bgColor: string; icon: `${string}.${"png" | "svg"}` }> = {
   CKP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: CKP },
   EGP: { bgColor: "bg-gray-600", color: "bg-gray-400", icon: EGP },
   LTP: { bgColor: "bg-yellow-600", color: "bg-yellow-400", icon: LTP },

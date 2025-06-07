@@ -1,21 +1,23 @@
+import { useAllowances } from "../../state/useAllowances";
+import { useBalances } from "../../state/useBalances";
 import { useCallback, useEffect, useRef } from "react";
+import { useSupplies } from "../../state/useSupplies";
 
 import { Chains } from "../../config/contracts";
-import { UseAllowances } from "../useAllowances";
 import { UseContracts } from "../useContracts";
 
 import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  allowances: UseAllowances["allowances"];
-  updateBalances: UseBalances["updateBalances"];
+  allowances: ReturnType<typeof useAllowances>[0];
+  updateBalances: ReturnType<typeof useBalances>[1];
   chain: Chains;
   clients: Clients;
   send: bigint;
   setConnectRequired: (_value: boolean) => void;
   setError: (_value: string) => void;
-  updateSupplies: UseSupplies["updateSupplies"];
+  updateSupplies: ReturnType<typeof useSupplies>[1];
   updateYMGPHoldings: () => Promise<void>;
   writeContracts: UseContracts;
 }
@@ -81,14 +83,10 @@ export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & Pub
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    if (allowancesReference.current.rMGP < (sendReference.current ?? 0n)) {
+    if (allowancesReference.current.rMGP.MGP < sendReference.current) {
       setErrorReference.current("Allowance too low"); return;
     }
-    await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendReference.current ?? 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    updateBalancesReference.current.rMGP();
-    updateBalancesReference.current.yMGP();
-    updateSuppliesReference.current.rMGP();
-    updateSuppliesReference.current.yMGP();
+    await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateYMGPHoldingsReference.current();
   }, []);
 };

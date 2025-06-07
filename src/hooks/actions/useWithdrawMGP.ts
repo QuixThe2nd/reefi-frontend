@@ -1,3 +1,4 @@
+import { useBalances } from "../../state/useBalances";
 import { useCallback, useEffect, useRef } from "react";
 
 import { Chains } from "../../config/contracts";
@@ -7,7 +8,7 @@ import type { PublicActions, WalletClient } from "viem";
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
-  updateBalances: UseBalances["updateBalances"];
+  updateBalances: ReturnType<typeof useBalances>[1];
   chain: Chains;
   clients: Clients;
   setConnectRequired: (_value: boolean) => void;
@@ -68,7 +69,6 @@ export const useWithdrawMGP = <Clients extends Record<Chains, WalletClient & Pub
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
     await writeContractsReference.current[chainReference.current].rMGP.write.unlock({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     await writeContractsReference.current[chainReference.current].rMGP.write.withdraw({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    updateBalancesReference.current.MGP();
     updateUserPendingWithdrawsReference.current();
     updateUnsubmittedWithdrawsReference.current();
     updateUserWithdrawableReference.current();

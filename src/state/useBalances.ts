@@ -1,11 +1,12 @@
+/* eslint functional/no-try-statements: 0 */
 import { useAsyncReducer } from "../hooks/useAsyncReducer";
 import { useEffect } from "react";
 import { useWallet } from "./useWallet";
 
-import { AllCoin, PrimaryCoin, publicClients, contracts } from "../config/contracts";
+import { AllCoinETH, PrimaryCoin, publicClients, contracts } from "../config/contracts";
 
 export const useBalances = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0] }) => {
-  const [balances, updateBalances] = useAsyncReducer<{ user: Record<AllCoin, bigint>; rMGP: { MGP: bigint }; yMGP: { rMGP: bigint }; vMGP: { yMGP: bigint }; curve: Record<PrimaryCoin, bigint> }>(async () => {
+  const [balances, updateBalances] = useAsyncReducer<{ user: Record<AllCoinETH, bigint>; rMGP: { MGP: bigint }; yMGP: { rMGP: bigint }; vMGP: { yMGP: bigint }; curve: Record<PrimaryCoin, bigint> }>(async () => {
     const safeBalance = async (fn: () => Promise<bigint>) => {
       try {
         return await fn();
@@ -85,5 +86,5 @@ export const useBalances = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0
     updateBalances();
   }, [wallet.account, wallet.chain]);
 
-  return [balances] as const;
+  return [balances, updateBalances] as const;
 };

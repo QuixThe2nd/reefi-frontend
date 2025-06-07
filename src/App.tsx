@@ -178,11 +178,11 @@ const App = () => {
               <Card>
                 <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row w-full">
                   <div className="flex rounded-lg bg-gray-700 p-1">
-                    <Button size="sm" variant={page === "getMGP" ? "primary" : "clear"} onClick={() => setPage(page === "getMGP" ? undefined : "getMGP")} type="button">Get MGP</Button>
-                    {balances.user.vlMGP > 0n && <Button size="sm" variant={page === "migrateVLMGP" ? "primary" : "clear"} onClick={() => setPage(page === "migrateVLMGP" ? undefined : "migrateVLMGP")} type="button">Migrate vlMGP</Button>}
-                    <Button size="sm" variant={page === "deposit" ? "primary" : "clear"} onClick={() => setPage(page === "deposit" ? undefined : "deposit")} type="button">Get rMGP</Button>
-                    {balances.user.rMGP > 0n && <Button size="sm" variant={page === "redeem" ? "primary" : "clear"} onClick={() => setPage(page === "redeem" ? undefined : "redeem")} type="button">Redeem rMGP</Button>}
-                    <Button size="sm" variant={page === "fixedYield" ? "primary" : "clear"} onClick={() => setPage(page === "fixedYield" ? undefined : "fixedYield")} type="button">Fixed Yield</Button>
+                    <Button size="sm" variant={page === "getMGP" ? "primary" : "clear"} onClick={() => setPage(page === "getMGP" ? undefined : "getMGP")} type="button" tooltip="Buy the Magpie governance token">Get MGP</Button>
+                    {balances.user.vlMGP > 0n && <Button size="sm" variant={page === "migrateVLMGP" ? "primary" : "clear"} onClick={() => setPage(page === "migrateVLMGP" ? undefined : "migrateVLMGP")} type="button" tooltip="Unlock your illiquid vlMGP">Migrate vlMGP</Button>}
+                    <Button size="sm" variant={page === "deposit" ? "primary" : "clear"} onClick={() => setPage(page === "deposit" ? undefined : "deposit")} type="button" tooltip="Deposit your Magpie and earn auto compounded & liquid yield">Get rMGP</Button>
+                    {balances.user.rMGP > 0n && <Button size="sm" variant={page === "redeem" ? "primary" : "clear"} onClick={() => setPage(page === "redeem" ? undefined : "redeem")} type="button" tooltip="Withdraw the underlying MGP from rMGP">Redeem rMGP</Button>}
+                    <Button size="sm" variant={page === "fixedYield" ? "primary" : "clear"} onClick={() => setPage(page === "fixedYield" ? undefined : "fixedYield")} type="button" tooltip="Earn fixed interest by buying depegged rMGP and redeeming">Fixed Yield</Button>
                   </div>
                   <div className="flex h-min flex-row-reverse">
                     <div className="flex gap-1">
@@ -200,10 +200,10 @@ const App = () => {
                 <div className="bg-gray-500 w-full h-[0.5px] mt-8" />
                 <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full">
                   <div className="flex rounded-lg bg-gray-700 p-1">
-                    <Button size="sm" variant={page === "convert" ? "primary" : "clear"} onClick={() => setPage(page === "convert" ? undefined : "convert")} type="button">Get yMGP</Button>
-                    <Button size="sm" variant={page === "lock" ? "primary" : "clear"} onClick={() => setPage(page === "lock" ? undefined : "lock")} type="button">Lock yMGP</Button>
-                    {balances.user.lyMGP > 0n && <Button size="sm" variant={page === "unlock" ? "primary" : "clear"} onClick={() => setPage(page === "unlock" ? undefined : "unlock")} type="button">Unlock yMGP</Button>}
-                    {balances.user.yMGP > 0n && <Button size="sm" variant={page === "redeemYMGP" ? "primary" : "clear"} onClick={() => setPage(page === "redeemYMGP" ? undefined : "redeemYMGP")} type="button">Redeem yMGP</Button>}
+                    <Button size="sm" variant={page === "convert" ? "primary" : "clear"} onClick={() => setPage(page === "convert" ? undefined : "convert")} type="button" tooltip="Convert your rMGP for yMGP for better yield potential">Get yMGP</Button>
+                    <Button size="sm" variant={page === "lock" ? "primary" : "clear"} onClick={() => setPage(page === "lock" ? undefined : "lock")} type="button" tooltip="Lock your yMGP for boosted yield">Lock yMGP</Button>
+                    {balances.user.lyMGP > 0n && <Button size="sm" variant={page === "unlock" ? "primary" : "clear"} onClick={() => setPage(page === "unlock" ? undefined : "unlock")} type="button" tooltip="Withdraw your yMGP from the locker">Unlock yMGP</Button>}
+                    {balances.user.yMGP > 0n && <Button size="sm" variant={page === "redeemYMGP" ? "primary" : "clear"} onClick={() => setPage(page === "redeemYMGP" ? undefined : "redeemYMGP")} type="button" tooltip="Convert your yMGP back to rMGP">Redeem yMGP</Button>}
                   </div>
                   <div className="flex h-min flex-row-reverse">
                     <div className="flex gap-1">
@@ -219,9 +219,9 @@ const App = () => {
                 <div className="bg-gray-500 w-full h-[0.5px] mt-8" />
                 <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full">
                   <div className="flex rounded-lg bg-gray-700 p-1">
-                    <Button size="sm" variant={page === "getVMGP" ? "primary" : "clear"} onClick={() => setPage(page === "getVMGP" ? undefined : "getVMGP")} type="button">Get vMGP</Button>
-                    <Button size="sm" variant={page === "lockVMGP" ? "primary" : "clear"} onClick={() => setPage(page === "lockVMGP" ? undefined : "lockVMGP")} type="button">Lock vMGP</Button>
-                    {balances.user.lvMGP !== 0n && <Button size="sm" variant={page === "unlockVMGP" ? "primary" : "clear"} onClick={() => setPage(page === "unlockVMGP" ? undefined : "unlockVMGP")} type="button">Unlock vMGP</Button>}
+                    <Button size="sm" variant={page === "getVMGP" ? "primary" : "clear"} onClick={() => setPage(page === "getVMGP" ? undefined : "getVMGP")} type="button" tooltip="Buy lifetime boosted voting rights">Get vMGP</Button>
+                    <Button size="sm" variant={page === "lockVMGP" ? "primary" : "clear"} onClick={() => setPage(page === "lockVMGP" ? undefined : "lockVMGP")} type="button" tooltip="Earn yield by selling individual votes">Lock vMGP</Button>
+                    {balances.user.lvMGP !== 0n && <Button size="sm" variant={page === "unlockVMGP" ? "primary" : "clear"} onClick={() => setPage(page === "unlockVMGP" ? undefined : "unlockVMGP")} type="button" tooltip="Withdraw your vMGP from the locker">Unlock vMGP</Button>}
                   </div>
                   <div className="flex h-min flex-row-reverse">
                     <div className="flex gap-1">
@@ -235,7 +235,7 @@ const App = () => {
                 <div className="bg-gray-500 w-full h-[0.5px] mt-8" />
                 <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full">
                   <div className="flex rounded-lg bg-gray-700 p-1">
-                    <Button size="sm" variant={page === "supplyLiquidity" ? "primary" : "clear"} onClick={() => setPage(page === "supplyLiquidity" ? undefined : "supplyLiquidity")} type="button">Supply Liquidity</Button>
+                    <Button size="sm" variant={page === "supplyLiquidity" ? "primary" : "clear"} onClick={() => setPage(page === "supplyLiquidity" ? undefined : "supplyLiquidity")} type="button" tooltip="Become a Curve LP and earn additional LP yield">Supply Liquidity</Button>
                   </div>
                   <div className="flex h-min flex-row-reverse">
                     <div className="flex gap-1">

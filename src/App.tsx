@@ -93,9 +93,9 @@ const App = () => {
     exchangeRates,
     supplies,
     prices,
-    protocol: [protocol],
     amounts,
-    wallet, walletActions
+    wallet, walletActions,
+    withdraws
   } = useReefiState({ setError });
 
   const lockedYmgpAPY = useMemo(() => Number(balances.rMGP.MGP) * aprToApy(rewards.vlmgpAPR) * 0.05 / Number(balances.user.lyMGP) + aprToApy(rewards.vlmgpAPR) * 0.9, [balances.rMGP.MGP, rewards.vlmgpAPR, balances.user.lyMGP]);
@@ -103,7 +103,7 @@ const App = () => {
   const calculateFixedYield = () => {
     const burnRate = Number(balances.rMGP.MGP) / Number(supplies.rMGP);
     const fixedYieldPercent = (exchangeRates.mgpRMGP / burnRate - 1) * 100;
-    const withdrawalTime = protocol.withdraws.reefi.unlockSchedule.length === 6 ? Number(protocol.withdraws.reefi.unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2;
+    const withdrawalTime = withdraws.reefi.unlockSchedule.length === 6 ? Number(withdraws.reefi.unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2;
     const daysToWithdraw = withdrawalTime / (60 * 60 * 24);
     return `${(fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100).toFixed(2)}%`;
   };
@@ -260,7 +260,7 @@ const App = () => {
                     { label: "Buy", value: 1 / exchangeRates.mgpRMGP, color: "blue", required: true },
                     { label: "Sell", value: exchangeRates.rmgpMGP, color: "red", required: true },
                     { label: "Orig Mint", value: 1, color: "emerald" },
-                    { label: "Target", value: Number(supplies.rMGP) / Number(balances.rMGP.MGP) / (1 + aprToApy(rewards.vlmgpAPR) * (protocol.withdraws.reefi.unlockSchedule.length === 6 ? Number(protocol.withdraws.reefi.unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2 / (60 * 60 * 24)) / 365), color: "purple", required: true }
+                    { label: "Target", value: Number(supplies.rMGP) / Number(balances.rMGP.MGP) / (1 + aprToApy(rewards.vlmgpAPR) * (withdraws.reefi.unlockSchedule.length === 6 ? Number(withdraws.reefi.unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2 / (60 * 60 * 24)) / 365), color: "purple", required: true }
                   ]}
                 />
                 <PegCard token="yMGP" targetToken="rMGP" spread={100 / exchangeRates.rmgpYMGP / exchangeRates.ymgpRMGP - 100}

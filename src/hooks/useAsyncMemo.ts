@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 export const useAsyncMemo = <T>(factory: () => Promise<T>, deps: React.DependencyList, initial: T): T => {
   const [data, setData] = useState<T>(initial);
-  const cancelRef = useRef<() => void>();
+  const cancelRef = useRef<() => void>(undefined);
 
   useEffect(() => {
     let cancelled = false;

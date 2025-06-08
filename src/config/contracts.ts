@@ -32,7 +32,8 @@ export type LockedCoinMagpie = "vlMGP";
 export type LockedCoinReefi = "lyMGP" | "lvMGP";
 export type LockedCoin = LockedCoinReefi | LockedCoinMagpie;
 
-export type CoreCoin = PrimaryCoin | LockedCoin | "wrMGP";
+export type CoreCoin = PrimaryCoin | LockedCoin;
+export type CoreCoinExtended = CoreCoin | "wrMGP";
 
 export type SecondaryCoin = "CKP" | "PNP" | "EGP" | "LTP" | "WETH" | PrimaryCoinMagpie;
 export type SecondaryCoinETH = SecondaryCoin | "ETH";

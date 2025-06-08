@@ -170,7 +170,7 @@ const App = () => {
                     <Button size="sm" variant={page === "getMGP" ? "primary" : "clear"} onClick={() => setPage(page === "getMGP" ? undefined : "getMGP")} type="button" tooltip="Buy the Magpie governance token">Get MGP</Button>
                     {balances.user.vlMGP > 0n && <Button size="sm" variant={page === "migrateVLMGP" ? "primary" : "clear"} onClick={() => setPage(page === "migrateVLMGP" ? undefined : "migrateVLMGP")} type="button" tooltip="Unlock your illiquid vlMGP">Migrate vlMGP</Button>}
                     <Button size="sm" variant={page === "deposit" ? "primary" : "clear"} onClick={() => setPage(page === "deposit" ? undefined : "deposit")} type="button" tooltip="Deposit your Magpie and earn auto compounded & liquid yield">Get rMGP</Button>
-                    {balances.user.rMGP > 0n && <Button size="sm" variant={page === "redeem" ? "primary" : "clear"} onClick={() => setPage(page === "redeem" ? undefined : "redeem")} type="button" tooltip="Withdraw the underlying MGP from rMGP">Redeem rMGP</Button>}
+                    {balances.user.rMGP > 0n && <Button size="sm" variant={page === "redeem" ? "primary" : "clear"} onClick={() => setPage(page === "redeem" ? undefined : "redeem")} type="button" tooltip="Withdraw the underlying MGP from rMGP">Withdraw MGP</Button>}
                     <Button size="sm" variant={page === "fixedYield" ? "primary" : "clear"} onClick={() => setPage(page === "fixedYield" ? undefined : "fixedYield")} type="button" tooltip="Earn fixed interest by buying depegged rMGP and redeeming">Fixed Yield</Button>
                   </div>
                   <div className="flex h-min flex-row-reverse">

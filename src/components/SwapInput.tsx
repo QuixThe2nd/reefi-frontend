@@ -51,10 +51,10 @@ export const SwapInput = memo(({ label, value, balance, selectedCoin, excludeCoi
       <div className="flex items-center space-x-2">
         <Button size="xs" variant="ghost" onClick={() => onChange(balance)} type="button">MAX</Button>
         <div className="relative" ref={dropdownReference}>
-          <button className={["flex cursor-pointer items-center rounded-md px-3 py-1 transition-opacity hover:opacity-90", coins[selectedCoin === "ETH" ? "WETH" : selectedCoin].bgColor].join(" ")} onClick={() => setIsDropdownOpen(!isDropdownOpen)} type="button">
+          <button className={["flex cursor-pointer items-center rounded-md px-3 py-1 transition-opacity hover:opacity-90", coins[selectedCoin === "ETH" ? "WETH" : selectedCoin].bgColor].join(" ")} onClick={() => availableCoins.length > 1 && setIsDropdownOpen(!isDropdownOpen)} type="button">
             <img className="mr-2 size-5" src={selectedCoin === "ETH" ? ETH : coins[selectedCoin].icon} />
             <span className="mr-2">{selectedCoin}</span>
-            <svg className={`size-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>
+            {availableCoins.length > 1 && <svg className={`size-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>}
           </button>
           {isDropdownOpen && <TokenDropdown shownCoins={availableCoins} selectedCoin={selectedCoin} handleCoinChange={handleCoinChange} />}
         </div>

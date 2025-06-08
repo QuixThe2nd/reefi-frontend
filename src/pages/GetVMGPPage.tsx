@@ -24,6 +24,6 @@ interface Properties {
 }
 
 export const GetVMGPPage = memo(({ balances, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => <Page info="yMGP is backed 1:1 by rMGP. 1 yMGP can be redeemed for 0.75 rMGP. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield.">
-  <SwapToken excludeCoins={["CKP", "EGP", "PNP", "LTP", "WETH"]} label="Mint" originalTokenIn="yMGP" tokenOut="vMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
+  <SwapToken excludeCoins={["CKP", "EGP", "PNP", "LTP", "WETH", "MGP", "ETH", "cMGP", "rMGP", "lyMGP", "lvMGP", "vlMGP", "wrMGP"]} label="Mint" originalTokenIn="yMGP" tokenOut="vMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
 </Page>);
 GetVMGPPage.displayName = "GetVMGPPage";

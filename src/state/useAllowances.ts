@@ -1,5 +1,5 @@
 import { contracts, PrimaryCoin, SecondaryCoin } from "../config/contracts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWallet } from "./useWallet";
 
 interface Allowances {
@@ -43,6 +43,21 @@ export const useAllowances = ({ wallet }: { wallet: ReturnType<typeof useWallet>
       WETH: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].WETH.read.allowance([wallet.account, contracts[wallet.chain].odosRouter.address]).then(value => setAllowances(a => ({ ...a, odos: { ...a.odos, WETH: value } })))
     }
   };
+
+  useEffect(() => {
+    updateAllowances.rMGP();
+    updateAllowances.yMGP();
+    updateAllowances.cMGP.MGP();
+    updateAllowances.cMGP.rMGP();
+    updateAllowances.cMGP.yMGP();
+    updateAllowances.cMGP.vMGP();
+    updateAllowances.odos.CKP();
+    updateAllowances.odos.EGP();
+    updateAllowances.odos.LTP();
+    updateAllowances.odos.MGP();
+    updateAllowances.odos.PNP();
+    updateAllowances.odos.WETH();
+  }, [wallet.account, wallet.chain]);
 
   return [allowances, updateAllowances] as const;
 };

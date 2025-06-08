@@ -30,7 +30,7 @@ interface Properties {
 }
 
 export const RedeemYMGPPage = memo(({ withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => <Page info={["yMGP can be redeemed for 75% of it's underlying rMGP instantly or swapped at market rate via Curve.", "The 25% withdraw fee is distributed to yMGP lockers."]}>
-  <SwapToken excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Redeem" originalTokenIn="yMGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
+  <SwapToken excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "ETH", "cMGP", "vMGP", "lyMGP", "lvMGP", "vlMGP", "wrMGP", "MGP"]} label="Redeem" originalTokenIn="yMGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
   {userPendingWithdraws > 0n ? <>
     <h3 className="mt-4 text-base font-medium">Pending Withdraws</h3>
     <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>

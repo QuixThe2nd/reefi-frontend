@@ -229,7 +229,7 @@ const App = () => {
                   <div className="flex h-min flex-row-reverse">
                     <div className="flex gap-1">
                       <YieldBadge
-                        apy={rewards.cmgpPoolAPY}
+                        apy={rewards.cmgpPoolAPY + aprToApy(rewards.vlmgpAPR) * 0.9 * Number(balances.curve.rMGP + balances.curve.yMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP) / (Number(balances.curve.MGP) + Number(balances.curve.rMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP) + Number(balances.curve.yMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP))}
                         asset="cMGP"
                         breakdown={[
                           { apy: 0, asset: `${(100 * Number(balances.curve.MGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP) / (Number(balances.curve.MGP) + Number(balances.curve.rMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP) + Number(balances.curve.yMGP) * Number(balances.rMGP.MGP) / Number(supplies.rMGP))).toFixed(0)}% MGP`, logo: coins.MGP.icon },

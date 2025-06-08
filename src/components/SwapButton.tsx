@@ -29,7 +29,7 @@ interface Properties {
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
 }
 
-const exchangeRates = (tokenIn: CoreCoin, tokenOut: CoreCoinExtended, balances: ReturnType<typeof useBalances>[0], supplies: ReturnType<typeof useSupplies>[0]): number => {
+const exchangeRates = (tokenIn: CoreCoinExtended, tokenOut: CoreCoinExtended, balances: ReturnType<typeof useBalances>[0], supplies: ReturnType<typeof useSupplies>[0]): number => {
   if (tokenIn === "MGP" || tokenIn === "vlMGP" || tokenIn === "wrMGP") {
     if (tokenOut === "MGP" || tokenOut === "vlMGP" || tokenOut === "wrMGP") return 1;
     if (tokenOut === "rMGP" || tokenOut === "yMGP" || tokenOut === "vMGP" || tokenOut === "lyMGP" || tokenOut === "lvMGP") return supplies.rMGP === 0n ? 1 : Number(supplies.rMGP) / Number(balances.rMGP.MGP);

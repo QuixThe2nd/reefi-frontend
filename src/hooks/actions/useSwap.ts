@@ -1,4 +1,3 @@
-import { formatEther } from "../../utilities";
 import { useAllowances } from "../../state/useAllowances";
 import { useCallback, useEffect, useRef } from "react";
 import { z } from "zod";
@@ -12,7 +11,7 @@ const QuoteRequestSchema = z.object({
   compact: z.boolean(),
   disableRFQs: z.boolean(),
   inputTokens: z.array(z.object({
-    amount: z.string().regex(/^-?\d+(\.\d+)?$/, "Must be a number string"),
+    amount: z.string().regex(/^-?\d+(?:\.\d+)?$/u, "Must be a number string"),
     tokenAddress: z.string()
   })),
   outputTokens: z.array(z.object({

@@ -4,7 +4,7 @@ import { useAmounts } from "../state/useAmounts";
 import { useBalances } from "../state/useBalances";
 import { useSupplies } from "../state/useSupplies";
 
-import { Chains, AllCoin, CoreCoin } from "../config/contracts";
+import { Chains, AllCoin, CoreCoin, PrimaryCoin } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 
@@ -17,7 +17,7 @@ interface Properties {
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
   setSend: (_send: bigint) => void;
-  curveBuy: (_tokenIn: AllCoin, _tokenOut: CoreCoin) => void;
+  curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
   nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
   curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
   supplies: ReturnType<typeof useSupplies>[0];

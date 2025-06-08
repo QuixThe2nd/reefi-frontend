@@ -2,19 +2,16 @@ import { useAllowances } from "./useAllowances";
 import { useAmounts } from "./useAmounts";
 import { useApprove } from "../hooks/actions/useApprove";
 import { useBalances } from "./useBalances";
-import { useBuyMGP } from "../hooks/actions/useBuyMGP";
-import { useBuyRMGP } from "../hooks/actions/useBuyRMGP";
-import { useBuyYMGP } from "../hooks/actions/useBuyYMGP";
 import { useClaimYMGPRewards } from "../hooks/actions/useClaimYMGPRewards";
 import { useCompoundRMGP } from "../hooks/actions/useCompoundRMGP";
 import { useContracts } from "./useContracts";
 import { useConvertMGP } from "../hooks/actions/useConvertMGP";
+import { useCurveBuy } from "../hooks/actions/useCurveBuy";
 import { useDepositMGP } from "../hooks/actions/useDepositMGP";
 import { useDepositRMGP } from "../hooks/actions/useDepositRMGP";
 import { useLockYMGP } from "../hooks/actions/useLockYMGP";
 import { useMintWETH } from "../hooks/actions/useMintWETH";
 import { useRedeemRMGP } from "../hooks/actions/useRedeemRMGP";
-import { useSellRMGP } from "../hooks/actions/useSellRMGP";
 import { useSupplies } from "./useSupplies";
 import { useSupplyLiquidity } from "../hooks/actions/useSupplyLiquidity";
 import { useSwap } from "../hooks/actions/useSwap";
@@ -39,11 +36,8 @@ interface Props {
 export const useActions = ({ wallet, updateWallet, updateBalances, updateSupplies, amounts, allowances, updateAllowances, contracts, setError, setNotification }: Props) => ({
   approve: useApprove({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, updateAllowances, writeContracts: contracts }),
   depositMGP: useDepositMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, writeContracts: contracts }),
-  buyRMGP: useBuyRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, updateBalances, writeContracts: contracts }),
-  sellRMGP: useSellRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, updateBalances, writeContracts: contracts }),
-  buyYMGP: useBuyYMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, updateBalances, writeContracts: contracts }),
+  curveBuy: useCurveBuy({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, writeContracts: contracts }),
   convertMGP: useConvertMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, updateBalances, writeContracts: contracts }),
-  buyMGP: useBuyMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, updateBalances, writeContracts: contracts }),
   depositRMGP: useDepositRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, updateBalances, updateSupplies, writeContracts: contracts }),
   lockYMGP: useLockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, updateSupplies, updateBalances, writeContracts: contracts }),
   unlockYMGP: useUnlockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, updateSupplies, updateBalances, writeContracts: contracts }),
@@ -55,5 +49,4 @@ export const useActions = ({ wallet, updateWallet, updateBalances, updateSupplie
   swap: useSwap({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, setNotification }),
   mintWETH: useMintWETH({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, writeContracts: contracts }),
   unlockVLMGP: useUnlockVLMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, writeContracts: contracts })
-  // buyRMGPAndWithdraw: useBuyRMGPAndWithdraw({ buyRMGP, withdrawMGP })
 });

@@ -12,14 +12,14 @@ import { useWithdraws } from "./useWithdraws";
 
 export const useReefiState = ({ setError, setNotification }: { setError: (_message: string) => void; setNotification: (_message: string) => void }) => {
   const [wallet, updateWallet] = useWallet({ setError });
-  const [balances, updateBalances] = useBalances({ wallet });
-  const [rewards] = useRewards({ wallet });
-  const [supplies, updateSupplies] = useSupplies({ wallet });
   const [exchangeRates] = useExchangeRates({ wallet });
+  const contracts = useContracts({ wallet });
+  const [balances, updateBalances] = useBalances({ wallet });
+  const [supplies, updateSupplies] = useSupplies({ wallet });
   const [amounts, amountsActions] = useAmounts({ wallet });
   const [allowances, updateAllowances] = useAllowances({ wallet });
   const [prices] = usePrices();
-  const contracts = useContracts({ wallet });
+  const [rewards] = useRewards({ wallet, prices });
   const [withdraws] = useWithdraws();
   const actions = useActions({ wallet, updateWallet, contracts, amounts, allowances, updateAllowances, setError, updateBalances, updateSupplies, setNotification });
 

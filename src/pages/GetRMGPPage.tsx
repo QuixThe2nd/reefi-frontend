@@ -5,8 +5,8 @@ import { useAmounts } from "../state/useAmounts";
 import { useBalances } from "../state/useBalances";
 import { useSupplies } from "../state/useSupplies";
 
-import { AllCoin, AllCoinETH, Chains, CoreCoin } from "../config/contracts";
 import { Page } from "../components/Page";
+import { PrimaryCoin, AllCoinETH, Chains, CoreCoin } from "../config/contracts";
 import { SwapToken } from "../components/SwapToken";
 
 interface Properties {
@@ -19,7 +19,7 @@ interface Properties {
   supplies: ReturnType<typeof useSupplies>[0];
   depositMGP: () => void;
   setSend: (_send: bigint) => void;
-  curveBuy: () => (_tokenIn: AllCoin, _tokenOut: CoreCoin) => void;
+  curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
   nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
   approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoinETH, _infinity: boolean) => void;
   mintWETH: () => void;

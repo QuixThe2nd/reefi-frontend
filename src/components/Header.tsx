@@ -20,40 +20,26 @@ interface Properties {
 }
 
 const getHeaderContent = (page: Pages | undefined, setPage: (_page: Pages | undefined) => void) => {
-  if (page === "claim") return (
-    <>
-      <button onClick={() => setPage(undefined)} className="text-blue-400 hover:text-blue-300" type="button">← Back</button>
-      <h1 className="text-xl font-bold text-green-400">💰 Claim Yield</h1>
-    </>
-  );
-
-  if (page === "vote") return (
-    <>
-      <button onClick={() => setPage(undefined)} className="text-blue-400 hover:text-blue-300" type="button">← Back</button>
-      <h1 className="text-xl font-bold text-red-400">🗳️ Vote on Proposals</h1>
-    </>
-  );
-
-  if (page === "bridge") return (
-    <>
-      <button onClick={() => setPage(undefined)} className="text-blue-400 hover:text-blue-300" type="button">← Back</button>
-      <h1 className="text-xl font-bold text-blue-400">🗳️ Bridge rMGP</h1>
-    </>
-  );
-
-  if (page === "documentation") return (
-    <>
-      <button onClick={() => setPage(undefined)} className="text-blue-400 hover:text-blue-300" type="button">← Back</button>
-      <h1 className="text-xl font-bold text-blue-400">📖 Documentation</h1>
-    </>
-  );
-
-  return (
-    <>
-      <h1 className="text-xl font-bold text-blue-500">REEFI</h1>
-      <p className="hidden lg:block">Refinance Magpie Yield and Governance</p>
-    </>
-  );
+  if (page === "claim") return <>
+    <button onClick={() => setPage(undefined)} className="text-blue-400 hover:text-blue-300" type="button">← Back</button>
+    <h1 className="text-xl font-bold text-green-400">💰 Claim Yield</h1>
+  </>;
+  if (page === "vote") return <>
+    <button onClick={() => setPage(undefined)} className="text-blue-400 hover:text-blue-300" type="button">← Back</button>
+    <h1 className="text-xl font-bold text-red-400">🗳️ Vote on Proposals</h1>
+  </>;
+  if (page === "bridge") return <>
+    <button onClick={() => setPage(undefined)} className="text-blue-400 hover:text-blue-300" type="button">← Back</button>
+    <h1 className="text-xl font-bold text-blue-400">🗳️ Bridge rMGP</h1>
+  </>;
+  if (page === "documentation") return <>
+    <button onClick={() => setPage(undefined)} className="text-blue-400 hover:text-blue-300" type="button">← Back</button>
+    <h1 className="text-xl font-bold text-blue-400">📖 Documentation</h1>
+  </>;
+  return <>
+    <h1 className="text-xl font-bold text-blue-500">REEFI</h1>
+    <p className="hidden lg:block">Refinance Magpie Yield and Governance</p>
+  </>;
 };
 
 export const Header = memo(({ ens, chain, page, setPage, account, isConnecting, setChain, connectWallet, mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance }: Properties): ReactElement => <div className="sticky top-0 z-10 flex w-full items-center justify-between p-4 bg-gray-800">

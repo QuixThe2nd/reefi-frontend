@@ -1,6 +1,6 @@
 /* eslint @typescript-eslint/no-unnecessary-condition: 0 */
 
-import { contracts, Chains, AllCoinETH, AllCoin, CoreCoin, isPrimaryCoin } from "../config/contracts";
+import { contracts, Chains, AllCoinETH, AllCoin, CoreCoin, isPrimaryCoin, PrimaryCoin } from "../config/contracts";
 import { formatEther } from "../utilities";
 import { useAllowances } from "../state/useAllowances";
 import { useAmounts } from "../state/useAmounts";
@@ -22,7 +22,7 @@ interface Properties {
   supplies: ReturnType<typeof useSupplies>[0];
   curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
   allowances: ReturnType<typeof useAllowances>[0];
-  curveBuy: (_tokenIn: AllCoin, _tokenOut: CoreCoin) => void;
+  curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
   nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
   approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
   mintWETH: () => void;

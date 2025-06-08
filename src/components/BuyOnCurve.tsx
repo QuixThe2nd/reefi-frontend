@@ -1,8 +1,8 @@
 import { formatEther } from "../utilities";
 
-import { AllCoin, CoreCoin } from "../config/contracts";
 import { Button } from "./Button";
 import { JSX, memo, ReactElement } from "react";
+import { PrimaryCoin } from "../config/contracts";
 import { TokenApproval } from "./TokenApproval";
 
 interface Properties {
@@ -11,9 +11,9 @@ interface Properties {
   readonly allowanceCurve: bigint;
   readonly nativeRate: number;
   readonly onApprove: (_infinity: boolean) => void;
-  readonly buy: (_tokenIn: AllCoin, _tokenOut: CoreCoin) => void;
-  readonly tokenIn: AllCoin;
-  readonly tokenOut: CoreCoin;
+  readonly buy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
+  readonly tokenIn: PrimaryCoin;
+  readonly tokenOut: PrimaryCoin;
 }
 
 export const BuyOnCurve = memo(({ send, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenIn, tokenOut }: Properties): ReactElement => <div>

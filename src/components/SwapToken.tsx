@@ -4,7 +4,7 @@ import { useBalances } from "../state/useBalances";
 import { useState, ReactElement } from "react";
 import { useSupplies } from "../state/useSupplies";
 
-import { Chains, AllCoinETH, AllCoin, CoreCoin } from "../config/contracts";
+import { Chains, AllCoinETH, AllCoin, CoreCoin, PrimaryCoin } from "../config/contracts";
 import { SwapButton } from "./SwapButton";
 import { SwapInput } from "./SwapInput";
 
@@ -19,7 +19,7 @@ interface Properties {
   allowances: ReturnType<typeof useAllowances>[0];
   balances: ReturnType<typeof useBalances>[0];
   supplies: ReturnType<typeof useSupplies>[0];
-  curveBuy: (_tokenIn: AllCoin, _tokenOut: CoreCoin) => void;
+  curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
   nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
   setSend: (_send: bigint) => void;
   approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;

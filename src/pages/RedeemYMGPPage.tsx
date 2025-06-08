@@ -1,17 +1,16 @@
 import { formatEther, formatTime } from "../utilities";
 import { memo, type ReactElement } from "react";
 import { useAllowances } from "../state/useAllowances";
+import { useAmounts } from "../state/useAmounts";
 import { useBalances } from "../state/useBalances";
-import { usePrices } from "../state/usePrices";
+import { useSupplies } from "../state/useSupplies";
 import { useWithdraws } from "../state/useWithdraws";
 
-import { Chains, decimals, TradeableCoinExtended } from "../config/contracts";
+import { Chains, decimals, AllCoin, CoreCoin } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 
 interface Properties {
-  buyRMGP: () => void;
-  redeemYMGP: () => void;
   withdrawMGP: () => void;
   unlockSchedule: ReturnType<typeof useWithdraws>[0]["reefi"]["unlockSchedule"];
   userPendingWithdraws: ReturnType<typeof useWithdraws>[0]["user"]["pending"];
@@ -19,29 +18,19 @@ interface Properties {
   balances: ReturnType<typeof useBalances>[0];
   setSend: (_send: bigint) => void;
   send: bigint;
-  prices: ReturnType<typeof usePrices>[0];
-  ymgpMgpCurveRate: number;
-  mgpRmgpCurveRate: number;
-  mgpRmgpCurveAmount: bigint;
-  rmgpYmgpCurveAmount: bigint;
-  rmgpMgpCurveAmount: bigint;
-  mgpYmgpCurveAmount: bigint;
-  ymgpRmgpCurveAmount: bigint;
-  ymgpMgpCurveAmount: bigint;
-  ymgpVmgpCurveAmount: bigint;
   allowances: ReturnType<typeof useAllowances>[0];
   chain: Chains;
-  lockedReefiMGP: bigint;
-  rmgpSupply: bigint;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TradeableCoinExtended, _infinity: boolean) => void;
-  convertMGP: () => void;
-  sellYMGP: () => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
+  curveBuy: (_tokenIn: AllCoin, _tokenOut: CoreCoin) => void;
+  nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
+  curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
+  supplies: ReturnType<typeof useSupplies>[0];
 }
 
-export const RedeemYMGPPage = memo(({ buyRMGP, redeemYMGP, withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, ymgpVmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info={["yMGP can be redeemed for 75% of it's underlying rMGP instantly or swapped at market rate via Curve.", "The 25% withdraw fee is distributed to yMGP lockers."]}>
-  <SwapToken buy={buyRMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Redeem" nativeSwap={redeemYMGP} originalTokenIn="yMGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} />
+export const RedeemYMGPPage = memo(({ withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => <Page info={["yMGP can be redeemed for 75% of it's underlying rMGP instantly or swapped at market rate via Curve.", "The 25% withdraw fee is distributed to yMGP lockers."]}>
+  <SwapToken excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Redeem" originalTokenIn="yMGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
   {userPendingWithdraws > 0n ? <>
     <h3 className="mt-4 text-base font-medium">Pending Withdraws</h3>
     <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>

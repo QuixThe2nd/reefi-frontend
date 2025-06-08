@@ -22,7 +22,7 @@ interface Properties {
 
 export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance, setLPAmounts, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, supplyLiquidity }: Properties): ReactElement => <Page info='Supply liquidity to the cMGP Curve pool (MGP/rMGP/yMGP). You can supply liquidity at any ratio of MGP:rMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use <a href="https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/" className="text-blue-400">Curve</a>.'>
   <AmountInput balance={mgpBalance} label="Supply MGP"
-    onChange={setLPAmounts}
+    onChange={val => setLPAmounts(a => ({ ...a, MGP: val }))}
     placeholder={((): string => {
       const mgpTarget = mgpCurveBalance === 0n ? 0 : Number(mgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
       const getTotalRecommendedLP = (): number => {
@@ -46,7 +46,7 @@ export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance,
   <AmountInput
     balance={rmgpBalance}
     label="Supply rMGP"
-    onChange={setLPAmounts}
+    onChange={val => setLPAmounts(a => ({ ...a, rMGP: val }))}
     placeholder={((): string => {
       const rmgpTarget = rmgpCurveBalance === 0n ? 0 : Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
       const getTotalRecommendedLP = (): number => {
@@ -70,7 +70,7 @@ export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance,
   <AmountInput
     balance={ymgpBalance}
     label="Supply yMGP"
-    onChange={setLPAmounts}
+    onChange={val => setLPAmounts(a => ({ ...a, yMGP: val }))}
     placeholder={((): string => {
       const ymgpTarget = ymgpCurveBalance === 0n ? 0 : Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
       const getTotalRecommendedLP = (): number => {

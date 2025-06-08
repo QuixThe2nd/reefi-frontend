@@ -4,6 +4,7 @@ import { useWallet } from "./useWallet";
 
 interface Allowances {
   rMGP: { MGP: bigint };
+  wrMGP: { rMGP: bigint };
   yMGP: { rMGP: bigint };
   lyMGP: { yMGP: bigint };
   vMGP: { yMGP: bigint };
@@ -15,6 +16,7 @@ interface Allowances {
 export const useAllowances = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0] }) => {
   const [allowances, setAllowances] = useState<Allowances>({
     rMGP: { MGP: 0n },
+    wrMGP: { rMGP: 0n },
     yMGP: { rMGP: 0n },
     lyMGP: { yMGP: 0n },
     vMGP: { yMGP: 0n },
@@ -26,7 +28,7 @@ export const useAllowances = ({ wallet }: { wallet: ReturnType<typeof useWallet>
   const updateAllowances = {
     rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].rMGP.address]).then(value => setAllowances(a => ({ ...a, rMGP: { MGP: value } }))),
     yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].yMGP.address]).then(value => setAllowances(a => ({ ...a, yMGP: { rMGP: value } }))),
-    curve: {
+    cMGP: {
       MGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].MGP.read.allowance([wallet.account, contracts[wallet.chain].cMGP.address]).then(value => setAllowances(a => ({ ...a, cMGP: { ...a.cMGP, MGP: value } }))),
       rMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].rMGP.read.allowance([wallet.account, contracts[wallet.chain].cMGP.address]).then(value => setAllowances(a => ({ ...a, cMGP: { ...a.cMGP, rMGP: value } }))),
       yMGP: () => wallet.account === undefined ? Promise.resolve() : contracts[wallet.chain].yMGP.read.allowance([wallet.account, contracts[wallet.chain].cMGP.address]).then(value => setAllowances(a => ({ ...a, cMGP: { ...a.cMGP, yMGP: value } }))),

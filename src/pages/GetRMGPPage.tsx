@@ -1,43 +1,33 @@
 import { aprToApy } from "../utilities";
 import { memo, type ReactElement } from "react";
 import { useAllowances } from "../state/useAllowances";
+import { useAmounts } from "../state/useAmounts";
 import { useBalances } from "../state/useBalances";
-import { usePrices } from "../state/usePrices";
+import { useSupplies } from "../state/useSupplies";
 
-import { Chains, TradeableCoinExtended } from "../config/contracts";
+import { AllCoin, AllCoinETH, Chains, CoreCoin } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 
 interface Properties {
   mgpAPR: number;
-  depositMGP: () => void;
-  balances: ReturnType<typeof useBalances>[0];
-  setSend: (_send: bigint) => void;
   send: bigint;
-  prices: ReturnType<typeof usePrices>[0];
-  ymgpMgpCurveRate: number;
-  mgpRmgpCurveRate: number;
-  mgpRmgpCurveAmount: bigint;
-  rmgpYmgpCurveAmount: bigint;
-  rmgpMgpCurveAmount: bigint;
-  mgpYmgpCurveAmount: bigint;
-  ymgpRmgpCurveAmount: bigint;
-  ymgpVmgpCurveAmount: bigint;
-  ymgpMgpCurveAmount: bigint;
-  allowances: ReturnType<typeof useAllowances>[0];
   chain: Chains;
-  lockedReefiMGP: bigint;
-  rmgpSupply: bigint;
-  buyRMGP: () => void;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TradeableCoinExtended, _infinity: boolean) => void;
-  convertMGP: () => void;
-  sellYMGP: () => void;
+  balances: ReturnType<typeof useBalances>[0];
+  allowances: ReturnType<typeof useAllowances>[0];
+  curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
+  supplies: ReturnType<typeof useSupplies>[0];
+  depositMGP: () => void;
+  setSend: (_send: bigint) => void;
+  curveBuy: () => (_tokenIn: AllCoin, _tokenOut: CoreCoin) => void;
+  nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoinETH, _infinity: boolean) => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
 }
 
-export const GetRMGPPage = memo(({ mgpAPR, depositMGP, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpVmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, buyRMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info="MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.">
-  <SwapToken buy={buyRMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH"]} label="Mint" nativeSwap={depositMGP} originalTokenIn="MGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} />
+export const GetRMGPPage = memo(({ mgpAPR, balances, setSend, send, allowances, chain, curveBuy, nativeSwap, approve, mintWETH, swap, curveAmounts, supplies }: Properties): ReactElement => <Page info="MGP can be converted to rMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.">
+  <SwapToken label="Mint" originalTokenIn="MGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} excludeCoins={["CKP", "PNP", "EGP", "LTP", "lvMGP", "lyMGP", "vlMGP", "WETH", "ETH", "cMGP", "wrMGP", "vMGP", "yMGP"]} curveBuy={curveBuy} nativeSwap={nativeSwap} curveAmounts={curveAmounts} supplies={supplies} />
   <div className="mt-4 text-sm text-gray-400">
     <div className="mb-1 flex justify-between">
       <span>Original APR</span>

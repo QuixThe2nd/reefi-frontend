@@ -44,13 +44,20 @@ export const Button = ({ ref, variant = "primary", size = "md", isLoading = fals
     right: "right-full top-1/2 -translate-y-1/2 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-800"
   };
 
+  const color = () => {
+    if (size === "lg") return "px-6 py-3";
+    if (size === "md") return "px-4 py-2";
+    if (size === "sm") return "px-3 py-1.5";
+    return "px-2 py-1";
+  };
+
   return (
     <button ref={ref} disabled={disabled ?? isLoading} type={type} className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${tooltipClasses} ${className}`} {...properties}>
       <div className="relative overflow-hidden rounded-lg size-full">
         {variant !== "clear" && <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent opacity-50" />}
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700" />
         <div className="relative flex items-center justify-center gap-2 h-full">
-          <div className={`flex items-center justify-center gap-2 ${size === "lg" ? "px-6 py-3" : size === "md" ? "px-4 py-2" : size === "sm" ? "px-3 py-1.5" : "px-2 py-1"}`}>
+          <div className={`flex items-center justify-center gap-2 ${color()}`}>
             {isLoading && <div className="animate-spin rounded-full size-4 border-2 border-white border-t-transparent" />}
             {children}
           </div>

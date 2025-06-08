@@ -73,7 +73,7 @@ export const QASection = (): ReactElement => {
           </button>
           {openItems.has(index) && <div className="px-4 pb-4">
             <div className="border-t border-gray-700 pt-2">
-              {Array.isArray(item.answer) ? (item.answer as string[]).map(paragraph => <p className="mb-2 text-sm text-gray-300 last:mb-0" dangerouslySetInnerHTML={{ __html: paragraph }} key={paragraph} />) : <p className="text-sm text-gray-300" dangerouslySetInnerHTML={{ __html: item.answer }} />}
+              {Array.isArray(item.answer) ? (item.answer as string[]).map(paragraph => <p className="mb-2 text-sm text-gray-300 last:mb-0" dangerouslySetInnerHTML={{ __html: paragraph }} key={paragraph} />) : <p className="text-sm text-gray-300" dangerouslySetInnerHTML={{ __html: item.answer as string }} />}
             </div>
           </div>}
         </div>)}

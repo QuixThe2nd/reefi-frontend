@@ -1,11 +1,12 @@
 import { formatEther, formatTime } from "../utilities";
 import { memo, type ReactElement } from "react";
 import { useAllowances } from "../state/useAllowances";
+import { useAmounts } from "../state/useAmounts";
 import { useBalances } from "../state/useBalances";
-import { usePrices } from "../state/usePrices";
+import { useSupplies } from "../state/useSupplies";
 import { useWithdraws } from "../state/useWithdraws";
 
-import { Chains, TradeableCoinExtended } from "../config/contracts";
+import { AllCoin, Chains, CoreCoin } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 
@@ -14,30 +15,23 @@ interface Properties {
   balances: ReturnType<typeof useBalances>[0];
   setSend: (_send: bigint) => void;
   send: bigint;
-  prices: ReturnType<typeof usePrices>[0];
-  ymgpMgpCurveRate: number;
   mgpRmgpCurveRate: number;
   mgpRmgpCurveAmount: bigint;
-  rmgpYmgpCurveAmount: bigint;
-  rmgpMgpCurveAmount: bigint;
-  mgpYmgpCurveAmount: bigint;
-  ymgpRmgpCurveAmount: bigint;
-  ymgpMgpCurveAmount: bigint;
-  ymgpVmgpCurveAmount: bigint;
   allowances: ReturnType<typeof useAllowances>[0];
   chain: Chains;
   lockedReefiMGP: bigint;
   rmgpSupply: bigint;
   unlockSchedule: ReturnType<typeof useWithdraws>[0]["reefi"]["unlockSchedule"];
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TradeableCoinExtended, _infinity: boolean) => void;
-  convertMGP: () => void;
-  sellYMGP: () => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
-  buyRMGPAndWithdraw: () => void;
+  curveBuy: (_tokenIn: AllCoin, _tokenOut: CoreCoin) => void;
+  nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
+  curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
+  supplies: ReturnType<typeof useSupplies>[0];
 }
 
-export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, ymgpVmgpCurveAmount, allowances, chain, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply, unlockSchedule, buyRMGPAndWithdraw }: Properties): ReactElement => {
+export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, mgpRmgpCurveRate, mgpRmgpCurveAmount, allowances, chain, approve, mintWETH, swap, lockedReefiMGP, rmgpSupply, unlockSchedule, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => {
   const burnRate = Number(rmgpSupply) / Number(lockedReefiMGP);
   const fixedYieldPercent = (Number(mgpRmgpCurveAmount) / Number(send) / burnRate - 1) * 100;
   const withdrawalTime = unlockSchedule.length === 6 ? Number(unlockSchedule[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2;
@@ -49,35 +43,7 @@ export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, prices, y
     "This strategy monetizes the rMGP depeg by capturing the difference between market price and the burn rate.",
     "The yield is fixed and known upfront, unlike variable staking yields that can change over time."
   ]}>
-    <SwapToken
-      buy={buyRMGPAndWithdraw}
-      excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "yMGP"]}
-      label="Buy & Withdraw"
-      originalTokenIn="MGP"
-      tokenOut="rMGP"
-      balances={balances}
-      setSend={setSend}
-      send={send}
-      prices={prices}
-      ymgpMgpCurveRate={ymgpMgpCurveRate}
-      mgpRmgpCurveRate={mgpRmgpCurveRate}
-      mgpRmgpCurveAmount={mgpRmgpCurveAmount}
-      rmgpYmgpCurveAmount={rmgpYmgpCurveAmount}
-      rmgpMgpCurveAmount={rmgpMgpCurveAmount}
-      mgpYmgpCurveAmount={mgpYmgpCurveAmount}
-      ymgpRmgpCurveAmount={ymgpRmgpCurveAmount}
-      ymgpMgpCurveAmount={ymgpMgpCurveAmount}
-      ymgpVmgpCurveAmount={ymgpVmgpCurveAmount}
-      allowances={allowances}
-      chain={chain}
-      approve={approve}
-      convertMGP={convertMGP}
-      sellYMGP={sellYMGP}
-      mintWETH={mintWETH}
-      swap={swap}
-      lockedReefiMGP={lockedReefiMGP}
-      rmgpSupply={rmgpSupply}
-    />
+    <SwapToken excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "yMGP"]} label="Buy & Withdraw" originalTokenIn="MGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
 
     <div className="mt-4 rounded-lg border border-green-700 bg-green-900/20 p-4">
       <h3 className="mb-2 text-lg font-semibold text-green-400">🎯 Earn Fixed Yield</h3>

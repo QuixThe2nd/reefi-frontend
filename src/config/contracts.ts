@@ -13,33 +13,40 @@ import yMGP from "../../public/icons/yMGP.png";
 
 import { arbitrum, bsc, mainnet } from "viem/chains";
 import { createPublicClient, erc20Abi, getContract, webSocket } from "viem";
+import z from "zod";
 
 import { ABIs } from "./ABIs/abis";
 import ETH from "../../public/icons/ETH.svg";
 
 export type Chains = 56 | 42_161;
 
-export type PrimaryCoinMagpie = "MGP";
-export type PrimaryCoinReefi = "rMGP" | "yMGP" | "vMGP";
-export type PrimaryCoin = PrimaryCoinReefi | PrimaryCoinMagpie;
+export const PrimaryCoinMagpieSchema = z.literal("MGP");
+export const PrimaryCoinReefiSchema = z.enum(["rMGP", "yMGP", "vMGP"]);
+export const PrimaryCoinSchema = z.union([PrimaryCoinReefiSchema, PrimaryCoinMagpieSchema]);
+
+export type PrimaryCoinMagpie = z.infer<typeof PrimaryCoinMagpieSchema>;
+export type PrimaryCoinReefi = z.infer<typeof PrimaryCoinReefiSchema>;
+export type PrimaryCoin = z.infer<typeof PrimaryCoinSchema>;
 
 export type LockedCoinMagpie = "vlMGP";
 export type LockedCoinReefi = "lyMGP" | "lvMGP";
 export type LockedCoin = LockedCoinReefi | LockedCoinMagpie;
 
-export type CoreCoin = PrimaryCoin | LockedCoin;
+export type CoreCoin = PrimaryCoin | LockedCoin | "wrMGP";
 
 export type SecondaryCoin = "CKP" | "PNP" | "EGP" | "LTP" | "WETH" | PrimaryCoinMagpie;
 export type SecondaryCoinETH = SecondaryCoin | "ETH";
 export type TradeableCoin = PrimaryCoin | SecondaryCoin;
-export type TradeableCoinExtended = TradeableCoin | "wrMGP";
-export type TradeableCoinExtendedETH = TradeableCoinExtended | "ETH";
+export type TradeableCoinExtendedETH = TradeableCoin | "wrMGP" | "ETH";
 
 export type NonTradeableCoin = "cMGP";
-export type TransferrableCoin = TradeableCoinExtended | NonTradeableCoin;
+export type TransferrableCoin = TradeableCoin | "wrMGP" | NonTradeableCoin;
 
 export type AllCoin = LockedCoin | TransferrableCoin;
 export type AllCoinETH = AllCoin | "ETH";
+
+export const isPrimaryCoin = (value: string): value is PrimaryCoin => PrimaryCoinSchema.safeParse(value).success;
+
 
 export const decimals: Record<AllCoinETH, number> = { CKP: 18, EGP: 18, ETH: 18, LTP: 18, MGP: 18, PNP: 18, WETH: 18, cMGP: 18, rMGP: 18, vMGP: 18, yMGP: 18, lyMGP: 18, lvMGP: 18, wrMGP: 18, vlMGP: 18 };
 export const coins: Record<AllCoinETH, { color: string; bgColor: string; icon: `${string}.${"png" | "svg"}` }> = {

@@ -1,5 +1,6 @@
 import { formatEther } from "../utilities";
 
+import { AllCoin, CoreCoin } from "../config/contracts";
 import { Button } from "./Button";
 import { JSX, memo, ReactElement } from "react";
 import { TokenApproval } from "./TokenApproval";
@@ -10,15 +11,15 @@ interface Properties {
   readonly allowanceCurve: bigint;
   readonly nativeRate: number;
   readonly onApprove: (_infinity: boolean) => void;
-  readonly buy: () => void;
-  readonly tokenASymbol: string;
-  readonly tokenBSymbol: string;
+  readonly buy: (_tokenIn: AllCoin, _tokenOut: CoreCoin) => void;
+  readonly tokenIn: AllCoin;
+  readonly tokenOut: CoreCoin;
 }
 
-export const BuyOnCurve = memo(({ send, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenASymbol, tokenBSymbol }: Properties): ReactElement => <div>
-  <TokenApproval allowance={allowanceCurve} curve={true} onApprove={onApprove} send={send} tokenSymbol={tokenASymbol} />
+export const BuyOnCurve = memo(({ send, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenIn, tokenOut }: Properties): ReactElement => <div>
+  <TokenApproval allowance={allowanceCurve} curve={true} onApprove={onApprove} send={send} tokenSymbol={tokenIn} />
   <div className="relative">
-    <Button variant="secondary" className="w-full" onClick={buy} type="submit">Buy on Curve ({formatEther(curveAmount).toFixed(4)} {tokenBSymbol})</Button>
+    <Button variant="secondary" className="w-full" onClick={() => buy(tokenIn, tokenOut)} type="submit">Buy on Curve ({formatEther(curveAmount).toFixed(4)} {tokenOut})</Button>
     {((): JSX.Element | undefined => {
       const directRate = formatEther(send) * nativeRate;
       const premiumDiscount = (formatEther(curveAmount) - directRate) / directRate * 100;

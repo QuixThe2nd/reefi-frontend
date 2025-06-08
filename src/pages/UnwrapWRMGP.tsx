@@ -1,40 +1,29 @@
 import { memo, type ReactElement } from "react";
 import { useAllowances } from "../state/useAllowances";
+import { useAmounts } from "../state/useAmounts";
 import { useBalances } from "../state/useBalances";
-import { usePrices } from "../state/usePrices";
+import { useSupplies } from "../state/useSupplies";
 
-import { Chains, TradeableCoinExtended } from "../config/contracts";
+import { Chains, AllCoin, CoreCoin } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 
 interface Properties {
-  depositMGP: () => void;
   balances: ReturnType<typeof useBalances>[0];
-  setSend: (_send: bigint) => void;
   send: bigint;
-  prices: ReturnType<typeof usePrices>[0];
-  ymgpMgpCurveRate: number;
-  mgpRmgpCurveRate: number;
-  mgpRmgpCurveAmount: bigint;
-  rmgpYmgpCurveAmount: bigint;
-  rmgpMgpCurveAmount: bigint;
-  mgpYmgpCurveAmount: bigint;
-  ymgpRmgpCurveAmount: bigint;
-  ymgpVmgpCurveAmount: bigint;
-  ymgpMgpCurveAmount: bigint;
   allowances: ReturnType<typeof useAllowances>[0];
   chain: Chains;
-  lockedReefiMGP: bigint;
-  rmgpSupply: bigint;
-  unwrapWRMGP: () => void;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: TradeableCoinExtended, _infinity: boolean) => void;
-  convertMGP: () => void;
-  sellYMGP: () => void;
+  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
+  setSend: (_send: bigint) => void;
+  curveBuy: (_tokenIn: AllCoin, _tokenOut: CoreCoin) => void;
+  nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
+  curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
+  supplies: ReturnType<typeof useSupplies>[0];
 }
 
-export const UnwrapWRMGPPage = memo(({ depositMGP, balances, setSend, send, prices, ymgpMgpCurveRate, mgpRmgpCurveRate, mgpRmgpCurveAmount, rmgpYmgpCurveAmount, rmgpMgpCurveAmount, mgpYmgpCurveAmount, ymgpVmgpCurveAmount, ymgpRmgpCurveAmount, ymgpMgpCurveAmount, allowances, chain, unwrapWRMGP, approve, convertMGP, sellYMGP, mintWETH, swap, lockedReefiMGP, rmgpSupply }: Properties): ReactElement => <Page info="wrMGP can be unwrapped for rMGP. 1 wrMGP receives 1 vlMGP worth of rMGP. wrMGP can be unwrapped on any chain." noTopMargin={true}>
-  <SwapToken buy={unwrapWRMGP} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "MGP", "rMGP", "yMGP", "vMGP"]} label="Unwrap" nativeSwap={depositMGP} originalTokenIn="wrMGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} prices={prices} ymgpMgpCurveRate={ymgpMgpCurveRate} mgpRmgpCurveRate={mgpRmgpCurveRate} mgpRmgpCurveAmount={mgpRmgpCurveAmount} rmgpYmgpCurveAmount={rmgpYmgpCurveAmount} rmgpMgpCurveAmount={rmgpMgpCurveAmount} mgpYmgpCurveAmount={mgpYmgpCurveAmount} ymgpRmgpCurveAmount={ymgpRmgpCurveAmount} ymgpMgpCurveAmount={ymgpMgpCurveAmount} allowances={allowances} chain={chain} approve={approve} convertMGP={convertMGP} sellYMGP={sellYMGP} mintWETH={mintWETH} swap={swap} lockedReefiMGP={lockedReefiMGP} rmgpSupply={rmgpSupply} ymgpVmgpCurveAmount={ymgpVmgpCurveAmount} />
+export const UnwrapWRMGPPage = memo(({ balances, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => <Page info="wrMGP can be unwrapped for rMGP. 1 wrMGP receives 1 vlMGP worth of rMGP. wrMGP can be unwrapped on any chain." noTopMargin={true}>
+  <SwapToken excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "MGP", "rMGP", "yMGP", "vMGP"]} label="Unwrap" originalTokenIn="wrMGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
 </Page>);
 UnwrapWRMGPPage.displayName = "UnwrapWRMGPPage";

@@ -14,7 +14,7 @@ interface Properties {
   send: bigint;
   allowances: ReturnType<typeof useAllowances>[0];
   chain: Chains;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
+  approve: (_tokenOut: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
   curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
@@ -23,7 +23,7 @@ interface Properties {
   supplies: ReturnType<typeof useSupplies>[0];
 }
 
-export const GetVMGPPage = memo(({ balances, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => <Page info="yMGP is backed 1:1 by rMGP. 1 yMGP can be redeemed for 0.75 rMGP. yMGP alone has no additional benefit over rMGP, it must be locked for boosted yield.">
-  <SwapToken excludeCoins={["CKP", "EGP", "PNP", "LTP", "WETH", "MGP", "ETH", "cMGP", "rMGP", "lyMGP", "lvMGP", "vlMGP", "wrMGP"]} label="Mint" originalTokenIn="yMGP" tokenOut="vMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
+export const GetVMGPPage = memo(({ balances, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => <Page info="yMGP is backed 1:1 by wstMGP. 1 yMGP can be redeemed for 0.75 wstMGP. yMGP alone has no additional benefit over wstMGP, it must be locked for boosted yield.">
+  <SwapToken excludeCoins={["CKP", "EGP", "PNP", "LTP", "WETH", "MGP", "ETH", "cMGP", "wstMGP", "lyMGP", "lvMGP", "vlMGP", "stMGP"]} label="Mint" originalTokenIn="yMGP" tokenOut="vMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
 </Page>);
 GetVMGPPage.displayName = "GetVMGPPage";

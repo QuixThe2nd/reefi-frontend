@@ -53,7 +53,7 @@ export const useCompoundRMGP = <Clients extends Record<Chains, WalletClient & Pu
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    await writeContractsReference.current[chainReference.current].rMGP.write.claim({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].wstMGP.write.claim({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current();
     updateSupplies();
   }, []);

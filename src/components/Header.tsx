@@ -30,7 +30,7 @@ const getHeaderContent = (page: Pages | undefined, setPage: (_page: Pages | unde
   </>;
   if (page === "bridge") return <>
     <button onClick={() => setPage(undefined)} className="text-blue-400 hover:text-blue-300" type="button">← Back</button>
-    <h1 className="text-xl font-bold text-blue-400">🗳️ Bridge rMGP</h1>
+    <h1 className="text-xl font-bold text-blue-400">🗳️ Bridge stMGP</h1>
   </>;
   if (page === "documentation") return <>
     <button onClick={() => setPage(undefined)} className="text-blue-400 hover:text-blue-300" type="button">← Back</button>

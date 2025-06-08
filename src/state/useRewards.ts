@@ -46,7 +46,7 @@ export const useRewards = ({ wallet, prices }: { wallet: ReturnType<typeof useWa
   useEffect(() => {
     (async () => {
       type PendingTokensResponse = [bigint, `0x${string}`[], string[], bigint[]];
-      const data = await contracts[wallet.chain].masterMGP.read.allPendingTokens([contracts[wallet.chain].vlMGP.address, contracts[wallet.chain].rMGP.address]) as PendingTokensResponse;
+      const data = await contracts[wallet.chain].masterMGP.read.allPendingTokens([contracts[wallet.chain].vlMGP.address, contracts[wallet.chain].wstMGP.address]) as PendingTokensResponse;
       const pendingRewards: Record<SecondaryCoin, { address: `0x${string}`; rewards: bigint }> = { MGP: { address: contracts[wallet.chain].MGP.address, rewards: data[0] } };
       data[2].forEach((token, index) => {
         if (data[2][index] && data[3][index] && data[1][index]) pendingRewards[token.replace("Bridged ", "").toUpperCase() as SecondaryCoin] = { address: data[1][index], rewards: data[3][index] };
@@ -62,11 +62,11 @@ export const useRewards = ({ wallet, prices }: { wallet: ReturnType<typeof useWa
   useEffect(() => {
     (async () => {
       if (wallet.clients === undefined || wallet.account === undefined) return;
-      const simulation = await contracts[wallet.chain].rMGP.simulate.claim({ account: wallet.account, chain: wallet.clients[wallet.chain].chain });
+      const simulation = await contracts[wallet.chain].wstMGP.simulate.claim({ account: wallet.account, chain: wallet.clients[wallet.chain].chain });
       setRewards(y => ({ ...y, reefi: { ...y.reefi, vlMGP: { ...y.reefi.vlMGP, estimatedYMGP: simulation.result } } }));
     })();
     (async () => {
-      const [gasPrice, gas] = await Promise.all([publicClients[wallet.chain].getGasPrice(), wallet.account === undefined ? 0n : contracts[wallet.chain].rMGP.estimateGas.claim({ account: wallet.account })]);
+      const [gasPrice, gas] = await Promise.all([publicClients[wallet.chain].getGasPrice(), wallet.account === undefined ? 0n : contracts[wallet.chain].wstMGP.estimateGas.claim({ account: wallet.account })]);
       setRewards(y => ({ ...y, reefi: { ...y.reefi, vlMGP: { ...y.reefi.vlMGP, estimatedGas: gasPrice * gas } } }));
     })();
   }, [wallet.account, wallet.clients, wallet.chain]);

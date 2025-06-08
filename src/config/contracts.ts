@@ -6,9 +6,9 @@ import PNP from "../../public/icons/PNP.png";
 import WETH from "../../public/icons/WETH.png";
 import curve from "../../public/icons/curve.png";
 import lyMGP from "../../public/icons/lyMGP.png";
-import rMGP from "../../public/icons/rMGP.png";
 import vMGP from "../../public/icons/vMGP.png";
 import vlMGP from "../../public/icons/vlMGP.png";
+import wstMGP from "../../public/icons/rMGP.png";
 import yMGP from "../../public/icons/yMGP.png";
 
 import { arbitrum, bsc, mainnet } from "viem/chains";
@@ -21,7 +21,7 @@ import ETH from "../../public/icons/ETH.svg";
 export type Chains = 56 | 42_161;
 
 export const PrimaryCoinMagpieSchema = z.literal("MGP");
-export const PrimaryCoinReefiSchema = z.enum(["rMGP", "yMGP", "vMGP"]);
+export const PrimaryCoinReefiSchema = z.enum(["wstMGP", "yMGP", "vMGP"]);
 export const PrimaryCoinSchema = z.union([PrimaryCoinReefiSchema, PrimaryCoinMagpieSchema]);
 
 export type PrimaryCoinMagpie = z.infer<typeof PrimaryCoinMagpieSchema>;
@@ -33,15 +33,15 @@ export type LockedCoinReefi = "lyMGP" | "lvMGP";
 export type LockedCoin = LockedCoinReefi | LockedCoinMagpie;
 
 export type CoreCoin = PrimaryCoin | LockedCoin;
-export type CoreCoinExtended = CoreCoin | "wrMGP";
+export type CoreCoinExtended = CoreCoin | "stMGP";
 
 export type SecondaryCoin = "CKP" | "PNP" | "EGP" | "LTP" | "WETH" | PrimaryCoinMagpie;
 export type SecondaryCoinETH = SecondaryCoin | "ETH";
 export type TradeableCoin = PrimaryCoin | SecondaryCoin;
-export type TradeableCoinExtendedETH = TradeableCoin | "wrMGP" | "ETH";
+export type TradeableCoinExtendedETH = TradeableCoin | "stMGP" | "ETH";
 
 export type NonTradeableCoin = "cMGP";
-export type TransferrableCoin = TradeableCoin | "wrMGP" | NonTradeableCoin;
+export type TransferrableCoin = TradeableCoin | "stMGP" | NonTradeableCoin;
 
 export type AllCoin = LockedCoin | TransferrableCoin;
 export type AllCoinETH = AllCoin | "ETH";
@@ -49,7 +49,7 @@ export type AllCoinETH = AllCoin | "ETH";
 export const isPrimaryCoin = (value: string): value is PrimaryCoin => PrimaryCoinSchema.safeParse(value).success;
 
 
-export const decimals: Record<AllCoinETH, number> = { CKP: 18, EGP: 18, ETH: 18, LTP: 18, MGP: 18, PNP: 18, WETH: 18, cMGP: 18, rMGP: 18, vMGP: 18, yMGP: 18, lyMGP: 18, lvMGP: 18, wrMGP: 18, vlMGP: 18 };
+export const decimals: Record<AllCoinETH, number> = { CKP: 18, EGP: 18, ETH: 18, LTP: 18, MGP: 18, PNP: 18, WETH: 18, cMGP: 18, wstMGP: 18, vMGP: 18, yMGP: 18, lyMGP: 18, lvMGP: 18, stMGP: 18, vlMGP: 18 };
 export const coins: Record<AllCoinETH, { color: string; bgColor: string; icon: `${string}.${"png" | "svg"}` }> = {
   CKP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: CKP },
   EGP: { bgColor: "bg-gray-600", color: "bg-gray-400", icon: EGP },
@@ -59,13 +59,13 @@ export const coins: Record<AllCoinETH, { color: string; bgColor: string; icon: `
   WETH: { bgColor: "bg-gray-600", color: "bg-gray-400", icon: WETH },
   ETH: { bgColor: "bg-gray-600", color: "bg-gray-400", icon: ETH },
   cMGP: { bgColor: "bg-indigo-600", color: "bg-indigo-400", icon: curve },
-  rMGP: { bgColor: "bg-green-600", color: "bg-green-400", icon: rMGP },
+  wstMGP: { bgColor: "bg-green-600", color: "bg-green-400", icon: wstMGP },
   vMGP: { bgColor: "bg-red-600", color: "bg-red-400", icon: vMGP },
   yMGP: { bgColor: "bg-yellow-600", color: "bg-yellow-400", icon: yMGP },
   lyMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP },
   lvMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP },
   vlMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: vlMGP },
-  wrMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP }
+  stMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP }
 } as const;
 
 export const publicClients = {
@@ -87,11 +87,11 @@ export const contracts = {
     vlRewarder: getContract({ abi: ABIs.vlRewarder, address: "0xAE7FDA9d3d6dceda5824c03A75948AaB4c933c45" as const, client: publicClients[42_161] }),
     WETH: getContract({ abi: ABIs.WETH, address: "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1" as const, client: publicClients[42_161] }),
     cMGP: getContract({ abi: ABIs.cMGP, address: "0xD1465c3489Aa7Eac0e7f9907F93a684840a2F934" as const, client: publicClients[42_161] }),
-    rMGP: getContract({ abi: ABIs.rMGP, address: "0x3788c8791d826254bAbd49b602C93008468D5695" as const, client: publicClients[42_161] }),
+    wstMGP: getContract({ abi: ABIs.wstMGP, address: "0x3788c8791d826254bAbd49b602C93008468D5695" as const, client: publicClients[42_161] }),
     vMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000001" as const, client: publicClients[42_161] }),
     lvMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000002" as const, client: publicClients[42_161] }),
     lyMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000003" as const, client: publicClients[42_161] }),
-    wrMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000004" as const, client: publicClients[42_161] }),
+    stMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000004" as const, client: publicClients[42_161] }),
     yMGP: getContract({ abi: ABIs.yMGP, address: "0x3975Eca44C64dCBE35d3aA227F05a97A811b30B9" as const, client: publicClients[42_161] })
   },
   56: {
@@ -106,11 +106,11 @@ export const contracts = {
     vlRewarder: getContract({ abi: ABIs.vlRewarder, address: "0x9D29c8d733a3b6E0713D677F106E8F38c5649eF9" as const, client: publicClients[56] }),
     WETH: getContract({ abi: ABIs.WETH, address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" as const, client: publicClients[56] }),
     cMGP: getContract({ abi: ABIs.cMGP, address: "0x0000000000000000000000000000000000000005" as const, client: publicClients[56] }),
-    rMGP: getContract({ abi: ABIs.rMGP, address: "0x0277517658a1dd3899bf926fCf6A633e549eB769" as const, client: publicClients[56] }),
+    wstMGP: getContract({ abi: ABIs.wstMGP, address: "0x0277517658a1dd3899bf926fCf6A633e549eB769" as const, client: publicClients[56] }),
     vMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000006" as const, client: publicClients[56] }),
     lvMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000007" as const, client: publicClients[56] }),
     lyMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000008" as const, client: publicClients[56] }),
-    wrMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000009" as const, client: publicClients[56] }),
+    stMGP: getContract({ abi: ABIs.vMGP, address: "0x0000000000000000000000000000000000000009" as const, client: publicClients[56] }),
     yMGP: getContract({ abi: ABIs.yMGP, address: "0xc7Fd6A7D4CDd26fD34948cA0fC2b07DdC84fe0Bb" as const, client: publicClients[56] })
   }
 } as const;

@@ -15,15 +15,15 @@ interface Properties {
   readonly ymgpSupply: bigint;
 }
 
-export const ClaimYieldComponent = ({ claimYMGPRewards, unclaimedUserYield, uncompoundedMGPYield, lockedYMGP, userLockedYMGP, ymgpHoldings, ymgpSupply }: Properties): ReactElement => <Page info={["Locked yMGP earns additional yield from the underlying vlMGP and from 5% of rMGP withdrawal.", "To claim pending MGP yield, compound rMGP yield."]} noTopMargin={true}>
+export const ClaimYieldComponent = ({ claimYMGPRewards, unclaimedUserYield, uncompoundedMGPYield, lockedYMGP, userLockedYMGP, ymgpHoldings, ymgpSupply }: Properties): ReactElement => <Page info={["Locked yMGP earns additional yield from the underlying vlMGP and from 5% of wstMGP withdrawal.", "To claim pending MGP yield, compound wstMGP yield."]} noTopMargin={true}>
   <h3 className="mt-2 mb-1 text-base font-medium">Unclaimed Rewards</h3>
   <div className="flex justify-between rounded-lg bg-gray-700/50 p-4">
     <div className="flex flex-col">
-      <p className="text-lg font-medium">You: {formatNumber(formatEther(unclaimedUserYield, decimals.yMGP), 4)} rMGP</p>
+      <p className="text-lg font-medium">You: {formatNumber(formatEther(unclaimedUserYield, decimals.yMGP), 4)} wstMGP</p>
       <p className="text-sm text-gray-400">+{formatNumber(0.05 * uncompoundedMGPYield * (Number(userLockedYMGP) / Number(lockedYMGP)), 4)} MGP</p>
     </div>
     <div className="flex flex-col text-right">
-      <p className="text-lg font-medium">Total: {formatNumber(formatEther(ymgpHoldings - ymgpSupply - lockedYMGP, decimals.yMGP), 4)} rMGP</p>
+      <p className="text-lg font-medium">Total: {formatNumber(formatEther(ymgpHoldings - ymgpSupply - lockedYMGP, decimals.yMGP), 4)} wstMGP</p>
       <p className="text-sm text-gray-400">+{formatNumber(uncompoundedMGPYield * 0.05, 4)} MGP</p>
     </div>
   </div>

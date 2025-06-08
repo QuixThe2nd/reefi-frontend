@@ -7,11 +7,8 @@ export const formatEther = (value: bigint, decimals = 18): number => {
 };
 export const formatNumber = (number_: number, decimals = 2): string => {
   if (number_ >= 1_000_000_000) return `${(number_ / 1_000_000_000).toFixed(decimals)}B`;
-
   if (number_ >= 1_000_000) return `${(number_ / 1_000_000).toFixed(decimals)}M`;
-
   if (number_ >= 1000) return `${(number_ / 1000).toFixed(decimals)}K`;
-
   return number_.toFixed(decimals);
 };
 export const formatTime = (seconds: number, units = 2): string => {
@@ -20,10 +17,10 @@ export const formatTime = (seconds: number, units = 2): string => {
   const minutes = Math.floor(seconds % 3600 / 60);
   const secs = seconds % 60;
   const parts = [];
-  if (days > 0) parts.push(`${String(days)} Days`);
-  if (hours > 0) parts.push(`${String(hours)} Hours`);
-  if (minutes > 0) parts.push(`${String(minutes)} Minutes`);
-  if (secs > 0) parts.push(`${String(secs)} Seconds`);
+  if (days > 0) parts.push(`${String(days.toFixed(0))} Days`);
+  if (hours > 0) parts.push(`${String(hours.toFixed(0))} Hours`);
+  if (minutes > 0) parts.push(`${String(minutes.toFixed(0))} Minutes`);
+  if (secs > 0) parts.push(`${String(secs.toFixed(0))} Seconds`);
   return parts.slice(0, units).join(", ");
 };
 export const aprToApy = (apr: number): number => (1 + apr / 365) ** 365 - 1;

@@ -64,7 +64,7 @@ export const useRedeemRMGP = <Clients extends Record<Chains, WalletClient & Publ
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    await writeContractsReference.current[chainReference.current].rMGP.write.startUnlock([sendReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].wstMGP.write.startUnlock([sendReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
     updateBalancesReference.current();
     updateSuppliesReference.current();
   }, []);

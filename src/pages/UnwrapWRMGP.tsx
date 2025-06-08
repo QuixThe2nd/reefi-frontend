@@ -13,7 +13,7 @@ interface Properties {
   send: bigint;
   allowances: ReturnType<typeof useAllowances>[0];
   chain: Chains;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
+  approve: (_tokenOut: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
   setSend: (_send: bigint) => void;
@@ -23,7 +23,7 @@ interface Properties {
   supplies: ReturnType<typeof useSupplies>[0];
 }
 
-export const UnwrapWRMGPPage = memo(({ balances, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => <Page info="wrMGP can be unwrapped for rMGP. 1 wrMGP receives 1 vlMGP worth of rMGP. wrMGP can be unwrapped on any chain." noTopMargin={true}>
-  <SwapToken excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "MGP", "rMGP", "yMGP", "vMGP"]} label="Unwrap" originalTokenIn="wrMGP" tokenOut="rMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
+export const UnwrapWRMGPPage = memo(({ balances, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => <Page info="stMGP can be wrapped for wstMGP. 1 stMGP receives 1 vlMGP worth of wstMGP. stMGP can be wrapped on any chain." noTopMargin={true}>
+  <SwapToken excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "MGP", "wstMGP", "yMGP", "vMGP"]} label="Unwrap" originalTokenIn="stMGP" tokenOut="wstMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
 </Page>);
 UnwrapWRMGPPage.displayName = "UnwrapWRMGPPage";

@@ -70,7 +70,7 @@ export const useConvertMGP = <Clients extends Record<Chains, WalletClient & Publ
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    if (allowancesReference.current.cMGP.rMGP < sendReference.current) {
+    if (allowancesReference.current.cMGP.wstMGP < sendReference.current) {
       setErrorReference.current("Allowance too low"); return;
     }
     await writeContractsReference.current[chainReference.current].cMGP.write.exchange([0n, 2n, sendReference.current, 0n], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });

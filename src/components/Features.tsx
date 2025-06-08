@@ -9,7 +9,7 @@ interface Feature {
 
 const features: readonly Feature[] = [
   {
-    description: "Earn 90% of vlMGP yield with automatic compounding through rMGP, maintaining liquidity while maximizing returns.",
+    description: "Earn 90% of vlMGP yield with automatic compounding through wstMGP, maintaining liquidity while maximizing returns.",
     icon: "🔄",
     title: "Auto-Compounding Yield"
   }, {
@@ -17,7 +17,7 @@ const features: readonly Feature[] = [
     icon: "💧",
     title: "Liquid Derivatives"
   }, {
-    description: "Lock yMGP to earn additional protocol fees (5% of vlMGP yield) on top of base rMGP returns.",
+    description: "Lock yMGP to earn additional protocol fees (5% of vlMGP yield) on top of base wstMGP returns.",
     icon: "📈",
     title: "Enhanced Yields"
   }, {

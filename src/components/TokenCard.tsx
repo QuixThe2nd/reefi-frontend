@@ -25,7 +25,7 @@ export const TokenCard = memo(({ symbol, decimals, description, price, supply, u
         <div className="flex items-center">
           {/* <div className={`${bg} mr-2 flex  items-center justify-center rounded-full`}>{symbol[0]?.toUpperCase()}</div> */}
           <img className="size-8 mr-2" src={coins[symbol].icon} />
-          <p className="text-lg font-bold">${symbol}</p>
+          <p className="text-lg font-bold">{symbol}</p>
         </div>
       </div>
     </div>

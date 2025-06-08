@@ -24,25 +24,25 @@ interface Properties {
   allowances: ReturnType<typeof useAllowances>[0];
   curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
   nativeSwap: undefined | ((_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void);
-  approve: (_tokenOut: "rMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
+  approve: (_tokenOut: "wstMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
 }
 
 const exchangeRates = (tokenIn: CoreCoinExtended, tokenOut: CoreCoinExtended, balances: ReturnType<typeof useBalances>[0], supplies: ReturnType<typeof useSupplies>[0]): number => {
-  if (tokenIn === "MGP" || tokenIn === "vlMGP" || tokenIn === "wrMGP") {
-    if (tokenOut === "MGP" || tokenOut === "vlMGP" || tokenOut === "wrMGP") return 1;
-    if (tokenOut === "rMGP" || tokenOut === "yMGP" || tokenOut === "vMGP" || tokenOut === "lyMGP" || tokenOut === "lvMGP") return supplies.rMGP === 0n ? 1 : Number(supplies.rMGP) / Number(balances.rMGP.MGP);
-  } else if (tokenIn === "rMGP" || tokenIn === "yMGP" || tokenIn === "lyMGP" || tokenIn === "vMGP" || tokenIn === "lvMGP") {
-    if (tokenOut === "MGP" || tokenOut === "vlMGP" || tokenOut === "wrMGP") return balances.rMGP.MGP === 0n ? 1 : Number(balances.rMGP.MGP) / Number(supplies.rMGP);
-    if (tokenOut === "rMGP" || tokenOut === "yMGP" || tokenOut === "lyMGP" || tokenOut === "vMGP" || tokenOut === "lvMGP") return 1;
+  if (tokenIn === "MGP" || tokenIn === "vlMGP" || tokenIn === "stMGP") {
+    if (tokenOut === "MGP" || tokenOut === "vlMGP" || tokenOut === "stMGP") return 1;
+    if (tokenOut === "wstMGP" || tokenOut === "yMGP" || tokenOut === "vMGP" || tokenOut === "lyMGP" || tokenOut === "lvMGP") return supplies.wstMGP === 0n ? 1 : Number(supplies.wstMGP) / Number(balances.wstMGP.MGP);
+  } else if (tokenIn === "wstMGP" || tokenIn === "yMGP" || tokenIn === "lyMGP" || tokenIn === "vMGP" || tokenIn === "lvMGP") {
+    if (tokenOut === "MGP" || tokenOut === "vlMGP" || tokenOut === "stMGP") return balances.wstMGP.MGP === 0n ? 1 : Number(balances.wstMGP.MGP) / Number(supplies.wstMGP);
+    if (tokenOut === "wstMGP" || tokenOut === "yMGP" || tokenOut === "lyMGP" || tokenOut === "vMGP" || tokenOut === "lvMGP") return 1;
   }
   return 0;
 };
 
 export const SwapButton = ({ curveBuy, nativeSwap, tokenIn, tokenOut, label, curveAmounts, allowances, send, chain, approve, mintWETH, swap, balances, supplies }: Properties): ReactElement => {
   const buttons = [] as JSX.Element[];
-  if (tokenIn === "MGP" && tokenOut === "rMGP" || tokenIn === "rMGP" && tokenOut === "yMGP" || tokenIn === "yMGP" && tokenOut === "vMGP" || tokenIn === "yMGP" && tokenOut === "rMGP") {
+  if (tokenIn === "MGP" && tokenOut === "wstMGP" || tokenIn === "wstMGP" && tokenOut === "yMGP" || tokenIn === "yMGP" && tokenOut === "vMGP" || tokenIn === "yMGP" && tokenOut === "wstMGP") {
     const nativeRate = exchangeRates(tokenIn, tokenOut, balances, supplies);
     buttons.push(<div>
       <TokenApproval allowance={allowances[tokenOut][tokenIn]} onApprove={infinity => approve(tokenOut, tokenIn, infinity)} send={send} tokenSymbol={tokenIn} />

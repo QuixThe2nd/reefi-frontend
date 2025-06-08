@@ -77,7 +77,7 @@ export const useDepositRMGP = <Clients extends Record<Chains, WalletClient & Pub
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    if (allowancesReference.current.rMGP.MGP < sendReference.current) {
+    if (allowancesReference.current.wstMGP.MGP < sendReference.current) {
       setErrorReference.current("Allowance too low"); return;
     }
     await writeContractsReference.current[chainReference.current].yMGP.write.deposit([sendReference.current], { account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });

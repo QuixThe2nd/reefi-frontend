@@ -14,27 +14,27 @@ const qaData: readonly QAItem[] = [
     question: "What is Reefi and how does it work?"
   },
   {
-    answer: ["<strong>MGP</strong>: The base token from Magpie protocol", "<strong>rMGP</strong>: Liquid token representing locked MGP that earns auto-compounding yield (90% of vlMGP yield)", "<strong>yMGP</strong>: Token backed 1:1 by rMGP that can be locked to earn 5% of vlMGP yield and 25% on redemptions", "<strong>vMGP</strong>: Governance token backed by yMGP that controls Reefi's vlMGP voting power", "<strong>cMGP</strong>: Curve LP token for the MGP/rMGP/yMGP/vMGP pool that earns swap fees + underlying yield"],
+    answer: ["<strong>MGP</strong>: The base token from Magpie protocol", "<strong>wstMGP</strong>: Liquid token representing locked MGP that earns auto-compounding yield (90% of vlMGP yield)", "<strong>yMGP</strong>: Token backed 1:1 by wstMGP that can be locked to earn 5% of vlMGP yield and 25% on redemptions", "<strong>vMGP</strong>: Governance token backed by yMGP that controls Reefi's vlMGP voting power", "<strong>cMGP</strong>: Curve LP token for the MGP/wstMGP/yMGP/vMGP pool that earns swap fees + underlying yield"],
     question: "What are the different tokens in the Reefi ecosystem?"
   },
   {
-    answer: ["1. <strong>Deposit MGP</strong>: Convert MGP to rMGP to earn 90% of vlMGP yield with auto-compounding", "2. <strong>Lock yMGP</strong>: Convert rMGP to yMGP and lock it to earn additional yield from protocol fees and redemptions", "3. <strong>Provide Liquidity</strong>: Supply tokens to the Curve pool to earn swap fees plus underlying yield", "4. <strong>Compound Rewards</strong>: Anyone can compound pending yield and receive 1% as a reward", "5. <strong>Fixed Yield</strong>: Buy rMGP and instantly withdraw to earn fixed yield"],
+    answer: ["1. <strong>Deposit MGP</strong>: Convert MGP to wstMGP to earn 90% of vlMGP yield with auto-compounding", "2. <strong>Lock yMGP</strong>: Convert wstMGP to yMGP and lock it to earn additional yield from protocol fees and redemptions", "3. <strong>Provide Liquidity</strong>: Supply tokens to the Curve pool to earn swap fees plus underlying yield", "4. <strong>Compound Rewards</strong>: Anyone can compound pending yield and receive 1% as a reward", "5. <strong>Fixed Yield</strong>: Buy wstMGP and instantly withdraw to earn fixed yield"],
     question: "How do I earn yield with Reefi?"
   },
   {
-    answer: ["rMGP can be redeemed for MGP in two ways:", "1. <strong>Instant Market Rate</strong>: Swap on Curve at current market price", "2. <strong>Native Redemption</strong>: Use the withdrawal queue with a 60-120 day wait time"],
-    question: "What are the withdrawal mechanics for rMGP?"
+    answer: ["wstMGP can be redeemed for MGP in two ways:", "1. <strong>Instant Market Rate</strong>: Swap on Curve at current market price", "2. <strong>Native Redemption</strong>: Use the withdrawal queue with a 60-120 day wait time"],
+    question: "What are the withdrawal mechanics for wstMGP?"
   },
   {
     answer: ["The withdrawal mechanics are inherited from Magpie's vlMGP:", "• vlMGP has a minimum 60-day unlock period", "• Only 6 withdrawal slots are available at once, potentially extending wait time to 120 days in rare cases", "• This creates arbitrage opportunities for those willing to wait for withdrawals"],
-    question: "Why does rMGP have a withdrawal delay?"
+    question: "Why does wstMGP have a withdrawal delay?"
   },
   {
     answer: ["<strong>vMGP Governance</strong>: vMGP holders control all of Reefi's vlMGP voting power on Magpie proposals", "<strong>Reefi DAO</strong>: Locked yMGP holders vote on Reefi protocol decisions", "<strong>Treasury</strong>: Receives 4% of compounded yield", "The core team has no initial token allocation as all tokens are backed by underlying MGP"],
     question: "How does governance work in Reefi?"
   },
   {
-    answer: ["<strong>Smart Contract Risk</strong>: Reefi is in early beta and may contain bugs", "<strong>Depeg Risk</strong>: rMGP and yMGP may trade below the MGP value, though arbitrage mechanisms exist", "<strong>Liquidity Risk</strong>: Withdrawal queues may be full, extending redemption time", "<strong>Protocol Risk</strong>: Dependency on Magpie protocol and vlMGP mechanics"],
+    answer: ["<strong>Smart Contract Risk</strong>: Reefi is in early beta and may contain bugs", "<strong>Depeg Risk</strong>: wstMGP and yMGP may trade below the MGP value, though arbitrage mechanisms exist", "<strong>Liquidity Risk</strong>: Withdrawal queues may be full, extending redemption time", "<strong>Protocol Risk</strong>: Dependency on Magpie protocol and vlMGP mechanics"],
     question: "What are the risks of using Reefi?"
   },
   {
@@ -42,7 +42,7 @@ const qaData: readonly QAItem[] = [
     question: "How do I compound rewards and earn the 1% fee?"
   },
   {
-    answer: ["<strong>Minting</strong>: Native protocol rate - rMGP minted at current backing ratio, yMGP always 1:1 with rMGP", "<strong>Curve Trading</strong>: Market-determined rates with potential premium/discount", "The UI shows percentage differences to help you choose the better option.", "Arbitrage opportunities exist when market rates deviate significantly from mint/burn rates."],
+    answer: ["<strong>Minting</strong>: Native protocol rate - wstMGP minted at current backing ratio, yMGP always 1:1 with wstMGP", "<strong>Curve Trading</strong>: Market-determined rates with potential premium/discount", "The UI shows percentage differences to help you choose the better option.", "Arbitrage opportunities exist when market rates deviate significantly from mint/burn rates."],
     question: "What is the difference between minting and buying on Curve?"
   },
   {

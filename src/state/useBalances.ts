@@ -1,4 +1,5 @@
 /* eslint functional/no-try-statements: 0 */
+import { parseEther } from "../utilities";
 import { useAsyncReducer } from "../hooks/useAsyncReducer";
 import { useEffect } from "react";
 import { useWallet } from "./useWallet";
@@ -6,7 +7,7 @@ import { useWallet } from "./useWallet";
 import { AllCoinETH, PrimaryCoin, publicClients, contracts } from "../config/contracts";
 
 export const useBalances = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0] }) => {
-  const [balances, updateBalances] = useAsyncReducer<{ user: Record<AllCoinETH, bigint>; rMGP: { MGP: bigint }; yMGP: { rMGP: bigint }; vMGP: { yMGP: bigint }; curve: Record<PrimaryCoin, bigint> }>(async () => {
+  const [balances, updateBalances] = useAsyncReducer<{ user: Record<AllCoinETH, bigint>; wstMGP: { MGP: bigint }; yMGP: { wstMGP: bigint }; vMGP: { yMGP: bigint }; curve: Record<PrimaryCoin, bigint> }>(async () => {
     const safeBalance = async (fn: () => Promise<bigint>) => {
       try {
         return await fn();
@@ -15,7 +16,7 @@ export const useBalances = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0
       }
     };
 
-    const [userCKP, userEGP, userLTP, userMGP, userPNP, userWETH, userCMGP, userRMGP, userYMGP, userLyMGP, userWrMGP, userVlMGP, userLvMGP, userETH, userVMGP, curveMGP, curveRMGP, curveYMGP, curveVMGP, rMGPMGP, yMGPRMGP, vMGPYMGP] = await Promise.all([
+    const [userCKP, userEGP, userLTP, userMGP, userPNP, userWETH, userCMGP, userRMGP, userYMGP, userLyMGP, userWrMGP, userVlMGP, userLvMGP, userETH, userVMGP, curveMGP, curveRMGP, curveYMGP, curveVMGP, wstMGPMGP, yMGPRMGP, vMGPYMGP] = await Promise.all([
       safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].CKP.read.balanceOf([wallet.account])),
       safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].EGP.read.balanceOf([wallet.account])),
       safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].LTP.read.balanceOf([wallet.account])),
@@ -23,20 +24,21 @@ export const useBalances = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0
       safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].PNP.read.balanceOf([wallet.account])),
       safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].WETH.read.balanceOf([wallet.account])),
       safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].cMGP.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].rMGP.read.balanceOf([wallet.account])),
+      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].wstMGP.read.balanceOf([wallet.account])),
       safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].yMGP.read.balanceOf([wallet.account])),
       safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].wrMGP.read.balanceOf([wallet.account])),
+      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].stMGP.read.balanceOf([wallet.account])),
       safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].vlMGP.read.balanceOf([wallet.account])),
       safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account])),
       safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : publicClients[wallet.chain].getBalance({ address: wallet.account })),
-      safeBalance(() => contracts[wallet.chain].vMGP.read.balanceOf([contracts[wallet.chain].yMGP.address])),
+      // safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].vMGP.read.balanceOf([wallet.account])),
+      Promise.resolve(parseEther(1.5)),
       safeBalance(() => contracts[wallet.chain].MGP.read.balanceOf([contracts[wallet.chain].cMGP.address])),
-      safeBalance(() => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].cMGP.address])),
+      safeBalance(() => contracts[wallet.chain].wstMGP.read.balanceOf([contracts[wallet.chain].cMGP.address])),
       safeBalance(() => contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].cMGP.address])),
       safeBalance(() => contracts[wallet.chain].vMGP.read.balanceOf([contracts[wallet.chain].cMGP.address])),
-      safeBalance(() => contracts[wallet.chain].vlMGP.read.getUserTotalLocked([contracts[wallet.chain].rMGP.address])),
-      safeBalance(() => contracts[wallet.chain].rMGP.read.balanceOf([contracts[wallet.chain].yMGP.address])),
+      safeBalance(() => contracts[wallet.chain].vlMGP.read.getUserTotalLocked([contracts[wallet.chain].wstMGP.address])),
+      safeBalance(() => contracts[wallet.chain].wstMGP.read.balanceOf([contracts[wallet.chain].yMGP.address])),
       safeBalance(() => contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].vMGP.address]))
     ]);
 
@@ -49,10 +51,10 @@ export const useBalances = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0
         PNP: userPNP,
         WETH: userWETH,
         cMGP: userCMGP,
-        rMGP: userRMGP,
+        wstMGP: userRMGP,
         yMGP: userYMGP,
         lyMGP: userLyMGP,
-        wrMGP: userWrMGP,
+        stMGP: userWrMGP,
         vlMGP: userVlMGP,
         lvMGP: userLvMGP,
         ETH: userETH,
@@ -60,26 +62,26 @@ export const useBalances = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0
       },
       curve: {
         MGP: curveMGP,
-        rMGP: curveRMGP,
+        wstMGP: curveRMGP,
         yMGP: curveYMGP,
         vMGP: curveVMGP
       },
-      rMGP: { MGP: rMGPMGP },
-      yMGP: { rMGP: yMGPRMGP },
+      wstMGP: { MGP: wstMGPMGP },
+      yMGP: { wstMGP: yMGPRMGP },
       vMGP: { yMGP: vMGPYMGP }
     };
   }, {
     user: {
-      MGP: 0n, rMGP: 0n, yMGP: 0n, vMGP: 0n,
+      MGP: 0n, wstMGP: 0n, yMGP: 0n, vMGP: 0n,
       vlMGP: 0n, lyMGP: 0n, lvMGP: 0n,
-      wrMGP: 0n, cMGP: 0n,
+      stMGP: 0n, cMGP: 0n,
       CKP: 0n, EGP: 0n, LTP: 0n, PNP: 0n,
       WETH: 0n, ETH: 0n
     },
-    rMGP: { MGP: 0n },
-    yMGP: { rMGP: 0n },
+    wstMGP: { MGP: 0n },
+    yMGP: { wstMGP: 0n },
     vMGP: { yMGP: 0n },
-    curve: { MGP: 0n, rMGP: 0n, yMGP: 0n, vMGP: 0n }
+    curve: { MGP: 0n, wstMGP: 0n, yMGP: 0n, vMGP: 0n }
   });
 
   useEffect(() => {

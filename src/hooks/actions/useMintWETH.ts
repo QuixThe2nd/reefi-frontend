@@ -63,7 +63,7 @@ export const useMintWETH = <Clients extends Record<Chains, WalletClient & Public
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) {
       setConnectRequiredReference.current(true); return;
     }
-    if (allowancesReference.current.rMGP.MGP < sendReference.current) return setErrorReference.current("Allowance too low");
+    if (allowancesReference.current.wstMGP.MGP < sendReference.current) return setErrorReference.current("Allowance too low");
     await writeContractsReference.current[chainReference.current].WETH.write.deposit({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain, value: sendReference.current });
   }, []);
 };

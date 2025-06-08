@@ -49,7 +49,7 @@ export const useWithdrawMGP = <Clients extends Record<Chains, WalletClient & Pub
 
   return useCallback(async (): Promise<void> => {
     if (!clientsReference.current || !writeContractsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
-    await writeContractsReference.current[chainReference.current].rMGP.write.unlock({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
-    await writeContractsReference.current[chainReference.current].rMGP.write.withdraw({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].wstMGP.write.unlock({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
+    await writeContractsReference.current[chainReference.current].wstMGP.write.withdraw({ account: accountReference.current, chain: clientsReference.current[chainReference.current].chain });
   }, []);
 };

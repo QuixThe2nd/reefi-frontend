@@ -75,10 +75,11 @@ const getSpreadColor = (value: number): string => {
   return "text-red-400";
 };
 
-const PegCard = <Label extends string>({ token, spread, targetToken, rates }: {
+const PegCard = <Label extends string>({ token, spread, targetToken, rates, softPeg = false }: {
   token: TradeableCoin;
   targetToken: TradeableCoin;
   spread: number;
+  softPeg?: boolean;
   rates: {
     value: number;
     label: Label;
@@ -96,14 +97,15 @@ const PegCard = <Label extends string>({ token, spread, targetToken, rates }: {
   const healthRates = ratePositions.filter(rate => rate.required !== false).map(r => r.value);
   const [mintPeg] = healthRates as [number];
   const targetPeg = healthRates.at(-1) ?? 0;
+  const adjustedTargetPeg = softPeg ? 1 - (1 - targetPeg) * 2 : targetPeg;
   const middle = healthRates.slice(1, -1);
   const avg = middle.reduce((sum, number) => sum + number, 0) / middle.length;
-  const pegHealth = Number(((avg - targetPeg) / (mintPeg - targetPeg) * 100).toFixed(2));
+  const pegHealth = Number(((avg - adjustedTargetPeg) / (mintPeg - adjustedTargetPeg) * 100).toFixed(2));
 
   const [isHealthy, isWarning] = [pegHealth > 95, pegHealth > 75 && pegHealth <= 95];
 
   const notices: NoticeProperties[] = [];
-  if (spread >= 5) notices.push({ type: "recommendation", title: "Provide Liquidity", message: `The spread is ${spread.toFixed(2)}%.`, action: "Consider supplying liquidity to monetize high spreads", icon: "💧" });
+  if (spread >= 5) notices.push({ type: "recommendation", title: "Provide Liquidity", message: `The spread on the Curve pool is high (${spread.toFixed(2)}%).`, action: "Consider supplying liquidity to monetize high spreads", icon: "💧" });
 
   const sortedRates = [...ratePositions].sort((a, b) => b.value - a.value);
 

@@ -1,11 +1,11 @@
 import { cMGP } from "./CMGP";
 import { erc20Abi } from "viem";
 import { masterMGP } from "./MASTERMGP";
-import { odosRouter } from "./odosRouter";
-import { rMGP } from "./RMGP";
+import { odosRouter } from "./ODOSRouter";
 import { vMGP } from "./VMGP";
 import { vlMGP } from "./VLMGP";
 import { vlRewarder } from "./VLREWARDER";
+import { wstMGP } from "./WSTMGP";
 import { yMGP } from "./YMGP";
 
 import { WETH } from "./WETH";
@@ -20,7 +20,7 @@ export const ABIs = {
   WETH,
   cMGP,
   masterMGP,
-  rMGP,
+  wstMGP,
   vMGP,
   vlMGP,
   vlRewarder,

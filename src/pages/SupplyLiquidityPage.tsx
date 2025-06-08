@@ -20,7 +20,7 @@ interface Properties {
   supplyLiquidity: () => void;
 }
 
-export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance, setLPAmounts, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, supplyLiquidity }: Properties): ReactElement => <Page info='Supply liquidity to the cMGP Curve pool (MGP/rMGP/yMGP). You can supply liquidity at any ratio of MGP:rMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use <a href="https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/" className="text-blue-400">Curve</a>.'>
+export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance, setLPAmounts, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, supplyLiquidity }: Properties): ReactElement => <Page info='Supply liquidity to the cMGP Curve pool (MGP/wstMGP/yMGP). You can supply liquidity at any ratio of MGP:wstMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use <a href="https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/" className="text-blue-400">Curve</a>.'>
   <AmountInput balance={mgpBalance} label="Supply MGP"
     onChange={val => setLPAmounts(a => ({ ...a, MGP: val }))}
     placeholder={((): string => {
@@ -45,8 +45,8 @@ export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance,
 
   <AmountInput
     balance={rmgpBalance}
-    label="Supply rMGP"
-    onChange={val => setLPAmounts(a => ({ ...a, rMGP: val }))}
+    label="Supply wstMGP"
+    onChange={val => setLPAmounts(a => ({ ...a, wstMGP: val }))}
     placeholder={((): string => {
       const rmgpTarget = rmgpCurveBalance === 0n ? 0 : Number(rmgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance);
       const getTotalRecommendedLP = (): number => {
@@ -58,7 +58,7 @@ export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance,
       };
       return formatEther(BigInt(getTotalRecommendedLP() * rmgpTarget / (1 - rmgpTarget))).toString();
     })()}
-    token={{ symbol: "rMGP" }}
+    token={{ symbol: "wstMGP" }}
     value={rmgpLPAmount}
   />
 

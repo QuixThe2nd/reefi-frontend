@@ -11,7 +11,7 @@ interface Properties {
   readonly lymgpBalance: bigint;
 }
 
-const UnlockPageComponent = ({ send, setSendAmount, unlockYMGP, lymgpBalance }: Properties): ReactElement => <Page info={["yMGP can be unlocked instantly. Unlocked yMGP earns the underlying rMGP yield, but forfeits the additional yield."]}>
+const UnlockPageComponent = ({ send, setSendAmount, unlockYMGP, lymgpBalance }: Properties): ReactElement => <Page info={["yMGP can be unlocked instantly. Unlocked yMGP earns the underlying wstMGP yield, but forfeits the additional yield."]}>
   <AmountInput balance={lymgpBalance} label="Get yMGP" onChange={setSendAmount} token={{ symbol: "lyMGP" }} value={send} />
   <Button className="w-full" onClick={unlockYMGP} type="submit">Unlock yMGP</Button>
 </Page>;

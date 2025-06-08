@@ -14,7 +14,7 @@ interface Properties {
   send: bigint;
   allowances: ReturnType<typeof useAllowances>[0];
   chain: Chains;
-  approve: (_tokenOut: "rMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
+  approve: (_tokenOut: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
   mintWETH: () => void;
   swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
   balances: ReturnType<typeof useBalances>[0];
@@ -24,7 +24,7 @@ interface Properties {
 }
 
 export const GetMGPPage = memo(({ balances, mgpAPR, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy }: Properties): ReactElement => <Page info="MGP is Magpie's governance token. All Reefi derivatives are built around MGP.">
-  <SwapToken balances={balances} excludeCoins={["rMGP", "yMGP", "vMGP", "lyMGP", "lvMGP", "wrMGP", "vlMGP", "cMGP"]} originalTokenIn='WETH' tokenOut="MGP" label="Swap" setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} />
+  <SwapToken balances={balances} excludeCoins={["wstMGP", "yMGP", "vMGP", "lyMGP", "lvMGP", "stMGP", "vlMGP", "cMGP"]} originalTokenIn='WETH' tokenOut="MGP" label="Swap" setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} />
   <div className="mt-4 text-sm text-gray-400">
     <div className="mb-1 flex justify-between">
       <span>Original APR</span>

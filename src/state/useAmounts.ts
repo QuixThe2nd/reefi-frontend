@@ -11,7 +11,7 @@ type CurveRates<T extends PropertyKey> = {
 };
 
 export const useAmounts = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0] }) => {
-  const [lp, setLP] = useState<Record<PrimaryCoin, bigint>>({ MGP: 0n, rMGP: 0n, yMGP: 0n, vMGP: 0n });
+  const [lp, setLP] = useState<Record<PrimaryCoin, bigint>>({ MGP: 0n, wstMGP: 0n, yMGP: 0n, vMGP: 0n });
   const [send, setSend] = useState(0n);
 
   const curve = useAsyncMemo<CurveRates<PrimaryCoin>>(async () => {
@@ -44,16 +44,16 @@ export const useAmounts = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0]
       Promise.resolve(send)
     ]);
     return {
-      MGP: { rMGP: mgpRmgp, yMGP: mgpYmgp, vMGP: mgpVmgp },
-      rMGP: { MGP: rmgpMgp, yMGP: rmgpYmgp, vMGP: rmgpVmgp },
-      yMGP: { MGP: ymgpMgp, rMGP: ymgpRmgp, vMGP: ymgpVmgp },
-      vMGP: { MGP: vmgpMgp, rMGP: vmgpRmgp, yMGP: vmgpYmgp }
+      MGP: { wstMGP: mgpRmgp, yMGP: mgpYmgp, vMGP: mgpVmgp },
+      wstMGP: { MGP: rmgpMgp, yMGP: rmgpYmgp, vMGP: rmgpVmgp },
+      yMGP: { MGP: ymgpMgp, wstMGP: ymgpRmgp, vMGP: ymgpVmgp },
+      vMGP: { MGP: vmgpMgp, wstMGP: vmgpRmgp, yMGP: vmgpYmgp }
     };
   }, [wallet.chain, send], {
-    MGP: { rMGP: 0n, yMGP: 0n, vMGP: 0n },
-    rMGP: { MGP: 0n, yMGP: 0n, vMGP: 0n },
-    yMGP: { MGP: 0n, rMGP: 0n, vMGP: 0n },
-    vMGP: { MGP: 0n, rMGP: 0n, yMGP: 0n }
+    MGP: { wstMGP: 0n, yMGP: 0n, vMGP: 0n },
+    wstMGP: { MGP: 0n, yMGP: 0n, vMGP: 0n },
+    yMGP: { MGP: 0n, wstMGP: 0n, vMGP: 0n },
+    vMGP: { MGP: 0n, wstMGP: 0n, yMGP: 0n }
   });
 
   return [{ lp, curve, send }, { setSend, setLP }] as const;

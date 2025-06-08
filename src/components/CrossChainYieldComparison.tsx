@@ -66,13 +66,13 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
 
   // Fetch locked amounts for calculating locked yMGP yields
   const [bscLockedAmounts] = useCachedUpdateable(async () => {
-    const reefiMGP = await contracts[56].vlMGP.read.getUserTotalLocked([contracts[56].rMGP.address]);
+    const reefiMGP = await contracts[56].vlMGP.read.getUserTotalLocked([contracts[56].wstMGP.address]);
     const lockedYMGP = await contracts[56].yMGP.read.totalLocked();
     return { lockedYMGP, reefiMGP };
   }, [], "BSC Locked Amounts", { lockedYMGP: 0n, reefiMGP: 0n });
 
   const [arbLockedAmounts] = useCachedUpdateable(async () => {
-    const reefiMGP = await contracts[42_161].vlMGP.read.getUserTotalLocked([contracts[42_161].rMGP.address]);
+    const reefiMGP = await contracts[42_161].vlMGP.read.getUserTotalLocked([contracts[42_161].wstMGP.address]);
     const lockedYMGP = await contracts[42_161].yMGP.read.totalLocked();
     return { lockedYMGP, reefiMGP };
   }, [], "ARB Locked Amounts", { lockedYMGP: 0n, reefiMGP: 0n });
@@ -109,24 +109,24 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
   const otherLockedYMGPEffective = otherChainLockedAPY * otherChainRates.mgpToYmgp;
 
   // Find the best opportunities
-  const rMGPDifference = otherRMGPEffective - currentRMGPEffective;
+  const wstMGPDifference = otherRMGPEffective - currentRMGPEffective;
   const yMGPDifference = otherYMGPEffective - currentYMGPEffective;
   const lockedYMGPDifference = otherLockedYMGPEffective - currentLockedYMGPEffective;
 
   // Determine which tokens are better where
-  const rMGPBetterElsewhere = rMGPDifference > 0.005;
+  const wstMGPBetterElsewhere = wstMGPDifference > 0.005;
   const yMGPBetterElsewhere = yMGPDifference > 0.005;
   const lockedYMGPBetterElsewhere = lockedYMGPDifference > 0.005;
 
-  const rMGPBetterHere = rMGPDifference < -0.005;
+  const wstMGPBetterHere = wstMGPDifference < -0.005;
   const yMGPBetterHere = yMGPDifference < -0.005;
   const lockedYMGPBetterHere = lockedYMGPDifference < -0.005;
 
-  const tokensToOptimize = [rMGPBetterElsewhere, yMGPBetterElsewhere, lockedYMGPBetterElsewhere].filter(Boolean).length;
-  const tokensAlreadyOptimal = [rMGPBetterHere, yMGPBetterHere, lockedYMGPBetterHere].filter(Boolean).length;
+  const tokensToOptimize = [wstMGPBetterElsewhere, yMGPBetterElsewhere, lockedYMGPBetterElsewhere].filter(Boolean).length;
+  const tokensAlreadyOptimal = [wstMGPBetterHere, yMGPBetterHere, lockedYMGPBetterHere].filter(Boolean).length;
 
-  const maxDifference = Math.max(Math.abs(rMGPDifference), Math.abs(yMGPDifference), Math.abs(lockedYMGPDifference));
-  const maxPercentageDiff = Math.max(Math.abs(rMGPDifference / currentRMGPEffective * 100), Math.abs(yMGPDifference / currentYMGPEffective * 100), Math.abs(lockedYMGPDifference / currentLockedYMGPEffective * 100));
+  const maxDifference = Math.max(Math.abs(wstMGPDifference), Math.abs(yMGPDifference), Math.abs(lockedYMGPDifference));
+  const maxPercentageDiff = Math.max(Math.abs(wstMGPDifference / currentRMGPEffective * 100), Math.abs(yMGPDifference / currentYMGPEffective * 100), Math.abs(lockedYMGPDifference / currentLockedYMGPEffective * 100));
 
   // Only show if there's a meaningful difference (>0.5% absolute or >5% relative)
   if (maxDifference < 0.005 && maxPercentageDiff < 5) return undefined;
@@ -143,32 +143,32 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
       </div>
 
       <div className="grid grid-cols-1 gap-4 text-sm lg:grid-cols-3">
-        {/* rMGP Comparison */}
+        {/* wstMGP Comparison */}
         <div className="rounded-lg border border-green-600/30 bg-green-900/10 p-3">
-          <h4 className="mb-2 font-medium text-green-400">rMGP (Auto-Compound)</h4>
+          <h4 className="mb-2 font-medium text-green-400">wstMGP (Auto-Compound)</h4>
           <div className="space-y-1">
             <div className="flex justify-between">
               <span className="text-gray-400">{chain === 56 ? "BNB" : "ARB"}:</span>
               <div className="text-right">
                 <div className="font-medium">{(currentRMGPEffective * 100).toFixed(2)}%</div>
-                <div className="text-xs text-gray-500">{currentChainRates.mgpToRmgp.toFixed(3)} rMGP per MGP</div>
+                <div className="text-xs text-gray-500">{currentChainRates.mgpToRmgp.toFixed(3)} wstMGP per MGP</div>
               </div>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">{otherChainName}:</span>
               <div className="text-right">
-                <div className={`font-medium ${rMGPDifference > 0 ? "text-yellow-400" : "text-gray-300"}`}>
+                <div className={`font-medium ${wstMGPDifference > 0 ? "text-yellow-400" : "text-gray-300"}`}>
                   {(otherRMGPEffective * 100).toFixed(2)}%
                 </div>
-                <div className="text-xs text-gray-500">{otherChainRates.mgpToRmgp.toFixed(3)} rMGP per MGP</div>
+                <div className="text-xs text-gray-500">{otherChainRates.mgpToRmgp.toFixed(3)} wstMGP per MGP</div>
               </div>
             </div>
-            {Math.abs(rMGPDifference) > 0.005 &&
+            {Math.abs(wstMGPDifference) > 0.005 &&
               <div className="border-t border-gray-700 pt-1 text-xs">
-                <span className={rMGPDifference > 0 ? "text-yellow-300" : "text-green-300"}>
-                  {rMGPDifference > 0 ? "📈 " : "🏆 "}
-                  {rMGPDifference > 0 ? "Get " : "Earn "}{Math.abs(rMGPDifference * 100).toFixed(2)}% more yield per MGP
-                  {rMGPDifference > 0 ? ` on ${otherChainName}` : " here"}
+                <span className={wstMGPDifference > 0 ? "text-yellow-300" : "text-green-300"}>
+                  {wstMGPDifference > 0 ? "📈 " : "🏆 "}
+                  {wstMGPDifference > 0 ? "Get " : "Earn "}{Math.abs(wstMGPDifference * 100).toFixed(2)}% more yield per MGP
+                  {wstMGPDifference > 0 ? ` on ${otherChainName}` : " here"}
                 </span>
               </div>
             }
@@ -249,7 +249,7 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
             <div>
               <p className="mb-1 font-medium text-orange-300">Better on {otherChainName}:</p>
               <div className="space-y-1">
-                {rMGPBetterElsewhere && <div>• rMGP: +{(rMGPDifference * 100).toFixed(2)}% yield ({otherChainRates.mgpToRmgp.toFixed(3)} vs {currentChainRates.mgpToRmgp.toFixed(3)} per MGP)</div>}
+                {wstMGPBetterElsewhere && <div>• wstMGP: +{(wstMGPDifference * 100).toFixed(2)}% yield ({otherChainRates.mgpToRmgp.toFixed(3)} vs {currentChainRates.mgpToRmgp.toFixed(3)} per MGP)</div>}
                 {yMGPBetterElsewhere && <div>• yMGP: +{(yMGPDifference * 100).toFixed(2)}% yield ({otherChainRates.mgpToYmgp.toFixed(3)} vs {currentChainRates.mgpToYmgp.toFixed(3)} per MGP)</div>}
                 {lockedYMGPBetterElsewhere && <div>• Locked yMGP: +{(lockedYMGPDifference * 100).toFixed(2)}% yield ({(otherChainLockedBoost * 100).toFixed(1)}% vs {(currentChainLockedBoost * 100).toFixed(1)}% boost)</div>}
               </div>
@@ -257,7 +257,7 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
             <div>
               <p className="mb-1 font-medium text-green-300">Better here ({chain === 56 ? "BNB Chain" : "Arbitrum"}):</p>
               <div className="space-y-1">
-                {rMGPBetterHere && <div>• rMGP: +{(Math.abs(rMGPDifference) * 100).toFixed(2)}% yield ({currentChainRates.mgpToRmgp.toFixed(3)} vs {otherChainRates.mgpToRmgp.toFixed(3)} per MGP)</div>}
+                {wstMGPBetterHere && <div>• wstMGP: +{(Math.abs(wstMGPDifference) * 100).toFixed(2)}% yield ({currentChainRates.mgpToRmgp.toFixed(3)} vs {otherChainRates.mgpToRmgp.toFixed(3)} per MGP)</div>}
                 {yMGPBetterHere && <div>• yMGP: +{(Math.abs(yMGPDifference) * 100).toFixed(2)}% yield ({currentChainRates.mgpToYmgp.toFixed(3)} vs {otherChainRates.mgpToYmgp.toFixed(3)} per MGP)</div>}
                 {lockedYMGPBetterHere && <div>• Locked yMGP: +{(Math.abs(lockedYMGPDifference) * 100).toFixed(2)}% yield ({(currentChainLockedBoost * 100).toFixed(1)}% vs {(otherChainLockedBoost * 100).toFixed(1)}% boost)</div>}
               </div>
@@ -273,10 +273,10 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
         <div className="mt-3 rounded-lg bg-yellow-800/30 p-3">
           <p className="mb-2 text-sm font-medium text-yellow-200">💡 You can get better returns on {otherChainName}:</p>
           <div className="space-y-1 text-xs">
-            {rMGPBetterElsewhere &&
+            {wstMGPBetterElsewhere &&
               <div className="flex justify-between">
-                <span>• rMGP: Get {otherChainRates.mgpToRmgp.toFixed(3)} vs {currentChainRates.mgpToRmgp.toFixed(3)} tokens per MGP</span>
-                <span className="text-yellow-300">+{(rMGPDifference * 100).toFixed(2)}% annual yield</span>
+                <span>• wstMGP: Get {otherChainRates.mgpToRmgp.toFixed(3)} vs {currentChainRates.mgpToRmgp.toFixed(3)} tokens per MGP</span>
+                <span className="text-yellow-300">+{(wstMGPDifference * 100).toFixed(2)}% annual yield</span>
               </div>
             }
             {yMGPBetterElsewhere &&
@@ -305,7 +305,7 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
         <div className="mt-3 rounded-lg bg-green-800/30 p-3">
           <p className="mb-2 text-sm font-medium text-green-200">✅ You're maximizing your MGP returns here!</p>
           <div className="space-y-1 text-xs text-green-300">
-            {Math.abs(rMGPDifference) > 0.005 && <div>• rMGP: Earning {(Math.abs(rMGPDifference) * 100).toFixed(2)}% more than {otherChainName} ({currentChainRates.mgpToRmgp.toFixed(3)} vs {otherChainRates.mgpToRmgp.toFixed(3)} tokens per MGP)</div>}
+            {Math.abs(wstMGPDifference) > 0.005 && <div>• wstMGP: Earning {(Math.abs(wstMGPDifference) * 100).toFixed(2)}% more than {otherChainName} ({currentChainRates.mgpToRmgp.toFixed(3)} vs {otherChainRates.mgpToRmgp.toFixed(3)} tokens per MGP)</div>}
             {Math.abs(yMGPDifference) > 0.005 && <div>• yMGP: Earning {(Math.abs(yMGPDifference) * 100).toFixed(2)}% more than {otherChainName} ({currentChainRates.mgpToYmgp.toFixed(3)} vs {otherChainRates.mgpToYmgp.toFixed(3)} tokens per MGP)</div>}
             {Math.abs(lockedYMGPDifference) > 0.005 && <div>• Locked yMGP: Earning {(Math.abs(lockedYMGPDifference) * 100).toFixed(2)}% more than {otherChainName} ({(currentChainLockedBoost * 100).toFixed(1)}% vs {(otherChainLockedBoost * 100).toFixed(1)}% boost)</div>}
           </div>

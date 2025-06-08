@@ -17,10 +17,10 @@ interface Props {
 }
 
 export const useCurveBuy = ({ clients, account, writeContracts, setConnectRequired, allowances, send, setError, chain }: Props) => useCallback(async (tokenIn: PrimaryCoin, tokenOut: PrimaryCoin) => {
-  const curveIndex = { MGP: 0n, rMGP: 1n, yMGP: 2n, vMGP: 3n } as const;
+  const curveIndex = { MGP: 0n, wstMGP: 1n, yMGP: 2n, vMGP: 3n } as const;
   const indexIn = curveIndex[tokenIn];
   const indexOut = curveIndex[tokenOut];
   if (!clients || !writeContracts || account === undefined) return setConnectRequired(true);
-  if (allowances.cMGP.rMGP < send) return setError("Allowance too low");
+  if (allowances.cMGP.wstMGP < send) return setError("Allowance too low");
   await writeContracts[chain].cMGP.write.exchange([indexIn, indexOut, send, 0n], { account, chain: clients[chain].chain });
-}, [account, allowances.cMGP.rMGP, chain, clients, send, setConnectRequired, setError, writeContracts]);
+}, [account, allowances.cMGP.wstMGP, chain, clients, send, setConnectRequired, setError, writeContracts]);

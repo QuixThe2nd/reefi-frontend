@@ -19,6 +19,6 @@ interface Properties<Clients extends Record<Chains, WalletClient & PublicActions
 
 export const useDepositMGP = <Clients extends Record<Chains, WalletClient & PublicActions> | undefined>({ account, allowances, chain, clients, send, setConnectRequired, setError, writeContracts }: Properties<Clients>) => useCallback(async (): Promise<void> => {
   if (!clients || !writeContracts || account === undefined) return setConnectRequired(true);
-  if (allowances.rMGP.MGP < send) return setError("Allowance too low");
-  await writeContracts[chain].rMGP.write.deposit([send], { account, chain: clients[chain].chain });
+  if (allowances.wstMGP.MGP < send) return setError("Allowance too low");
+  await writeContracts[chain].wstMGP.write.deposit([send], { account, chain: clients[chain].chain });
 }, [account, allowances, chain, clients, send, setConnectRequired, setError, writeContracts]);

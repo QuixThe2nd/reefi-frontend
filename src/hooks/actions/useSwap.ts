@@ -1,9 +1,44 @@
+import { formatEther } from "../../utilities";
 import { useAllowances } from "../../state/useAllowances";
 import { useCallback, useEffect, useRef } from "react";
+import { z } from "zod";
 
 import { Chains } from "../../config/contracts";
 
 import type { PublicActions, WalletClient } from "viem";
+
+const QuoteRequestSchema = z.object({
+  chainId: z.number(),
+  compact: z.boolean(),
+  disableRFQs: z.boolean(),
+  inputTokens: z.array(z.object({
+    amount: z.string().regex(/^-?\d+(\.\d+)?$/, "Must be a number string"),
+    tokenAddress: z.string()
+  })),
+  outputTokens: z.array(z.object({
+    proportion: z.number(),
+    tokenAddress: z.string()
+  })),
+  referralCode: z.number(),
+  slippageLimitPercent: z.number(),
+  userAddr: z.string()
+});
+
+const QuoteResponseSchema = z.object({
+  pathId: z.string()
+});
+
+const AssembleRequestSchema = z.object({
+  pathId: z.string(),
+  simulate: z.boolean(),
+  userAddr: z.string()
+});
+
+const AssembleResponseSchema = z.object({
+  transaction: z.object({
+    gas: z.number()
+  })
+});
 
 interface Properties<Clients extends Record<Chains, WalletClient & PublicActions> | undefined> {
   account: `0x${string}` | undefined;
@@ -59,32 +94,28 @@ export const useSwap = <Clients extends Record<Chains, WalletClient & PublicActi
   }, [setNotification]);
 
   return useCallback(async (tokenIn: `0x${string}`, tokenOut: `0x${string}`): Promise<void> => {
-    if (!clientsReference.current || accountReference.current === undefined) {
-      setConnectRequiredReference.current(true); return;
-    }
-    if (allowancesReference.current.cMGP.MGP < sendReference.current) {
-      setErrorReference.current("Allowance too low"); return;
-    }
+    if (!clientsReference.current || accountReference.current === undefined) return setConnectRequiredReference.current(true);
+    if (allowancesReference.current.cMGP.MGP < sendReference.current) return setErrorReference.current("Allowance too low");
 
     setNotificationReference.current("Fetching swap route");
-    const quoteRequestBody = {
+    const quoteRequestBody = QuoteRequestSchema.parse({
       chainId: chainReference.current,
       compact: true,
       disableRFQs: true,
-      inputTokens: [{ amount: sendReference.current, tokenAddress: tokenIn }],
+      inputTokens: [{ amount: Number(sendReference.current).toString(), tokenAddress: tokenIn }],
       outputTokens: [{ proportion: 1, tokenAddress: tokenOut }],
       referralCode: 0,
       slippageLimitPercent: 5,
       userAddr: accountReference.current
-    };
+    });
     const response = await fetch("https://api.odos.xyz/sor/quote/v2", { body: JSON.stringify(quoteRequestBody), headers: { "Content-Type": "application/json" }, method: "POST" });
-    if (!response.ok) {
-      setError("Failed to find route"); return;
-    }
+    if (!response.ok) return setError("Failed to find route");
+
     setNotificationReference.current("Assembling transaction");
-    const assembleRequestBody = { pathId: (await response.json() as { pathId: string }).pathId, simulate: false, userAddr: accountReference.current };
+    const quoteResponse = QuoteResponseSchema.parse(await response.json());
+    const assembleRequestBody = AssembleRequestSchema.parse({ pathId: quoteResponse.pathId, simulate: false, userAddr: accountReference.current });
     const response2 = await fetch("https://api.odos.xyz/sor/assemble", { body: JSON.stringify(assembleRequestBody), headers: { "Content-Type": "application/json" }, method: "POST" });
-    const { transaction } = await response2.json() as { transaction: { gas: number } };
-    await clientsReference.current[chainReference.current].sendTransaction({ ...transaction, account: accountReference.current, chain: undefined, gas: BigInt(Math.max(transaction.gas, 0)) });
+    const assembleResponse = AssembleResponseSchema.parse(await response2.json());
+    await clientsReference.current[chainReference.current].sendTransaction({ ...assembleResponse.transaction, account: accountReference.current, chain: undefined, gas: BigInt(Math.max(assembleResponse.transaction.gas, 0)) });
   }, []);
 };

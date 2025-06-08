@@ -19,16 +19,22 @@ export const useExchangeRates = ({ wallet }: { wallet: ReturnType<typeof useWall
     const [mgpRMGP, mgpYMGP, mgpVMGP, rmgpMGP, rmgpYMGP, rmgpVMGP, ymgpMGP, ymgpRMGP, ymgpVMGP, vmgpMGP, vmgpRMGP, vmgpYMGP] = await Promise.all([
       safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
       safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
-      safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 3n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
+      // safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([0n, 3n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
+      Promise.resolve(0.8),
       safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
       safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
-      safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 3n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
+      // safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([1n, 3n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
+      Promise.resolve(1.3),
       safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
       safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
-      safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 3n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
-      safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([3n, 0n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
-      safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([3n, 1n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
-      safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([3n, 2n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)))
+      Promise.resolve(1.1),
+      // safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([2n, 3n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
+      Promise.resolve(1.2),
+      // safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([3n, 0n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
+      Promise.resolve(0.7),
+      // safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([3n, 1n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5))),
+      Promise.resolve(0.85)
+      // safeRate(async () => Number(await contracts[wallet.chain].cMGP.read.get_dy([3n, 2n, parseEther(0.5)], { account: wallet.account })) / Number(parseEther(0.5)))
     ]);
     return { mgpRMGP, mgpYMGP, mgpVMGP, rmgpMGP, rmgpYMGP, rmgpVMGP, ymgpMGP, ymgpRMGP, ymgpVMGP, vmgpMGP, vmgpRMGP, vmgpYMGP };
   }, { mgpRMGP: 0, mgpYMGP: 0, mgpVMGP: 0, rmgpMGP: 0, rmgpYMGP: 0, rmgpVMGP: 0, ymgpMGP: 0, ymgpRMGP: 0, ymgpVMGP: 0, vmgpMGP: 0, vmgpRMGP: 0, vmgpYMGP: 0 });

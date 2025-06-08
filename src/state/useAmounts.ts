@@ -27,21 +27,21 @@ export const useAmounts = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0]
       safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, send], { account: wallet.account })),
       safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, send], { account: wallet.account })),
       // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([0n, 3n, send], { account: wallet.account })),
-      Promise.resolve(0n),
+      Promise.resolve(send),
       safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, send], { account: wallet.account })),
       safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, send], { account: wallet.account })),
       // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([1n, 3n, send], { account: wallet.account })),
-      Promise.resolve(0n),
+      Promise.resolve(send),
       safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, send], { account: wallet.account })),
       safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, send], { account: wallet.account })),
       // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([2n, 3n, send], { account: wallet.account })),
-      Promise.resolve(0n),
+      Promise.resolve(send),
       // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([3n, 0n, send], { account: wallet.account })),
-      Promise.resolve(0n),
+      Promise.resolve(send),
       // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([3n, 1n, send], { account: wallet.account })),
-      Promise.resolve(0n),
+      Promise.resolve(send),
       // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([3n, 2n, send], { account: wallet.account }))
-      Promise.resolve(0n)
+      Promise.resolve(send)
     ]);
     return {
       MGP: { rMGP: mgpRmgp, yMGP: mgpYmgp, vMGP: mgpVmgp },

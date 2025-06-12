@@ -1,45 +1,51 @@
+import { decimals, type Chains, type CoreCoin, type PrimaryCoin, type TransferrableCoin } from "../config/contracts";
 import { formatEther, formatTime } from "../utilities";
 import { memo, type ReactElement } from "react";
-import { useAllowances } from "../state/useAllowances";
-import { useAmounts } from "../state/useAmounts";
-import { useBalances } from "../state/useBalances";
-import { useSupplies } from "../state/useSupplies";
-import { useWithdraws } from "../state/useWithdraws";
+import { useWriteContract, type UseSendTransactionReturnType, type UseWriteContractReturnType } from "wagmi";
 
-import { Chains, decimals, AllCoin, CoreCoin, PrimaryCoin } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 
+import type { useAllowances } from "../state/useAllowances";
+import type { useAmounts } from "../state/useAmounts";
+import type { useBalances } from "../state/useBalances";
+import type { useSupplies } from "../state/useSupplies";
+import type { useWithdraws } from "../state/useWithdraws";
+import type { wagmiConfig } from "..";
+
 interface Properties {
-  withdrawMGP: () => void;
-  unlockSchedule: ReturnType<typeof useWithdraws>[0]["reefi"]["unlockSchedule"];
-  userPendingWithdraws: ReturnType<typeof useWithdraws>[0]["user"]["pending"];
-  userWithdrawable: ReturnType<typeof useWithdraws>[0]["user"]["ready"];
-  balances: ReturnType<typeof useBalances>[0];
-  setSend: (_send: bigint) => void;
-  send: bigint;
-  allowances: ReturnType<typeof useAllowances>[0];
-  chain: Chains;
-  approve: (_tokenOut: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
-  mintWETH: () => void;
-  swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
-  curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
-  nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
-  curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
-  supplies: ReturnType<typeof useSupplies>[0];
+  readonly withdrawMGP: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly unlockSchedule: ReturnType<typeof useWithdraws>["reefi"]["unlockSchedule"];
+  readonly userPendingWithdraws: ReturnType<typeof useWithdraws>["user"]["pending"];
+  readonly userWithdrawable: ReturnType<typeof useWithdraws>["user"]["ready"];
+  readonly balances: ReturnType<typeof useBalances>;
+  readonly setSend: (_send: bigint) => void;
+  readonly send: bigint;
+  readonly allowances: ReturnType<typeof useAllowances>;
+  readonly chain: Chains;
+  readonly approve: (_coin: TransferrableCoin, _spender: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _infinity: boolean, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly mintWETH: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`, _sendTransaction: UseSendTransactionReturnType<typeof wagmiConfig>["sendTransaction"]) => void;
+  readonly curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
+  readonly supplies: ReturnType<typeof useSupplies>;
 }
 
-export const RedeemYMGPPage = memo(({ withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => <Page info={["yMGP can be redeemed for 75% of it's underlying wstMGP instantly or swapped at market rate via Curve.", "60% of the withdraw fee (15% of withdraw) is distributed to yMGP lockers with 40% of the fee (10% total) sent to the treasury."]}>
-  <SwapToken excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "ETH", "cMGP", "vMGP", "lyMGP", "lvMGP", "vlMGP", "stMGP", "MGP"]} label="Redeem" originalTokenIn="yMGP" tokenOut="stMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
-  {userPendingWithdraws > 0n ? <>
-    <h3 className="mt-4 text-base font-medium">Pending Withdraws</h3>
-    <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
-    {unlockSchedule[0] ? <p> Unlock available in: {formatTime(Number(unlockSchedule[0].endTime) - Date.now() / 1000)} to {formatTime(Number(unlockSchedule.at(-1)?.endTime) + 60 * 60 * 24 * 60 - Date.now() / 1000)}</p> : <p>N/A</p>}
-  </> : ""}
-  {userWithdrawable > 0n ? <>
-    <h3 className="mt-4 text-base font-medium">Available To Withdraw</h3>
-    <p>{formatEther(userWithdrawable, decimals.MGP)} MGP</p>
-    <button className="h-min w-full rounded-lg bg-green-600 py-2 transition-colors hover:bg-green-700" onClick={withdrawMGP} type="submit">Withdraw MGP</button>
-  </> : ""}
-</Page>);
+export const RedeemYMGPPage = memo(({ withdrawMGP, unlockSchedule, userPendingWithdraws, userWithdrawable, balances, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => {
+  const { writeContract } = useWriteContract();
+  return <Page info={[<span key="redeem_options">yMGP can be redeemed for 75% of it&apos;s underlying wstMGP instantly or swapped at market rate via Curve.</span>, <span key="withdraw_fee">60% of the withdraw fee (15% of withdraw) is distributed to yMGP lockers with 40% of the fee (10% total) sent to the treasury.</span>]}>
+    <SwapToken allowances={allowances} approve={approve} balances={balances} chain={chain} curveAmounts={curveAmounts} curveBuy={curveBuy} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "ETH", "cMGP", "vMGP", "lyMGP", "lvMGP", "vlMGP", "stMGP", "MGP"]} label="Redeem" mintWETH={mintWETH} nativeSwap={nativeSwap} originalTokenIn="yMGP" send={send} setSend={setSend} supplies={supplies} swap={swap} tokenOut="stMGP" />
+    {userPendingWithdraws > 0n ? <>
+      <h3 className="mt-4 text-base font-medium">Pending Withdraws</h3>
+      <p>{formatEther(userPendingWithdraws, decimals.MGP)} MGP</p>
+      {unlockSchedule[0] ? <p>Unlock available in: {formatTime(Number(unlockSchedule[0].endTime) - Date.now() / 1000)} to {formatTime(Number(unlockSchedule.at(-1)?.endTime) + 60 * 60 * 24 * 60 - Date.now() / 1000)}</p> : <p>N/A</p>}
+    </> : ""}
+    {userWithdrawable > 0n ? <>
+      <h3 className="mt-4 text-base font-medium">Available To Withdraw</h3>
+      <p>{formatEther(userWithdrawable, decimals.MGP)} MGP</p>
+      <button className="h-min w-full rounded-lg bg-green-600 py-2 transition-colors hover:bg-green-700" onClick={() => withdrawMGP(writeContract)} type="submit">Withdraw MGP</button>
+    </> : ""}
+  </Page>;
+});
 RedeemYMGPPage.displayName = "RedeemYMGPPage";

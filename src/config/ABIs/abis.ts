@@ -10,19 +10,6 @@ import { yMGP } from "./YMGP";
 
 import { WETH } from "./WETH";
 
-export const ABIs = {
-  CKP: erc20Abi,
-  EGP: erc20Abi,
-  LTP: erc20Abi,
-  MGP: erc20Abi,
-  odosRouter,
-  PNP: erc20Abi,
-  WETH,
-  cMGP,
-  masterMGP,
-  wstMGP,
-  vMGP,
-  vlMGP,
-  vlRewarder,
-  yMGP
-} as const;
+export const ABIs = { CKP: erc20Abi, EGP: erc20Abi, LTP: erc20Abi, MGP: erc20Abi, PNP: erc20Abi,
+  odosRouter, WETH, cMGP, masterMGP, wstMGP, vMGP, vlMGP, vlRewarder, yMGP,
+  stMGP: erc20Abi } as const;

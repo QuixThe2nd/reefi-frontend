@@ -1,33 +1,35 @@
 import { aprToApy } from "../utilities";
 import { memo, type ReactElement } from "react";
-import { useAllowances } from "../state/useAllowances";
-import { useAmounts } from "../state/useAmounts";
-import { useBalances } from "../state/useBalances";
-import { useSupplies } from "../state/useSupplies";
 
 import { Page } from "../components/Page";
-import { PrimaryCoin, AllCoinETH, Chains, CoreCoin } from "../config/contracts";
 import { SwapToken } from "../components/SwapToken";
 
+import type { PrimaryCoin, Chains, CoreCoin, TransferrableCoin } from "../config/contracts";
+import type { UseSendTransactionReturnType, UseWriteContractReturnType } from "wagmi";
+import type { useAllowances } from "../state/useAllowances";
+import type { useAmounts } from "../state/useAmounts";
+import type { useBalances } from "../state/useBalances";
+import type { useSupplies } from "../state/useSupplies";
+import type { wagmiConfig } from "..";
+
 interface Properties {
-  mgpAPR: number;
-  send: bigint;
-  chain: Chains;
-  balances: ReturnType<typeof useBalances>[0];
-  allowances: ReturnType<typeof useAllowances>[0];
-  curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
-  supplies: ReturnType<typeof useSupplies>[0];
-  depositMGP: () => void;
-  setSend: (_send: bigint) => void;
-  curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
-  nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
-  approve: (_tokenOut: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoinETH, _infinity: boolean) => void;
-  mintWETH: () => void;
-  swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
+  readonly mgpAPR: number;
+  readonly send: bigint;
+  readonly chain: Chains;
+  readonly balances: ReturnType<typeof useBalances>;
+  readonly allowances: ReturnType<typeof useAllowances>;
+  readonly curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
+  readonly supplies: ReturnType<typeof useSupplies>;
+  readonly setSend: (_send: bigint) => void;
+  readonly curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly approve: (_coin: TransferrableCoin, _spender: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _infinity: boolean, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly mintWETH: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`, _sendTransaction: UseSendTransactionReturnType<typeof wagmiConfig>["sendTransaction"]) => void;
 }
 
-export const GetRMGPPage = memo(({ mgpAPR, balances, setSend, send, allowances, chain, curveBuy, nativeSwap, approve, mintWETH, swap, curveAmounts, supplies }: Properties): ReactElement => <Page info="MGP can be converted to wstMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.">
-  <SwapToken label="Mint" originalTokenIn="MGP" tokenOut="wstMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} excludeCoins={["CKP", "PNP", "EGP", "LTP", "lvMGP", "lyMGP", "vlMGP", "WETH", "ETH", "cMGP", "stMGP", "vMGP", "yMGP"]} curveBuy={curveBuy} nativeSwap={nativeSwap} curveAmounts={curveAmounts} supplies={supplies} />
+export const GetRMGPPage = memo(({ mgpAPR, balances, setSend, send, allowances, chain, curveBuy, nativeSwap, approve, mintWETH, swap, curveAmounts, supplies }: Properties): ReactElement => <Page info={<span>MGP can be converted to wstMGP to earn auto compounded yield. Yield is accrued from vlMGP SubDAO Rewards.</span>}>
+  <SwapToken allowances={allowances} approve={approve} balances={balances} chain={chain} curveAmounts={curveAmounts} curveBuy={curveBuy} excludeCoins={["CKP", "PNP", "EGP", "LTP", "lvMGP", "lyMGP", "vlMGP", "WETH", "ETH", "cMGP", "stMGP", "vMGP", "yMGP"]} label="Mint" mintWETH={mintWETH} nativeSwap={nativeSwap} originalTokenIn="MGP" send={send} setSend={setSend} supplies={supplies} swap={swap} tokenOut="wstMGP" />
   <div className="mt-4 text-sm text-gray-400">
     <div className="mb-1 flex justify-between">
       <span>Original APR</span>

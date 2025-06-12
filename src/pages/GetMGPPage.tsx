@@ -1,30 +1,33 @@
 import { memo, type ReactElement } from "react";
-import { useAllowances } from "../state/useAllowances";
-import { useAmounts } from "../state/useAmounts";
-import { useBalances } from "../state/useBalances";
-import { useSupplies } from "../state/useSupplies";
 
-import { Chains, AllCoin, PrimaryCoin } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 
+import type { Chains, PrimaryCoin, TransferrableCoin } from "../config/contracts";
+import type { UseSendTransactionReturnType, UseWriteContractReturnType } from "wagmi";
+import type { useAllowances } from "../state/useAllowances";
+import type { useAmounts } from "../state/useAmounts";
+import type { useBalances } from "../state/useBalances";
+import type { useSupplies } from "../state/useSupplies";
+import type { wagmiConfig } from "..";
+
 interface Properties {
-  mgpAPR: number;
-  setSend: (_send: bigint) => void;
-  send: bigint;
-  allowances: ReturnType<typeof useAllowances>[0];
-  chain: Chains;
-  approve: (_tokenOut: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
-  mintWETH: () => void;
-  swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
-  balances: ReturnType<typeof useBalances>[0];
-  curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
-  curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
-  supplies: ReturnType<typeof useSupplies>[0];
+  readonly mgpAPR: number;
+  readonly setSend: (_send: bigint) => void;
+  readonly send: bigint;
+  readonly allowances: ReturnType<typeof useAllowances>;
+  readonly chain: Chains;
+  readonly approve: (_coin: TransferrableCoin, _spender: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _infinity: boolean, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly mintWETH: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`, _sendTransaction: UseSendTransactionReturnType<typeof wagmiConfig>["sendTransaction"]) => void;
+  readonly balances: ReturnType<typeof useBalances>;
+  readonly curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
+  readonly supplies: ReturnType<typeof useSupplies>;
 }
 
-export const GetMGPPage = memo(({ balances, mgpAPR, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy }: Properties): ReactElement => <Page info="MGP is Magpie's governance token. All Reefi derivatives are built around MGP.">
-  <SwapToken balances={balances} excludeCoins={["wstMGP", "yMGP", "vMGP", "lyMGP", "lvMGP", "stMGP", "vlMGP", "cMGP"]} originalTokenIn='WETH' tokenOut="MGP" label="Swap" setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} />
+export const GetMGPPage = memo(({ balances, mgpAPR, setSend, send, allowances, chain, approve, mintWETH, swap, curveAmounts, supplies, curveBuy }: Properties): ReactElement => <Page info={<span>MGP is Magpie&apos;s governance token. All Reefi derivatives are built around MGP.</span>}>
+  <SwapToken allowances={allowances} approve={approve} balances={balances} chain={chain} curveAmounts={curveAmounts} curveBuy={curveBuy} excludeCoins={["wstMGP", "yMGP", "vMGP", "lyMGP", "lvMGP", "stMGP", "vlMGP", "cMGP"]} label="Swap" mintWETH={mintWETH} originalTokenIn="WETH" send={send} setSend={setSend} supplies={supplies} swap={swap} tokenOut="MGP" />
   <div className="mt-4 text-sm text-gray-400">
     <div className="mb-1 flex justify-between">
       <span>Original APR</span>

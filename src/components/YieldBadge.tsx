@@ -1,22 +1,11 @@
 import { memo, type ReactElement } from "react";
 
-type Yield = Readonly<{
-  asset: string;
-  logo: string;
-  suffix?: "+";
-}> & (Readonly<{
-  apy: number;
-  apr?: undefined;
-  value?: number;
-}> | Readonly<{
-  apr: number;
-  apy?: undefined;
-  value?: number;
-} | Readonly<{
-  value: string | number;
-  apr?: undefined;
-  apy?: undefined;
-}>>);
+type Yield = Readonly<{ asset: string; logo: string; suffix?: "+" }>
+  & Readonly<
+    { apy: number; apr?: undefined; value?: number } |
+    { apr: number; apy?: undefined; value?: number } |
+    { value: string | number; apr?: undefined; apy?: undefined }
+  >;
 
 type Properties = Yield & Readonly<{ breakdown: Yield[] }>;
 
@@ -35,14 +24,12 @@ const BadgeComponent = ({ title, value, breakdown }: Readonly<{ title: string; v
             <img className="size-4" src={item.logo} />
             <span>{item.asset}:</span>
           </div>
-          <span>{displayValue}
-          </span>
+          <span>{displayValue}</span>
         </div>;
       })}
     </div>
   </div>
 </div>;
-
 export const Badge = memo(BadgeComponent);
 
 export const YieldBadge = memo(({ asset, apy, apr, suffix, breakdown, value }: Properties): ReactElement => {

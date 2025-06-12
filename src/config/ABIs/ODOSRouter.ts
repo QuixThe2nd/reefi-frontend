@@ -3,8 +3,18 @@ export const odosRouter = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "previousOwner", type: "address" },
-      { indexed: true, internalType: "address", name: "newOwner", type: "address" }
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address"
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address"
+      }
     ],
     name: "OwnershipTransferred",
     type: "event"
@@ -12,13 +22,48 @@ export const odosRouter = [
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "sender", type: "address" },
-      { indexed: false, internalType: "uint256", name: "inputAmount", type: "uint256" },
-      { indexed: false, internalType: "address", name: "inputToken", type: "address" },
-      { indexed: false, internalType: "uint256", name: "amountOut", type: "uint256" },
-      { indexed: false, internalType: "address", name: "outputToken", type: "address" },
-      { indexed: false, internalType: "int256", name: "slippage", type: "int256" },
-      { indexed: false, internalType: "uint32", name: "referralCode", type: "uint32" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "sender",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "inputAmount",
+        type: "uint256"
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "inputToken",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amountOut",
+        type: "uint256"
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "outputToken",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "int256",
+        name: "slippage",
+        type: "int256"
+      },
+      {
+        indexed: false,
+        internalType: "uint32",
+        name: "referralCode",
+        type: "uint32"
+      }
     ],
     name: "Swap",
     type: "event"
@@ -26,20 +71,74 @@ export const odosRouter = [
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "sender", type: "address" },
-      { indexed: false, internalType: "uint256[]", name: "amountsIn", type: "uint256[]" },
-      { indexed: false, internalType: "address[]", name: "tokensIn", type: "address[]" },
-      { indexed: false, internalType: "uint256[]", name: "amountsOut", type: "uint256[]" },
-      { indexed: false, internalType: "address[]", name: "tokensOut", type: "address[]" },
-      { indexed: false, internalType: "uint32", name: "referralCode", type: "uint32" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "sender",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256[]",
+        name: "amountsIn",
+        type: "uint256[]"
+      },
+      {
+        indexed: false,
+        internalType: "address[]",
+        name: "tokensIn",
+        type: "address[]"
+      },
+      {
+        indexed: false,
+        internalType: "uint256[]",
+        name: "amountsOut",
+        type: "uint256[]"
+      },
+      {
+        indexed: false,
+        internalType: "address[]",
+        name: "tokensOut",
+        type: "address[]"
+      },
+      {
+        indexed: false,
+        internalType: "uint32",
+        name: "referralCode",
+        type: "uint32"
+      }
     ],
     name: "SwapMulti",
     type: "event"
   },
-  { inputs: [], name: "FEE_DENOM", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-  { inputs: [], name: "REFERRAL_WITH_FEE_THRESHOLD", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-  { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "addressList", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
+  {
+    inputs: [],
+    name: "FEE_DENOM",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "REFERRAL_WITH_FEE_THRESHOLD",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "addressList",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
   {
     inputs: [{ internalType: "uint32", name: "", type: "uint32" }],
     name: "referralLookup",
@@ -62,8 +161,20 @@ export const odosRouter = [
     stateMutability: "nonpayable",
     type: "function"
   },
-  { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" },
-  { inputs: [{ internalType: "uint256", name: "_swapMultiFee", type: "uint256" }], name: "setSwapMultiFee", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_swapMultiFee", type: "uint256" }],
+    name: "setSwapMultiFee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
   {
     inputs: [
       {
@@ -89,7 +200,13 @@ export const odosRouter = [
     stateMutability: "payable",
     type: "function"
   },
-  { inputs: [], name: "swapCompact", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "payable", type: "function" },
+  {
+    inputs: [],
+    name: "swapCompact",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "payable",
+    type: "function"
+  },
   {
     inputs: [
       {
@@ -122,8 +239,20 @@ export const odosRouter = [
     stateMutability: "payable",
     type: "function"
   },
-  { inputs: [], name: "swapMultiCompact", outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }], stateMutability: "payable", type: "function" },
-  { inputs: [], name: "swapMultiFee", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+  {
+    inputs: [],
+    name: "swapMultiCompact",
+    outputs: [{ internalType: "uint256[]", name: "amountsOut", type: "uint256[]" }],
+    stateMutability: "payable",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "swapMultiFee",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
   {
     inputs: [
       {
@@ -234,7 +363,13 @@ export const odosRouter = [
     stateMutability: "nonpayable",
     type: "function"
   },
-  { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address[]", name: "tokens", type: "address[]" },
@@ -246,6 +381,12 @@ export const odosRouter = [
     stateMutability: "nonpayable",
     type: "function"
   },
-  { inputs: [{ internalType: "address[]", name: "addresses", type: "address[]" }], name: "writeAddressList", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [{ internalType: "address[]", name: "addresses", type: "address[]" }],
+    name: "writeAddressList",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
   { stateMutability: "payable", type: "receive" }
 ] as const;

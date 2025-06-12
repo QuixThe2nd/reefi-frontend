@@ -28,9 +28,7 @@ export const TokenApproval = memo(({ allowance, send, onApprove, tokenSymbol, cu
 
   return <div className={className}>
     <div className="flex items-center">
-      <input checked={approveInfinity} className="mr-2" id={`approve-infinity-${tokenSymbol}`} onChange={() => {
-        setApproveInfinity(v => !v);
-      }} type="checkbox" />
+      <input checked={approveInfinity} className="mr-2" id={`approve-infinity-${tokenSymbol}`} onChange={() => setApproveInfinity(v => !v)} type="checkbox" />
       <label className="cursor-pointer select-none text-sm text-gray-300" htmlFor={`approve-infinity-${tokenSymbol}`}>Approve Infinity</label>
     </div>
     <Button className="w-full my-2" disabled={isApproving} onClick={handleApprove} type="submit">{getButtonText()}</Button>

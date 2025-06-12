@@ -1,52 +1,59 @@
-import { useAllowances } from "./useAllowances";
-import { useAmounts } from "./useAmounts";
-import { useApprove } from "../hooks/actions/useApprove";
-import { useBalances } from "./useBalances";
-import { useClaimYMGPRewards } from "../hooks/actions/useClaimYMGPRewards";
-import { useCompoundRMGP } from "../hooks/actions/useCompoundRMGP";
-import { useContracts } from "./useContracts";
-import { useConvertMGP } from "../hooks/actions/useConvertMGP";
-import { useCurveBuy } from "../hooks/actions/useCurveBuy";
-import { useDepositMGP } from "../hooks/actions/useDepositMGP";
-import { useDepositRMGP } from "../hooks/actions/useDepositRMGP";
-import { useLockYMGP } from "../hooks/actions/useLockYMGP";
-import { useMintWETH } from "../hooks/actions/useMintWETH";
-import { useRedeemRMGP } from "../hooks/actions/useRedeemRMGP";
-import { useSupplies } from "./useSupplies";
-import { useSupplyLiquidity } from "../hooks/actions/useSupplyLiquidity";
-import { useSwap } from "../hooks/actions/useSwap";
-import { useUnlockVLMGP } from "../hooks/actions/useUnlockVLMGP";
-import { useUnlockYMGP } from "../hooks/actions/useUnlockYMGP";
-import { useWallet } from "./useWallet";
-import { useWithdrawMGP } from "../hooks/actions/useWithdrawMGP";
+import { approve } from "../hooks/actions/approve";
+import { claimVMGPRewards } from "../hooks/actions/claimVMGPRewards";
+import { claimYMGPRewards } from "../hooks/actions/claimYMGPRewards";
+import { compoundRMGP } from "../hooks/actions/compoundRMGP";
+import { curveBuy } from "../hooks/actions/curveBuy";
+import { depositMGP } from "../hooks/actions/depositMGP";
+import { depositRMGP } from "../hooks/actions/depositRMGP";
+import { lockYMGP } from "../hooks/actions/lockYMGP";
+import { mintWETH } from "../hooks/actions/mintWETH";
+import { nativeSwap } from "../hooks/actions/nativeSwap";
+import { redeemRMGP } from "../hooks/actions/redeemRMGP";
+import { supplyLiquidity } from "../hooks/actions/supplyLiquidity";
+import { swap } from "../hooks/actions/swap";
+import { unlockVLMGP } from "../hooks/actions/unlockVLMGP";
+import { unlockYMGP } from "../hooks/actions/unlockYMGP";
+import { useAccount, useChainId } from "wagmi";
+import { withdrawMGP } from "../hooks/actions/withdrawMGP";
+
+import type { useAllowances } from "./useAllowances";
+import type { useAmounts } from "./useAmounts";
 
 interface Props {
-  wallet: ReturnType<typeof useWallet>[0];
-  updateWallet: ReturnType<typeof useWallet>[1];
-  updateBalances: ReturnType<typeof useBalances>[1];
-  updateSupplies: ReturnType<typeof useSupplies>[1];
   amounts: ReturnType<typeof useAmounts>[0];
-  allowances: ReturnType<typeof useAllowances>[0];
-  updateAllowances: ReturnType<typeof useAllowances>[1];
-  contracts: ReturnType<typeof useContracts>;
+  allowances: ReturnType<typeof useAllowances>;
   setError: (_message: string) => void;
   setNotification: (_message: string) => void;
 }
 
-export const useActions = ({ wallet, updateWallet, updateBalances, updateSupplies, amounts, allowances, updateAllowances, contracts, setError, setNotification }: Props) => ({
-  approve: useApprove({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, updateAllowances, writeContracts: contracts }),
-  depositMGP: useDepositMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, writeContracts: contracts }),
-  curveBuy: useCurveBuy({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, writeContracts: contracts }),
-  convertMGP: useConvertMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, updateBalances, writeContracts: contracts }),
-  depositRMGP: useDepositRMGP({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, updateBalances, updateSupplies, writeContracts: contracts }),
-  lockYMGP: useLockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, updateSupplies, updateBalances, writeContracts: contracts }),
-  unlockYMGP: useUnlockYMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, updateSupplies, updateBalances, writeContracts: contracts }),
-  redeemRMGP: useRedeemRMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, updateBalances, updateSupplies, writeContracts: contracts }),
-  withdrawMGP: useWithdrawMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: updateWallet.setConnectRequired, updateBalances, writeContracts: contracts }),
-  compoundRMGP: useCompoundRMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: updateWallet.setConnectRequired, updateBalances, updateSupplies, writeContracts: contracts }),
-  claimYMGPRewards: useClaimYMGPRewards({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, setConnectRequired: updateWallet.setConnectRequired, writeContracts: contracts }),
-  supplyLiquidity: useSupplyLiquidity({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, mgpLPAmount: amounts.lp.MGP, rmgpLPAmount: amounts.lp.wstMGP, setConnectRequired: updateWallet.setConnectRequired, updateBalances, writeContracts: contracts, ymgpLPAmount: amounts.lp.yMGP }),
-  swap: useSwap({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, setNotification }),
-  mintWETH: useMintWETH({ account: wallet.account, allowances, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, setError, writeContracts: contracts }),
-  unlockVLMGP: useUnlockVLMGP({ account: wallet.account, chain: wallet.chain, clients: wallet.clients, send: amounts.send, setConnectRequired: updateWallet.setConnectRequired, writeContracts: contracts })
-});
+export const useActions = ({ amounts, allowances, setError, setNotification }: Props) => {
+  const chain = useChainId();
+  const { address } = useAccount();
+
+  const depositMGPAction = depositMGP({ allowances, send: amounts.send, setError, chain });
+  const redeemRMGPAction = redeemRMGP({ send: amounts.send, chain });
+  const depositRMGPAction = depositRMGP({ allowances, send: amounts.send, setError, chain });
+  const lockYMGPAction = lockYMGP({ send: amounts.send, chain });
+  const unlockYMGPAction = unlockYMGP({ send: amounts.send, chain });
+
+  return {
+    approve: approve({ send: amounts.send, chain }),
+    curveBuy: curveBuy({ allowances, send: amounts.send, setError, chain }),
+    withdrawMGP: withdrawMGP({ chain }),
+    compoundRMGP: compoundRMGP({ chain }),
+    claimYMGPRewards: claimYMGPRewards({ chain }),
+    claimVMGPRewards: claimVMGPRewards({ chain }),
+    supplyLiquidity: supplyLiquidity({ mgpLPAmount: amounts.lp.MGP, rmgpLPAmount: amounts.lp.wstMGP, ymgpLPAmount: amounts.lp.yMGP, chain }),
+    swap: swap({ allowances, send: amounts.send, setError, setNotification, chain, address }),
+    mintWETH: mintWETH({ allowances, send: amounts.send, setError, chain }),
+    unlockVLMGP: unlockVLMGP({ send: amounts.send, chain }),
+    nativeSwap: nativeSwap({ depositMGPAction, redeemRMGPAction, depositRMGPAction, lockYMGPAction, unlockYMGPAction }),
+    vote: async (_proposalId: string, _choice: number) => {},
+    lockVMGP: () => {},
+    buyAndWithdrawMGP: () => {},
+    wrapSTMGP: () => {},
+    unlockVMGP: () => {},
+    unwrapWSTMGP: () => {},
+    mintVMGP: () => {}
+  };
+};

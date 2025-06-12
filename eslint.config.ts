@@ -1,3 +1,5 @@
+import { configs } from "eslint-plugin-react-hooks";
+import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
 import deMorgan from "eslint-plugin-de-morgan";
 import depend from "eslint-plugin-depend";
 import eslint from "@eslint/js";
@@ -5,8 +7,12 @@ import eslintPluginMath from "eslint-plugin-math";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import eslintReact from "@eslint-react/eslint-plugin";
 import functional from "eslint-plugin-functional";
+import github from "eslint-plugin-github";
+import { globalIgnores } from "eslint/config";
 import globals from "globals";
-import reactHooks from "eslint-plugin-react-hooks";
+import { importX } from "eslint-plugin-import-x";
+import preferArrayFunc from "eslint-plugin-prefer-arrow-functions";
+import react from "eslint-plugin-react";
 import sonarjs from "eslint-plugin-sonarjs";
 import splitAndSortImports from "@sngn/eslint-plugin-split-and-sort-imports";
 import stylistic from "@stylistic/eslint-plugin";
@@ -15,8 +21,9 @@ import tseslint from "typescript-eslint";
 import zod from "eslint-plugin-zod";
 
 export default tseslint.config([
+  globalIgnores(["dist/"]),
   eslintPluginUnicorn.configs.all,
-  reactHooks.configs["recommended-latest"],
+  configs["recommended-latest"],
   eslint.configs.all,
   stylistic.configs.all,
   sonarjs.configs.recommended,
@@ -28,6 +35,14 @@ export default tseslint.config([
   tseslint.configs.strictTypeChecked,
   eslintReact.configs.all,
   functional.configs.all,
+  github.getFlatConfigs().browser,
+  github.getFlatConfigs().recommended,
+  github.getFlatConfigs().react,
+  ...github.getFlatConfigs().typescript,
+  react.configs.flat["all"],
+  importX.flatConfigs.recommended,
+  importX.flatConfigs.react,
+  importX.flatConfigs.typescript,
   {
     languageOptions: {
       globals: globals.browser,
@@ -39,15 +54,73 @@ export default tseslint.config([
         tsconfigRootDir: import.meta.dirname
       }
     },
-    plugins: { depend, zod },
+    plugins: { depend, zod, react, "prefer-arrow-functions": preferArrayFunc },
+    settings: {
+      "import-x/resolver-next": [
+        createTypeScriptImportResolver({
+          alwaysTryTypes: true,
+          bun: true
+        })
+      ]
+    },
     rules: {
       "@eslint-react/avoid-shorthand-fragment": "off",
       "@eslint-react/naming-convention/filename": "off",
       "@stylistic/array-element-newline": ["error", "consistent"],
+      "prettier/prettier": "off",
+      "functional/no-try-statements": "off",
+      "react/function-component-definition": "off",
+      "react/jsx-closing-tag-location": "off",
+      "prefer-arrow-functions/prefer-arrow-functions": "error",
+      "react/forbid-component-props": "off",
+      "depend/ban-dependencies": "off",
+      "i18n-text/no-en": "off",
+      "react/require-default-props": "off",
+      "prefer-arrow-callback": "error",
+      "react/no-multi-comp": "off",
+      "comma-dangle": ["error", "never"],
+      "no-inline-comments": "off",
+      "@typescript-eslint/consistent-type-imports": "error",
+      "react/jsx-no-literals": "off",
+      "react/jsx-max-props-per-line": "off",
+      "react/jsx-props-no-spreading": "off",
+      "github/array-foreach": "off",
+      "react/jsx-max-depth": "off",
+      "react/jsx-no-bind": "off",
+      "react/button-has-type": "off",
+      "github/filenames-match-regex": "off",
+      "@eslint-react/no-complex-conditional-rendering": "off",
+      "@eslint-react/prefer-react-namespace-import": "off",
       "@stylistic/arrow-parens": ["error", "as-needed"],
       "@stylistic/function-call-argument-newline": ["error", "never"],
+      "@stylistic/brace-style": ["error", "1tbs", { allowSingleLine: true }],
+      "@stylistic/operator-linebreak": ["error", "none"],
+      "@stylistic/implicit-arrow-linebreak": ["error", "beside"],
       "@stylistic/indent": ["error", 2],
       "@stylistic/jsx-one-expression-per-line": "off",
+      "@stylistic/jsx-newline": ["error", { prevent: true }],
+      "github/a11y-no-title-attribute": "off",
+      "import-x/no-named-as-default-member": "off",
+      "@stylistic/jsx-wrap-multilines": "off",
+      "github/no-then": "off",
+      "react/jsx-indent": "off",
+      "react/jsx-filename-extension": "off",
+      "react/jsx-one-expression-per-line": "off",
+      "react/react-in-jsx-scope": "off",
+      "react/jsx-newline": ["error", { prevent: true }],
+      "@stylistic/jsx-first-prop-new-line": ["error", "never"],
+      "no-duplicate-imports": "error",
+      "react/jsx-wrap-multilines": [
+        "error", {
+          declaration: "never",
+          assignment: "never",
+          return: "never",
+          arrow: "never",
+          condition: "never",
+          logical: "never",
+          prop: "never"
+        }
+      ],
       "tailwindcss/classnames-order": "off",
       "unicorn/no-useless-undefined": "off",
       "functional/no-loop-statements": "off",
@@ -102,7 +175,10 @@ export default tseslint.config([
       "no-ternary": "off",
       "no-undefined": "off",
       "no-underscore-dangle": "off",
-      "no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+      "no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }
+      ],
       "no-warning-comments": "off",
       "no-warnings-comments": "off",
       "one-var": "off",

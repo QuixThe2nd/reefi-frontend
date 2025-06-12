@@ -6,7 +6,7 @@ import { memo, type ReactElement } from "react";
 import { Page } from "../components/Page";
 import WormholeConnect from "@wormhole-foundation/wormhole-connect";
 
-export const BridgePage = memo((): ReactElement => <Page info={["Bridge stMGP tokens between Arbitrum and BNB Chain using Wormhole's Token Bridge.", "Unwrap wstMGP as stMGP on the source chain, bridge via Wormhole, then wrap to wstMGP on the destination chain."]} noTopMargin={true}>
+export const BridgePage = memo((): ReactElement => <Page info={[<span key="bridge">Bridge stMGP tokens between Arbitrum and BNB Chain using Wormhole&apos;s Token Bridge.</span>, <span key="wrap">Unwrap wstMGP as stMGP on the source chain, bridge via Wormhole, then wrap to wstMGP on the destination chain.</span>]} noTopMargin>
   <WormholeConnect config={{
     chains: ["Arbitrum", "Bsc"],
     tokens: ["stMGP (Arbitrum)", "stMGP (Bsc)"],
@@ -16,7 +16,7 @@ export const BridgePage = memo((): ReactElement => <Page info={["Bridge stMGP to
         icon: wstMGP,
         tokenId: {
           chain: "Arbitrum",
-          address: contracts[42_161].stMGP.address
+          address: contracts[42_161].stMGP
         },
         decimals: 18
       },
@@ -25,23 +25,24 @@ export const BridgePage = memo((): ReactElement => <Page info={["Bridge stMGP to
         icon: wstMGP,
         tokenId: {
           chain: "Bsc",
-          address: contracts[56].stMGP.address
+          address: contracts[56].stMGP
         },
         decimals: 18
       }
     },
     wrappedTokens: {
       Arbitrum: {
-        [contracts[42_161].stMGP.address]: {
-          Bsc: contracts[56].stMGP.address
+        [contracts[42_161].stMGP]: {
+          Bsc: contracts[56].stMGP
         }
       },
       Bsc: {
-        [contracts[56].stMGP.address]: {
-          Arbitrum: contracts[42_161].stMGP.address
+        [contracts[56].stMGP]: {
+          Arbitrum: contracts[42_161].stMGP
         }
       }
     }
-  }} />
+  }}
+  />
 </Page>);
 BridgePage.displayName = "BridgePage";

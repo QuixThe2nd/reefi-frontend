@@ -1,60 +1,42 @@
 /* eslint functional/no-try-statements: 0 */
-import { contracts, PrimaryCoin } from "../config/contracts";
-import { useAsyncMemo } from "../hooks/useAsyncMemo";
+import { contracts, type PrimaryCoin } from "../config/contracts";
+import { useChainId, useReadContract } from "wagmi";
 import { useState } from "react";
-import { useWallet } from "./useWallet";
 
-type CurveRates<T extends PropertyKey> = {
-  [K in T]: {
-    [_P in Exclude<T, K>]: bigint;
-  }
+import { ABIs } from "../config/ABIs/abis";
+
+export type FlattenRecord<T extends Record<string, bigint>> = {
+  [K1 in keyof T as K1 extends string ?
+    K1 extends keyof T ?
+      { [K2 in keyof T]: K2 extends string ?
+        K1 extends K2 ? never : `${K1}_${K2}`
+        : never }[keyof T]
+      : never
+    : never]: bigint
 };
 
-export const useAmounts = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0] }) => {
+export const useAmounts = () => {
   const [lp, setLP] = useState<Record<PrimaryCoin, bigint>>({ MGP: 0n, wstMGP: 0n, yMGP: 0n, vMGP: 0n });
   const [send, setSend] = useState(0n);
+  const chain = useChainId();
 
-  const curve = useAsyncMemo<CurveRates<PrimaryCoin>>(async () => {
-    const safeAmount = async (fn: () => Promise<bigint>) => {
-      try {
-        return await fn();
-      } catch {
-        return 0n;
-      }
-    };
+  const curve: FlattenRecord<Record<PrimaryCoin, bigint>> = {
+    MGP_wstMGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [0n, 1n, send] }).data ?? 0n,
+    MGP_yMGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [0n, 2n, send] }).data ?? 0n,
+    MGP_vMGP: send,
+    wstMGP_MGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [1n, 0n, send] }).data ?? 0n,
+    wstMGP_yMGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [1n, 2n, send] }).data ?? 0n,
+    wstMGP_vMGP: send,
+    yMGP_MGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [2n, 0n, send] }).data ?? 0n,
+    yMGP_wstMGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [2n, 1n, send] }).data ?? 0n,
+    yMGP_vMGP: send,
+    vMGP_MGP: send,
+    vMGP_wstMGP: send,
+    vMGP_yMGP: send
+  };
 
-    const [mgpRmgp, mgpYmgp, mgpVmgp, rmgpMgp, rmgpYmgp, rmgpVmgp, ymgpMgp, ymgpRmgp, ymgpVmgp, vmgpMgp, vmgpRmgp, vmgpYmgp] = await Promise.all([
-      safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([0n, 1n, send], { account: wallet.account })),
-      safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([0n, 2n, send], { account: wallet.account })),
-      // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([0n, 3n, send], { account: wallet.account })),
-      Promise.resolve(send),
-      safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([1n, 0n, send], { account: wallet.account })),
-      safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([1n, 2n, send], { account: wallet.account })),
-      // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([1n, 3n, send], { account: wallet.account })),
-      Promise.resolve(send),
-      safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([2n, 0n, send], { account: wallet.account })),
-      safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([2n, 1n, send], { account: wallet.account })),
-      // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([2n, 3n, send], { account: wallet.account })),
-      Promise.resolve(send),
-      // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([3n, 0n, send], { account: wallet.account })),
-      Promise.resolve(send),
-      // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([3n, 1n, send], { account: wallet.account })),
-      Promise.resolve(send),
-      // safeAmount(() => contracts[wallet.chain].cMGP.read.get_dy([3n, 2n, send], { account: wallet.account }))
-      Promise.resolve(send)
-    ]);
-    return {
-      MGP: { wstMGP: mgpRmgp, yMGP: mgpYmgp, vMGP: mgpVmgp },
-      wstMGP: { MGP: rmgpMgp, yMGP: rmgpYmgp, vMGP: rmgpVmgp },
-      yMGP: { MGP: ymgpMgp, wstMGP: ymgpRmgp, vMGP: ymgpVmgp },
-      vMGP: { MGP: vmgpMgp, wstMGP: vmgpRmgp, yMGP: vmgpYmgp }
-    };
-  }, [wallet.chain, send], {
-    MGP: { wstMGP: 0n, yMGP: 0n, vMGP: 0n },
-    wstMGP: { MGP: 0n, yMGP: 0n, vMGP: 0n },
-    yMGP: { MGP: 0n, wstMGP: 0n, vMGP: 0n },
-    vMGP: { MGP: 0n, wstMGP: 0n, yMGP: 0n }
-  });
-
-  return [{ lp, curve, send }, { setSend, setLP }] as const;
+  return [
+    { lp, curve, send },
+    { setSend, setLP }
+  ] as const;
 };

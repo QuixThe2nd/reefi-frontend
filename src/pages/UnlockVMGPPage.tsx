@@ -11,7 +11,7 @@ interface Properties {
   readonly lvmgpBalance: bigint;
 }
 
-const UnlockVMGPPageComponent = ({ send, setSendAmount, unlockVMGP, lvmgpBalance }: Properties): ReactElement => <Page info={["vMGP can be unlocked instantly. By unlocking your vMGP you won't receive additional yield, but will be able to vote."]}>
+const UnlockVMGPPageComponent = ({ send, setSendAmount, unlockVMGP, lvmgpBalance }: Properties): ReactElement => <Page info={<span>vMGP can be unlocked instantly. By unlocking your vMGP you won&apos;t receive additional yield, but will be able to vote.</span>}>
   <AmountInput balance={lvmgpBalance} label="Get vMGP" onChange={setSendAmount} token={{ symbol: "lvMGP" }} value={send} />
   <Button className="w-full" onClick={unlockVMGP} type="submit">Unlock vMGP</Button>
 </Page>;

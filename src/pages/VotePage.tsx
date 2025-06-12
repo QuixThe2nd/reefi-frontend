@@ -36,7 +36,7 @@ interface Properties {
   readonly lvmgpSupply: bigint;
   readonly reefiMgpLocked: bigint;
   readonly ymgpBalance: bigint;
-  readonly onVote: (_proposalId: string, _choice: number) => Promise<void>;
+  readonly vote: (_proposalId: string, _choice: number) => Promise<void>;
 }
 
 const getStateClassName = (state: "active" | "closed" | "pending"): string => {
@@ -85,7 +85,7 @@ const completedLabel = (winningChoice: string) => {
   return "TIE";
 };
 
-export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote, lvmgpSupply, ymgpBalance }: Properties): ReactElement => {
+export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, vote, lvmgpSupply, ymgpBalance }: Properties): ReactElement => {
   const [selectedChoices, setSelectedChoices] = useState<Record<string, number>>({});
   const [votingProposal, setVotingProposal] = useState<string | undefined>();
   const proposalScores: Record<string, number[]> = {};
@@ -94,7 +94,7 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote,
     const choice = selectedChoices[proposalId];
     if (choice === undefined) return;
     setVotingProposal(proposalId);
-    await onVote(proposalId, choice);
+    await vote(proposalId, choice);
     setVotingProposal(undefined);
   };
 
@@ -108,16 +108,16 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote,
       query: "query Proposals {proposals (first: 3, skip: 0, where: { space_in: [\"magpiexyz.eth\"] }, orderBy: \"created\", orderDirection: desc) {id title body choices start end snapshot state author space { id name } } }",
       operationName: "Proposals"
     });
-    const response = await fetch("https://hub.snapshot.org/graphql?", { method: "POST", headers, body: raw });
-    const result = await response.json() as SnapshotResponse;
+    const response = await fetch("https://hub.snapshot.org/graphql?", {
+      method: "POST",
+      headers,
+      body: raw
+    });
+    const result = (await response.json()) as SnapshotResponse;
     return result.data.proposals;
   }, [], "proposals", []);
 
-  return <Page info={[
-    "vMGP holders control all of Reefi's vlMGP voting power on Magpie governance proposals.",
-    "Your voting power is amplified by Reefi's locked MGP position, giving you more influence per token.",
-    "Vote multipliers are displayed as a minimum vote assuming all vMGP votes. If 50% of vMGP votes on a proposal, your vote multiplier doubles."
-  ]} noTopMargin={true}>
+  return <Page info={[<span>vMGP holders control all of Reefi's vlMGP voting power on Magpie governance proposals.</span>, <span>Your voting power is amplified by Reefi's locked MGP position, giving you more influence per token.</span>, <span>Vote multipliers are displayed as a minimum vote assuming all vMGP votes. If 50% of vMGP votes on a proposal, your vote multiplier doubles.</span>]} noTopMargin>
     <div className="mb-6 rounded-lg bg-gray-700/50 p-4">
       <h3 className="mb-2 text-lg font-semibold">Your Voting Power</h3>
       <div className="grid grid-cols-2 gap-4 text-sm">
@@ -131,7 +131,9 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote,
         </div>
       </div>
     </div>
-    <h3 className="mb-4 text-lg font-semibold">Recent Proposals</h3>
+    <h3 className="mb-4 text-lg font-semibold">
+      Recent Proposals
+    </h3>
     {proposals.length === 0 ? <div className="rounded-lg bg-gray-700/50 p-8 text-center">
       <p className="text-gray-400">No active proposals found</p>
       <p className="mt-2 text-sm text-gray-500">Check back later for new governance proposals</p>
@@ -139,7 +141,7 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote,
       {proposals.map(proposal => {
         const marketData = MARKET_DATA[proposal.id];
         const winningChoice = marketData ? getWinningChoice(marketData) : "tie";
-        return <div key={proposal.id} className="rounded-lg border border-gray-700 bg-gray-800/50 p-4">
+        return <div className="rounded-lg border border-gray-700 bg-gray-800/50 p-4" key={proposal.id}>
           <div className="mb-3 flex flex-col items-start justify-between">
             <div className="flex justify-between w-full">
               <h4 className="font-semibold text-blue-400 underline">
@@ -165,8 +167,7 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote,
               <p className="font-medium text-green-300">1 yMGP = {formatNumber(formatEther(marketData?.lpYesBalance ?? 0n))} vlMGP</p>
             </div>
           </div>
-
-          {marketData && <div className="mb-4 rounded-lg bg-gray-700/30 p-4">
+          {marketData ? <div className="mb-4 rounded-lg bg-gray-700/30 p-4">
             <div className="mb-3 flex items-center justify-between">
               <h5 className="font-medium">Votes Purchased</h5>
               {proposal.state === "closed" && <div className={`rounded px-2 py-1 text-xs font-medium ${completedColors(winningChoice)}`}>{completedLabel(winningChoice)}</div>}
@@ -177,28 +178,23 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote,
                   <span className="text-green-400">YES Votes</span>
                   <span className="font-medium">{formatNumber(formatEther(marketData.yesTokenSupply))} yMGP</span>
                 </div>
-                <div className="mt-1 text-xs text-gray-400">
-                  Your Votes: {formatNumber(formatEther(marketData.userYesBalance))} yMGP
-                </div>
+                <div className="mt-1 text-xs text-gray-400">Your Votes: {formatNumber(formatEther(marketData.userYesBalance))} yMGP</div>
               </div>
               <div className="rounded bg-red-900/30 p-3">
                 <div className="flex justify-between">
                   <span className="text-red-400">NO Votes</span>
                   <span className="font-medium">{formatNumber(formatEther(marketData.noTokenSupply))} yMGP</span>
                 </div>
-                <div className="mt-1 text-xs text-gray-400">
-                  Your Votes: {formatNumber(formatEther(marketData.userNoBalance))} yMGP
-                </div>
+                <div className="mt-1 text-xs text-gray-400">Your Votes: {formatNumber(formatEther(marketData.userNoBalance))} yMGP</div>
               </div>
             </div>
-          </div>}
-
+          </div> : undefined}
           {proposal.state === "active" && vmgpBalance > 0n && <>
             <div className="mb-3">
               <p className="mb-2 text-sm font-medium">Choose your vote:</p>
               <div className="grid gap-2">
-                {proposal.choices.map((choice, index) => <label key={choice} className="flex cursor-pointer items-center rounded border border-gray-600 p-2 hover:bg-gray-700/50">
-                  <input type="radio" name={`proposal-${proposal.id}`} value={index} checked={selectedChoices[proposal.id] === index} onChange={() => setSelectedChoices(previous => ({ ...previous, [proposal.id]: index }))} className="mr-3" />
+                {proposal.choices.map((choice, index) => <label className="flex cursor-pointer items-center rounded border border-gray-600 p-2 hover:bg-gray-700/50" key={choice}>
+                  <input checked={selectedChoices[proposal.id] === index} className="mr-3" name={`proposal-${proposal.id}`} onChange={() => setSelectedChoices(previous => ({ ...previous, [proposal.id]: index }))} type="radio" value={index} />
                   <span className="flex-1">{choice}</span>
                   <span className="text-sm text-gray-400">{proposalScores[proposal.id]?.[index] ? formatNumber(proposalScores[proposal.id]?.[index] ?? 0) : 0} votes</span>
                 </label>)}
@@ -208,42 +204,42 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, onVote,
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="rounded-lg bg-green-900/20 p-4">
                   <h6 className="mb-4 font-medium text-green-300">Vote YES</h6>
-                  <AmountInput balance={ymgpBalance} label="Deposit yMGP" onChange={value => setSellNoAmounts(previous => ({ ...previous, [proposal.id]: value }))} token={{ symbol: "yMGP" }} value={sellNoAmount} placeholder="0" />
-                  <Button className="mt-3 w-full bg-red-600 hover:bg-red-700" onClick={() => handleSellNoTokens(proposal.id)} isLoading={activeAction === `sell-no-${proposal.id}`} disabled={activeAction !== undefined || marketData.userNoBalance < sellNoAmount || sellNoAmount === 0n} type="button">{activeAction === `sell-no-${proposal.id}` ? "Swapping..." : "Buy Yes Votes"}</Button>
+                  <AmountInput balance={ymgpBalance} label="Deposit yMGP" onChange={value => setSellNoAmounts(previous => ({ ...previous, [proposal.id]: value }))} placeholder="0" token={{ symbol: "yMGP" }} value={sellNoAmount} />
+                  <Button className="mt-3 w-full bg-red-600 hover:bg-red-700" disabled={activeAction !== undefined || marketData.userNoBalance < sellNoAmount || sellNoAmount === 0n} isLoading={activeAction === `sell-no-${proposal.id}`} onClick={() => handleSellNoTokens(proposal.id)} type="button">{activeAction === `sell-no-${proposal.id}` ? "Swapping..." : "Buy Yes Votes"}</Button>
                 </div>
                 <div className="rounded-lg bg-red-900/20 p-4">
                   <h6 className="mb-4 font-medium text-red-300">Vote NO</h6>
-                  <AmountInput balance={ymgpBalance} label="Deposit yMGP" onChange={value => setSellYesAmounts(previous => ({ ...previous, [proposal.id]: value }))} token={{ symbol: "yMGP" }} value={sellYesAmount} placeholder="0" />
-                  <Button className="mt-3 w-full bg-green-600 hover:bg-green-700" onClick={() => handleSellYesTokens(proposal.id)} isLoading={activeAction === `sell-yes-${proposal.id}`} disabled={activeAction !== undefined || marketData.userYesBalance < sellYesAmount || sellYesAmount === 0n} type="button">{activeAction === `sell-yes-${proposal.id}` ? "Swapping..." : "Buy No Votes"}</Button>
+                  <AmountInput balance={ymgpBalance} label="Deposit yMGP" onChange={value => setSellYesAmounts(previous => ({ ...previous, [proposal.id]: value }))} placeholder="0" token={{ symbol: "yMGP" }} value={sellYesAmount} />
+                  <Button className="mt-3 w-full bg-green-600 hover:bg-green-700" disabled={activeAction !== undefined || marketData.userYesBalance < sellYesAmount || sellYesAmount === 0n} isLoading={activeAction === `sell-yes-${proposal.id}`} onClick={() => handleSellYesTokens(proposal.id)} type="button">{activeAction === `sell-yes-${proposal.id}` ? "Swapping..." : "Buy No Votes"}</Button>
                 </div>
               </div>
             </div>
           </>}
           {proposal.state === "closed" && <div className="mb-3">
-            <p className="mb-2 text-sm font-medium">Results:</p>
+            <p className="mb-2 text-sm font-medium">
+              Results:
+            </p>
             <div className="space-y-2">
               {proposal.choices.map((choice, index) => {
                 const score = proposalScores[proposal.id]?.[index] ?? 0;
                 const totalScore = proposalScores[proposal.id]?.reduce((sum, s) => sum + s, 0) ?? 0;
                 const percentage = totalScore > 0 ? score / totalScore * 100 : 0;
-                return (
-                  <div key={choice} className="rounded border border-gray-600 p-2">
-                    <div className="flex justify-between">
-                      <span>{choice}</span>
-                      <span className="text-sm text-gray-400">{formatNumber(score)} ({percentage.toFixed(1)}%)</span>
-                    </div>
-                    <div className="mt-1 h-2 rounded bg-gray-700">
-                      <div className="h-full rounded bg-blue-500" style={{ width: `${percentage}%` }} />
-                    </div>
+                return <div className="rounded border border-gray-600 p-2" key={choice}>
+                  <div className="flex justify-between">
+                    <span>{choice}</span>
+                    <span className="text-sm text-gray-400">{formatNumber(score)} ({percentage.toFixed(1)}%)</span>
                   </div>
-                );
+                  <div className="mt-1 h-2 rounded bg-gray-700">
+                    <div className="h-full rounded bg-blue-500" style={{ width: `${percentage}%` }} />
+                  </div>
+                </div>;
               })}
             </div>
           </div>}
-          {proposal.state === "active" && vmgpBalance > 0n && selectedChoices[proposal.id] !== undefined && <Button className="w-full" onClick={() => handleVote(proposal.id)} isLoading={votingProposal === proposal.id} disabled={votingProposal !== undefined} type="button">{votingProposal === proposal.id ? "Voting..." : `Vote with ${formatNumber(formatEther(vmgpBalance))} vMGP (${formatNumber(formatEther(vmgpBalance) * votePower)} - ${formatNumber(formatEther(vmgpBalance) * votePower)} vlMGP)`}</Button>}
+          {proposal.state === "active" && vmgpBalance > 0n && selectedChoices[proposal.id] !== undefined && <Button className="w-full" disabled={votingProposal !== undefined} isLoading={votingProposal === proposal.id} onClick={() => handleVote(proposal.id)} type="button">{votingProposal === proposal.id ? "Voting..." : `Vote with ${formatNumber(formatEther(vmgpBalance))} vMGP (${formatNumber(formatEther(vmgpBalance) * votePower)} - ${formatNumber(formatEther(vmgpBalance) * votePower)} vlMGP)`}</Button>}
           {proposal.state === "active" && vmgpBalance === 0n && <div className="mt-6 rounded-lg bg-blue-600/20 p-4 text-center">
             <p className="text-blue-300">Get vMGP tokens to control votes</p>
-            <p className="mt-2 text-sm text-blue-400">Permanently convert yMGP to vMGP to unlock voting power and control Reefi's vlMGP position or rent out your vote power to earn yield.</p>
+            <p className="mt-2 text-sm text-blue-400">Permanently convert yMGP to vMGP to unlock voting power and control Reefi&apos;s vlMGP position or rent out your vote power to earn yield.</p>
           </div>}
           <div className="mt-3 flex justify-between text-xs text-gray-500">
             <span>Started: {new Date(proposal.start * 1000).toLocaleDateString()}</span>

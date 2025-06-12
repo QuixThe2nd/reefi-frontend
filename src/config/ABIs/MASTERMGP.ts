@@ -18,19 +18,56 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "_oldARBRewarder", type: "address" },
-      { indexed: false, internalType: "address", name: "_newARBRewarder", type: "address" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_oldARBRewarder",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_newARBRewarder",
+        type: "address"
+      }
     ],
     name: "ARBRewarderSet",
     type: "event"
   },
-  { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "rewarder", type: "address" }], name: "ARBRewarderSetAsQueuer", type: "event" },
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "uint256", name: "_allocPoint", type: "uint256" },
-      { indexed: true, internalType: "address", name: "_stakingToken", type: "address" },
-      { indexed: true, internalType: "contract IBaseRewardPool", name: "_rewarder", type: "address" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "rewarder",
+        type: "address"
+      }
+    ],
+    name: "ARBRewarderSetAsQueuer",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_allocPoint",
+        type: "uint256"
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_stakingToken",
+        type: "address"
+      },
+      {
+        indexed: true,
+        internalType: "contract IBaseRewardPool",
+        name: "_rewarder",
+        type: "address"
+      }
     ],
     name: "Add",
     type: "event"
@@ -38,8 +75,18 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "_newCompounder", type: "address" },
-      { indexed: false, internalType: "address", name: "_oldCompounder", type: "address" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_newCompounder",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_oldCompounder",
+        type: "address"
+      }
     ],
     name: "CompounderUpdated",
     type: "event"
@@ -47,9 +94,24 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "_user", type: "address" },
-      { indexed: true, internalType: "address", name: "_stakingToken", type: "address" },
-      { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_user",
+        type: "address"
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_stakingToken",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256"
+      }
     ],
     name: "Deposit",
     type: "event"
@@ -57,9 +119,24 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "_user", type: "address" },
-      { indexed: true, internalType: "address", name: "_stakingToken", type: "address" },
-      { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_user",
+        type: "address"
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_stakingToken",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256"
+      }
     ],
     name: "DepositNotAvailable",
     type: "event"
@@ -67,9 +144,24 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "_user", type: "address" },
-      { indexed: true, internalType: "address", name: "_stakingToken", type: "address" },
-      { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_user",
+        type: "address"
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_stakingToken",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256"
+      }
     ],
     name: "EmergencyWithdraw",
     type: "event"
@@ -77,20 +169,50 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "_account", type: "address" },
-      { indexed: true, internalType: "address", name: "_receiver", type: "address" },
-      { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_account",
+        type: "address"
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_receiver",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256"
+      },
       { indexed: false, internalType: "bool", name: "isLock", type: "bool" }
     ],
     name: "HarvestMGP",
     type: "event"
   },
-  { anonymous: false, inputs: [{ indexed: false, internalType: "uint8", name: "version", type: "uint8" }], name: "Initialized", type: "event" },
+  {
+    anonymous: false,
+    inputs: [{ indexed: false, internalType: "uint8", name: "version", type: "uint8" }],
+    name: "Initialized",
+    type: "event"
+  },
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "_stakingToken", type: "address" },
-      { indexed: false, internalType: "address[]", name: "_legacyRewarder", type: "address[]" }
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_stakingToken",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "address[]",
+        name: "_legacyRewarder",
+        type: "address[]"
+      }
     ],
     name: "LegacyRewardersSet",
     type: "event"
@@ -98,18 +220,50 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "_stakingToken", type: "address" },
-      { indexed: false, internalType: "bool", name: "_isRewardMGP", type: "bool" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_stakingToken",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "_isRewardMGP",
+        type: "bool"
+      }
     ],
     name: "LockFreePoolUpdated",
     type: "event"
   },
-  { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "_mgp", type: "address" }], name: "MGPSet", type: "event" },
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "_mWomSV", type: "address" },
-      { indexed: false, internalType: "address", name: "_oldMWomSV", type: "address" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_mgp",
+        type: "address"
+      }
+    ],
+    name: "MGPSet",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_mWomSV",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_oldMWomSV",
+        type: "address"
+      }
     ],
     name: "MWomSVpdated",
     type: "event"
@@ -117,17 +271,44 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "previousOwner", type: "address" },
-      { indexed: true, internalType: "address", name: "newOwner", type: "address" }
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address"
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address"
+      }
     ],
     name: "OwnershipTransferred",
     type: "event"
   },
-  { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Paused", type: "event" },
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "_account", type: "address" },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "account",
+        type: "address"
+      }
+    ],
+    name: "Paused",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_account",
+        type: "address"
+      },
       { indexed: false, internalType: "bool", name: "_status", type: "bool" }
     ],
     name: "PoolManagerStatus",
@@ -136,20 +317,62 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "_stakingToken", type: "address" },
-      { indexed: false, internalType: "uint256", name: "_allocPoint", type: "uint256" },
-      { indexed: true, internalType: "contract IBaseRewardPool", name: "_rewarder", type: "address" }
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_stakingToken",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_allocPoint",
+        type: "uint256"
+      },
+      {
+        indexed: true,
+        internalType: "contract IBaseRewardPool",
+        name: "_rewarder",
+        type: "address"
+      }
     ],
     name: "Set",
     type: "event"
   },
-  { anonymous: false, inputs: [{ indexed: false, internalType: "address", name: "account", type: "address" }], name: "Unpaused", type: "event" },
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "_user", type: "address" },
-      { indexed: false, internalType: "uint256", name: "_oldMgpPerSec", type: "uint256" },
-      { indexed: false, internalType: "uint256", name: "_newMgpPerSec", type: "uint256" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "account",
+        type: "address"
+      }
+    ],
+    name: "Unpaused",
+    type: "event"
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_user",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_oldMgpPerSec",
+        type: "uint256"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_newMgpPerSec",
+        type: "uint256"
+      }
     ],
     name: "UpdateEmissionRate",
     type: "event"
@@ -157,10 +380,30 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "_stakingToken", type: "address" },
-      { indexed: false, internalType: "uint256", name: "_lastRewardTimestamp", type: "uint256" },
-      { indexed: false, internalType: "uint256", name: "_lpSupply", type: "uint256" },
-      { indexed: false, internalType: "uint256", name: "_accMGPPerShare", type: "uint256" }
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_stakingToken",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_lastRewardTimestamp",
+        type: "uint256"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_lpSupply",
+        type: "uint256"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_accMGPPerShare",
+        type: "uint256"
+      }
     ],
     name: "UpdatePool",
     type: "event"
@@ -168,9 +411,24 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "_stakingToken", type: "address" },
-      { indexed: false, internalType: "uint256", name: "_oldAllocPoint", type: "uint256" },
-      { indexed: false, internalType: "uint256", name: "_newAllocPoint", type: "uint256" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_stakingToken",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_oldAllocPoint",
+        type: "uint256"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_newAllocPoint",
+        type: "uint256"
+      }
     ],
     name: "UpdatePoolAlloc",
     type: "event"
@@ -178,8 +436,18 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "address", name: "_newVlmgp", type: "address" },
-      { indexed: false, internalType: "address", name: "_oldVlmgp", type: "address" }
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_newVlmgp",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_oldVlmgp",
+        type: "address"
+      }
     ],
     name: "VLMGPUpdated",
     type: "event"
@@ -187,17 +455,56 @@ export const masterMGP = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "_user", type: "address" },
-      { indexed: true, internalType: "address", name: "_stakingToken", type: "address" },
-      { indexed: false, internalType: "uint256", name: "_amount", type: "uint256" }
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_user",
+        type: "address"
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_stakingToken",
+        type: "address"
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256"
+      }
     ],
     name: "Withdraw",
     type: "event"
   },
-  { inputs: [], name: "ARBRewarder", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "AllocationManagers", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  { inputs: [{ internalType: "address", name: "", type: "address" }], name: "MPGRewardPool", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" },
-  { inputs: [{ internalType: "address", name: "", type: "address" }], name: "PoolManagers", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" },
+  {
+    inputs: [],
+    name: "ARBRewarder",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "AllocationManagers",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "MPGRewardPool",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "PoolManagers",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address", name: "_mgp", type: "address" },
@@ -222,7 +529,19 @@ export const masterMGP = [
     stateMutability: "nonpayable",
     type: "function"
   },
-  { inputs: [{ internalType: "address", name: "_newAllocationManager", type: "address" }], name: "addWhitelistedAllocManager", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_newAllocationManager",
+        type: "address"
+      }
+    ],
+    name: "addWhitelistedAllocManager",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address", name: "_stakingToken", type: "address" },
@@ -230,9 +549,21 @@ export const masterMGP = [
     ],
     name: "allPendingLegacyTokens",
     outputs: [
-      { internalType: "address[][]", name: "bonusTokenAddresses", type: "address[][]" },
-      { internalType: "string[][]", name: "bonusTokenSymbols", type: "string[][]" },
-      { internalType: "uint256[][]", name: "pendingBonusRewards", type: "uint256[][]" }
+      {
+        internalType: "address[][]",
+        name: "bonusTokenAddresses",
+        type: "address[][]"
+      },
+      {
+        internalType: "string[][]",
+        name: "bonusTokenSymbols",
+        type: "string[][]"
+      },
+      {
+        internalType: "uint256[][]",
+        name: "pendingBonusRewards",
+        type: "uint256[][]"
+      }
     ],
     stateMutability: "view",
     type: "function"
@@ -245,14 +576,28 @@ export const masterMGP = [
     name: "allPendingTokens",
     outputs: [
       { internalType: "uint256", name: "pendingMGP", type: "uint256" },
-      { internalType: "address[]", name: "bonusTokenAddresses", type: "address[]" },
+      {
+        internalType: "address[]",
+        name: "bonusTokenAddresses",
+        type: "address[]"
+      },
       { internalType: "string[]", name: "bonusTokenSymbols", type: "string[]" },
-      { internalType: "uint256[]", name: "pendingBonusRewards", type: "uint256[]" }
+      {
+        internalType: "uint256[]",
+        name: "pendingBonusRewards",
+        type: "uint256[]"
+      }
     ],
     stateMutability: "view",
     type: "function"
   },
-  { inputs: [], name: "compounder", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
+  {
+    inputs: [],
+    name: "compounder",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address", name: "_stakingToken", type: "address" },
@@ -316,8 +661,20 @@ export const masterMGP = [
     stateMutability: "view",
     type: "function"
   },
-  { inputs: [{ internalType: "address", name: "stakingToken", type: "address" }], name: "getRewarder", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  { inputs: [{ internalType: "address", name: "", type: "address" }], name: "legacyRewarder_deprecated", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
+  {
+    inputs: [{ internalType: "address", name: "stakingToken", type: "address" }],
+    name: "getRewarder",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "legacyRewarder_deprecated",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address", name: "", type: "address" },
@@ -328,15 +685,49 @@ export const masterMGP = [
     stateMutability: "view",
     type: "function"
   },
-  { inputs: [], name: "mWomSV", outputs: [{ internalType: "contract ILocker", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  { inputs: [], name: "massUpdatePools", outputs: [], stateMutability: "nonpayable", type: "function" },
-  { inputs: [], name: "mgp", outputs: [{ internalType: "contract MGP", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  { inputs: [], name: "mgpPerSec", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-  { inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }], name: "multiclaim", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [],
+    name: "mWomSV",
+    outputs: [{ internalType: "contract ILocker", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "massUpdatePools",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "mgp",
+    outputs: [{ internalType: "contract MGP", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "mgpPerSec",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "address[]", name: "_stakingTokens", type: "address[]" }],
+    name: "multiclaim",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address[]", name: "_stakingTokens", type: "address[]" },
-      { internalType: "address[][]", name: "_rewardTokens", type: "address[][]" },
+      {
+        internalType: "address[][]",
+        name: "_rewardTokens",
+        type: "address[][]"
+      },
       { internalType: "address", name: "_account", type: "address" }
     ],
     name: "multiclaimFor",
@@ -347,7 +738,11 @@ export const masterMGP = [
   {
     inputs: [
       { internalType: "address[]", name: "_stakingTokens", type: "address[]" },
-      { internalType: "address[][]", name: "_rewardTokens", type: "address[][]" },
+      {
+        internalType: "address[][]",
+        name: "_rewardTokens",
+        type: "address[][]"
+      },
       { internalType: "address", name: "_account", type: "address" }
     ],
     name: "multiclaimOnBehalf",
@@ -358,16 +753,38 @@ export const masterMGP = [
   {
     inputs: [
       { internalType: "address[]", name: "_stakingTokens", type: "address[]" },
-      { internalType: "address[][]", name: "_rewardTokens", type: "address[][]" }
+      {
+        internalType: "address[][]",
+        name: "_rewardTokens",
+        type: "address[][]"
+      }
     ],
     name: "multiclaimSpec",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function"
   },
-  { inputs: [], name: "owner", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  { inputs: [], name: "pause", outputs: [], stateMutability: "nonpayable", type: "function" },
-  { inputs: [], name: "paused", outputs: [{ internalType: "bool", name: "", type: "bool" }], stateMutability: "view", type: "function" },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "pause",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "paused",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address", name: "_stakingToken", type: "address" },
@@ -384,16 +801,50 @@ export const masterMGP = [
     stateMutability: "view",
     type: "function"
   },
-  { inputs: [], name: "poolLength", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-  { inputs: [], name: "referral", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  { inputs: [{ internalType: "uint256", name: "", type: "uint256" }], name: "registeredToken", outputs: [{ internalType: "address", name: "", type: "address" }], stateMutability: "view", type: "function" },
-  { inputs: [{ internalType: "uint256", name: "index", type: "uint256" }], name: "removeWhitelistedAllocManager", outputs: [], stateMutability: "nonpayable", type: "function" },
-  { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [],
+    name: "poolLength",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "referral",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "registeredToken",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "index", type: "uint256" }],
+    name: "removeWhitelistedAllocManager",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
   {
     inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }],
     name: "rewarderBonusTokenInfo",
     outputs: [
-      { internalType: "address[]", name: "bonusTokenAddresses", type: "address[]" },
+      {
+        internalType: "address[]",
+        name: "bonusTokenAddresses",
+        type: "address[]"
+      },
       { internalType: "string[]", name: "bonusTokenSymbols", type: "string[]" }
     ],
     stateMutability: "view",
@@ -412,13 +863,35 @@ export const masterMGP = [
     stateMutability: "nonpayable",
     type: "function"
   },
-  { inputs: [{ internalType: "address", name: "_ARBRewarder", type: "address" }], name: "setARBRewarder", outputs: [], stateMutability: "nonpayable", type: "function" },
-  { inputs: [{ internalType: "address[]", name: "_pools", type: "address[]" }], name: "setARBRewarderAsQueuer", outputs: [], stateMutability: "nonpayable", type: "function" },
-  { inputs: [{ internalType: "address", name: "_compounder", type: "address" }], name: "setCompounder", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [{ internalType: "address", name: "_ARBRewarder", type: "address" }],
+    name: "setARBRewarder",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "address[]", name: "_pools", type: "address[]" }],
+    name: "setARBRewarderAsQueuer",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "address", name: "_compounder", type: "address" }],
+    name: "setCompounder",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address[]", name: "_stakingTokens", type: "address[]" },
-      { internalType: "address[][]", name: "_legacyRewarder", type: "address[][]" }
+      {
+        internalType: "address[][]",
+        name: "_legacyRewarder",
+        type: "address[][]"
+      }
     ],
     name: "setLegacyRewarder",
     outputs: [],
@@ -435,7 +908,13 @@ export const masterMGP = [
     stateMutability: "nonpayable",
     type: "function"
   },
-  { inputs: [{ internalType: "address", name: "_mWomSV", type: "address" }], name: "setMWomSV", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [{ internalType: "address", name: "_mWomSV", type: "address" }],
+    name: "setMWomSV",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address", name: "_account", type: "address" },
@@ -446,8 +925,20 @@ export const masterMGP = [
     stateMutability: "nonpayable",
     type: "function"
   },
-  { inputs: [{ internalType: "address", name: "_referral", type: "address" }], name: "setReferral", outputs: [], stateMutability: "nonpayable", type: "function" },
-  { inputs: [{ internalType: "address", name: "_vlmgp", type: "address" }], name: "setVlmgp", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [{ internalType: "address", name: "_referral", type: "address" }],
+    name: "setReferral",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "address", name: "_vlmgp", type: "address" }],
+    name: "setVlmgp",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address", name: "_stakingToken", type: "address" },
@@ -461,7 +952,13 @@ export const masterMGP = [
     stateMutability: "view",
     type: "function"
   },
-  { inputs: [], name: "startTimestamp", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
+  {
+    inputs: [],
+    name: "startTimestamp",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
   {
     inputs: [{ internalType: "address", name: "", type: "address" }],
     name: "tokenToPoolInfo",
@@ -477,8 +974,20 @@ export const masterMGP = [
     stateMutability: "view",
     type: "function"
   },
-  { inputs: [], name: "totalAllocPoint", outputs: [{ internalType: "uint256", name: "", type: "uint256" }], stateMutability: "view", type: "function" },
-  { inputs: [{ internalType: "address", name: "newOwner", type: "address" }], name: "transferOwnership", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [],
+    name: "totalAllocPoint",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address", name: "", type: "address" },
@@ -489,9 +998,27 @@ export const masterMGP = [
     stateMutability: "view",
     type: "function"
   },
-  { inputs: [], name: "unpause", outputs: [], stateMutability: "nonpayable", type: "function" },
-  { inputs: [{ internalType: "uint256", name: "_mgpPerSec", type: "uint256" }], name: "updateEmissionRate", outputs: [], stateMutability: "nonpayable", type: "function" },
-  { inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }], name: "updatePool", outputs: [], stateMutability: "nonpayable", type: "function" },
+  {
+    inputs: [],
+    name: "unpause",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "_mgpPerSec", type: "uint256" }],
+    name: "updateEmissionRate",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [{ internalType: "address", name: "_stakingToken", type: "address" }],
+    name: "updatePool",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address[]", name: "_stakingTokens", type: "address[]" },
@@ -513,7 +1040,13 @@ export const masterMGP = [
     stateMutability: "nonpayable",
     type: "function"
   },
-  { inputs: [], name: "vlmgp", outputs: [{ internalType: "contract ILocker", name: "", type: "address" }], stateMutability: "view", type: "function" },
+  {
+    inputs: [],
+    name: "vlmgp",
+    outputs: [{ internalType: "contract ILocker", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function"
+  },
   {
     inputs: [
       { internalType: "address", name: "_stakingToken", type: "address" },

@@ -1,13 +1,11 @@
 import { aprToApy, parseEther } from "../utilities";
+import { contracts } from "../config/contracts";
 import { memo, type ReactElement } from "react";
 import { useCachedUpdateable } from "../hooks/useUpdateable";
+import { useChainId, useReadContract } from "wagmi";
+import zod from "zod";
 
-import { Chains, contracts } from "../config/contracts";
-
-interface Properties {
-  account: `0x${string}` | undefined;
-  chain: Chains;
-}
+import { ABIs } from "../config/ABIs/abis";
 
 const getBorderClass = (mixed: boolean, better: boolean): string => {
   if (mixed) return "border-orange-600/50 bg-orange-900/20";
@@ -27,11 +25,20 @@ const getStatusColor = (mixed: boolean, better: boolean): string => {
   return "bg-green-400";
 };
 
-export const CrossChainYieldComparison = memo(({ account, chain }: Properties): ReactElement | undefined => {
+const streamRewardSchema = zod.object({
+  data: zod.object({
+    rewardTokenInfo: zod.array(zod.object({
+      apr: zod.number()
+    }))
+  })
+});
+
+export const CrossChainYieldComparison = memo((): ReactElement | undefined => {
+  const chain = useChainId();
   // Fetch MGP APR from both chains
   const [bscMgpAPR] = useCachedUpdateable(async () => {
-    const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=56&rewarder=${contracts[56].vlRewarder.address}`);
-    const body = await response.json() as { data: { rewardTokenInfo: { apr: number }[] } };
+    const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=56&rewarder=${contracts[56].vlRewarder}`);
+    const body = streamRewardSchema.parse(await response.json());
     let apr = 0;
     body.data.rewardTokenInfo.forEach(token => {
       apr += token.apr;
@@ -40,8 +47,8 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
   }, [], "BSC MGP APR", 0);
 
   const [arbMgpAPR] = useCachedUpdateable(async () => {
-    const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=42161&rewarder=${contracts[42_161].vlRewarder.address}`);
-    const body = await response.json() as { data: { rewardTokenInfo: { apr: number }[] } };
+    const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=42161&rewarder=${contracts[42_161].vlRewarder}`);
+    const body = streamRewardSchema.parse(await response.json());
     let apr = 0;
     body.data.rewardTokenInfo.forEach(token => {
       apr += token.apr;
@@ -50,32 +57,27 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
   }, [], "ARB MGP APR", 0);
 
   // Fetch exchange rates from both chains
-  const [bscExchangeRates] = useCachedUpdateable(async () => {
-    const mgpToRmgp = Number(await contracts[56].cMGP.read.get_dy([0n, 1n, parseEther(1)], { account })) / Number(parseEther(1));
-    const rmgpToYmgp = Number(await contracts[56].cMGP.read.get_dy([1n, 2n, parseEther(1)], { account })) / Number(parseEther(1));
-    const mgpToYmgp = Number(await contracts[56].cMGP.read.get_dy([0n, 2n, parseEther(1)], { account })) / Number(parseEther(1));
-    return { mgpToRmgp, mgpToYmgp, rmgpToYmgp };
-  }, [account], "BSC Exchange Rates", { mgpToRmgp: 1, mgpToYmgp: 1, rmgpToYmgp: 1 });
+  const bscExchangeRates = {
+    mgpToRmgp: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[56].cMGP, functionName: "get_dy", args: [0n, 1n, parseEther(1)] }).data),
+    mgpToYmgp: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[56].cMGP, functionName: "get_dy", args: [1n, 2n, parseEther(1)] }).data),
+    rmgpToYmgp: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[56].cMGP, functionName: "get_dy", args: [0n, 2n, parseEther(1)] }).data)
+  };
+  const arbExchangeRates = {
+    mgpToRmgp: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[42_161].cMGP, functionName: "get_dy", args: [0n, 1n, parseEther(1)] }).data),
+    mgpToYmgp: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[42_161].cMGP, functionName: "get_dy", args: [1n, 2n, parseEther(1)] }).data),
+    rmgpToYmgp: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[42_161].cMGP, functionName: "get_dy", args: [0n, 2n, parseEther(1)] }).data)
+  };
 
-  const [arbExchangeRates] = useCachedUpdateable(async () => {
-    const mgpToRmgp = Number(await contracts[42_161].cMGP.read.get_dy([0n, 1n, parseEther(1)], { account })) / Number(parseEther(1));
-    const rmgpToYmgp = Number(await contracts[42_161].cMGP.read.get_dy([1n, 2n, parseEther(1)], { account })) / Number(parseEther(1));
-    const mgpToYmgp = Number(await contracts[42_161].cMGP.read.get_dy([0n, 2n, parseEther(1)], { account })) / Number(parseEther(1));
-    return { mgpToRmgp, mgpToYmgp, rmgpToYmgp };
-  }, [account], "ARB Exchange Rates", { mgpToRmgp: 1, mgpToYmgp: 1, rmgpToYmgp: 1 });
 
   // Fetch locked amounts for calculating locked yMGP yields
-  const [bscLockedAmounts] = useCachedUpdateable(async () => {
-    const reefiMGP = await contracts[56].vlMGP.read.getUserTotalLocked([contracts[56].wstMGP.address]);
-    const lockedYMGP = await contracts[56].yMGP.read.totalLocked();
-    return { lockedYMGP, reefiMGP };
-  }, [], "BSC Locked Amounts", { lockedYMGP: 0n, reefiMGP: 0n });
-
-  const [arbLockedAmounts] = useCachedUpdateable(async () => {
-    const reefiMGP = await contracts[42_161].vlMGP.read.getUserTotalLocked([contracts[42_161].wstMGP.address]);
-    const lockedYMGP = await contracts[42_161].yMGP.read.totalLocked();
-    return { lockedYMGP, reefiMGP };
-  }, [], "ARB Locked Amounts", { lockedYMGP: 0n, reefiMGP: 0n });
+  const bscLockedAmounts = {
+    reefiMGP: useReadContract({ abi: ABIs.vlMGP, address: contracts[56].vlMGP, functionName: "getUserTotalLocked", args: [contracts[56].wstMGP] }).data,
+    lockedYMGP: useReadContract({ abi: ABIs.yMGP, address: contracts[56].yMGP, functionName: "totalLocked" }).data
+  };
+  const arbLockedAmounts = {
+    reefiMGP: useReadContract({ abi: ABIs.vlMGP, address: contracts[42_161].vlMGP, functionName: "getUserTotalLocked", args: [contracts[56].wstMGP] }).data,
+    lockedYMGP: useReadContract({ abi: ABIs.yMGP, address: contracts[42_161].yMGP, functionName: "totalLocked" }).data
+  };
 
   const currentChainAPR = chain === 56 ? bscMgpAPR : arbMgpAPR;
   const otherChainAPR = chain === 56 ? arbMgpAPR : bscMgpAPR;
@@ -131,188 +133,170 @@ export const CrossChainYieldComparison = memo(({ account, chain }: Properties): 
   // Only show if there's a meaningful difference (>0.5% absolute or >5% relative)
   if (maxDifference < 0.005 && maxPercentageDiff < 5) return undefined;
 
-
   const isMixedScenario = tokensToOptimize > 0 && tokensAlreadyOptimal > 0;
   const hasAnyBetterOpportunity = tokensToOptimize > 0;
 
-  return (
-    <div className={`rounded-xl border p-4 ${getBorderClass(isMixedScenario, hasAnyBetterOpportunity)}`}>
-      <div className="mb-2 flex items-center gap-2">
-        <div className={`size-3 rounded-full ${getStatusColor(isMixedScenario, hasAnyBetterOpportunity)}`} />
-        <h3 className="font-semibold">{getHeaderText(isMixedScenario, hasAnyBetterOpportunity)}</h3>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 text-sm lg:grid-cols-3">
-        {/* wstMGP Comparison */}
-        <div className="rounded-lg border border-green-600/30 bg-green-900/10 p-3">
-          <h4 className="mb-2 font-medium text-green-400">wstMGP (Auto-Compound)</h4>
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <span className="text-gray-400">{chain === 56 ? "BNB" : "ARB"}:</span>
-              <div className="text-right">
-                <div className="font-medium">{(currentRMGPEffective * 100).toFixed(2)}%</div>
-                <div className="text-xs text-gray-500">{currentChainRates.mgpToRmgp.toFixed(3)} wstMGP per MGP</div>
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">{otherChainName}:</span>
-              <div className="text-right">
-                <div className={`font-medium ${wstMGPDifference > 0 ? "text-yellow-400" : "text-gray-300"}`}>
-                  {(otherRMGPEffective * 100).toFixed(2)}%
-                </div>
-                <div className="text-xs text-gray-500">{otherChainRates.mgpToRmgp.toFixed(3)} wstMGP per MGP</div>
-              </div>
-            </div>
-            {Math.abs(wstMGPDifference) > 0.005 &&
-              <div className="border-t border-gray-700 pt-1 text-xs">
-                <span className={wstMGPDifference > 0 ? "text-yellow-300" : "text-green-300"}>
-                  {wstMGPDifference > 0 ? "📈 " : "🏆 "}
-                  {wstMGPDifference > 0 ? "Get " : "Earn "}{Math.abs(wstMGPDifference * 100).toFixed(2)}% more yield per MGP
-                  {wstMGPDifference > 0 ? ` on ${otherChainName}` : " here"}
-                </span>
-              </div>
-            }
-          </div>
-        </div>
-
-        {/* yMGP Comparison */}
-        <div className="rounded-lg border border-green-600/30 bg-green-900/10 p-3">
-          <h4 className="mb-2 font-medium text-green-400">yMGP (Unlocked)</h4>
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <span className="text-gray-400">{chain === 56 ? "BNB" : "ARB"}:</span>
-              <div className="text-right">
-                <div className="font-medium">{(currentYMGPEffective * 100).toFixed(2)}%</div>
-                <div className="text-xs text-gray-500">{currentChainRates.mgpToYmgp.toFixed(3)} yMGP per MGP</div>
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">{otherChainName}:</span>
-              <div className="text-right">
-                <div className={`font-medium ${yMGPDifference > 0 ? "text-yellow-400" : "text-gray-300"}`}>
-                  {(otherYMGPEffective * 100).toFixed(2)}%
-                </div>
-                <div className="text-xs text-gray-500">{otherChainRates.mgpToYmgp.toFixed(3)} yMGP per MGP</div>
-              </div>
-            </div>
-            {Math.abs(yMGPDifference) > 0.005 &&
-              <div className="border-t border-gray-700 pt-1 text-xs">
-                <span className={yMGPDifference > 0 ? "text-yellow-300" : "text-green-300"}>
-                  {yMGPDifference > 0 ? "📈 " : "🏆 "}
-                  {yMGPDifference > 0 ? "Get " : "Earn "}{Math.abs(yMGPDifference * 100).toFixed(2)}% more yield per MGP
-                  {yMGPDifference > 0 ? ` on ${otherChainName}` : " here"}
-                </span>
-              </div>
-            }
-          </div>
-        </div>
-
-        {/* Locked yMGP Comparison */}
-        <div className="rounded-lg border border-green-600/30 bg-green-900/10 p-3">
-          <h4 className="mb-2 font-medium text-green-400">Locked yMGP (Boosted)</h4>
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <span className="text-gray-400">{chain === 56 ? "BNB" : "ARB"}:</span>
-              <div className="text-right">
-                <div className="font-medium">{(currentLockedYMGPEffective * 100).toFixed(2)}%</div>
-                <div className="text-xs text-gray-500">{currentChainRates.mgpToYmgp.toFixed(3)} yMGP per MGP</div>
-                <div className="text-xs text-gray-500">+{(currentChainLockedBoost * 100).toFixed(1)}% boost</div>
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">{otherChainName}:</span>
-              <div className="text-right">
-                <div className={`font-medium ${lockedYMGPDifference > 0 ? "text-yellow-400" : "text-gray-300"}`}>
-                  {(otherLockedYMGPEffective * 100).toFixed(2)}%
-                </div>
-                <div className="text-xs text-gray-500">{otherChainRates.mgpToYmgp.toFixed(3)} yMGP per MGP</div>
-                <div className="text-xs text-gray-500">+{(otherChainLockedBoost * 100).toFixed(1)}% boost</div>
-              </div>
-            </div>
-            {Math.abs(lockedYMGPDifference) > 0.005 &&
-              <div className="border-t border-gray-700 pt-1 text-xs">
-                <span className={lockedYMGPDifference > 0 ? "text-yellow-300" : "text-green-300"}>
-                  {lockedYMGPDifference > 0 ? "📈 " : "🏆 "}
-                  {lockedYMGPDifference > 0 ? "Get " : "Earn "}{Math.abs(lockedYMGPDifference * 100).toFixed(2)}% more yield per MGP
-                  {lockedYMGPDifference > 0 ? ` on ${otherChainName}` : " here"}
-                </span>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-
-      {isMixedScenario &&
-        <div className="mt-3 rounded-lg bg-orange-800/30 p-3">
-          <p className="mb-2 text-sm font-medium text-orange-200">⚖️ Strategic choice: Different tokens perform better on different chains</p>
-          <div className="grid grid-cols-1 gap-3 text-xs md:grid-cols-2">
-            <div>
-              <p className="mb-1 font-medium text-orange-300">Better on {otherChainName}:</p>
-              <div className="space-y-1">
-                {wstMGPBetterElsewhere && <div>• wstMGP: +{(wstMGPDifference * 100).toFixed(2)}% yield ({otherChainRates.mgpToRmgp.toFixed(3)} vs {currentChainRates.mgpToRmgp.toFixed(3)} per MGP)</div>}
-                {yMGPBetterElsewhere && <div>• yMGP: +{(yMGPDifference * 100).toFixed(2)}% yield ({otherChainRates.mgpToYmgp.toFixed(3)} vs {currentChainRates.mgpToYmgp.toFixed(3)} per MGP)</div>}
-                {lockedYMGPBetterElsewhere && <div>• Locked yMGP: +{(lockedYMGPDifference * 100).toFixed(2)}% yield ({(otherChainLockedBoost * 100).toFixed(1)}% vs {(currentChainLockedBoost * 100).toFixed(1)}% boost)</div>}
-              </div>
-            </div>
-            <div>
-              <p className="mb-1 font-medium text-green-300">Better here ({chain === 56 ? "BNB Chain" : "Arbitrum"}):</p>
-              <div className="space-y-1">
-                {wstMGPBetterHere && <div>• wstMGP: +{(Math.abs(wstMGPDifference) * 100).toFixed(2)}% yield ({currentChainRates.mgpToRmgp.toFixed(3)} vs {otherChainRates.mgpToRmgp.toFixed(3)} per MGP)</div>}
-                {yMGPBetterHere && <div>• yMGP: +{(Math.abs(yMGPDifference) * 100).toFixed(2)}% yield ({currentChainRates.mgpToYmgp.toFixed(3)} vs {otherChainRates.mgpToYmgp.toFixed(3)} per MGP)</div>}
-                {lockedYMGPBetterHere && <div>• Locked yMGP: +{(Math.abs(lockedYMGPDifference) * 100).toFixed(2)}% yield ({(currentChainLockedBoost * 100).toFixed(1)}% vs {(otherChainLockedBoost * 100).toFixed(1)}% boost)</div>}
-              </div>
-            </div>
-          </div>
-          <div className="mt-2 rounded bg-orange-900/50 p-2 text-xs text-orange-200">
-            <strong>💡 Strategy:</strong> Consider diversifying across chains or focusing on the tokens that perform best where you currently are.
-          </div>
-        </div>
-      }
-
-      {hasAnyBetterOpportunity && !isMixedScenario &&
-        <div className="mt-3 rounded-lg bg-yellow-800/30 p-3">
-          <p className="mb-2 text-sm font-medium text-yellow-200">💡 You can get better returns on {otherChainName}:</p>
-          <div className="space-y-1 text-xs">
-            {wstMGPBetterElsewhere &&
-              <div className="flex justify-between">
-                <span>• wstMGP: Get {otherChainRates.mgpToRmgp.toFixed(3)} vs {currentChainRates.mgpToRmgp.toFixed(3)} tokens per MGP</span>
-                <span className="text-yellow-300">+{(wstMGPDifference * 100).toFixed(2)}% annual yield</span>
-              </div>
-            }
-            {yMGPBetterElsewhere &&
-              <div className="flex justify-between">
-                <span>• yMGP: Get {otherChainRates.mgpToYmgp.toFixed(3)} vs {currentChainRates.mgpToYmgp.toFixed(3)} tokens per MGP</span>
-                <span className="text-yellow-300">+{(yMGPDifference * 100).toFixed(2)}% annual yield</span>
-              </div>
-            }
-            {lockedYMGPBetterElsewhere &&
-              <div className="flex justify-between">
-                <span>• Locked yMGP: {(otherChainLockedBoost * 100).toFixed(1)}% vs {(currentChainLockedBoost * 100).toFixed(1)}% boost</span>
-                <span className="text-yellow-300">+{(lockedYMGPDifference * 100).toFixed(2)}% annual yield</span>
-              </div>
-            }
-          </div>
-          <div className="mt-2 rounded bg-yellow-900/50 p-2 text-xs text-yellow-200">
-            <strong>Example:</strong> 1000 MGP → {(1000 * Math.max(otherChainRates.mgpToRmgp, otherChainRates.mgpToYmgp)).toFixed(0)} tokens on {otherChainName} vs {(1000 * Math.max(currentChainRates.mgpToRmgp, currentChainRates.mgpToYmgp)).toFixed(0)} tokens here
-          </div>
-          <p className="mt-2 text-xs text-yellow-300">
-            Higher yields come from {otherChainBaseAPY > currentChainBaseAPY ? "better base rates" : "more favorable exchange rates"} on {otherChainName}.
-          </p>
-        </div>
-      }
-
-      {!hasAnyBetterOpportunity &&
-        <div className="mt-3 rounded-lg bg-green-800/30 p-3">
-          <p className="mb-2 text-sm font-medium text-green-200">✅ You're maximizing your MGP returns here!</p>
-          <div className="space-y-1 text-xs text-green-300">
-            {Math.abs(wstMGPDifference) > 0.005 && <div>• wstMGP: Earning {(Math.abs(wstMGPDifference) * 100).toFixed(2)}% more than {otherChainName} ({currentChainRates.mgpToRmgp.toFixed(3)} vs {otherChainRates.mgpToRmgp.toFixed(3)} tokens per MGP)</div>}
-            {Math.abs(yMGPDifference) > 0.005 && <div>• yMGP: Earning {(Math.abs(yMGPDifference) * 100).toFixed(2)}% more than {otherChainName} ({currentChainRates.mgpToYmgp.toFixed(3)} vs {otherChainRates.mgpToYmgp.toFixed(3)} tokens per MGP)</div>}
-            {Math.abs(lockedYMGPDifference) > 0.005 && <div>• Locked yMGP: Earning {(Math.abs(lockedYMGPDifference) * 100).toFixed(2)}% more than {otherChainName} ({(currentChainLockedBoost * 100).toFixed(1)}% vs {(otherChainLockedBoost * 100).toFixed(1)}% boost)</div>}
-          </div>
-        </div>
-      }
+  return <div className={`rounded-xl border p-4 ${getBorderClass(isMixedScenario, hasAnyBetterOpportunity)}`}>
+    <div className="mb-2 flex items-center gap-2">
+      <div className={`size-3 rounded-full ${getStatusColor(isMixedScenario, hasAnyBetterOpportunity)}`} />
+      <h3 className="font-semibold">{getHeaderText(isMixedScenario, hasAnyBetterOpportunity)}</h3>
     </div>
-  );
+    <div className="grid grid-cols-1 gap-4 text-sm lg:grid-cols-3">
+      {/* wstMGP Comparison */}
+      <div className="rounded-lg border border-green-600/30 bg-green-900/10 p-3">
+        <h4 className="mb-2 font-medium text-green-400">wstMGP (Auto-Compound)</h4>
+        <div className="space-y-1">
+          <div className="flex justify-between">
+            <span className="text-gray-400">{chain === 56 ? "BNB" : "ARB"}:</span>
+            <div className="text-right">
+              <div className="font-medium">{(currentRMGPEffective * 100).toFixed(2)}%</div>
+              <div className="text-xs text-gray-500">{currentChainRates.mgpToRmgp.toFixed(3)} wstMGP per MGP</div>
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-400">{otherChainName}:</span>
+            <div className="text-right">
+              <div className={`font-medium ${wstMGPDifference > 0 ? "text-yellow-400" : "text-gray-300"}`}>{(otherRMGPEffective * 100).toFixed(2)}%</div>
+              <div className="text-xs text-gray-500">{otherChainRates.mgpToRmgp.toFixed(3)} wstMGP per MGP</div>
+            </div>
+          </div>
+          {Math.abs(wstMGPDifference) > 0.005 && <div className="border-t border-gray-700 pt-1 text-xs">
+            <span className={wstMGPDifference > 0 ? "text-yellow-300" : "text-green-300"}>
+              {wstMGPDifference > 0 ? "📈 " : "🏆 "}
+              {wstMGPDifference > 0 ? "Get " : "Earn "}
+              {Math.abs(wstMGPDifference * 100).toFixed(2)}% more yield
+              per MGP
+              {wstMGPDifference > 0 ? ` on ${otherChainName}` : " here"}
+            </span>
+          </div>}
+        </div>
+      </div>
+      {/* yMGP Comparison */}
+      <div className="rounded-lg border border-green-600/30 bg-green-900/10 p-3">
+        <h4 className="mb-2 font-medium text-green-400">yMGP (Unlocked)</h4>
+        <div className="space-y-1">
+          <div className="flex justify-between">
+            <span className="text-gray-400">{chain === 56 ? "BNB" : "ARB"}:</span>
+            <div className="text-right">
+              <div className="font-medium">{(currentYMGPEffective * 100).toFixed(2)}%</div>
+              <div className="text-xs text-gray-500">{currentChainRates.mgpToYmgp.toFixed(3)} yMGP per MGP</div>
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-400">{otherChainName}:</span>
+            <div className="text-right">
+              <div className={`font-medium ${yMGPDifference > 0 ? "text-yellow-400" : "text-gray-300"}`}>{(otherYMGPEffective * 100).toFixed(2)}%</div>
+              <div className="text-xs text-gray-500">{otherChainRates.mgpToYmgp.toFixed(3)} yMGP per MGP</div>
+            </div>
+          </div>
+          {Math.abs(yMGPDifference) > 0.005 && <div className="border-t border-gray-700 pt-1 text-xs">
+            <span className={yMGPDifference > 0 ? "text-yellow-300" : "text-green-300"}>{yMGPDifference > 0 ? "📈 " : "🏆 "} {yMGPDifference > 0 ? "Get " : "Earn "} {Math.abs(yMGPDifference * 100).toFixed(2)}% more yield per MGP {yMGPDifference > 0 ? ` on ${otherChainName}` : " here"}</span>
+          </div>}
+        </div>
+      </div>
+      {/* Locked yMGP Comparison */}
+      <div className="rounded-lg border border-green-600/30 bg-green-900/10 p-3">
+        <h4 className="mb-2 font-medium text-green-400">Locked yMGP (Boosted)</h4>
+        <div className="space-y-1">
+          <div className="flex justify-between">
+            <span className="text-gray-400">{chain === 56 ? "BNB" : "ARB"}:</span>
+            <div className="text-right">
+              <div className="font-medium">{(currentLockedYMGPEffective * 100).toFixed(2)}%</div>
+              <div className="text-xs text-gray-500">{currentChainRates.mgpToYmgp.toFixed(3)} yMGP per MGP</div>
+              <div className="text-xs text-gray-500">+{(currentChainLockedBoost * 100).toFixed(1)}% boost</div>
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-400">{otherChainName}:</span>
+            <div className="text-right">
+              <div className={`font-medium ${lockedYMGPDifference > 0 ? "text-yellow-400" : "text-gray-300"}`}>{(otherLockedYMGPEffective * 100).toFixed(2)}%</div>
+              <div className="text-xs text-gray-500">{otherChainRates.mgpToYmgp.toFixed(3)} yMGP per MGP</div>
+              <div className="text-xs text-gray-500">+{(otherChainLockedBoost * 100).toFixed(1)}% boost</div>
+            </div>
+          </div>
+          {Math.abs(lockedYMGPDifference) > 0.005 && <div className="border-t border-gray-700 pt-1 text-xs">
+            <span className={lockedYMGPDifference > 0 ? "text-yellow-300" : "text-green-300"}>
+              {lockedYMGPDifference > 0 ? "📈 " : "🏆 "}
+              {lockedYMGPDifference > 0 ? "Get " : "Earn "}
+              {Math.abs(lockedYMGPDifference * 100).toFixed(2)}% more
+              yield per MGP
+              {lockedYMGPDifference > 0 ? ` on ${otherChainName}` : " here"}
+            </span>
+          </div>}
+        </div>
+      </div>
+    </div>
+    {isMixedScenario ? <div className="mt-3 rounded-lg bg-orange-800/30 p-3">
+      <p className="mb-2 text-sm font-medium text-orange-200">⚖️ Strategic choice: Different tokens perform better on different chains</p>
+      <div className="grid grid-cols-1 gap-3 text-xs md:grid-cols-2">
+        <div>
+          <p className="mb-1 font-medium text-orange-300">Better on {otherChainName}:</p>
+          <div className="space-y-1">
+            {wstMGPBetterElsewhere ? <div> • wstMGP: +{(wstMGPDifference * 100).toFixed(2)}% yield ({otherChainRates.mgpToRmgp.toFixed(3)} vs {currentChainRates.mgpToRmgp.toFixed(3)} per MGP)</div> : undefined}
+            {yMGPBetterElsewhere ? <div>• yMGP: +{(yMGPDifference * 100).toFixed(2)}% yield ({otherChainRates.mgpToYmgp.toFixed(3)} vs {currentChainRates.mgpToYmgp.toFixed(3)} per MGP)</div> : undefined}
+            {lockedYMGPBetterElsewhere ? <div>• Locked yMGP: +{(lockedYMGPDifference * 100).toFixed(2)}% yield ({(otherChainLockedBoost * 100).toFixed(1)}% vs  {(currentChainLockedBoost * 100).toFixed(1)}% boost)</div> : undefined}
+          </div>
+        </div>
+        <div>
+          <p className="mb-1 font-medium text-green-300">Better here ({chain === 56 ? "BNB Chain" : "Arbitrum"}):</p>
+          <div className="space-y-1">
+            {wstMGPBetterHere ? <div>• wstMGP: +{(Math.abs(wstMGPDifference) * 100).toFixed(2)} % yield ({currentChainRates.mgpToRmgp.toFixed(3)} vs {otherChainRates.mgpToRmgp.toFixed(3)} per MGP)</div> : undefined}
+            {yMGPBetterHere ? <div>• yMGP: +{(Math.abs(yMGPDifference) * 100).toFixed(2)}% yield ({currentChainRates.mgpToYmgp.toFixed(3)} vs {otherChainRates.mgpToYmgp.toFixed(3)} per MGP)</div> : undefined}
+            {lockedYMGPBetterHere ? <div>• Locked yMGP: +{(Math.abs(lockedYMGPDifference) * 100).toFixed(2)}% yield ({(currentChainLockedBoost * 100).toFixed(1)}% vs {(otherChainLockedBoost * 100).toFixed(1)}% boost)</div> : undefined}
+          </div>
+        </div>
+      </div>
+      <div className="mt-2 rounded bg-orange-900/50 p-2 text-xs text-orange-200">
+        <strong>💡 Strategy:</strong>
+        {" "}
+        Consider diversifying across chains
+        or focusing on the tokens that perform best where you currently
+        are.
+      </div>
+    </div> : undefined}
+    {hasAnyBetterOpportunity && !isMixedScenario ? <div className="mt-3 rounded-lg bg-yellow-800/30 p-3">
+      <p className="mb-2 text-sm font-medium text-yellow-200">💡 You can get better returns on {otherChainName}:</p>
+      <div className="space-y-1 text-xs">
+        {wstMGPBetterElsewhere ? <div className="flex justify-between">
+          <span>• wstMGP: Get {otherChainRates.mgpToRmgp.toFixed(3)} vs {currentChainRates.mgpToRmgp.toFixed(3)} tokens per MGP</span>
+          <span className="text-yellow-300">+{(wstMGPDifference * 100).toFixed(2)}% annual yield</span>
+        </div> : undefined}
+        {yMGPBetterElsewhere ? <div className="flex justify-between">
+          <span>• yMGP: Get {otherChainRates.mgpToYmgp.toFixed(3)} vs {currentChainRates.mgpToYmgp.toFixed(3)} tokens per MGP</span>
+          <span className="text-yellow-300">+{(yMGPDifference * 100).toFixed(2)}% annual yield</span>
+        </div> : undefined}
+        {lockedYMGPBetterElsewhere ? <div className="flex justify-between">
+          <span>• Locked yMGP: {(otherChainLockedBoost * 100).toFixed(1)}% vs {(currentChainLockedBoost * 100).toFixed(1)}% boost</span>
+          <span className="text-yellow-300">+{(lockedYMGPDifference * 100).toFixed(2)}% annual yield</span>
+        </div> : undefined}
+      </div>
+      <div className="mt-2 rounded bg-yellow-900/50 p-2 text-xs text-yellow-200">Example: 1000 MGP → {(1000 * Math.max(otherChainRates.mgpToRmgp, otherChainRates.mgpToYmgp)).toFixed(0)} tokens on {otherChainName} vs {(1000 * Math.max(currentChainRates.mgpToRmgp, currentChainRates.mgpToYmgp)).toFixed(0)} tokens here</div>
+      <p className="mt-2 text-xs text-yellow-300">Higher yields come from {otherChainBaseAPY > currentChainBaseAPY ? "better base rates" : "more favorable exchange rates"} on {otherChainName}.</p>
+    </div> : undefined}
+    {!hasAnyBetterOpportunity && <div className="mt-3 rounded-lg bg-green-800/30 p-3">
+      <p className="mb-2 text-sm font-medium text-green-200">✅ You&apos;re maximizing your MGP returns here!</p>
+      <div className="space-y-1 text-xs text-green-300">
+        {Math.abs(wstMGPDifference) > 0.005 && <div>
+          • wstMGP: Earning{" "}
+          {(Math.abs(wstMGPDifference) * 100).toFixed(2)}% more than{" "}
+          {otherChainName} ({currentChainRates.mgpToRmgp.toFixed(3)} vs{" "}
+          {otherChainRates.mgpToRmgp.toFixed(3)} tokens per MGP)
+        </div>}
+        {Math.abs(yMGPDifference) > 0.005 && <div>
+          • yMGP: Earning {(Math.abs(yMGPDifference) * 100).toFixed(2)}%
+          more than {otherChainName} (
+          {currentChainRates.mgpToYmgp.toFixed(3)} vs{" "}
+          {otherChainRates.mgpToYmgp.toFixed(3)} tokens per MGP)
+        </div>}
+        {Math.abs(lockedYMGPDifference) > 0.005 && <div>
+          • Locked yMGP: Earning{" "}
+          {(Math.abs(lockedYMGPDifference) * 100).toFixed(2)}% more than{" "}
+          {otherChainName} ({(currentChainLockedBoost * 100).toFixed(1)}
+          % vs {(otherChainLockedBoost * 100).toFixed(1)}% boost)
+        </div>}
+      </div>
+    </div>}
+  </div>;
 });
 
 CrossChainYieldComparison.displayName = "CrossChainYieldComparison";

@@ -1,16 +1,16 @@
-import { ReactNode, ButtonHTMLAttributes } from "react";
+import type { ReactNode, ButtonHTMLAttributes } from "react";
 
 interface ButtonProperties extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "danger" | "ghost" | "clear";
-  size?: "xs" | "sm" | "md" | "lg";
-  isLoading?: boolean;
-  children: ReactNode;
-  type: "submit" | "reset" | "button";
-  tooltip?: string;
-  tooltipPosition?: "top" | "bottom" | "left" | "right";
+  readonly children: ReactNode;
+  readonly type: "submit" | "reset" | "button";
+  readonly variant?: "primary" | "secondary" | "danger" | "ghost" | "clear";
+  readonly size?: "xs" | "sm" | "md" | "lg";
+  readonly isLoading?: boolean;
+  readonly tooltip?: string;
+  readonly tooltipPosition?: "top" | "bottom" | "left" | "right";
 }
 
-export const Button = ({ ref, variant = "primary", size = "md", isLoading = false, type, disabled, children, className = "", tooltip, tooltipPosition = "top", ...properties }: ButtonProperties & { ref?: React.RefObject<HTMLButtonElement | null> }) => {
+export const Button = ({ ref, variant = "primary", size = "md", isLoading = false, type, disabled, children, className = "", tooltip, tooltipPosition = "top", ...properties }: ButtonProperties & Readonly<{ ref?: React.RefObject<HTMLButtonElement | null> }>) => {
   const baseClasses = "relative rounded-lg font-medium transition-all duration-300 transform active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:cursor-not-allowed disabled:opacity-50 disabled:transform-none";
 
   const variants = {
@@ -51,28 +51,19 @@ export const Button = ({ ref, variant = "primary", size = "md", isLoading = fals
     return "px-2 py-1";
   };
 
-  return (
-    <button ref={ref} disabled={disabled ?? isLoading} type={type} className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${tooltipClasses} ${className}`} {...properties}>
-      <div className="relative overflow-hidden rounded-lg size-full">
-        {variant !== "clear" && <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent opacity-50" />}
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700" />
-        <div className="relative flex items-center justify-center gap-2 h-full">
-          <div className={`flex items-center justify-center gap-2 ${color()}`}>
-            {isLoading && <div className="animate-spin rounded-full size-4 border-2 border-white border-t-transparent" />}
-            {children}
-          </div>
-        </div>
+  return <button className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${tooltipClasses} ${className}`} disabled={disabled ?? isLoading} ref={ref} type={type} {...properties}>
+    <div className="relative overflow-hidden rounded-lg size-full">
+      {variant !== "clear" && <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-white/5 to-transparent opacity-50" />}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700" />
+      <div className="relative flex items-center justify-center gap-2 h-full">
+        <div className={`flex items-center justify-center gap-2 ${color()}`}>{isLoading ? <div className="animate-spin rounded-full size-4 border-2 border-white border-t-transparent" /> : undefined}{children}</div>
       </div>
-      {tooltip &&
-        <div className={`absolute z-50 pointer-events-none opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-200 ${tooltipPositionClasses[tooltipPosition]}`}>
-          <div className="bg-gray-800 text-white text-sm px-2 py-1 rounded whitespace-nowrap shadow-lg border border-gray-700">
-            {tooltip}
-          </div>
-          <div className={`absolute size-0 ${tooltipArrowClasses[tooltipPosition]}`} />
-        </div>
-      }
-    </button>
-  );
+    </div>
+    {tooltip ? <div className={`absolute z-50 pointer-events-none opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-200 ${tooltipPositionClasses[tooltipPosition]}`}>
+      <div className="bg-gray-800 text-white text-sm px-2 py-1 rounded whitespace-nowrap shadow-lg border border-gray-700">{tooltip}</div>
+      <div className={`absolute size-0 ${tooltipArrowClasses[tooltipPosition]}`} />
+    </div> : undefined}
+  </button>;
 };
 
 Button.displayName = "Button";

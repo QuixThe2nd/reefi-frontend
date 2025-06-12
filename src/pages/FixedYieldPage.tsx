@@ -1,34 +1,37 @@
 import { formatEther, formatTime } from "../utilities";
 import { memo, type ReactElement } from "react";
-import { useAllowances } from "../state/useAllowances";
-import { useAmounts } from "../state/useAmounts";
-import { useBalances } from "../state/useBalances";
-import { useSupplies } from "../state/useSupplies";
-import { useWithdraws } from "../state/useWithdraws";
 
-import { AllCoin, Chains, CoreCoin, PrimaryCoin } from "../config/contracts";
 import { Page } from "../components/Page";
 import { SwapToken } from "../components/SwapToken";
 
+import type { Chains, CoreCoin, PrimaryCoin, TransferrableCoin } from "../config/contracts";
+import type { UseSendTransactionReturnType, UseWriteContractReturnType } from "wagmi";
+import type { useAllowances } from "../state/useAllowances";
+import type { useAmounts } from "../state/useAmounts";
+import type { useBalances } from "../state/useBalances";
+import type { useSupplies } from "../state/useSupplies";
+import type { useWithdraws } from "../state/useWithdraws";
+import type { wagmiConfig } from "..";
+
 interface Properties {
-  mgpAPR: number;
-  balances: ReturnType<typeof useBalances>[0];
-  setSend: (_send: bigint) => void;
-  send: bigint;
-  mgpRmgpCurveRate: number;
-  mgpRmgpCurveAmount: bigint;
-  allowances: ReturnType<typeof useAllowances>[0];
-  chain: Chains;
-  lockedReefiMGP: bigint;
-  rmgpSupply: bigint;
-  unlockSchedule: ReturnType<typeof useWithdraws>[0]["reefi"]["unlockSchedule"];
-  approve: (_tokenOut: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
-  mintWETH: () => void;
-  swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
-  curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
-  nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
-  curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
-  supplies: ReturnType<typeof useSupplies>[0];
+  readonly mgpAPR: number;
+  readonly balances: ReturnType<typeof useBalances>;
+  readonly setSend: (_send: bigint) => void;
+  readonly send: bigint;
+  readonly mgpRmgpCurveRate: number;
+  readonly mgpRmgpCurveAmount: bigint;
+  readonly allowances: ReturnType<typeof useAllowances>;
+  readonly chain: Chains;
+  readonly lockedReefiMGP: bigint;
+  readonly rmgpSupply: bigint;
+  readonly unlockSchedule: ReturnType<typeof useWithdraws>["reefi"]["unlockSchedule"];
+  readonly approve: (_coin: TransferrableCoin, _spender: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _infinity: boolean, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly mintWETH: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`, _sendTransaction: UseSendTransactionReturnType<typeof wagmiConfig>["sendTransaction"]) => void;
+  readonly curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
+  readonly supplies: ReturnType<typeof useSupplies>;
 }
 
 export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, mgpRmgpCurveRate, mgpRmgpCurveAmount, allowances, chain, approve, mintWETH, swap, lockedReefiMGP, rmgpSupply, unlockSchedule, curveAmounts, supplies, curveBuy, nativeSwap }: Properties): ReactElement => {
@@ -38,13 +41,8 @@ export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, mgpRmgpCu
   const daysToWithdraw = withdrawalTime / (60 * 60 * 24);
   const annualizedYield = fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100;
 
-  return <Page info={[
-    "Swap MGP to wstMGP under the peg, then immediately submit for withdrawal to earn guaranteed yield and wait 60-120 days.",
-    "This strategy monetizes the wstMGP depeg by capturing the difference between market price and the burn rate.",
-    "The yield is fixed and known upfront, unlike variable staking yields that can change over time."
-  ]}>
-    <SwapToken excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "yMGP"]} label="Buy & Withdraw" originalTokenIn="MGP" tokenOut="wstMGP" balances={balances} setSend={setSend} send={send} allowances={allowances} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} curveAmounts={curveAmounts} supplies={supplies} curveBuy={curveBuy} nativeSwap={nativeSwap} />
-
+  return <Page info={[<span key="swap">Swap MGP to wstMGP under the peg, then immediately submit for withdrawal to earn guaranteed yield and wait 60-120 days.</span>, <span key="strategy">This strategy monetizes the wstMGP depeg by capturing the difference between market price and the burn rate.</span>, <span key="yield">The yield is fixed and known upfront, unlike variable staking yields that can change over time.</span>]}>
+    <SwapToken allowances={allowances} approve={approve} balances={balances} chain={chain} curveAmounts={curveAmounts} curveBuy={curveBuy} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "yMGP"]} label="Buy & Withdraw" mintWETH={mintWETH} nativeSwap={nativeSwap} originalTokenIn="MGP" send={send} setSend={setSend} supplies={supplies} swap={swap} tokenOut="wstMGP" />
     <div className="mt-4 rounded-lg border border-green-700 bg-green-900/20 p-4">
       <h3 className="mb-2 text-lg font-semibold text-green-400">🎯 Earn Fixed Yield</h3>
       <div className="space-y-2 text-sm">
@@ -69,11 +67,8 @@ export const FixedYieldPage = memo(({ mgpAPR, balances, setSend, send, mgpRmgpCu
           <span className="text-green-400">{annualizedYield.toFixed(2)}%</span>
         </div>
       </div>
-      <div className="mt-3 rounded bg-green-900/30 p-2 text-xs text-green-200">
-        <strong>Example:</strong> Spend {formatEther(send).toFixed(2)} MGP → Get {(formatEther(send) / mgpRmgpCurveRate).toFixed(2)} wstMGP → Withdraw {(formatEther(send) / mgpRmgpCurveRate * burnRate).toFixed(2)} MGP = +{(formatEther(send) / mgpRmgpCurveRate * burnRate - formatEther(send)).toFixed(2)} MGP profit
-      </div>
+      <div className="mt-3 rounded bg-green-900/30 p-2 text-xs text-green-200">Example: Spend {formatEther(send).toFixed(2)} MGP → Get {(formatEther(send) / mgpRmgpCurveRate).toFixed(2)} wstMGP → Withdraw {(formatEther(send) / mgpRmgpCurveRate * burnRate).toFixed(2)} MGP = +{(formatEther(send) / mgpRmgpCurveRate * burnRate - formatEther(send)).toFixed(2)} MGP profit</div>
     </div>
-
     <div className="mt-4 text-sm text-gray-400">
       <div className="mb-1 flex justify-between">
         <span>Variable MGP APR</span>

@@ -1,25 +1,30 @@
-import { decimals, SecondaryCoin } from "../config/contracts";
+import { decimals, type SecondaryCoin } from "../config/contracts";
 import { formatEther, formatNumber, formatTime } from "../utilities";
 import { memo, type ReactElement } from "react";
-import { usePrices } from "../state/usePrices";
+import { useWriteContract, type UseWriteContractReturnType } from "wagmi";
 
 import { Button } from "../components/Button";
 import { Page } from "../components/Page";
 
+import type { usePrices } from "../state/usePrices";
+import type { wagmiConfig } from "..";
+
 interface Properties {
-  uncompoundedMGPYield: number;
-  uncompoundedYMGPYield: number;
-  estimatedCompoundGasFee: bigint;
-  pendingRewards: Record<SecondaryCoin, { rewards: bigint }>;
-  mgpAPR: number;
-  prices: ReturnType<typeof usePrices>[0];
-  compoundRMGP: () => void;
-  reefiMGPLocked: bigint;
+  readonly uncompoundedMGPYield: number;
+  readonly uncompoundedYMGPYield: number;
+  readonly estimatedCompoundGasFee: bigint;
+  readonly pendingRewards: Record<SecondaryCoin, { rewards: bigint }>;
+  readonly mgpAPR: number;
+  readonly prices: ReturnType<typeof usePrices>;
+  readonly compoundRMGP: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly reefiMGPLocked: bigint;
 }
 
 export const CompoundYield = memo(({ uncompoundedMGPYield, uncompoundedYMGPYield, estimatedCompoundGasFee, pendingRewards, mgpAPR, reefiMGPLocked, prices, compoundRMGP }: Properties): ReactElement => {
+  const { writeContract } = useWriteContract();
+
   const textColor = `text-${uncompoundedMGPYield * prices.MGP * 0.01 > estimatedCompoundGasFee ? "green" : "red"}-400`;
-  return <Page info="Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of wstMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the compound button, you will receive 1% of the pending yield." noTopMargin={true}>
+  return <Page info={<span>Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of wstMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the compound button, you will receive 1% of the pending yield.</span>} noTopMargin>
     <h3 className="mb-2 font-medium">Uncompounded Yield</h3>
     <div className="rounded-lg bg-gray-700/50 p-4">
       <div className="mb-2 flex items-center justify-between">
@@ -31,7 +36,7 @@ export const CompoundYield = memo(({ uncompoundedMGPYield, uncompoundedYMGPYield
         <p className="text-xs">{formatNumber(prices[symbol] * Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 4)} MGP</p>
       </div>)}
     </div>
-    <Button className="mt-4 w-full" onClick={compoundRMGP} type="button">Compound Yield (Get ~{uncompoundedYMGPYield} yMGP)</Button>
+    <Button className="mt-4 w-full" onClick={() => compoundRMGP(writeContract)} type="button">Compound Yield (Get ~{uncompoundedYMGPYield} yMGP)</Button>
     <div className="mt-4 text-sm text-gray-400">
       <div className="mb-1 flex justify-between">
         <span>Estimated Payout</span>

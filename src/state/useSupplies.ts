@@ -1,27 +1,18 @@
-import { contracts, CoreCoin } from "../config/contracts";
+import { contracts } from "../config/contracts";
 import { parseEther } from "../utilities";
-import { useAsyncReducer } from "../hooks/useAsyncReducer";
-import { useEffect } from "react";
-import { useWallet } from "./useWallet";
+import { useChainId, useReadContract } from "wagmi";
 
-export const useSupplies = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0] }) => {
-  const [supplies, updateSupplies] = useAsyncReducer<Record<CoreCoin, bigint>>(async () => {
-    const results = await Promise.allSettled([
-      contracts[56].MGP.read.totalSupply(),
-      contracts[wallet.chain].wstMGP.read.totalSupply(),
-      contracts[wallet.chain].yMGP.read.totalSupply(),
-      // contracts[wallet.chain].vMGP.read.totalSupply(),
-      Promise.resolve(parseEther(8)),
-      contracts[wallet.chain].yMGP.read.totalLocked(),
-      contracts[wallet.chain].lvMGP.read.totalSupply(),
-      Promise.resolve(await contracts[56].vlMGP.read.totalSupply() + await contracts[42_161].vlMGP.read.totalSupply())
-    ]);
-    const [MGP, wstMGP, yMGP, vMGP, lyMGP, lvMGP, vlMGP] = results.map(result => result.status === "fulfilled" ? result.value : 0n) as [bigint, bigint, bigint, bigint, bigint, bigint, bigint];
-    return { MGP, wstMGP, yMGP, vMGP, lyMGP, lvMGP, vlMGP };
-  }, { MGP: 0n, wstMGP: 0n, yMGP: 0n, vMGP: 0n, vlMGP: 0n, lyMGP: 0n, lvMGP: 0n });
+import { ABIs } from "../config/ABIs/abis";
 
-  useEffect(() => {
-    updateSupplies();
-  }, [wallet.chain]);
-  return [supplies, updateSupplies] as const;
+export const useSupplies = () => {
+  const chain = useChainId();
+  return {
+    MGP: 1_000_000_000_000_000_000_000_000_000n, // 1 Billion
+    wstMGP: useReadContract({ abi: ABIs.wstMGP, address: contracts[chain].wstMGP, functionName: "totalSupply" }).data ?? 0n,
+    yMGP: useReadContract({ abi: ABIs.yMGP, address: contracts[chain].yMGP, functionName: "totalSupply" }).data ?? 0n,
+    vMGP: parseEther(8),
+    lyMGP: useReadContract({ abi: ABIs.yMGP, address: contracts[chain].yMGP, functionName: "totalLocked" }).data ?? 0n,
+    lvMGP: parseEther(2),
+    vlMGP: (useReadContract({ abi: ABIs.vlMGP, address: contracts[56].vlMGP, functionName: "totalSupply" }).data ?? 0n) + (useReadContract({ abi: ABIs.vlMGP, address: contracts[42_161].vlMGP, functionName: "totalSupply" }).data ?? 0n)
+  };
 };

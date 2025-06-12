@@ -12,31 +12,38 @@ const features: readonly Feature[] = [
     description: "Earn 90% of vlMGP yield with automatic compounding through wstMGP, maintaining liquidity while maximizing returns.",
     icon: "🔄",
     title: "Auto-Compounding Yield"
-  }, {
+  },
+  {
     description: "Receive transferrable tokens for all MGP derivatives, combining liquidity with staking rewards.",
     icon: "💧",
     title: "Liquid Derivatives"
-  }, {
+  },
+  {
     description: "Lock yMGP to earn additional protocol fees (5% of vlMGP yield) on top of base wstMGP returns.",
     icon: "📈",
     title: "Enhanced Yields"
-  }, {
+  },
+  {
     description: "Control Reefi's vlMGP voting power through vMGP tokens, amplifying your influence in Magpie governance decisions.",
     icon: "🗳️",
     title: "Boosted Governance Power"
-  }, {
+  },
+  {
     description: "Earn 1% of all pending yield by compounding rewards for the entire protocol - automated income opportunity.",
     icon: "💰",
     title: "Compound Rewards"
-  }, {
+  },
+  {
     description: "Profit from rate differences between native minting, Curve trading, and withdrawal mechanisms.",
     icon: "⚖️",
     title: "Arbitrage Opportunities"
-  }, {
+  },
+  {
     description: "Access Reefi on both BNB Chain and Arbitrum networks with seamless multi-chain functionality.",
     icon: "🌐",
     title: "Cross-Chain Support"
-  }, {
+  },
+  {
     description: "Built-in peg stability mechanisms and withdrawal queues protect against depegging while maintaining liquidity.",
     icon: "🛡️",
     title: "Risk Management"
@@ -44,12 +51,12 @@ const features: readonly Feature[] = [
 ] as const;
 
 interface Properties {
-  mgpAPR: number;
-  lockedYmgpAPY: number;
-  mgpPrice: number;
-  vmgpSupply: bigint;
-  reefiLockedMGP: bigint;
-  vmgpMGPCurveRate: number;
+  readonly mgpAPR: number;
+  readonly lockedYmgpAPY: number;
+  readonly mgpPrice: number;
+  readonly vmgpSupply: bigint;
+  readonly reefiLockedMGP: bigint;
+  readonly vmgpMGPCurveRate: number;
 }
 
 export const Features = memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSupply, reefiLockedMGP, vmgpMGPCurveRate }: Properties): ReactElement => <div className="flex flex-col items-center">
@@ -72,10 +79,12 @@ export const Features = memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSupply, ree
     </div>
   </div>
   <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-4">
-    {features.map(feature => <div className="rounded-lg border border-gray-700/50 bg-gray-900/50 p-3 transition-colors hover:border-blue-600/30" key={feature.title}>
+    {features.map(feature => <div className="flex gap-4 rounded-lg border border-gray-700/50 bg-gray-900/50 p-3 transition-colors hover:border-blue-600/30" key={feature.title}>
       <div className="mb-2 text-xl">{feature.icon}</div>
-      <h3 className="mb-1 text-sm font-semibold text-blue-400">{feature.title}</h3>
-      <p className="text-xs leading-tight text-gray-300">{feature.description}</p>
+      <div>
+        <h3 className="mb-1 text-sm font-semibold text-blue-400">{feature.title}</h3>
+        <p className="text-xs leading-tight text-gray-300">{feature.description}</p>
+      </div>
     </div>)}
   </div>
 </div>);

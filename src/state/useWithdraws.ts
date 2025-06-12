@@ -7,7 +7,7 @@ interface Withdraws {
   };
   reefi: {
     unsubmitted: bigint;
-    unlockSchedule: { startTime: bigint; endTime: bigint; amountInCoolDown: bigint }[];
+    unlockSchedule: Array<{ startTime: bigint; endTime: bigint; amountInCoolDown: bigint }>;
   };
 }
 
@@ -23,12 +23,12 @@ export const useWithdraws = () => {
     }
   });
 
-  return [withdraws] as const;
+  return withdraws;
 };
 
 /*
 import { contracts } from "../config/contracts";
-import { useEffect } from "react";
+import { useLoggedEffect } from "..";
 import { useStoredObject } from "./useStoredState";
 import { useWallet } from "../state/useWallet";
 
@@ -69,13 +69,13 @@ export const useWithdraws = ({ wallet }: Readonly<{ wallet: ReturnType<typeof us
     })
   };
 
-  useEffect(() => {
+  useLoggedEffect(() => {
     updateWithdraws.unlockSchedule();
     updateWithdraws.unsubmitted();
     updateWithdraws.userWithdrawable();
   }, [wallet.chain]);
 
-  useEffect(() => {
+  useLoggedEffect(() => {
     updateWithdraws.userPending();
   }, [wallet.chain, wallet.account]);
 

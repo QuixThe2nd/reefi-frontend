@@ -165,33 +165,6 @@ const documentationSections: NonEmptyArray<DocumentSection> = [
     ]
   },
   {
-    id: "technical",
-    title: "Technical Documentation",
-    content: "Reefi is built on battle-tested smart contracts deployed on BNB Chain and Arbitrum. The protocol leverages proven DeFi primitives including Curve pools, ERC-20 tokens, and time-locked mechanisms to create a secure and efficient yield optimization system.",
-    subsections: [
-      {
-        id: "smart-contracts",
-        title: "Smart Contracts",
-        content: "Core contracts include wstMGP (liquid staking), yMGP (yield token), vMGP (governance), vlMGP integration (Magpie interface), and Curve pool contracts. Each contract is upgradeable through governance voting to enable future improvements. The architecture separates concerns: wstMGP handles vlMGP management, yMGP manages yield distribution, and vMGP controls governance. All contracts are verified on block explorers and use standard patterns for maximum compatibility and security."
-      },
-      {
-        id: "security",
-        title: "Security Measures",
-        content: "Reefi implements multiple security layers: time locks on sensitive functions, multi-signature controls for admin functions, extensive testing on testnets, and gradual rollout with deposit limits. The protocol uses battle-tested code patterns and integrates with established protocols (Magpie, Curve) to minimize novel risk vectors. Emergency pause mechanisms protect user funds during unexpected events or discovered vulnerabilities."
-      },
-      {
-        id: "audits",
-        title: "Audits & Code Review",
-        content: "The protocol is currently in beta with ongoing security reviews. Multiple independent developers have reviewed the codebase, and formal audits are planned before removing beta restrictions. All code is open source and available for community review. Bug bounty programs incentivize white-hat security research. Users should understand that early-stage protocols carry additional risks despite security precautions."
-      },
-      {
-        id: "integration",
-        title: "Integration Guide",
-        content: "Developers can integrate Reefi tokens into their applications using standard ERC-20 interfaces. The protocol provides APIs for real-time exchange rates, yield calculations, and governance data. Integration examples include wallet support, yield aggregators, and portfolio trackers. Detailed ABI documentation and example code are available for common use cases like token swaps, yield calculations, and governance participation."
-      }
-    ]
-  },
-  {
     id: "risks",
     title: "Risks & Disclaimers",
     content: "DeFi protocols carry inherent risks that users must understand before participating. Reefi is in early beta and should be considered experimental technology. Users should only deposit amounts they can afford to lose and understand all risk factors before proceeding.",
@@ -199,17 +172,17 @@ const documentationSections: NonEmptyArray<DocumentSection> = [
       {
         id: "smart-contract-risks",
         title: "Smart Contract Risks",
-        content: "Smart contracts may contain bugs, vulnerabilities, or unexpected behaviors that could result in loss of funds. While extensive testing and review have been conducted, no code is guaranteed to be bug-free. The protocol's complexity increases risk surface area. Users should understand that early-stage protocols carry higher smart contract risks than established projects. Emergency mechanisms exist but may not prevent all potential loss scenarios."
+        content: "Smart contracts may contain bugs, vulnerabilities, or unexpected behaviors that could result in loss of funds. no code is guaranteed to be bug-free. The protocol's complexity increases risk surface area. Users should understand that early-stage protocols carry higher smart contract risks than established projects. Emergency mechanisms exist but may not prevent all potential loss scenarios."
       },
       {
         id: "market-risks",
         title: "Market & Depeg Risks",
-        content: "wstMGP and yMGP may trade at discounts to their underlying value, especially during market stress. While arbitrage mechanisms exist to restore pegs, they depend on market participants and may not work instantly. Extreme depegs could persist for extended periods. Users may face losses if forced to sell tokens below fair value. Yield rates are variable and may decrease due to market conditions or protocol changes."
+        content: "stMGP, wstMGP, yMGP, & vMGP may trade at discounts to their underlying value, especially during market stress. While arbitrage mechanisms exist to restore pegs, they depend on market participants and may not work instantly. Extreme depegs could persist for extended periods. Users may face losses if tokens are sold below fair value, however native rates don't depeg. Yield rates are variable and may decrease due to market conditions or protocol changes."
       },
       {
         id: "liquidity-risks",
         title: "Liquidity & Withdrawal Risks",
-        content: "Native withdrawals through Magpie's queue system take 60-120 days and may be extended if all withdrawal slots are occupied. During stress events, Curve pools may have insufficient liquidity for large trades. Users should plan for potential delays in accessing underlying MGP. Withdrawal queues could become congested during market downturns when many users want to exit simultaneously."
+        content: "Native withdrawals through Magpie's queue system take 60-120 days depending on how many slots are occupied. During stress events, Curve pools may have insufficient liquidity for large trades. Users should plan for potential delays in accessing underlying MGP. Withdrawal queues could become congested during market downturns when many users want to exit simultaneously."
       },
       {
         id: "protocol-dependency",
@@ -272,9 +245,9 @@ const Sidebar = ({ sections, activeSection, onSectionChange }: SidebarProperties
       <nav className="space-y-2 w-full">
         {sections.map(section => <div key={section.id}>
           <button className={`w-full text-left text-sm font-medium transition-colors hover:text-blue-400 ${activeSection === section.id ? "text-blue-400" : "text-gray-300"}`} onClick={() => onSectionChange(section.id)} type="button">{section.title}</button>
-          {section.subsections && isSubsectionOfActiveSection(section.id) && <div className="ml-4 mt-2 space-y-1">
-            {section.subsections.map(subsection => <button key={subsection.id} className={`block w-full text-left text-xs transition-colors hover:text-blue-300 ${activeSection === subsection.id ? "text-blue-300" : "text-gray-400"}`} onClick={() => onSectionChange(subsection.id)} type="button">{subsection.title}</button>)}
-          </div>}
+          {section.subsections && isSubsectionOfActiveSection(section.id) ? <div className="ml-4 mt-2 space-y-1">
+            {section.subsections.map(subsection => <button className={`block w-full text-left text-xs transition-colors hover:text-blue-300 ${activeSection === subsection.id ? "text-blue-300" : "text-gray-400"}`} key={subsection.id} onClick={() => onSectionChange(subsection.id)} type="button">{subsection.title}</button>)}
+          </div> : undefined}
         </div>)}
       </nav>
     </Card>
@@ -290,23 +263,19 @@ const Content = ({ section }: ContentProperties): ReactElement => <div className
     <h1 className="mb-6 text-3xl font-bold text-white">{section.title}</h1>
     <div className="prose prose-invert max-w-none">
       <p className="mb-6 text-gray-300 leading-relaxed">{section.content}</p>
-      {section.subsections && <div className="space-y-8">
-        {section.subsections.map(subsection => <div key={subsection.id} className="border-l-4 border-blue-600 pl-6">
+      {section.subsections ? <div className="space-y-8">
+        {section.subsections.map(subsection => <div className="border-l-4 border-blue-600 pl-6" key={subsection.id}>
           <h2 className="mb-3 text-xl font-semibold text-blue-400">{subsection.title}</h2>
           <p className="text-gray-300 leading-relaxed">{subsection.content}</p>
         </div>)}
-      </div>}
+      </div> : undefined}
       <div className="mt-12 rounded-lg border border-gray-700 bg-gray-800/30 p-6">
         <h3 className="mb-3 text-lg font-semibold text-yellow-400">⚠️ Important Notice</h3>
-        <p className="text-sm text-gray-300">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        </p>
+        <p className="text-sm text-gray-300"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
       </div>
     </div>
   </div>
 </div>;
-
 const findSectionById = (sections: readonly DocumentSection[], id: string): DocumentSection | undefined => {
   for (const section of sections) {
     if (section.id === id) return section;
@@ -322,7 +291,7 @@ export const Documentation = (): ReactElement => {
   const [activeSection, setActiveSection] = useState("introduction");
   const currentSection: DocumentSection = findSectionById(documentationSections, activeSection) ?? documentationSections[0];
   return <div className="flex h-full">
-    <Sidebar sections={documentationSections} activeSection={activeSection} onSectionChange={setActiveSection} />
+    <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} sections={documentationSections} />
     <Content section={currentSection} />
   </div>;
 };

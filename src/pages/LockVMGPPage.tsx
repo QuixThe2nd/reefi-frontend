@@ -6,14 +6,14 @@ import { Button } from "../components/Button";
 import { Page } from "../components/Page";
 
 interface Properties {
-  vmgpBalance: bigint;
-  setSend: (_send: bigint) => void;
-  send: bigint;
-  lockVMGP: () => void;
-  mgpAPR: number;
+  readonly vmgpBalance: bigint;
+  readonly setSend: (_send: bigint) => void;
+  readonly send: bigint;
+  readonly lockVMGP: () => void;
+  readonly mgpAPR: number;
 }
 
-export const LockVMGPPage = memo(({ vmgpBalance, setSend, send, lockVMGP, mgpAPR }: Properties): ReactElement => <Page info={["vMGP can be locked to earn additional yield paid in yMGP. Locked vMGP can't be voted with as it is rented to those willing to pay to vote for you."]}>
+export const LockVMGPPage = memo(({ vmgpBalance, setSend, send, lockVMGP, mgpAPR }: Properties): ReactElement => <Page info={<span>vMGP can be locked to earn additional yield paid in yMGP. Locked vMGP can&apos;t be voted with as it is rented to those willing to pay to vote for you.</span>}>
   <AmountInput balance={vmgpBalance} label="Lock vMGP" onChange={setSend} token={{ symbol: "vMGP" }} value={send} />
   <Button className="w-full" onClick={lockVMGP} type="submit">Lock yMGP</Button>
   <div className="mt-4 text-sm text-gray-400">

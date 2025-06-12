@@ -1,4 +1,4 @@
-import { coins, PrimaryCoin } from "../config/contracts";
+import { coins, type PrimaryCoin } from "../config/contracts";
 import { formatEther, formatNumber } from "../utilities";
 import { memo, type ReactElement } from "react";
 
@@ -6,30 +6,30 @@ import { Card } from "./Card";
 import { TokenStat } from "./TokenStat";
 
 interface Properties {
-  symbol: PrimaryCoin;
-  decimals: number;
-  description: string;
-  price?: number;
-  supply: bigint;
-  locked?: bigint;
-  marketRate?: number;
-  voteMultiplier?: number;
-  underlying?: bigint;
-  underlyingSymbol?: string;
+  readonly symbol: PrimaryCoin;
+  readonly decimals: number;
+  readonly description: string;
+  readonly price?: number;
+  readonly supply: bigint;
+  readonly locked?: bigint;
+  readonly marketRate?: number;
+  readonly voteMultiplier?: number;
+  readonly underlying?: bigint;
+  readonly underlyingSymbol?: string;
 }
 
-export const TokenCard = memo(({ symbol, decimals, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }: Properties): ReactElement => <Card padding={4}>
+export const TokenCard = memo(({ symbol, decimals, description, price, supply, underlying, underlyingSymbol, voteMultiplier, locked, marketRate }: Properties): ReactElement => <Card padding={3}>
   <div className="xl:grid xl:grid-cols-3 w-full">
     <div className="flex items-start justify-between">
       <div>
         <div className="flex items-center">
           {/* <div className={`${bg} mr-2 flex  items-center justify-center rounded-full`}>{symbol[0]?.toUpperCase()}</div> */}
-          <img className="size-8 mr-2" src={coins[symbol].icon} />
+          <img className="size-8 mr-1" src={coins[symbol].icon} />
           <p className="text-lg font-bold">{symbol}</p>
         </div>
       </div>
     </div>
-    <div className="col-span-2 mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:mt-0">
+    <div className="col-span-2 mt-2 grid grid-cols-1 gap-1 sm:grid-cols-2 xl:mt-0">
       <TokenStat detail={`${formatNumber(formatEther(supply, decimals), 3)} ${symbol}`} title="Supply" />
       {price !== undefined && <TokenStat detail={`$${price.toFixed(4)}`} title="Price" />}
       {underlying !== undefined && <TokenStat detail={`${formatNumber(formatEther(underlying), 2)} ${underlyingSymbol}`} title="TVL" />}

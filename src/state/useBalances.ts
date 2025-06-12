@@ -1,92 +1,41 @@
 /* eslint functional/no-try-statements: 0 */
-import { parseEther } from "../utilities";
-import { useAsyncReducer } from "../hooks/useAsyncReducer";
-import { useEffect } from "react";
-import { useWallet } from "./useWallet";
+import { contracts } from "../config/contracts";
+import { useAccount, useBalance, useChainId, useReadContract } from "wagmi";
 
-import { AllCoinETH, PrimaryCoin, publicClients, contracts } from "../config/contracts";
+import { ABIs } from "../config/ABIs/abis";
 
-export const useBalances = ({ wallet }: { wallet: ReturnType<typeof useWallet>[0] }) => {
-  const [balances, updateBalances] = useAsyncReducer<{ user: Record<AllCoinETH, bigint>; wstMGP: { MGP: bigint }; yMGP: { wstMGP: bigint }; vMGP: { yMGP: bigint }; curve: Record<PrimaryCoin, bigint> }>(async () => {
-    const safeBalance = async (fn: () => Promise<bigint>) => {
-      try {
-        return await fn();
-      } catch {
-        return 0n;
-      }
-    };
+export const useBalances = () => {
+  const { address } = useAccount();
+  const chainId = useChainId();
 
-    const [userCKP, userEGP, userLTP, userMGP, userPNP, userWETH, userCMGP, userRMGP, userYMGP, userLyMGP, userWrMGP, userVlMGP, userLvMGP, userETH, userVMGP, curveMGP, curveRMGP, curveYMGP, curveVMGP, wstMGPMGP, yMGPRMGP, vMGPYMGP] = await Promise.all([
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].CKP.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].EGP.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].LTP.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].MGP.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].PNP.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].WETH.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].cMGP.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].wstMGP.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].yMGP.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].stMGP.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].vlMGP.read.balanceOf([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].yMGP.read.lockedBalances([wallet.account])),
-      safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : publicClients[wallet.chain].getBalance({ address: wallet.account })),
-      // safeBalance(() => wallet.account === undefined ? Promise.resolve(0n) : contracts[wallet.chain].vMGP.read.balanceOf([wallet.account])),
-      Promise.resolve(parseEther(1.5)),
-      safeBalance(() => contracts[wallet.chain].MGP.read.balanceOf([contracts[wallet.chain].cMGP.address])),
-      safeBalance(() => contracts[wallet.chain].wstMGP.read.balanceOf([contracts[wallet.chain].cMGP.address])),
-      safeBalance(() => contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].cMGP.address])),
-      safeBalance(() => contracts[wallet.chain].vMGP.read.balanceOf([contracts[wallet.chain].cMGP.address])),
-      safeBalance(() => contracts[wallet.chain].vlMGP.read.getUserTotalLocked([contracts[wallet.chain].wstMGP.address])),
-      safeBalance(() => contracts[wallet.chain].wstMGP.read.balanceOf([contracts[wallet.chain].yMGP.address])),
-      safeBalance(() => contracts[wallet.chain].yMGP.read.balanceOf([contracts[wallet.chain].vMGP.address]))
-    ]);
-
-    return {
-      user: {
-        CKP: userCKP,
-        EGP: userEGP,
-        LTP: userLTP,
-        MGP: userMGP,
-        PNP: userPNP,
-        WETH: userWETH,
-        cMGP: userCMGP,
-        wstMGP: userRMGP,
-        yMGP: userYMGP,
-        lyMGP: userLyMGP,
-        stMGP: userWrMGP,
-        vlMGP: userVlMGP,
-        lvMGP: userLvMGP,
-        ETH: userETH,
-        vMGP: userVMGP
-      },
-      curve: {
-        MGP: curveMGP,
-        wstMGP: curveRMGP,
-        yMGP: curveYMGP,
-        vMGP: curveVMGP
-      },
-      wstMGP: { MGP: wstMGPMGP },
-      yMGP: { wstMGP: yMGPRMGP },
-      vMGP: { yMGP: vMGPYMGP }
-    };
-  }, {
+  const balances = {
     user: {
-      MGP: 0n, wstMGP: 0n, yMGP: 0n, vMGP: 0n,
-      vlMGP: 0n, lyMGP: 0n, lvMGP: 0n,
-      stMGP: 0n, cMGP: 0n,
-      CKP: 0n, EGP: 0n, LTP: 0n, PNP: 0n,
-      WETH: 0n, ETH: 0n
+      CKP: useBalance({ address, token: contracts[chainId].CKP }).data?.value ?? 0n,
+      EGP: useBalance({ address, token: contracts[chainId].EGP }).data?.value ?? 0n,
+      LTP: useBalance({ address, token: contracts[chainId].LTP }).data?.value ?? 0n,
+      MGP: useBalance({ address, token: contracts[chainId].MGP }).data?.value ?? 0n,
+      PNP: useBalance({ address, token: contracts[chainId].PNP }).data?.value ?? 0n,
+      WETH: useBalance({ address, token: contracts[chainId].WETH }).data?.value ?? 0n,
+      cMGP: useBalance({ address, token: contracts[chainId].cMGP }).data?.value ?? 0n,
+      wstMGP: useBalance({ address, token: contracts[chainId].wstMGP }).data?.value ?? 0n,
+      yMGP: useBalance({ address, token: contracts[chainId].yMGP }).data?.value ?? 0n,
+      lyMGP: useReadContract({ abi: ABIs.yMGP, address: contracts[chainId].yMGP, functionName: "lockedBalances", args: [address!] }).data ?? 0n,
+      stMGP: useBalance({ address, token: contracts[chainId].stMGP }).data?.value ?? 0n,
+      vlMGP: useBalance({ address, token: contracts[chainId].vlMGP }).data?.value ?? 0n,
+      lvMGP: useReadContract({ abi: ABIs.yMGP, address: contracts[chainId].yMGP, functionName: "lockedBalances", args: [address!] }).data ?? 0n,
+      vMGP: useBalance({ address, token: contracts[chainId].vMGP }).data?.value ?? 0n,
+      ETH: useBalance({ address }).data?.value ?? 0n
     },
-    wstMGP: { MGP: 0n },
-    yMGP: { wstMGP: 0n },
-    vMGP: { yMGP: 0n },
-    curve: { MGP: 0n, wstMGP: 0n, yMGP: 0n, vMGP: 0n }
-  });
+    curve: {
+      MGP: useBalance({ token: contracts[chainId].MGP, address: contracts[chainId].cMGP }).data?.value ?? 0n,
+      wstMGP: useBalance({ token: contracts[chainId].wstMGP, address: contracts[chainId].cMGP }).data?.value ?? 0n,
+      yMGP: useBalance({ token: contracts[chainId].yMGP, address: contracts[chainId].cMGP }).data?.value ?? 0n,
+      vMGP: useBalance({ token: contracts[chainId].vMGP, address: contracts[chainId].cMGP }).data?.value ?? 0n
+    },
+    wstMGP: { MGP: useReadContract({ abi: ABIs.vlMGP, address: contracts[chainId].vlMGP, functionName: "getUserTotalLocked", args: [contracts[chainId].wstMGP] }).data ?? 0n },
+    yMGP: { wstMGP: useBalance({ token: contracts[chainId].wstMGP, address: contracts[chainId].yMGP }).data?.value ?? 0n },
+    vMGP: { yMGP: useBalance({ token: contracts[chainId].yMGP, address: contracts[chainId].vMGP }).data?.value ?? 0n }
+  } as const;
 
-  useEffect(() => {
-    updateBalances();
-  }, [wallet.account, wallet.chain]);
-
-  return [balances, updateBalances] as const;
+  return balances;
 };

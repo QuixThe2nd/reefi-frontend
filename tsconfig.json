@@ -27,7 +27,8 @@
 		"allowUnreachableCode": false,
 		"allowUnusedLabels": false,
 		"noEmitOnError": true,
-		"strictNullChecks": true
+		"strictNullChecks": true,
+		"useUnknownInCatchVariables": false
 	},
   "include": [
     "src/**/*",

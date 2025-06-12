@@ -1,36 +1,39 @@
-import { useAllowances } from "../state/useAllowances";
-import { useAmounts } from "../state/useAmounts";
-import { useBalances } from "../state/useBalances";
-import { useState, ReactElement } from "react";
-import { useSupplies } from "../state/useSupplies";
+import { useState, type ReactElement } from "react";
 
-import { Chains, AllCoinETH, AllCoin, CoreCoin, PrimaryCoin } from "../config/contracts";
 import { SwapButton } from "./SwapButton";
 import { SwapInput } from "./SwapInput";
 
+import type { Chains, AllCoinETH, CoreCoin, PrimaryCoin, TransferrableCoin } from "../config/contracts";
+import type { UseSendTransactionReturnType, UseWriteContractReturnType } from "wagmi";
+import type { useAllowances } from "../state/useAllowances";
+import type { useAmounts } from "../state/useAmounts";
+import type { useBalances } from "../state/useBalances";
+import type { useSupplies } from "../state/useSupplies";
+import type { wagmiConfig } from "..";
+
 interface Properties {
-  originalTokenIn: AllCoinETH;
-  tokenOut: AllCoinETH;
-  excludeCoins: AllCoinETH[];
-  label: string;
-  send: bigint;
-  chain: Chains;
-  curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
-  allowances: ReturnType<typeof useAllowances>[0];
-  balances: ReturnType<typeof useBalances>[0];
-  supplies: ReturnType<typeof useSupplies>[0];
-  curveBuy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin) => void;
-  nativeSwap?: (_tokenIn: CoreCoin, _tokenOut: CoreCoin) => void;
-  setSend: (_send: bigint) => void;
-  approve: (_tokenOut: "wstMGP" | "yMGP" | "cMGP" | "vMGP" | "odosRouter", _tokenIn: AllCoin, _infinity: boolean) => void;
-  mintWETH: () => void;
-  swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`) => void;
+  readonly originalTokenIn: AllCoinETH;
+  readonly tokenOut: AllCoinETH;
+  readonly excludeCoins: AllCoinETH[];
+  readonly label: string;
+  readonly send: bigint;
+  readonly chain: Chains;
+  readonly curveAmounts: ReturnType<typeof useAmounts>[0]["curve"];
+  readonly allowances: ReturnType<typeof useAllowances>;
+  readonly balances: ReturnType<typeof useBalances>;
+  readonly supplies: ReturnType<typeof useSupplies>;
+  readonly curveBuy?: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly nativeSwap?: (_tokenIn: CoreCoin, _tokenOut: CoreCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly setSend: (_send: bigint) => void;
+  readonly approve: (_coin: TransferrableCoin, _spender: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _infinity: boolean, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly mintWETH: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`, _sendTransaction: UseSendTransactionReturnType<typeof wagmiConfig>["sendTransaction"]) => void;
 }
 
-export const SwapToken = ({ originalTokenIn, tokenOut, balances, curveBuy, nativeSwap, label, excludeCoins, setSend, send, curveAmounts, allowances, chain, approve, mintWETH, swap, supplies }: Properties): ReactElement => {
+export const SwapToken = ({ originalTokenIn, tokenOut, balances, curveBuy = undefined, nativeSwap = undefined, label, excludeCoins, setSend, send, curveAmounts, allowances, chain, approve, mintWETH, swap, supplies }: Properties): ReactElement => {
   const [tokenIn, setTokenIn] = useState<AllCoinETH | "vlMGP">(originalTokenIn);
   return <>
     <SwapInput balance={balances.user[tokenIn]} excludeCoins={[...excludeCoins, tokenOut]} label={`Get ${tokenOut}`} onChange={setSend} onCoinChange={setTokenIn} selectedCoin={tokenIn} value={send} />
-    <SwapButton curveBuy={curveBuy} nativeSwap={nativeSwap} label={label} tokenIn={tokenIn} tokenOut={tokenOut} curveAmounts={curveAmounts} allowances={allowances} send={send} chain={chain} approve={approve} mintWETH={mintWETH} swap={swap} balances={balances} supplies={supplies} />
+    <SwapButton allowances={allowances} approve={approve} balances={balances} chain={chain} curveAmounts={curveAmounts} curveBuy={curveBuy} label={label} mintWETH={mintWETH} nativeSwap={nativeSwap} send={send} supplies={supplies} swap={swap} tokenIn={tokenIn} tokenOut={tokenOut} />
   </>;
 };

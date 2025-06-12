@@ -1,28 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useLoggedEffect } from "..";
+import { useRef, useState } from "react";
 
-export const useAsyncMemo = <T>(factory: () => Promise<T>, deps: React.DependencyList, initial: T): T => {
-  const [data, setData] = useState<T>(initial);
+type UseCallbackResult<T extends () => void> = T & { __useCallbackBrand: never };
+
+declare module "react" {
+  function useCallback<T extends () => void> (_callback: T, _deps: DependencyList): UseCallbackResult<T>;
+}
+
+export const useAsyncMemo = <Value, Callback extends () => Promise<Value> = () => Promise<Value>>(factory: UseCallbackResult<Callback>, initial: Value): Value => {
+  const [data, setData] = useState<Value>(initial);
   const cancelRef = useRef<() => void>(undefined);
 
-  useEffect(() => {
-    let cancelled = false;
+  useLoggedEffect(() => {
+    (async () => setData(await factory()))();
+  }, [factory], "useAsyncMemo populate");
 
-    cancelRef.current = () => {
-      cancelled = true;
-    };
-
-    factory().then(result => {
-      if (!cancelled) setData(result);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, deps);
-
-  useEffect(() => () => {
+  useLoggedEffect(() => {
     if (cancelRef.current) cancelRef.current();
-  }, []);
+  }, [], "useAsyncMemo cancel");
 
   return data;
 };

@@ -16,9 +16,8 @@ import { aprToApy, formatEther, formatNumber } from "./utilities";
 import { coins } from "./config/contracts";
 import { useActions } from "./state/useActions";
 import { useChainId } from "wagmi";
-import { useLoggedEffect } from ".";
 import { useReefiState } from "./state/useReefiState";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 import { Badge, YieldBadge } from "./components/YieldBadge";
 import { BridgePage } from "./pages/BridgePage";
@@ -35,7 +34,6 @@ import { FixedYieldPage } from "./pages/FixedYieldPage";
 import { GetMGPPage } from "./pages/GetMGPPage";
 import { GetRMGPPage } from "./pages/GetRMGPPage";
 import { GetVMGPPage } from "./pages/GetVMGPPage";
-import { GetWRMGPPage } from "./pages/GetWRMGP";
 import { GetYMGPPage } from "./pages/GetYMGPPage";
 import { Header } from "./components/Header";
 import { LockPage } from "./pages/LockYMGPPage";
@@ -50,8 +48,9 @@ import { SupplyLiquidityPage } from "./pages/SupplyLiquidityPage";
 import { TokenCards } from "./components/TokenCards";
 import { UnlockPage } from "./pages/UnlockYMGPPage";
 import { UnlockVMGPPage } from "./pages/UnlockVMGPPage";
-import { UnwrapWRMGPPage } from "./pages/UnwrapWRMGP";
+import { UnwrapWSTMGPPage } from "./pages/UnwrapWSTMGPPage";
 import { VotePage } from "./pages/VotePage";
+import { WrapSTMGPPage } from "./pages/WrapSTMGPPage";
 
 /*
  * Import { Web3Provider } from '@ethersproject/providers';
@@ -93,9 +92,9 @@ const App = () => {
     return `${(fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100).toFixed(2)}%`;
   };
 
-  useLoggedEffect(() => {
+  useEffect(() => {
     history.pushState(undefined, "", page ?? "./");
-  }, [page], "Change page");
+  }, [page]);
 
   return <>
     <ErrorCard error={error} setError={setError} />
@@ -109,7 +108,6 @@ const App = () => {
             if (page === "documentation") return <Documentation />;
 
             if (page === "claim") return <div className="flex flex-col h-screen bg-gray-900 text-white">
-              <ErrorCard error={error} setError={setError} />
               <Card>
                 <CompoundYield compoundRMGP={actions.compoundRMGP} estimatedCompoundGasFee={rewards.reefi.vlMGP.estimatedGas} mgpAPR={rewards.vlmgpAPR} pendingRewards={rewards.reefi.vlMGP.pendingRewards} prices={prices} reefiMGPLocked={balances.wstMGP.MGP} uncompoundedMGPYield={rewards.reefi.vlMGP.estimatedMGP} uncompoundedYMGPYield={formatEther(rewards.reefi.vlMGP.estimatedYMGP)} />
               </Card>
@@ -126,12 +124,10 @@ const App = () => {
             </div>;
 
             if (page === "vote") return <div className="flex flex-col h-screen bg-gray-900 text-white">
-              <ErrorCard error={error} setError={setError} />
               <VotePage lvmgpSupply={supplies.lvMGP} reefiMgpLocked={balances.wstMGP.MGP} vmgpBalance={balances.user.vMGP} vmgpSupply={supplies.vMGP} vote={actions.vote} ymgpBalance={balances.user.yMGP} />
             </div>;
 
             if (page === "bridge") return <div className="flex flex-col h-screen bg-gray-900 text-white">
-              <ErrorCard error={error} setError={setError} />
               <Card>
                 <h2 className="mb-4 text-xl font-bold">Bridge stMGP</h2>
                 <BridgePage />
@@ -139,11 +135,11 @@ const App = () => {
               <div className="grid grid-cols-1 gap-6 pb-6 mt-6 lg:grid-cols-2">
                 <Card>
                   <h2 className="mb-4 text-xl font-bold">Unwrap wstMGP</h2>
-                  <GetWRMGPPage allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} swap={actions.swap} />
+                  <UnwrapWSTMGPPage allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} swap={actions.swap} />
                 </Card>
                 <Card>
                   <h2 className="mb-4 text-xl font-bold">Wrap stMGP</h2>
-                  <UnwrapWRMGPPage allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} swap={actions.swap} />
+                  <WrapSTMGPPage allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} swap={actions.swap} />
                 </Card>
               </div>
             </div>;
@@ -173,7 +169,7 @@ const App = () => {
                   </div>
                 </div>
                 {page === "migrateVLMGP" && <MigrateVLMGPPage allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} swap={actions.swap} />}
-                {page === "getMGP" && <GetMGPPage allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mgpAPR={rewards.vlmgpAPR} mintWETH={actions.mintWETH} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} swap={actions.swap} />}
+                {page === "getMGP" && <GetMGPPage allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mgpAPR={rewards.vlmgpAPR} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} swap={actions.swap} />}
                 {page === "deposit" && <GetRMGPPage allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mgpAPR={rewards.vlmgpAPR} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} swap={actions.swap} />}
                 {page === "redeem" && <RedeemRMGPPage allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} swap={actions.swap} unlockSchedule={withdraws.reefi.unlockSchedule} userPendingWithdraws={withdraws.user.pending} userWithdrawable={withdraws.user.ready} withdrawMGP={actions.withdrawMGP} />}
                 {page === "fixedYield" && <FixedYieldPage allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} lockedReefiMGP={balances.wstMGP.MGP} mgpAPR={rewards.vlmgpAPR} mgpRmgpCurveAmount={amounts.curve.MGP_wstMGP} mgpRmgpCurveRate={exchangeRates.MGP.wstMGP} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} rmgpSupply={supplies.wstMGP} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} swap={actions.swap} unlockSchedule={withdraws.reefi.unlockSchedule} />}

@@ -21,7 +21,7 @@ interface Properties {
 }
 
 export const CompoundYield = memo(({ uncompoundedMGPYield, uncompoundedYMGPYield, estimatedCompoundGasFee, pendingRewards, mgpAPR, reefiMGPLocked, prices, compoundRMGP }: Properties): ReactElement => {
-  const { writeContract } = useWriteContract();
+  const { writeContract, isPending } = useWriteContract();
   const estimatedCompoundGasUSD = formatEther(estimatedCompoundGasFee) * prices.ETH;
   const textColor = `text-${uncompoundedMGPYield * prices.MGP * 0.01 > estimatedCompoundGasUSD ? "green" : "red"}-400`;
   return <Page info={<span>Pending yield (PNP, EGP, etc) gets converted to MGP and locked as vlMGP. The underlying backing of wstMGP increases each time yields are compounded. 1% of MGP yield is sent to the compounder as yMGP, 4% sent to the treasury, and 5% to locked yMGP holders. By clicking the compound button, you will receive 1% of the pending yield.</span>} noTopMargin>
@@ -31,12 +31,12 @@ export const CompoundYield = memo(({ uncompoundedMGPYield, uncompoundedYMGPYield
         <p className="text-lg font-medium">{formatNumber(uncompoundedMGPYield, 4)} MGP</p>
         <p className="text-lg font-medium">${formatNumber(uncompoundedMGPYield * prices.MGP, 4)}</p>
       </div>
-      {(Object.keys(pendingRewards) as SecondaryCoin[]).map(symbol => pendingRewards[symbol].rewards !== 0n ? <div className="flex justify-between" key={symbol}>
+      {(Object.keys(pendingRewards) as SecondaryCoin[]).map(symbol => pendingRewards[symbol].rewards === 0n ? undefined : <div className="flex justify-between" key={symbol}>
         <p className="text-xs">{formatNumber(formatEther(pendingRewards[symbol].rewards, decimals[symbol]), 6)} {symbol}</p>
         <p className="text-xs">{formatNumber(prices[symbol] * Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 6)} MGP</p>
-      </div> : undefined)}
+      </div>)}
     </div>
-    <Button className="mt-4 w-full" onClick={() => compoundRMGP(writeContract)} type="button">Compound Yield (Get ~{uncompoundedYMGPYield} yMGP)</Button>
+    <Button className="mt-4 w-full" isLoading={isPending} onClick={() => compoundRMGP(writeContract)} type="button">Compound Yield (Get ~{uncompoundedYMGPYield} yMGP)</Button>
     <div className="mt-4 text-sm text-gray-400">
       <div className="mb-1 flex justify-between">
         <span>Estimated Payout</span>
@@ -48,7 +48,7 @@ export const CompoundYield = memo(({ uncompoundedMGPYield, uncompoundedYMGPYield
       </div>
       <div className="mb-1 flex justify-between">
         <span>Estimated Profit</span>
-        <span className={textColor}>{uncompoundedMGPYield * prices.MGP * 0.01 > estimatedCompoundGasUSD ? "" : "-"}${String(formatNumber(uncompoundedMGPYield * prices.MGP * 0.01 - estimatedCompoundGasUSD, 6)).replace("-", "")}</span>
+        <span className={textColor}>{uncompoundedMGPYield * prices.MGP * 0.01 > estimatedCompoundGasUSD ? "" : "-"}${String(formatNumber(uncompoundedMGPYield * prices.MGP * 0.01 - estimatedCompoundGasUSD, 4)).replace("-", "")}</span>
       </div>
       {uncompoundedMGPYield * prices.MGP * 0.01 < estimatedCompoundGasUSD && <div className="mb-1 flex justify-between">
         <span>ETA Till Profitable</span>

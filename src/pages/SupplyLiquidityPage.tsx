@@ -60,7 +60,7 @@ const ymgpPlaceholder = (mgpCurveBalance: bigint, rmgpCurveBalance: bigint, ymgp
 };
 
 export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance, setLPAmounts, mgpLPAmount, rmgpLPAmount, ymgpLPAmount, mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, supplyLiquidity }: Properties): ReactElement => {
-  const { writeContract } = useWriteContract();
+  const { writeContract, isPending } = useWriteContract();
   return <Page info={<span>Supply liquidity to the cMGP Curve pool (MGP/wstMGP/yMGP). You can supply liquidity at any ratio of MGP:wstMGP:yMGP, however it is recommended you match the targets to prevent slippage. To stake or withdraw liquidity, use <a className="text-blue-400" href="https://www.curve.finance/dex/arbitrum/pools/factory-stable-ng-179/withdraw/">Curve</a>.</span>}>
     <AmountInput balance={mgpBalance} label="Supply MGP" onChange={val => setLPAmounts(a => ({ ...a, MGP: val }))} placeholder={mgpPlaceholder(mgpCurveBalance, rmgpCurveBalance, ymgpCurveBalance, rmgpLPAmount, ymgpLPAmount)} token={{ symbol: "MGP" }} value={mgpLPAmount} />
     <div className="mb-4 flex justify-between text-sm text-gray-400">
@@ -77,7 +77,7 @@ export const SupplyLiquidityPage = memo(({ mgpBalance, rmgpBalance, ymgpBalance,
       <span>Target</span>
       <span>{(100 * Number(ymgpCurveBalance) / Number(mgpCurveBalance + rmgpCurveBalance + ymgpCurveBalance)).toFixed(0)}%</span>
     </div>
-    <Button className="w-full" onClick={() => supplyLiquidity(writeContract)} type="submit">Get cMGP</Button>
+    <Button className="w-full" isLoading={isPending} onClick={() => supplyLiquidity(writeContract)} type="submit">Get cMGP</Button>
   </Page>;
 });
 SupplyLiquidityPage.displayName = "SupplyLiquidityPage";

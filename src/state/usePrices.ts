@@ -1,5 +1,4 @@
-import { useLoggedEffect } from "..";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
 import type { SecondaryCoinETH } from "../config/contracts";
@@ -21,13 +20,13 @@ const ApiResponseSchema = z.object({
 export const usePrices = () => {
   const [prices, setPrices] = useState<Record<SecondaryCoinETH, number>>({ MGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, WETH: 0, ETH: 0 });
 
-  useLoggedEffect(() => {
+  useEffect(() => {
     (async (): Promise<void> => {
       const response = await fetch("https://api.magpiexyz.io/getalltokenprice");
       const parsed = ApiResponseSchema.parse(await response.json());
       setPrices(parsed.data.AllPrice);
     })();
-  }, [], "Update token prices");
+  }, []);
 
   return prices;
 };

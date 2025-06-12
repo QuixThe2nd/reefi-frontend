@@ -1,6 +1,6 @@
 import { formatNumber, formatEther } from "../utilities";
 import { memo, useState, type ReactElement } from "react";
-import { useCachedUpdateable } from "../hooks/useUpdateable";
+import { useFetch } from "../hooks/useFetch";
 
 import { AmountInput } from "../components/AmountInput";
 import { Button } from "../components/Button";
@@ -101,23 +101,13 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, vote, l
   const votePower = Number(reefiMgpLocked) / Number(vmgpSupply);
   const userVotingPower = formatEther(vmgpBalance) * votePower;
 
-  const [proposals] = useCachedUpdateable(async () => {
-    const headers = new Headers();
-    headers.append("content-type", "application/json");
-    const raw = JSON.stringify({
-      query: "query Proposals {proposals (first: 3, skip: 0, where: { space_in: [\"magpiexyz.eth\"] }, orderBy: \"created\", orderDirection: desc) {id title body choices start end snapshot state author space { id name } } }",
-      operationName: "Proposals"
-    });
-    const response = await fetch("https://hub.snapshot.org/graphql?", {
-      method: "POST",
-      headers,
-      body: raw
-    });
-    const result = (await response.json()) as SnapshotResponse;
-    return result.data.proposals;
-  }, [], "proposals", []);
+  const { proposals } = useFetch<SnapshotResponse>("https://hub.snapshot.org/graphql?", { data: { proposals: [] } }, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ operationName: "Proposals", query: "query Proposals {proposals (first: 3, skip: 0, where: { space_in: [\"magpiexyz.eth\"] }, orderBy: \"created\", orderDirection: desc) {id title body choices start end snapshot state author space { id name } } }" })
+  }).data;
 
-  return <Page info={[<span>vMGP holders control all of Reefi's vlMGP voting power on Magpie governance proposals.</span>, <span>Your voting power is amplified by Reefi's locked MGP position, giving you more influence per token.</span>, <span>Vote multipliers are displayed as a minimum vote assuming all vMGP votes. If 50% of vMGP votes on a proposal, your vote multiplier doubles.</span>]} noTopMargin>
+  return <Page info={[<span key="voting power">vMGP holders control all of Reefi&apos;s vlMGP voting power on Magpie governance proposals.</span>, <span key="amplified">Your voting power is amplified by Reefi&apos;s locked MGP position, giving you more influence per token.</span>]} noTopMargin>
     <div className="mb-6 rounded-lg bg-gray-700/50 p-4">
       <h3 className="mb-2 text-lg font-semibold">Your Voting Power</h3>
       <div className="grid grid-cols-2 gap-4 text-sm">

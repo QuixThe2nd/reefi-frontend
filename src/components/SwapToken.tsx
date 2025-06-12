@@ -3,7 +3,7 @@ import { useState, type ReactElement } from "react";
 import { SwapButton } from "./SwapButton";
 import { SwapInput } from "./SwapInput";
 
-import type { Chains, AllCoinETH, CoreCoin, PrimaryCoin, TransferrableCoin } from "../config/contracts";
+import type { Chains, AllCoinETH, PrimaryCoin, TransferrableCoin, CoreCoinExtended } from "../config/contracts";
 import type { UseSendTransactionReturnType, UseWriteContractReturnType } from "wagmi";
 import type { useAllowances } from "../state/useAllowances";
 import type { useAmounts } from "../state/useAmounts";
@@ -23,9 +23,9 @@ interface Properties {
   readonly balances: ReturnType<typeof useBalances>;
   readonly supplies: ReturnType<typeof useSupplies>;
   readonly curveBuy?: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
-  readonly nativeSwap?: (_tokenIn: CoreCoin, _tokenOut: CoreCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly nativeSwap: undefined | ((_tokenIn: CoreCoinExtended, _tokenOut: CoreCoinExtended, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void);
   readonly setSend: (_send: bigint) => void;
-  readonly approve: (_coin: TransferrableCoin, _spender: "wstMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _infinity: boolean, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly approve: (_coin: TransferrableCoin, _spender: "wstMGP" | "stMGP" | "yMGP" | "vMGP" | "cMGP" | "odosRouter", _infinity: boolean, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
   readonly mintWETH: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
   readonly swap: (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`, _sendTransaction: UseSendTransactionReturnType<typeof wagmiConfig>["sendTransaction"]) => void;
 }

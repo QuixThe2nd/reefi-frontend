@@ -1,5 +1,4 @@
-import { useLoggedEffect } from "..";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type UseCallbackResult<T extends () => void> = T & { __useCallbackBrand: never };
 
@@ -11,13 +10,13 @@ export const useAsyncMemo = <Value, Callback extends () => Promise<Value> = () =
   const [data, setData] = useState<Value>(initial);
   const cancelRef = useRef<() => void>(undefined);
 
-  useLoggedEffect(() => {
+  useEffect(() => {
     (async () => setData(await factory()))();
-  }, [factory], "useAsyncMemo populate");
+  }, [factory]);
 
-  useLoggedEffect(() => {
+  useEffect(() => {
     if (cancelRef.current) cancelRef.current();
-  }, [], "useAsyncMemo cancel");
+  }, []);
 
   return data;
 };

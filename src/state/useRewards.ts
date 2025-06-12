@@ -2,8 +2,7 @@ import { contracts, decimals, type SecondaryCoin } from "../config/contracts";
 import { encodeFunctionData } from "viem/utils";
 import { formatEther } from "../utilities";
 import { useAccount, useChainId, useEstimateGas, useGasPrice, useReadContract, useSimulateContract } from "wagmi";
-import { useLoggedEffect } from "..";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import zod from "zod";
 
 import { ABIs } from "../config/ABIs/abis";
@@ -36,7 +35,7 @@ export const useRewards = ({ prices }: { prices: ReturnType<typeof usePrices> })
   });
 
 
-  useLoggedEffect(() => {
+  useEffect(() => {
     (async () => {
       // TODO: switch chains
       const response = await fetch("https://api.curve.finance/api/getVolumes/arbitrum");
@@ -50,7 +49,7 @@ export const useRewards = ({ prices }: { prices: ReturnType<typeof usePrices> })
       for (const token of body.data.rewardTokenInfo) vlmgpAPR += token.apr;
       setRewards(r => ({ ...r, vlmgpAPR }));
     })();
-  }, [], "Fetching rewards");
+  }, []);
 
   const { data } = useReadContract({ abi: ABIs.masterMGP, address: contracts[chain].masterMGP, functionName: "allPendingTokens", args: [contracts[chain].vlMGP, contracts[chain].wstMGP] });
   const pendingRewards = { MGP: { address: contracts[chain].MGP, rewards: data?.[0] ?? 0n } } as unknown as Record<SecondaryCoin, { address: `0x${string}`; rewards: bigint }>;

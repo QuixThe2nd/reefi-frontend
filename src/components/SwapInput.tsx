@@ -1,7 +1,6 @@
 import { coins, decimals, type AllCoinETH } from "../config/contracts";
 import { formatEther } from "../utilities";
-import { memo, useRef, useState, Fragment, type ReactElement } from "react";
-import { useLoggedEffect } from "..";
+import { memo, useRef, useState, Fragment, type ReactElement, useEffect } from "react";
 
 import { Button } from "./Button";
 import ETH from "../../public/icons/ETH.svg";
@@ -32,10 +31,10 @@ export const SwapInput = memo(({ label, value, balance, selectedCoin, excludeCoi
   const handleClickOutside = (event: MouseEvent): void => {
     if (dropdownReference.current && !dropdownReference.current.contains(event.target as Node)) setIsDropdownOpen(false);
   };
-  useLoggedEffect(() => {
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return (): void => document.removeEventListener("mousedown", handleClickOutside);
-  }, [], "Swap dropdown");
+  }, []);
 
   const handleCoinChange = (coin: AllCoinETH) => {
     onCoinChange(coin);

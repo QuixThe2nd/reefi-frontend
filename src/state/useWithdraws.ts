@@ -28,7 +28,6 @@ export const useWithdraws = () => {
 
 /*
 import { contracts } from "../config/contracts";
-import { useLoggedEffect } from "..";
 import { useStoredObject } from "./useStoredState";
 import { useWallet } from "../state/useWallet";
 
@@ -69,13 +68,13 @@ export const useWithdraws = ({ wallet }: Readonly<{ wallet: ReturnType<typeof us
     })
   };
 
-  useLoggedEffect(() => {
+  useEffect(() => {
     updateWithdraws.unlockSchedule();
     updateWithdraws.unsubmitted();
     updateWithdraws.userWithdrawable();
   }, [wallet.chain]);
 
-  useLoggedEffect(() => {
+  useEffect(() => {
     updateWithdraws.userPending();
   }, [wallet.chain, wallet.account]);
 

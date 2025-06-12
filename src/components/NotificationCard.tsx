@@ -1,15 +1,13 @@
-import { useLoggedEffect } from "..";
-
-import { type ReactElement } from "react";
+import { useEffect, type ReactElement } from "react";
 
 export const NotificationCard = ({ notification, setNotification }: Readonly<{ notification: string; setNotification: (_error: string) => void }>): ReactElement | undefined => {
-  useLoggedEffect(() => {
+  useEffect(() => {
     if (notification.length > 0) {
       const timeout = setTimeout(() => setNotification(""), 2000);
       return () => clearTimeout(timeout);
     }
     return undefined;
-  }, [notification, setNotification], "Notification Card");
+  }, [notification, setNotification]);
 
   return notification.length > 0 ? <div className="absolute right-2 top-2 z-20">
     <div className="rounded-lg bg-blue-700 p-4 text-center">

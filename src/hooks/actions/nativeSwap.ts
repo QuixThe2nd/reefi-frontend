@@ -1,4 +1,4 @@
-import type { CoreCoin } from "../../config/contracts";
+import type { CoreCoinExtended } from "../../config/contracts";
 import type { UseWriteContractReturnType } from "wagmi";
 import type { wagmiConfig } from "../..";
 
@@ -8,7 +8,7 @@ export const nativeSwap = ({ depositMGPAction, redeemRMGPAction, depositRMGPActi
   depositRMGPAction: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
   lockYMGPAction: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
   unlockYMGPAction: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
-}) => (tokenIn: CoreCoin, tokenOut: CoreCoin, writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => {
+}) => (tokenIn: CoreCoinExtended, tokenOut: CoreCoinExtended, writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => {
   if (tokenIn === "MGP") {
     if (tokenOut === "wstMGP") return depositMGPAction(writeContract);
     throw new Error("Unexpected native swap output");

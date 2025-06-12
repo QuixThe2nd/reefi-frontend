@@ -6,24 +6,24 @@ import { AmountInput } from "../components/AmountInput";
 import { Button } from "../components/Button";
 import { Page } from "../components/Page";
 
-import type { CoreCoin } from "../config/contracts";
+import type { CoreCoinExtended } from "../config/contracts";
 import type { wagmiConfig } from "..";
 
 interface Properties {
   readonly ymgpBalance: bigint;
   readonly setSend: (_send: bigint) => void;
   readonly send: bigint;
-  readonly nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
+  readonly nativeSwap: (_tokenIn: CoreCoinExtended, _tokenOut: CoreCoinExtended, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
   readonly mgpAPR: number;
   readonly reefiLockedMGP: bigint;
   readonly ymgpLocked: bigint;
 }
 
 export const LockPage = memo(({ ymgpBalance, setSend, send, nativeSwap, mgpAPR, reefiLockedMGP, ymgpLocked }: Properties): ReactElement => {
-  const { writeContract } = useWriteContract();
+  const { writeContract, isPending } = useWriteContract();
   return <Page info={[<span key="lock ymgp">yMGP can be locked to earn additional yield paid in wstMGP. 5% of protocol yield and 25% of yMGP withdrawals are paid to yMGP lockers.</span>, <span key="locked ymgp governance">Locked yMGP is able to vote on Magpie proposals with boosted vote power, controlling all of Reefi&apos;s vlMGP.</span>]}>
     <AmountInput balance={ymgpBalance} label="Lock yMGP" onChange={setSend} token={{ symbol: "yMGP" }} value={send} />
-    <Button className="w-full" onClick={() => nativeSwap("yMGP", "lyMGP", writeContract)} type="submit">Lock yMGP</Button>
+    <Button className="w-full" isLoading={isPending} onClick={() => nativeSwap("yMGP", "lyMGP", writeContract)} type="submit">Lock yMGP</Button>
     <div className="mt-4 text-sm text-gray-400">
       <div className="mb-1 flex justify-between">
         <span>Base APY</span>

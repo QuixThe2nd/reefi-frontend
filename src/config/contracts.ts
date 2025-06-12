@@ -42,6 +42,7 @@ export type TransferrableCoin = TradeableCoin | "stMGP" | NonTradeableCoin;
 
 export type AllCoin = LockedCoin | TransferrableCoin;
 export type AllCoinETH = AllCoin | "ETH";
+export type AllCoinExtendedETH = AllCoinETH | "stMGP";
 
 export const isPrimaryCoin = (value: string): value is PrimaryCoin => PrimaryCoinSchema.safeParse(value).success;
 

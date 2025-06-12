@@ -1,6 +1,6 @@
 import superjson from "superjson";
+import { useEffect } from "react";
 import { useLocalStorage, useObjectState } from "@uidotdev/usehooks";
-import { useLoggedEffect } from "..";
 
 const resetStates: string[] = [];
 
@@ -11,8 +11,8 @@ export const useStoredObject = <T = unknown>(key: string, initialValue: T) => {
     saveState(superjson.stringify(initialValue));
   }
   const [state, setState] = useObjectState<T>(superjson.parse<T>(savedState));
-  useLoggedEffect(() => {
+  useEffect(() => {
     saveState(superjson.stringify(state));
-  }, [state, saveState], "useStoredObject");
+  }, [state, saveState]);
   return [state, setState] as const;
 };

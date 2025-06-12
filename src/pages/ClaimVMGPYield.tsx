@@ -15,7 +15,7 @@ interface Properties {
 }
 
 export const ClaimVMGPYield = memo(({ claimVMGPRewards, unclaimedUserVMGPYield, vmgpHoldings }: Properties): ReactElement => {
-  const { writeContract } = useWriteContract();
+  const { writeContract, isPending } = useWriteContract();
   return <Page info={<span>Locked vMGP is unable to vote on proposals but instead earns yield by selling it&apos;s vote power.</span>} noTopMargin>
     <h3 className="mt-2 mb-1 text-base font-medium">Unclaimed Rewards</h3>
     <div className="flex justify-between rounded-lg bg-gray-700/50 p-4">
@@ -26,7 +26,7 @@ export const ClaimVMGPYield = memo(({ claimVMGPRewards, unclaimedUserVMGPYield, 
         <p className="text-lg font-medium">Total: {formatNumber(formatEther(vmgpHoldings, decimals.yMGP), 4)} yMGP</p>
       </div>
     </div>
-    <Button className="mt-4 w-full" onClick={() => claimVMGPRewards(writeContract)} type="button">Claim Rewards</Button>
+    <Button className="mt-4 w-full" isLoading={isPending} onClick={() => claimVMGPRewards(writeContract)} type="button">Claim Rewards</Button>
   </Page>;
 });
 ClaimVMGPYield.displayName = "ClaimVMGPYield";

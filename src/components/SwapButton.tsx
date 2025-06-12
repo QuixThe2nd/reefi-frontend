@@ -43,19 +43,23 @@ const exchangeRates = (tokenIn: CoreCoinExtended, tokenOut: CoreCoinExtended, ba
 };
 
 export const SwapButton = ({ curveBuy, nativeSwap, tokenIn, tokenOut, label, curveAmounts, allowances, send, chain, approve, mintWETH, swap, balances, supplies }: Properties): ReactElement => {
-  const { writeContract } = useWriteContract();
+  const { writeContract: writeContractApprove, isPending: isPendingApprove } = useWriteContract();
+  const { writeContract: writeContractCurve, isPending: isPendingCurve } = useWriteContract();
+  const { writeContract: writeContractETH, isPending: isPendingETH } = useWriteContract();
+  const { writeContract: writeContractWETH, isPending: isPendingWETH } = useWriteContract();
+  const { writeContract: writeContractNative, isPending: isPendingNative } = useWriteContract();
   const { sendTransaction } = useSendTransaction();
   const buttons = [] as JSX.Element[];
   if (tokenIn === "MGP" && tokenOut === "wstMGP" || tokenIn === "wstMGP" && tokenOut === "yMGP" || tokenIn === "yMGP" && tokenOut === "vMGP" || tokenIn === "yMGP" && tokenOut === "wstMGP") {
     const nativeRate = exchangeRates(tokenIn, tokenOut, balances, supplies);
     buttons.push(<div>
-      <TokenApproval allowance={allowances[`${tokenOut}_${tokenIn}` as keyof typeof allowances]} onApprove={infinity => approve(tokenIn, tokenOut, infinity, writeContract)} send={send} tokenSymbol={tokenIn} />
-      <Button className="w-full" onClick={() => nativeSwap?.(tokenIn, tokenOut, writeContract)} type="submit">{label} ({formatEther(BigInt(Math.round(Number(send) * nativeRate))).toFixed(4)} {tokenOut})</Button>
+      <TokenApproval allowance={allowances[`${tokenOut}_${tokenIn}` as keyof typeof allowances]} isLoading={isPendingApprove} onApprove={infinity => approve(tokenIn, tokenOut, infinity, writeContractApprove)} send={send} tokenSymbol={tokenIn} />
+      <Button className="w-full" isLoading={isPendingNative} onClick={() => nativeSwap?.(tokenIn, tokenOut, writeContractNative)} type="submit">{label} ({formatEther(BigInt(Math.round(Number(send) * nativeRate))).toFixed(4)} {tokenOut})</Button>
     </div>);
-    if (isPrimaryCoin(tokenIn) && isPrimaryCoin(tokenOut) && curveBuy) buttons.push(<BuyOnCurve allowanceCurve={allowances[`cMGP_${tokenIn}`]} buy={curveBuy} curveAmount={curveAmounts[`${tokenIn}_${tokenOut}` as keyof FlattenRecord<Record<PrimaryCoin, bigint>>]} nativeRate={nativeRate} onApprove={infinity => approve(tokenIn, "cMGP", infinity, writeContract)} send={send} tokenIn={tokenIn} tokenOut={tokenOut} />);
+    if (isPrimaryCoin(tokenIn) && isPrimaryCoin(tokenOut) && curveBuy) buttons.push(<BuyOnCurve allowanceCurve={allowances[`cMGP_${tokenIn}`]} buy={curveBuy} curveAmount={curveAmounts[`${tokenIn}_${tokenOut}` as keyof FlattenRecord<Record<PrimaryCoin, bigint>>]} isLoading={isPendingCurve} nativeRate={nativeRate} onApprove={infinity => approve(tokenIn, "cMGP", infinity, writeContractCurve)} send={send} tokenIn={tokenIn} tokenOut={tokenOut} />);
   } else buttons.push(<>
-    {tokenIn === "ETH" && <Button className="mb-2 w-full" onClick={() => mintWETH(writeContract)} type="submit" variant="secondary">Wrap ETH</Button>}
-    {tokenIn === "WETH" && <TokenApproval allowance={allowances[`odos_${tokenIn}`]} onApprove={infinity => approve(tokenIn, "odosRouter", infinity, writeContract)} send={send} tokenSymbol={tokenIn} />}
+    {tokenIn === "ETH" && <Button className="mb-2 w-full" isLoading={isPendingETH} onClick={() => mintWETH(writeContractETH)} type="submit" variant="secondary">Wrap ETH</Button>}
+    {tokenIn === "WETH" && <TokenApproval allowance={allowances[`odos_${tokenIn}`]} isLoading={isPendingWETH} onApprove={infinity => approve(tokenIn, "odosRouter", infinity, writeContractWETH)} send={send} tokenSymbol={tokenIn} />}
     <Button className="w-full" onClick={() => swap(contracts[chain][tokenIn === "ETH" ? "WETH" : tokenIn], contracts[chain].MGP, sendTransaction)} type="submit" variant="secondary">Swap to MGP With Odos</Button>
   </>);
 

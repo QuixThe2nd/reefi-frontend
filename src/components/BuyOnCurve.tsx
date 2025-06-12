@@ -17,14 +17,15 @@ interface Properties {
   readonly buy: (_tokenIn: PrimaryCoin, _tokenOut: PrimaryCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
   readonly tokenIn: PrimaryCoin;
   readonly tokenOut: PrimaryCoin;
+  readonly isLoading: boolean;
 }
 
-export const BuyOnCurve = memo(({ send, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenIn, tokenOut }: Properties): ReactElement => {
-  const { writeContract } = useWriteContract();
+export const BuyOnCurve = memo(({ send, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenIn, tokenOut, isLoading }: Properties): ReactElement => {
+  const { writeContract, isPending } = useWriteContract();
   return <div>
-    <TokenApproval allowance={allowanceCurve} curve onApprove={onApprove} send={send} tokenSymbol={tokenIn} />
+    <TokenApproval allowance={allowanceCurve} curve isLoading={isLoading} onApprove={onApprove} send={send} tokenSymbol={tokenIn} />
     <div className="relative">
-      <Button className="w-full" onClick={() => buy(tokenIn, tokenOut, writeContract)} type="submit" variant="secondary">Buy on Curve ({formatEther(curveAmount).toFixed(4)} {tokenOut})</Button>
+      <Button className="w-full" isLoading={isPending} onClick={() => buy(tokenIn, tokenOut, writeContract)} type="submit" variant="secondary">Buy on Curve ({formatEther(curveAmount).toFixed(4)} {tokenOut})</Button>
       {((): JSX.Element | undefined => {
         const directRate = formatEther(send) * nativeRate;
         const premiumDiscount = (formatEther(curveAmount) - directRate) / directRate * 100;

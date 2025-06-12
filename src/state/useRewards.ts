@@ -1,7 +1,7 @@
 import { contracts, decimals, type SecondaryCoin } from "../config/contracts";
 import { encodeFunctionData } from "viem/utils";
 import { formatEther } from "../utilities";
-import { useChainId, useEstimateGas, useGasPrice, useReadContract, useSimulateContract } from "wagmi";
+import { useAccount, useChainId, useEstimateGas, useGasPrice, useReadContract, useSimulateContract } from "wagmi";
 import { useLoggedEffect } from "..";
 import { useState } from "react";
 import zod from "zod";
@@ -67,7 +67,8 @@ export const useRewards = ({ prices }: { prices: ReturnType<typeof usePrices> })
   // }, [rewards.cmgpPoolAPY, rewards.vlmgpAPR, balances.curve.MGP, balances.curve.rMGP, balances.curve.yMGP]);
   // const estimatedCompoundGasFee = useMemo(() => formatEther(rewards.compoundRMGPGas, decimals.WETH) * tokenState.prices.WETH, [rewards.compoundRMGPGas, prices]);
 
-  const gas = useEstimateGas({ to: contracts[chain].wstMGP, data: encodeFunctionData({ abi: ABIs.wstMGP, functionName: "claim" }) }).data ?? 0n;
+  const { address } = useAccount();
+  const gas = useEstimateGas({ to: contracts[chain].wstMGP, data: encodeFunctionData({ abi: ABIs.wstMGP, functionName: "claim" }), value: 0n, account: address }).data ?? 0n;
   const gasPrice = useGasPrice().data ?? 0n;
   const estimatedGas = gas * gasPrice;
 

@@ -31,10 +31,10 @@ export const CompoundYield = memo(({ uncompoundedMGPYield, uncompoundedYMGPYield
         <p className="text-lg font-medium">{formatNumber(uncompoundedMGPYield, 4)} MGP</p>
         <p className="text-lg font-medium">${formatNumber(uncompoundedMGPYield * prices.MGP, 4)}</p>
       </div>
-      {(Object.keys(pendingRewards) as SecondaryCoin[]).map(symbol => <div className="flex justify-between" key={symbol}>
+      {(Object.keys(pendingRewards) as SecondaryCoin[]).map(symbol => pendingRewards[symbol].rewards !== 0n ? <div className="flex justify-between" key={symbol}>
         <p className="text-xs">{formatNumber(formatEther(pendingRewards[symbol].rewards, decimals[symbol]), 6)} {symbol}</p>
         <p className="text-xs">{formatNumber(prices[symbol] * Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol])) / prices.MGP, 6)} MGP</p>
-      </div>)}
+      </div> : undefined)}
     </div>
     <Button className="mt-4 w-full" onClick={() => compoundRMGP(writeContract)} type="button">Compound Yield (Get ~{uncompoundedYMGPYield} yMGP)</Button>
     <div className="mt-4 text-sm text-gray-400">

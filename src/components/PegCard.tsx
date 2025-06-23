@@ -1,6 +1,6 @@
 /* eslint @typescript-eslint/no-unnecessary-type-parameters: 0 */
 
-import { coins, type TradeableCoin } from "../config/contracts";
+import { coins, type TradeableCoin } from "../state/useContracts";
 
 import React from "react";
 
@@ -112,12 +112,12 @@ const PegCard = <Label extends string>({ token, spread, targetToken, rates, soft
             <img className="size-12" src={coins[token].icon} />
             <div className="text-slate-300">
               <div className="text-sm font-semibold">1 {token}</div>
-              <div className="text-xs text-slate-500">→{targetToken}</div>
+              <div className="text-xs text-slate-500">→ {targetToken}</div>
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <Gauge isHealthy={isHealthy} isWarning={isWarning} label="Peg Health" value={pegHealth} />
-            <Gauge isHealthy={isHealthy} isSpread isWarning={isWarning} label="Spread" value={spread} />
+            <Gauge isHealthy={token === "wstMGP" ? true : isHealthy} isWarning={token === "wstMGP" ? false : isWarning} label={token === "wstMGP" ? "All Time Yield" : "Peg Health"} value={token === "wstMGP" ? 100 * rates[0]!.value / rates[1]!.value : pegHealth} />
+            {spread !== 0 && <Gauge isHealthy={isHealthy} isSpread isWarning={isWarning} label="Spread" value={spread} />}
           </div>
         </div>
         {notices.length > 0 && <div className="mb-6">{notices.map(notice => <Notice key={notice.title} {...notice} />)}</div>}
@@ -148,6 +148,7 @@ const PegCard = <Label extends string>({ token, spread, targetToken, rates, soft
           </div>
           {(["Peg Health (vs Mint Rate)", "Spread"] as const).map((label, index2) => {
             const value = index2 === 0 ? pegHealth : spread;
+            if (Number.isNaN(value)) return undefined;
             const colors = index2 === 0 ? { green: isHealthy, orange: isWarning } : { green: spread <= 10, orange: spread <= 20 };
             let color = "red";
             if (colors.green) color = "green";

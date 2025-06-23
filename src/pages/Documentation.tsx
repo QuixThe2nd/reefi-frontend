@@ -40,7 +40,7 @@ const documentationSections: NonEmptyArray<DocumentSection> = [
         content: "MGP is the base governance token for Magpie. It can be locked for 2 months as vlMGP to earn yield and governance rights, but this creates a liquidity problem."
       },
       {
-        id: "rmgp",
+        id: "wstmgp",
         title: "wstMGP Token",
         content: "wstMGP (Wrapped Staked MGP) is the core liquid staking token that represents a claim on the underlying vlMGP position (similar to wstETH). When you deposit MGP, you receive wstMGP tokens that automatically earn 90% of the vlMGP yield through auto-compounding. wstMGP can be redeemed for MGP either instantly through Curve at market rates or via the native withdrawal queue (60-120 day wait). The token maintains a floating peg to MGP based on the underlying backing ratio, which increases over time as yields compound."
       },
@@ -65,14 +65,19 @@ const documentationSections: NonEmptyArray<DocumentSection> = [
         content: "lvMGP (Locked Voting MGP) is backed 1:1 by vMGP with instant withdrawals. lvMGP also earns yield similar to lyMGP. lvMGP earns it's yield by renting out it's voting power on Reefi's voting pool."
       },
       {
+        id: "bmgp",
+        title: "bMGP Tokens",
+        content: "bMGP (Bond MGP) is backed 1:1 by MGP. When converting stMGP back to MGP, you are issued a bMGP which will be redeemable 1:1 for MGP at a specific date. Each time a new withdrawal slot is used with Magpie, a new bMGP token will be issued. bMGP can be traded on the open market, slowly regaining it's peg."
+      },
+      {
+        id: "smgp",
+        title: "sMGP Token",
+        content: "sMGP (Synthetic MGP) is not backed by an underlying asset, instead backed by Reefi yield. sMGP allows you to trade on Reefi's underlying yield similar to Pendle, however sMGP has no maturity date. By buying sMGP you are betting that Reefi's yield will increase. sMGP is minted 1:1 for every MGP in non-compounded yield Reefi generates. Non-compounded yield is then sold on Curve to buyback and burn sMGP. This means when 1 sMGP is less than 1 MGP, all non-compounded protocol yield improves the peg."
+      },
+      {
         id: "cmgp",
         title: "cMGP Token",
         content: "cMGP is the Curve LP token for the MGP/wstMGP/yMGP/vMGP liquidity pool. By providing liquidity, users earn swap fees from arbitrage activity plus the underlying yield from their contributed tokens. The pool enables instant conversions between token types and helps maintain peg stability. LP providers benefit from multiple revenue streams: trading fees, yield from underlying tokens, and potential rewards from Curve's ecosystem."
-      },
-      {
-        id: "wrmgp",
-        title: "stMGP Token (Advanced)",
-        content: "stMGP (Staked MGP) is backed by wstMGP with instant mints and burns. However 1 stMGP is worth 1 vlMGP, not 1 wstMGP, similar to stETH. stMGP does not earn yield, but is a receipt worth exactly 1 vlMGP but redeemable for wstMGP. stMGP can be bridged cross-chain using Wormhole and redeemed back for wstMGP on either chain. This allows you to convert your wstMGP to stMGP, bridge to another chain, then redeem wstMGP if yields are better, as well as letting you withdraw on another chain with the withdrawal queue is shorter."
       }
     ]
   },

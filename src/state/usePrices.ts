@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
 
-import type { SecondaryCoinETH } from "../config/contracts";
+import type { SecondaryCoin } from "./useContracts";
 
 const ApiResponseSchema = z.object({
   data: z.object({
@@ -18,7 +18,7 @@ const ApiResponseSchema = z.object({
 });
 
 export const usePrices = () => {
-  const [prices, setPrices] = useState<Record<SecondaryCoinETH, number>>({ MGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, WETH: 0, ETH: 0 });
+  const [prices, setPrices] = useState<Record<SecondaryCoin, number>>({ MGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, WETH: 0, ETH: 0 });
 
   useEffect(() => {
     (async (): Promise<void> => {

@@ -1,13 +1,14 @@
-import { contracts, type Chains } from "../config/contracts";
 import { useChainId, useChains } from "wagmi";
+import { useContracts, type Chains } from "../state/useContracts";
 
 import { Card } from "./Card";
 
 import { type ReactElement } from "react";
 
-export const Contracts = (): ReactElement => {
+export const ContractsCard = (): ReactElement => {
   const chains = useChains();
   const chainId = useChainId();
+  const contracts = useContracts();
   const chain = chains.find(c => c.id === chainId)!;
   return <Card>
     <h2 className="mb-2 text-lg font-bold">Contract Addresses</h2>

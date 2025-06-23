@@ -1,4 +1,4 @@
-import { coins, type AllCoin } from "../config/contracts";
+import { coins, type AllCoin } from "../state/useContracts";
 import { formatEther, parseEther } from "../utilities";
 import { memo, type ReactElement } from "react";
 

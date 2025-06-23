@@ -1,24 +1,32 @@
 import { useAllowances } from "./useAllowances";
 import { useAmounts } from "./useAmounts";
 import { useBalances } from "./useBalances";
+import { useBonds } from "./useBonds";
+import { useContracts } from "./useContracts";
 import { useExchangeRates } from "./useExchangeRates";
 import { usePrices } from "./usePrices";
 import { useRewards } from "./useRewards";
 import { useSupplies } from "./useSupplies";
-import { useWithdraws } from "./useWithdraws";
 
 export const useReefiState = () => {
-  const [amounts, amountsActions] = useAmounts();
+  const contracts = useContracts();
+  const [amounts, amountsActions] = useAmounts({ contracts });
   const prices = usePrices();
+  const bonds = useBonds({ contracts });
+  const allowances = useAllowances({ contracts });
+  const balances = useBalances({ contracts });
+  const supplies = useSupplies({ contracts });
+  const exchangeRates = useExchangeRates({ contracts, supplies });
+  const rewards = useRewards({ contracts, supplies, prices });
 
   return {
     amounts, amountsActions,
-    allowances: useAllowances(),
-    balances: useBalances(),
-    exchangeRates: useExchangeRates(),
+    allowances,
+    balances,
+    exchangeRates,
     prices,
-    rewards: useRewards({ prices }),
-    supplies: useSupplies(),
-    withdraws: useWithdraws()
+    rewards,
+    supplies,
+    bonds
   } as const;
 };

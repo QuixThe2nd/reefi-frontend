@@ -1,11 +1,12 @@
 import { formatEther } from "../utilities";
 import { memo, type JSX, type ReactElement } from "react";
-import { useWriteContract, type UseWriteContractReturnType } from "wagmi";
+import { useWriteSaveContract } from "../hooks/useWriteSaveContract";
 
 import { Button } from "./Button";
 import { TokenApproval } from "./TokenApproval";
 
-import type { PrimaryCoin } from "../config/contracts";
+import type { PrimaryCoin } from "../state/useContracts";
+import type { UseWriteContractReturnType } from "wagmi";
 import type { wagmiConfig } from "..";
 
 interface Properties {
@@ -21,7 +22,7 @@ interface Properties {
 }
 
 export const BuyOnCurve = memo(({ send, curveAmount, allowanceCurve, nativeRate, onApprove, buy, tokenIn, tokenOut, isLoading }: Properties): ReactElement => {
-  const { writeContract, isPending } = useWriteContract();
+  const { writeContract, isPending } = useWriteSaveContract("Curve Swap");
   return <div>
     <TokenApproval allowance={allowanceCurve} curve isLoading={isLoading} onApprove={onApprove} send={send} tokenSymbol={tokenIn} />
     <div className="relative">

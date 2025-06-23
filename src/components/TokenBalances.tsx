@@ -1,21 +1,13 @@
-import { decimals } from "../config/contracts";
-import { memo, type ReactElement } from "react";
+import { decimals, PrimaryCoinSchema, type PrimaryCoin } from "../state/useContracts";
 
 import { TokenBalance } from "./TokenBalance";
 
+import type { ReactElement } from "react";
+
 interface Properties {
-  readonly mgpBalance: bigint;
-  readonly rmgpBalance: bigint;
-  readonly ymgpBalance: bigint;
-  readonly cmgpBalance: bigint;
+  readonly balances: Record<Exclude<PrimaryCoin, "bMGP">, bigint>;
 }
 
-export const TokenBalances = memo(({ mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance }: Properties): ReactElement => <div className="hidden items-center space-x-2 md:flex">
-  <TokenBalance balance={mgpBalance} decimals={decimals.MGP} symbol="MGP" />
-  <TokenBalance balance={rmgpBalance} decimals={decimals.wstMGP} symbol="wstMGP" />
-  <TokenBalance balance={ymgpBalance} decimals={decimals.yMGP} symbol="yMGP" />
-  {/* <TokenBalance symbol="VMGP" balance={vmgpBalance} decimals={decimals.VMGP} /> */}
-  <TokenBalance balance={cmgpBalance} decimals={decimals.cMGP} symbol="cMGP" />
-  {/* <TokenBalance symbol="Locked yMGP" balance={userLockedYMGP} decimals={decimals.YMGP} /> */}
-</div>);
-TokenBalances.displayName = "TokenBalance";
+export const TokenBalances = ({ balances }: Properties): ReactElement => <div className="hidden rounded-xl space-x-1 md:grid md:grid-flow-col md:grid-rows-1 md:auto-cols-max bg-[#1A1B1F] px-4 gap-x-2" style={{ direction: "rtl" }}>
+  {PrimaryCoinSchema.options.filter(coin => coin !== "bMGP").map(coin => balances[coin] ? <TokenBalance balance={balances[coin]} decimals={decimals[coin]} key={coin} symbol={coin} /> : undefined)}
+</div>;

@@ -1,21 +1,19 @@
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { mainnet } from "viem/chains";
-import { useAccount, useEnsName, useEnsAvatar, createConfig, webSocket } from "wagmi";
+import { useAccount } from "wagmi";
 
+import { Button } from "./Button";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { TokenBalances } from "./TokenBalances";
 
+import type { AllCoin } from "../state/useContracts";
 import type { Pages } from "../App";
-import { type ReactElement } from "react";
+import type { ReactElement } from "react";
 
 interface Properties {
   readonly page: Pages | undefined;
   readonly setPage: (_page: Pages | undefined) => void;
-  readonly mgpBalance: bigint;
-  readonly rmgpBalance: bigint;
-  readonly ymgpBalance: bigint;
-  readonly cmgpBalance: bigint;
+  readonly balances: Record<Exclude<AllCoin, "bMGP">, bigint>;
 }
 
 const getHeaderContent = (page: Pages | undefined, setPage: (_page: Pages | undefined) => void) => {
@@ -41,24 +39,19 @@ const getHeaderContent = (page: Pages | undefined, setPage: (_page: Pages | unde
   </>;
 };
 
-const config = createConfig({ chains: [mainnet], transports: { [mainnet.id]: webSocket("wss://eth.drpc.org") } });
-
-export const Header = ({ page, setPage, mgpBalance, rmgpBalance, ymgpBalance, cmgpBalance }: Properties): ReactElement => {
+export const Header = ({ page, setPage, balances }: Properties): ReactElement => {
   const { address } = useAccount();
-  const { data: ens } = useEnsName({ address, config });
-  const { data: ensAvatar } = useEnsAvatar({ name: ens! });
 
   return <div className="sticky top-0 z-10 flex w-full items-center justify-between p-4 bg-gray-800">
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-2">
       {getHeaderContent(page, setPage)}
-      <button className="rounded-lg bg-gradient-to-r from-green-600 via-green-500 to-emerald-600 hover:from-green-500 hover:via-green-400 hover:to-emerald-500 text-white shadow-lg shadow-green-500/25 hover:shadow-green-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105" onClick={() => setPage("claim")} type="button">💰 Claim</button>
-      <button className="rounded-lg bg-gradient-to-r from-red-600 via-red-500 to-orange-600 hover:from-red-500 hover:via-red-400 hover:to-orange-500 text-white shadow-lg shadow-green-500/25 hover:shadow-green-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105" onClick={() => setPage("vote")} type="button">🗳️ Vote</button>
-      <button className="rounded-lg bg-gradient-to-r from-blue-600 via-blue-500 to-teal-600 hover:from-blue-500 hover:via-blue-400 hover:to-teal-500 text-white shadow-lg shadow-green-500/25 hover:shadow-blue-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105" onClick={() => setPage("bridge")} type="button">🌐 Bridge</button>
-      <button className="rounded-lg bg-gradient-to-r from-yellow-950 via-yellow-800 to-yellow-700 hover:from-yellow-900 hover:via-yellow-700 hover:to-grey-500 text-white shadow-lg shadow-yellow-700/25 hover:shadow-blue-400/40 px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105" onClick={() => setPage("documentation")} type="button">📖 Docs</button>
+      <Button onClick={() => setPage("claim")} size="sm" type="button" variant="secondary">💰 Claim</Button>
+      <Button onClick={() => setPage("vote")} size="sm" type="button" variant="secondary">🗳️ Vote</Button>
+      <Button onClick={() => setPage("bridge")} size="sm" type="button" variant="secondary">🌐 Bridge</Button>
+      <Button onClick={() => setPage("documentation")} size="sm" type="button" variant="secondary">📖 Docs</Button>
     </div>
-    {ensAvatar ? <img alt="ENS Avatar" src={ensAvatar} /> : undefined}
-    <div className="flex gap-4">
-      {address ? <TokenBalances cmgpBalance={cmgpBalance} mgpBalance={mgpBalance} rmgpBalance={rmgpBalance} ymgpBalance={ymgpBalance} /> : undefined}
+    <div className="flex gap-2">
+      {address ? <TokenBalances balances={balances} /> : undefined}
       <ConnectButton />
     </div>
   </div>;

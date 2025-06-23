@@ -2,7 +2,6 @@ import { formatNumber, formatEther } from "../utilities";
 import { memo, useState, type ReactElement } from "react";
 import { useFetch } from "../hooks/useFetch";
 
-import { AmountInput } from "../components/AmountInput";
 import { Button } from "../components/Button";
 import { Page } from "../components/Page";
 
@@ -35,7 +34,6 @@ interface Properties {
   readonly vmgpSupply: bigint;
   readonly lvmgpSupply: bigint;
   readonly reefiMgpLocked: bigint;
-  readonly ymgpBalance: bigint;
   readonly vote: (_proposalId: string, _choice: number) => Promise<void>;
 }
 
@@ -85,7 +83,7 @@ const completedLabel = (winningChoice: string) => {
   return "TIE";
 };
 
-export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, vote, lvmgpSupply, ymgpBalance }: Properties): ReactElement => {
+export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, vote, lvmgpSupply }: Properties): ReactElement => {
   const [selectedChoices, setSelectedChoices] = useState<Record<string, number>>({});
   const [votingProposal, setVotingProposal] = useState<string | undefined>();
   const proposalScores: Record<string, number[]> = {};
@@ -179,32 +177,16 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, vote, l
               </div>
             </div>
           </div> : undefined}
-          {proposal.state === "active" && vmgpBalance > 0n && <>
-            <div className="mb-3">
-              <p className="mb-2 text-sm font-medium">Choose your vote:</p>
-              <div className="grid gap-2">
-                {proposal.choices.map((choice, index) => <label className="flex cursor-pointer items-center rounded border border-gray-600 p-2 hover:bg-gray-700/50" key={choice}>
-                  <input checked={selectedChoices[proposal.id] === index} className="mr-3" name={`proposal-${proposal.id}`} onChange={() => setSelectedChoices(previous => ({ ...previous, [proposal.id]: index }))} type="radio" value={index} />
-                  <span className="flex-1">{choice}</span>
-                  <span className="text-sm text-gray-400">{proposalScores[proposal.id]?.[index] ? formatNumber(proposalScores[proposal.id]?.[index] ?? 0) : 0} votes</span>
-                </label>)}
-              </div>
+          {proposal.state === "active" && vmgpBalance > 0n && <div className="mb-3">
+            <p className="mb-2 text-sm font-medium">Choose your vote:</p>
+            <div className="grid gap-2">
+              {proposal.choices.map((choice, index) => <label className="flex cursor-pointer items-center rounded border border-gray-600 p-2 hover:bg-gray-700/50" key={choice}>
+                <input checked={selectedChoices[proposal.id] === index} className="mr-3" name={`proposal-${proposal.id}`} onChange={() => setSelectedChoices(previous => ({ ...previous, [proposal.id]: index }))} type="radio" value={index} />
+                <span className="flex-1">{choice}</span>
+                <span className="text-sm text-gray-400">{proposalScores[proposal.id]?.[index] ? formatNumber(proposalScores[proposal.id]?.[index] ?? 0) : 0} votes</span>
+              </label>)}
             </div>
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="rounded-lg bg-green-900/20 p-4">
-                  <h6 className="mb-4 font-medium text-green-300">Vote YES</h6>
-                  <AmountInput balance={ymgpBalance} label="Deposit yMGP" onChange={value => setSellNoAmounts(previous => ({ ...previous, [proposal.id]: value }))} placeholder="0" token={{ symbol: "yMGP" }} value={sellNoAmount} />
-                  <Button className="mt-3 w-full bg-red-600 hover:bg-red-700" disabled={activeAction !== undefined || marketData.userNoBalance < sellNoAmount || sellNoAmount === 0n} isLoading={activeAction === `sell-no-${proposal.id}`} onClick={() => handleSellNoTokens(proposal.id)} type="button">{activeAction === `sell-no-${proposal.id}` ? "Swapping..." : "Buy Yes Votes"}</Button>
-                </div>
-                <div className="rounded-lg bg-red-900/20 p-4">
-                  <h6 className="mb-4 font-medium text-red-300">Vote NO</h6>
-                  <AmountInput balance={ymgpBalance} label="Deposit yMGP" onChange={value => setSellYesAmounts(previous => ({ ...previous, [proposal.id]: value }))} placeholder="0" token={{ symbol: "yMGP" }} value={sellYesAmount} />
-                  <Button className="mt-3 w-full bg-green-600 hover:bg-green-700" disabled={activeAction !== undefined || marketData.userYesBalance < sellYesAmount || sellYesAmount === 0n} isLoading={activeAction === `sell-yes-${proposal.id}`} onClick={() => handleSellYesTokens(proposal.id)} type="button">{activeAction === `sell-yes-${proposal.id}` ? "Swapping..." : "Buy No Votes"}</Button>
-                </div>
-              </div>
-            </div>
-          </>}
+          </div>}
           {proposal.state === "closed" && <div className="mb-3">
             <p className="mb-2 text-sm font-medium">
               Results:

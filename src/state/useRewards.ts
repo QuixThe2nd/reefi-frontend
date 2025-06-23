@@ -1,12 +1,13 @@
-import { contracts, decimals, type SecondaryCoin } from "../config/contracts";
+import { aprToApy, formatEther } from "../utilities";
 import { encodeFunctionData } from "viem/utils";
-import { formatEther } from "../utilities";
 import { useAccount, useChainId, useEstimateGas, useGasPrice, useReadContract, useSimulateContract } from "wagmi";
 import { useEffect, useState } from "react";
 import zod from "zod";
 
-import { ABIs } from "../config/ABIs/abis";
+import { ABIs } from "../ABIs/abis";
 
+import { type Contracts, decimals, type SecondaryCoin } from "./useContracts";
+import type { Supplies } from "./useSupplies";
 import type { usePrices } from "./usePrices";
 
 const CurveResponseSchema = zod.object({
@@ -26,32 +27,28 @@ const MagpieResponseSchema = zod.object({
   })
 });
 
-export const useRewards = ({ prices }: { prices: ReturnType<typeof usePrices> }) => {
+export const useRewards = ({ prices, contracts, supplies }: { prices: ReturnType<typeof usePrices>; contracts: Contracts; supplies: Supplies }) => {
   const chain = useChainId();
-  const [rewards, setRewards] = useState({
-    vlmgpAPR: 0,
-    cmgpPoolAPY: 0,
-    user: { lvMGP: 0n }
-  });
-
+  const { address } = useAccount();
+  const [cmgpPoolAPY, setCmgpPoolAPY] = useState(0);
+  const [vlmgpAPR, setVlmgpAPR] = useState(0);
 
   useEffect(() => {
     (async () => {
-      // TODO: switch chains
-      const response = await fetch("https://api.curve.finance/api/getVolumes/arbitrum");
+      const response = await fetch(`https://api.curve.finance/api/getVolumes/${chain === 42_161 ? "arbitrum" : "bsc"}`);
       const curveBody = CurveResponseSchema.parse(await response.json());
-      for (const pool of curveBody.data.pools) if (pool.address === contracts[chain].cMGP) setRewards(y => ({ ...y, cmgpPoolAPY: pool.latestWeeklyApyPcent / 100 }));
+      for (const pool of curveBody.data.pools) if (pool.address === contracts[chain].cMGP) setCmgpPoolAPY(pool.latestWeeklyApyPcent / 100);
     })();
     (async () => {
       const response = await fetch(`https://dev.api.magpiexyz.io/streamReward?chainId=${chain}&rewarder=${contracts[chain].vlRewarder}`);
       const body = MagpieResponseSchema.parse(await response.json());
-      let vlmgpAPR = 0;
-      for (const token of body.data.rewardTokenInfo) vlmgpAPR += token.apr;
-      setRewards(r => ({ ...r, vlmgpAPR }));
+      let apr = 0;
+      for (const token of body.data.rewardTokenInfo) apr += token.apr;
+      setVlmgpAPR(apr);
     })();
-  }, []);
+  }, [chain, contracts]);
 
-  const { data } = useReadContract({ abi: ABIs.masterMGP, address: contracts[chain].masterMGP, functionName: "allPendingTokens", args: [contracts[chain].vlMGP, contracts[chain].wstMGP] });
+  const { data } = useReadContract({ abi: ABIs.masterMagpie, address: contracts[chain].masterMagpie, functionName: "allPendingTokens", args: [contracts[chain].vlMGP, contracts[chain].lockManager] });
   const pendingRewards = { MGP: { address: contracts[chain].MGP, rewards: data?.[0] ?? 0n } } as unknown as Record<SecondaryCoin, { address: `0x${string}`; rewards: bigint }>;
   data?.[2].forEach((token, index) => {
     if (data[2][index] && data[3][index] && data[1][index]) pendingRewards[token.replace("Bridged ", "").toUpperCase() as SecondaryCoin] = { address: data[1][index], rewards: data[3][index] };
@@ -59,27 +56,20 @@ export const useRewards = ({ prices }: { prices: ReturnType<typeof usePrices> })
   const rewardCoins = Object.keys(pendingRewards) as SecondaryCoin[];
   const estimatedMGP = rewardCoins.map(symbol => prices[symbol] * Number(formatEther(pendingRewards[symbol].rewards, decimals[symbol]))).reduce((sum, value) => sum + value, 0) / prices.MGP;
 
-  // const cmgpAPY = useMemo(() => {
-  //   const yieldBearingUnderlyingPercent = Number(balances.curve.rMGP + balances.curve.yMGP) / Number(balances.curve.MGP + balances.curve.rMGP + balances.curve.yMGP);
-  //   const underlyingYield = yieldBearingUnderlyingPercent * aprToApy(rewards.vlmgpAPR) * 0.9;
-  //   return underlyingYield + rewards.cmgpPoolAPY;
-  // }, [rewards.cmgpPoolAPY, rewards.vlmgpAPR, balances.curve.MGP, balances.curve.rMGP, balances.curve.yMGP]);
-  // const estimatedCompoundGasFee = useMemo(() => formatEther(rewards.compoundRMGPGas, decimals.WETH) * tokenState.prices.WETH, [rewards.compoundRMGPGas, prices]);
-
-  const { address } = useAccount();
-  const gas = useEstimateGas({ to: contracts[chain].wstMGP, data: encodeFunctionData({ abi: ABIs.wstMGP, functionName: "claim" }), value: 0n, account: address }).data ?? 0n;
+  const gas = useEstimateGas({ to: contracts[chain].stMGP, data: encodeFunctionData({ abi: ABIs.stMGP, functionName: "compound" }), value: 0n, account: address }).data ?? 0n;
   const gasPrice = useGasPrice().data ?? 0n;
   const estimatedGas = gas * gasPrice;
 
-  const estimatedYMGP = useSimulateContract({ abi: ABIs.wstMGP, address: contracts[chain].wstMGP, functionName: "claim" }).data?.result ?? 0n;
+  const estimatedRMGP = useSimulateContract({ address: contracts[chain].stMGP, abi: ABIs.stMGP, functionName: "compound" }).data?.result ?? 0n;
+  const stmgpAPY = aprToApy(vlmgpAPR) * 0.9;
   return {
-    ...rewards,
-    user: {
-      ...rewards.user,
-      lyMGP: useReadContract({ abi: ABIs.yMGP, address: contracts[chain].yMGP, functionName: "unclaimedUserYield" }).data ?? 0n
+    cmgpPoolAPY,
+    vlMGP: { estimatedRMGP, estimatedGas, pendingRewards, estimatedMGP, APR: vlmgpAPR },
+    stMGP: {
+      APY: stmgpAPY
     },
-    reefi: {
-      vlMGP: { estimatedYMGP, estimatedGas, pendingRewards, estimatedMGP }
+    syMGP: {
+      APY: stmgpAPY + Number(supplies.stMGP) * stmgpAPY / 18 / Number(supplies.syMGP)
     }
   };
 };

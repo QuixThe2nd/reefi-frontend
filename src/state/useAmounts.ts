@@ -1,9 +1,9 @@
-/* eslint functional/no-try-statements: 0 */
-import { contracts, type PrimaryCoin } from "../config/contracts";
 import { useChainId, useReadContract } from "wagmi";
 import { useState } from "react";
 
-import { ABIs } from "../config/ABIs/abis";
+import { ABIs } from "../ABIs/abis";
+
+import { type Contracts, curveIndexes, type PrimaryCoin, type CurveCoin, CurveCoinSchema } from "./useContracts";
 
 export type FlattenRecord<T extends Record<string, bigint>> = {
   [K1 in keyof T as K1 extends string ?
@@ -15,25 +15,19 @@ export type FlattenRecord<T extends Record<string, bigint>> = {
     : never]: bigint
 };
 
-export const useAmounts = () => {
-  const [lp, setLP] = useState<Record<PrimaryCoin, bigint>>({ MGP: 0n, wstMGP: 0n, yMGP: 0n, vMGP: 0n });
+export const useAmounts = ({ contracts }: { contracts: Contracts }) => {
+  const [lp, setLP] = useState<Record<CurveCoin, bigint>>({ MGP: 0n, stMGP: 0n, yMGP: 0n, vMGP: 0n, rMGP: 0n });
   const [send, setSend] = useState(0n);
   const chain = useChainId();
 
-  const curve: FlattenRecord<Record<PrimaryCoin, bigint>> = {
-    MGP_wstMGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [0n, 1n, send] }).data ?? 0n,
-    MGP_yMGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [0n, 2n, send] }).data ?? 0n,
-    MGP_vMGP: send,
-    wstMGP_MGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [1n, 0n, send] }).data ?? 0n,
-    wstMGP_yMGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [1n, 2n, send] }).data ?? 0n,
-    wstMGP_vMGP: send,
-    yMGP_MGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [2n, 0n, send] }).data ?? 0n,
-    yMGP_wstMGP: useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [2n, 1n, send] }).data ?? 0n,
-    yMGP_vMGP: send,
-    vMGP_MGP: send,
-    vMGP_wstMGP: send,
-    vMGP_yMGP: send
-  };
+  const coins: readonly CurveCoin[] = CurveCoinSchema.options;
+  const curve: FlattenRecord<Record<PrimaryCoin, bigint>> = {} as FlattenRecord<Record<PrimaryCoin, bigint>>;
+
+  for (const from of coins) for (const to of coins) if (from !== to) {
+    const key = `${from}_${to}` as keyof FlattenRecord<Record<PrimaryCoin, bigint>>;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    curve[key] = useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes[from], curveIndexes[to], send] }).data ?? 0n;
+  }
 
   return [
     { lp, curve, send },

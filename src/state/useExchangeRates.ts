@@ -1,34 +1,53 @@
-/* eslint functional/no-try-statements: 0 */
-import { contracts } from "../config/contracts";
 import { parseEther } from "../utilities";
 import { useChainId, useReadContract } from "wagmi";
 
-import { ABIs } from "../config/ABIs/abis";
+import { ABIs } from "../ABIs/abis";
 
-export const useExchangeRates = () => {
+import { type Contracts, type CurveCoin, curveIndexes } from "./useContracts";
+import type { Supplies } from "./useSupplies";
+
+type ExchangeRates<T extends readonly string[]> = {
+  [K in T[number]]: {
+    [_P in Exclude<T[number], K>]: number;
+  };
+};
+
+export const useExchangeRates = ({ contracts, supplies }: { contracts: Contracts; supplies: Supplies }): ExchangeRates<CurveCoin[]> & { wstMGP: { stMGP: number; yMGP: number } } => {
   const chain = useChainId();
-  const exchangeRates = {
+  return {
     MGP: {
-      wstMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [0n, 1n, parseEther(0.5)] }).data) / Number(parseEther(0.5)),
-      yMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [0n, 2n, parseEther(0.5)] }).data) / Number(parseEther(0.5)),
-      vMGP: 0.8
+      stMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.MGP, curveIndexes.stMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      yMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.MGP, curveIndexes.yMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      vMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.MGP, curveIndexes.yMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      rMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.MGP, curveIndexes.rMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1))
     },
-    wstMGP: {
-      MGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [1n, 0n, parseEther(0.5)] }).data) / Number(parseEther(0.5)),
-      yMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [1n, 2n, parseEther(0.5)] }).data) / Number(parseEther(0.5)),
-      vMGP: 1.3
+    stMGP: {
+      MGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.stMGP, curveIndexes.MGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      yMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.stMGP, curveIndexes.yMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      vMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.stMGP, curveIndexes.yMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      rMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.stMGP, curveIndexes.rMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1))
     },
     yMGP: {
-      MGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [2n, 0n, parseEther(0.5)] }).data) / Number(parseEther(0.5)),
-      wstMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [2n, 1n, parseEther(0.5)] }).data) / Number(parseEther(0.5)),
-      vMGP: 1.1
+      MGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.yMGP, curveIndexes.MGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      stMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.yMGP, curveIndexes.stMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      vMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.yMGP, curveIndexes.yMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      rMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.yMGP, curveIndexes.rMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1))
     },
     vMGP: {
-      MGP: 1.2,
-      wstMGP: 0.7,
-      yMGP: 0.85
+      MGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.vMGP, curveIndexes.MGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      stMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.vMGP, curveIndexes.stMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      yMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.vMGP, curveIndexes.yMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      rMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.vMGP, curveIndexes.rMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1))
+    },
+    rMGP: {
+      MGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.rMGP, curveIndexes.MGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      stMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.rMGP, curveIndexes.stMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      yMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.rMGP, curveIndexes.yMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)),
+      vMGP: Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.rMGP, curveIndexes.yMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1))
+    },
+    wstMGP: {
+      stMGP: Number(supplies.stMGP) / Number(supplies.stMGP_shares),
+      yMGP: Number(supplies.stMGP) / Number(supplies.stMGP_shares) / (Number(useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes.stMGP, curveIndexes.yMGP, parseEther(0.000_000_1)] }).data) / Number(parseEther(0.000_000_1)))
     }
-  } as const;
-
-  return exchangeRates;
+  };
 };

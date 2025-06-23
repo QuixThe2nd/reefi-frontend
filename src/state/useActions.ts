@@ -1,20 +1,12 @@
-import { approve } from "../hooks/actions/approve";
-import { claimVMGPRewards } from "../hooks/actions/claimVMGPRewards";
-import { claimYMGPRewards } from "../hooks/actions/claimYMGPRewards";
-import { compoundRMGP } from "../hooks/actions/compoundRMGP";
-import { curveBuy } from "../hooks/actions/curveBuy";
-import { depositMGP } from "../hooks/actions/depositMGP";
-import { depositRMGP } from "../hooks/actions/depositRMGP";
-import { lockYMGP } from "../hooks/actions/lockYMGP";
-import { mintWETH } from "../hooks/actions/mintWETH";
-import { nativeSwap } from "../hooks/actions/nativeSwap";
-import { redeemRMGP } from "../hooks/actions/redeemRMGP";
-import { supplyLiquidity } from "../hooks/actions/supplyLiquidity";
-import { swap } from "../hooks/actions/swap";
-import { unlockVLMGP } from "../hooks/actions/unlockVLMGP";
-import { unlockYMGP } from "../hooks/actions/unlockYMGP";
+import { approve } from "../actions/approve";
+import { buyOnCurve } from "../actions/buyOnCurve";
+import { buyWETH } from "../actions/buyOnOdos";
+import { compoundSTMGP } from "../actions/compoundSTMGP";
+import { mintWETH } from "../actions/mintWETH";
+import { nativeSwap } from "../actions/nativeSwap";
+import { supplyLiquidity } from "../actions/supplyLiquidity";
 import { useAccount, useChainId } from "wagmi";
-import { withdrawMGP } from "../hooks/actions/withdrawMGP";
+import { useContracts } from "./useContracts";
 
 import type { useAllowances } from "./useAllowances";
 import type { useAmounts } from "./useAmounts";
@@ -24,36 +16,26 @@ interface Props {
   allowances: ReturnType<typeof useAllowances>;
   setError: (_message: string) => void;
   setNotification: (_message: string) => void;
+  startBMGPUnlock: boolean;
+  bondAddress: `0x${string}`;
 }
 
-export const useActions = ({ amounts, allowances, setError, setNotification }: Props) => {
+export const useActions = ({ amounts, allowances, setError, setNotification, startBMGPUnlock, bondAddress }: Props) => {
   const chain = useChainId();
   const { address } = useAccount();
-
-  const depositMGPAction = depositMGP({ allowances, send: amounts.send, setError, chain });
-  const redeemRMGPAction = redeemRMGP({ send: amounts.send, chain });
-  const depositRMGPAction = depositRMGP({ allowances, send: amounts.send, setError, chain });
-  const lockYMGPAction = lockYMGP({ send: amounts.send, chain });
-  const unlockYMGPAction = unlockYMGP({ send: amounts.send, chain });
+  const contracts = useContracts();
 
   return {
-    approve: approve({ send: amounts.send, chain }),
-    curveBuy: curveBuy({ allowances, send: amounts.send, setError, chain }),
-    withdrawMGP: withdrawMGP({ chain }),
-    compoundRMGP: compoundRMGP({ chain }),
-    claimYMGPRewards: claimYMGPRewards({ chain }),
-    claimVMGPRewards: claimVMGPRewards({ chain }),
-    supplyLiquidity: supplyLiquidity({ mgpLPAmount: amounts.lp.MGP, rmgpLPAmount: amounts.lp.wstMGP, ymgpLPAmount: amounts.lp.yMGP, chain }),
-    swap: swap({ allowances, send: amounts.send, setError, setNotification, chain, address }),
-    mintWETH: mintWETH({ allowances, send: amounts.send, setError, chain }),
-    unlockVLMGP: unlockVLMGP({ send: amounts.send, chain }),
-    nativeSwap: nativeSwap({ depositMGPAction, redeemRMGPAction, depositRMGPAction, lockYMGPAction, unlockYMGPAction }),
-    vote: async (_proposalId: string, _choice: number) => {},
-    lockVMGP: () => {},
-    buyAndWithdrawMGP: () => {},
-    wrapSTMGP: () => {},
-    unlockVMGP: () => {},
-    unwrapWSTMGP: () => {},
-    mintVMGP: () => {}
+    approve: approve({ send: amounts.send, chain, contracts }),
+
+    // Swaps
+    nativeSwap: nativeSwap({ send: amounts.send, stmgpMGPAllowance: allowances.stMGP_MGP, setError, startBMGPUnlock, bondAddress, chain, address, contracts }),
+    curveBuy: buyOnCurve({ allowances: allowances.curve, send: amounts.send, setError, chain, contracts }),
+    mintWETH: mintWETH({ send: amounts.send, chain, contracts }),
+    buyWETH: buyWETH({ allowances: allowances.odos, send: amounts.send, setError, setNotification, chain, address }),
+
+    // Yield
+    compoundRMGP: compoundSTMGP({ chain, contracts }),
+    supplyLiquidity: supplyLiquidity({ ...amounts.lp, chain, contracts })
   };
 };

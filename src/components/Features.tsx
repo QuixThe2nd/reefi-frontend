@@ -1,5 +1,4 @@
 import { aprToApy } from "../utilities";
-import { memo, type ReactElement } from "react";
 
 interface Feature {
   readonly title: string;
@@ -52,14 +51,14 @@ const features: readonly Feature[] = [
 
 interface Properties {
   readonly mgpAPR: number;
-  readonly lockedYmgpAPY: number;
+  readonly syMGPAPY: number;
   readonly mgpPrice: number;
   readonly vmgpSupply: bigint;
   readonly reefiLockedMGP: bigint;
   readonly vmgpMGPCurveRate: number;
 }
 
-export const Features = memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSupply, reefiLockedMGP, vmgpMGPCurveRate }: Properties): ReactElement => <div className="flex flex-col items-center">
+export const Features = ({ mgpAPR, syMGPAPY, mgpPrice, vmgpSupply, reefiLockedMGP, vmgpMGPCurveRate }: Properties) => <div className="flex flex-col items-center">
   <div className="mb-4 grid w-full grid-cols-2 gap-4 md:grid-cols-4">
     <div className="rounded-lg border border-blue-600/30 bg-gradient-to-r from-blue-600/20 to-green-600/20 p-3 text-center">
       <div className="text-lg font-bold text-blue-400">{(100 * mgpAPR).toFixed(2)}%</div>
@@ -70,7 +69,7 @@ export const Features = memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSupply, ree
       <div className="text-xs text-gray-400">Average Reefi Yield</div>
     </div>
     <div className="rounded-lg border border-orange-600/30 bg-gradient-to-r from-orange-600/20 to-red-600/20 p-3 text-center">
-      <div className="text-lg font-bold text-orange-400">{(100 * lockedYmgpAPY).toFixed(2)}%+</div>
+      <div className="text-lg font-bold text-orange-400">{(100 * syMGPAPY).toFixed(2)}%+</div>
       <div className="text-xs text-gray-400">Boosted Yield</div>
     </div>
     <div className="rounded-lg border border-blue-600/30 bg-gradient-to-r from-blue-600/20 to-green-600/20 p-3 text-center">
@@ -87,5 +86,4 @@ export const Features = memo(({ mgpAPR, lockedYmgpAPY, mgpPrice, vmgpSupply, ree
       </div>
     </div>)}
   </div>
-</div>);
-Features.displayName = "Features";
+</div>;

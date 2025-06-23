@@ -1,21 +1,23 @@
-import { coins, decimals, type AllCoinETH } from "../config/contracts";
+import { coins, decimals, type AllCoin, type CurveCoin, type SecondaryCoin } from "../state/useContracts";
 import { formatEther } from "../utilities";
-import { memo, useRef, useState, Fragment, type ReactElement, useEffect } from "react";
+import { useRef, useState, Fragment, type ReactElement, useEffect } from "react";
 
 import { Button } from "./Button";
 import ETH from "../../public/icons/ETH.svg";
+
+type Coin = CurveCoin | SecondaryCoin | "wstMGP";
 
 interface Properties {
   readonly label: string;
   readonly value: bigint;
   readonly balance: bigint;
-  readonly selectedCoin: AllCoinETH;
-  readonly excludeCoins: AllCoinETH[];
-  readonly onCoinChange: (_coin: AllCoinETH) => void;
+  readonly selectedCoin: AllCoin;
+  readonly excludeCoins: AllCoin[];
+  readonly onCoinChange: (_coin: Coin) => void;
   readonly onChange: (_value: bigint) => void;
 }
 
-const TokenDropdown = ({ shownCoins, selectedCoin, handleCoinChange }: Readonly<{ shownCoins: AllCoinETH[]; selectedCoin: AllCoinETH; handleCoinChange: (_coin: AllCoinETH) => void }>) => <div className="absolute right-0 top-full z-50 mt-1 min-w-32 rounded-lg border border-gray-700 bg-gray-800 shadow-xl">
+const TokenDropdown = ({ shownCoins, selectedCoin, handleCoinChange }: Readonly<{ shownCoins: Coin[]; selectedCoin: AllCoin; handleCoinChange: (_coin: Coin) => void }>) => <div className="absolute right-0 top-full z-50 mt-1 min-w-32 rounded-lg border border-gray-700 bg-gray-800 shadow-xl">
   {shownCoins.map(coin => <Fragment key={coin}>
     <button className={`flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin ? "bg-gray-700" : ""}`} key={coin} onClick={() => handleCoinChange(coin)} type="button">
       <img className="mr-2 size-5" src={coins[coin].icon} />
@@ -23,10 +25,10 @@ const TokenDropdown = ({ shownCoins, selectedCoin, handleCoinChange }: Readonly<
     </button>
   </Fragment>)}
 </div>;
-export const SwapInput = memo(({ label, value, balance, selectedCoin, excludeCoins, onCoinChange, onChange }: Properties): ReactElement => {
+export const SwapInput = ({ label, value, balance, selectedCoin, excludeCoins, onCoinChange, onChange }: Properties): ReactElement => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownReference = useRef<HTMLDivElement>(null);
-  const availableCoins = (Object.keys(coins) as AllCoinETH[]).filter(coin => !excludeCoins.includes(coin));
+  const availableCoins = (Object.keys(coins) as Coin[]).filter(coin => !excludeCoins.includes(coin));
 
   const handleClickOutside = (event: MouseEvent): void => {
     if (dropdownReference.current && !dropdownReference.current.contains(event.target as Node)) setIsDropdownOpen(false);
@@ -36,7 +38,7 @@ export const SwapInput = memo(({ label, value, balance, selectedCoin, excludeCoi
     return (): void => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleCoinChange = (coin: AllCoinETH) => {
+  const handleCoinChange = (coin: Coin) => {
     onCoinChange(coin);
     setIsDropdownOpen(false);
   };
@@ -63,6 +65,4 @@ export const SwapInput = memo(({ label, value, balance, selectedCoin, excludeCoi
       </div>
     </div>
   </div>;
-});
-
-SwapInput.displayName = "SwapInput";
+};

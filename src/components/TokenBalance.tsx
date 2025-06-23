@@ -1,7 +1,6 @@
+import { coins, type AllCoin } from "../state/useContracts";
 import { formatEther } from "../utilities";
-import { memo, type ReactElement } from "react";
 
-import type { AllCoin } from "../config/contracts";
+import type { ReactElement } from "react";
 
-export const TokenBalance = memo(({ symbol, balance, decimals }: Readonly<{ symbol: AllCoin; balance: bigint; decimals: number }>): ReactElement => <div className="rounded-lg bg-[#1A1B1F] px-3 py-2 text-sm">{symbol}: {formatEther(balance, decimals).toFixed(2)}</div>);
-TokenBalance.displayName = "TokenBalance";
+export const TokenBalance = ({ symbol, balance, decimals }: Readonly<{ symbol: AllCoin; balance: bigint; decimals: number }>): ReactElement => <span className="text-xs flex gap-1 items-center" style={{ direction: "ltr", margin: 0 }}><img className="h-4" src={coins[symbol].icon} /> {symbol}: {formatEther(balance, decimals).toFixed(2)}</span>;

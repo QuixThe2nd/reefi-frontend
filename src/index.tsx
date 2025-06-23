@@ -1,5 +1,5 @@
 import { arbitrum, bsc } from "wagmi/chains";
-import { createStorage, WagmiProvider, webSocket } from "wagmi";
+import { createConfig, createStorage, WagmiProvider, webSocket } from "wagmi";
 import { getDefaultConfig, RainbowKitProvider, darkTheme } from "@rainbow-me/rainbowkit";
 
 import App from "./App";
@@ -8,6 +8,14 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 const queryClient = new QueryClient();
+
+export const config = createConfig({
+  chains: [arbitrum, bsc],
+  transports: {
+    [arbitrum.id]: webSocket("wss://arbitrum.drpc.org"),
+    [bsc.id]: webSocket("wss://bsc.drpc.org")
+  }
+});
 
 export const wagmiConfig = getDefaultConfig({
   appName: "Reefi",
@@ -35,4 +43,3 @@ ReactDOM.createRoot(document.querySelector("#root")!).render(<React.StrictMode>
     </QueryClientProvider>
   </WagmiProvider>
 </React.StrictMode>);
-// ReactDOM.createRoot(document.querySelector('#root') as HTMLElement).render(<App />)

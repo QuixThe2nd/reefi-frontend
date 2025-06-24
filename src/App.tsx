@@ -70,7 +70,7 @@ const App = () => {
   const actions = useActions({ amounts, allowances, setError, setNotification });
 
   const calculateFixedYield = () => {
-    const fixedYieldPercent = (exchangeRates.MGP.stMGP - 1) * 100;
+    const fixedYieldPercent = (1 - exchangeRates.stMGP.MGP) * 100;
     const withdrawalTime = bonds.length === 6 ? Number(bonds[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2;
     const daysToWithdraw = withdrawalTime / (60 * 60 * 24);
     return `${(fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100).toFixed(2)}%`;
@@ -87,6 +87,13 @@ const App = () => {
     }
     return undefined;
   }, [error]);
+
+  const stmgpTarget = () => {
+    const withdrawWaitDays = 60 + (bonds.length === 6 ? (Number(bonds[0]?.endTime) - Date.now() / 1000) / 60 / 60 / 24 / 30 / 2 : 0);
+    const dailyAPY = rewards.stMGP.APY / 365;
+    const missedYield = dailyAPY * withdrawWaitDays;
+    return 1 - missedYield;
+  };
 
   return <>
     <ErrorCard error={error} setError={setError} />
@@ -143,7 +150,7 @@ const App = () => {
                     <div className="flex gap-1">
                       <YieldBadge apr={rewards.vlMGP.APR} asset="vlMGP" breakdown={[{ apr: rewards.vlMGP.APR, asset: "vlMGP", logo: vlMGP }]} logo={vlMGP} />
                       <YieldBadge apy={aprToApy(rewards.vlMGP.APR) * 0.9} asset="stMGP" breakdown={[{ apy: aprToApy(rewards.vlMGP.APR) * 0.9, asset: "vlMGP", logo: vlMGP }]} logo={coins.wstMGP.icon} />
-                      <YieldBadge asset="bMGP Fixed Yield" breakdown={[{ value: `${((exchangeRates.MGP.stMGP / Number(supplies.stMGP) - 1) * 100).toFixed(2)}%`, asset: "wstMGP Discount", logo: coins.wstMGP.icon }]} logo={coins.wstMGP.icon} value={calculateFixedYield()} />
+                      <YieldBadge asset="bMGP Fixed Yield" breakdown={[{ value: `${((1 - exchangeRates.stMGP.MGP) * 100).toFixed(2)}%`, asset: "stMGP Discount", logo: coins.stMGP.icon }]} logo={coins.stMGP.icon} value={calculateFixedYield()} />
                     </div>
                   </div>
                 </div>
@@ -187,7 +194,7 @@ const App = () => {
               </Card>
               <QASection />
               <div className="grid grid-cols-2 gap-6">
-                <PegCard rates={[{ label: "Target", value: 1 - rewards.stMGP.APY * (bonds.length === 6 ? Number(bonds[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2) / 60 / 60 / 24 / 365, color: "purple", required: true }, { label: "Sell", value: exchangeRates.stMGP.MGP, color: "red", required: true }, { label: "Buy", value: 1 / exchangeRates.MGP.stMGP, color: "blue", required: true }, { label: "Mint", value: 1, color: "green", required: true }]} softPeg spread={100 / exchangeRates.MGP.stMGP / exchangeRates.stMGP.MGP - 100} targetToken="MGP" token="stMGP" />
+                <PegCard rates={[{ label: "Target", value: stmgpTarget(), color: "purple", required: true }, { label: "Sell", value: exchangeRates.stMGP.MGP, color: "red", required: true }, { label: "Buy", value: 1 / exchangeRates.MGP.stMGP, color: "blue", required: true }, { label: "Mint", value: 1, color: "green", required: true }]} softPeg spread={100 / exchangeRates.MGP.stMGP / exchangeRates.stMGP.MGP - 100} targetToken="MGP" token="stMGP" />
                 <PegCard rates={[{ label: "Orig Mint", value: 1, color: "emerald" }, { label: "Mint", value: Number(supplies.stMGP) / Number(supplies.stMGP_shares), color: "green", required: true }]} spread={0} targetToken="stMGP" token="wstMGP" />
                 <PegCard rates={[{ label: "Burn", value: 0.75, color: "purple", required: true }, { label: "Sell", value: exchangeRates.yMGP.stMGP, color: "red", required: true }, { label: "Buy", value: 1 / exchangeRates.stMGP.yMGP, color: "blue", required: true }, { label: "Mint", value: 1, color: "green", required: true }]} spread={100 / exchangeRates.stMGP.yMGP / exchangeRates.yMGP.stMGP - 100} targetToken="wstMGP" token="yMGP" />
                 <PegCard rates={[{ label: "Burn", value: 0, color: "purple", required: true }, { label: "Sell", value: exchangeRates.vMGP.yMGP, color: "red", required: true }, { label: "Buy", value: 1 / exchangeRates.yMGP.vMGP, color: "blue", required: true }, { label: "Mint", value: 1, color: "green", required: true }]} spread={100 / exchangeRates.yMGP.vMGP / exchangeRates.vMGP.yMGP - 100} targetToken="yMGP" token="vMGP" />

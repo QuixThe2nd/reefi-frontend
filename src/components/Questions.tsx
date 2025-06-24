@@ -29,7 +29,7 @@ const qaData: readonly QAItem[] = [
   {
     answer: [
       <span key="Deposit MGP">1. <strong>Deposit MGP</strong>: Convert MGP to wstMGP to earn 90% of vlMGP yield with auto-compounding</span>,
-      <span key="Lock yMGP">2. <strong>Lock yMGP</strong>: Convert wstMGP to yMGP and lock it to earn additional yield from protocol fees and redemptions</span>,
+      <span key="Lock yMGP">2. <strong>Lock yMGP & rMGP</strong>: Convert wstMGP to yMGP and lock it with rMGP to earn additional yield from protocol fees and redemptions</span>,
       <span key="Provide Liquidity">3. <strong>Provide Liquidity</strong>: Supply tokens to the Curve pool to earn swap fees plus underlying yield</span>,
       <span key="Compound Rewards">4. <strong>Compound Rewards</strong>: Anyone can compound pending yield and receive 1% as a reward</span>,
       <span key="Fixed Yield">5. <strong>Fixed Yield</strong>: Buy wstMGP and instantly withdraw to earn fixed yield</span>

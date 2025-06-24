@@ -1,8 +1,8 @@
 import { burnBMGP } from "./burnBMGP";
-import { burnSTMGP } from "./burnSTMGP";
 import { burnSYMGP } from "./burnSYMGP";
 import { burnWSTMGP } from "./burnWSTMGP";
 import { burnYMGP } from "./burnYMGP";
+import { getBMGP } from "./getBMGP";
 import { mintSTMGP } from "./mintSTMGP";
 import { mintSYMGP } from "./mintSYMGP";
 import { mintVMGP } from "./mintVMGP";
@@ -30,7 +30,7 @@ export const nativeSwap = ({ send, stmgpMGPAllowance, setError, startBMGPUnlock,
     throw new Error("Unexpected native swap output");
   }
   if (tokenIn === "stMGP") {
-    if (tokenOut === "bMGP") return burnSTMGP({ send, chain, address, setError, contracts })(writeContract, startBMGPUnlock);
+    if (tokenOut === "bMGP") return getBMGP({ send, chain, address, setError, contracts })(writeContract, startBMGPUnlock);
     if (tokenOut === "wstMGP") return mintWSTMGP({ send, setError, chain, address, contracts })(writeContract);
     throw new Error("Unexpected native swap output");
   }

@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import type { SecondaryCoin, useContracts } from "../state/useContracts";
 import type { UseSendTransactionReturnType } from "wagmi";
 import type { useAllowances } from "../state/useAllowances";
 import type { wagmiConfig } from "..";
@@ -39,6 +40,7 @@ const AssembleResponseSchema = z.object({
 
 interface Properties {
   allowances: ReturnType<typeof useAllowances>["odos"];
+  contracts: ReturnType<typeof useContracts>;
   send: bigint;
   setError: (_value: string) => void;
   setNotification: (_value: string) => void;
@@ -46,18 +48,23 @@ interface Properties {
   address: `0x${string}` | undefined;
 }
 
-export type BuyOnOdos = (_tokenIn: `0x${string}`, _tokenOut: `0x${string}`, _sendTransaction: UseSendTransactionReturnType<typeof wagmiConfig>["sendTransaction"]) => Promise<void>;
+export type BuyOnOdosProps = {
+  tokenIn: Exclude<SecondaryCoin, "ETH">;
+  sendTransaction: UseSendTransactionReturnType<typeof wagmiConfig>["sendTransaction"];
+};
 
-export const buyWETH = ({ allowances, send, setError, setNotification, chain, address }: Properties): BuyOnOdos => async (tokenIn: `0x${string}`, tokenOut: `0x${string}`, sendTransaction: UseSendTransactionReturnType<typeof wagmiConfig>["sendTransaction"]): Promise<void> => {
-  if (allowances.MGP < send) return setError("Allowance too low");
+export type BuyOnOdos = (_props: BuyOnOdosProps) => Promise<void>;
+
+export const buyOnOdos = ({ allowances, send, setError, setNotification, chain, address, contracts }: Properties): BuyOnOdos => async ({ tokenIn, sendTransaction }: BuyOnOdosProps) => {
+  if (allowances[tokenIn] < send) return setError("Allowance too low");
 
   setNotification("Fetching swap route");
   const quoteRequestBody = QuoteRequestSchema.parse({
     chainId: chain,
     compact: true,
     disableRFQs: true,
-    inputTokens: [{ amount: Number(send).toString(), tokenAddress: tokenIn }],
-    outputTokens: [{ proportion: 1, tokenAddress: tokenOut }],
+    inputTokens: [{ amount: Number(send).toString(), tokenAddress: contracts[chain][tokenIn] }],
+    outputTokens: [{ proportion: 1, tokenAddress: contracts[chain].MGP }],
     referralCode: 0,
     slippageLimitPercent: 5,
     userAddr: address

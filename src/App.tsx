@@ -9,7 +9,6 @@ import vlMGP from "../public/icons/vlMGP.png";
 import { aprToApy } from "./utilities";
 import { coins } from "./state/useContracts";
 import { useActions } from "./state/useActions";
-import { useChainId } from "wagmi";
 import { useReefiState } from "./state/useReefiState";
 import { useState, useEffect } from "react";
 
@@ -62,8 +61,11 @@ export type Pages = "GetMGP" | "GetSTMGP" | "GetWSTMGP" | "GetYMGP" | "GetVMGP" 
 const App = () => {
   const [error, setError] = useState("");
   const [notification, setNotification] = useState("");
-  const [page, setPage] = useState<Pages | undefined>((window.location.pathname.replace("/", "") as Pages | null) ?? "GetSTMGP");
-  const chain = useChainId();
+  const [page, setPage] = useState<Pages | undefined>((() => {
+    const path = window.location.pathname.replace("/", "") as Pages | "";
+    if (path === "") return "GetSTMGP";
+    return path;
+  })());
   const { amounts, amountsActions, allowances, balances, exchangeRates, supplies, rewards, prices, bonds } = useReefiState();
   const actions = useActions({ amounts, allowances, setError, setNotification });
 
@@ -113,17 +115,17 @@ const App = () => {
               <div className="grid grid-cols-1 gap-6 pb-6 mt-6 lg:grid-cols-2">
                 <Card>
                   <h2 className="mb-4 text-xl font-bold">Wrap stMGP</h2>
-                  <GetWSTMGP allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyWETH} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />
+                  <GetWSTMGP allowances={allowances} approve={actions.approve} balances={balances} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyOnOdos} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />
                 </Card>
                 <Card>
                   <h2 className="mb-4 text-xl font-bold">Unwrap wstMGP</h2>
-                  <BurnWSTMGP allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyWETH} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />
+                  <BurnWSTMGP allowances={allowances} approve={actions.approve} balances={balances} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyOnOdos} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />
                 </Card>
               </div>
             </div>;
 
             return <>
-              <TokenCards mgpPrice={prices.MGP} mgpStmgpCurveRate={exchangeRates.MGP.stMGP} supplies={supplies} wstmgpYmgpCurveRate={exchangeRates.wstMGP.yMGP} ymgpVmgpCurveRate={exchangeRates.yMGP.vMGP} />
+              <TokenCards mgpPrice={prices.MGP} mgpStmgpCurveRate={exchangeRates.MGP.stMGP} stmgpRmgpCurveRate={exchangeRates.stMGP.rMGP} supplies={supplies} wstmgpYmgpCurveRate={exchangeRates.wstMGP.yMGP} ymgpVmgpCurveRate={exchangeRates.yMGP.vMGP} />
               <Features mgpAPR={rewards.vlMGP.APR} mgpPrice={prices.MGP} reefiLockedMGP={supplies.stMGP} syMGPAPY={rewards.syMGP.APY} vmgpMGPCurveRate={exchangeRates.vMGP.MGP} vmgpSupply={supplies.vMGP} />
               <div className="rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4">
                 <h3 className="mb-2 text-lg font-semibold text-yellow-400">⚠️ Important Notice</h3>
@@ -145,16 +147,16 @@ const App = () => {
                     </div>
                   </div>
                 </div>
-                {page === "GetMGP" && <GetMGP allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mgpAPR={rewards.vlMGP.APR} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyWETH} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
-                {page === "GetSTMGP" && <GetSTMGP allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mgpAPR={rewards.vlMGP.APR} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyWETH} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
-                {page === "GetBMGP" && <GetBMGP allowances={allowances} approve={actions.approve} balances={balances} bonds={bonds} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyWETH} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
-                {page === "FixedYield" && <FixedYield allowances={allowances} approve={actions.approve} balances={balances} bonds={bonds} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} lockedReefiMGP={supplies.stMGP} mgpAPR={rewards.vlMGP.APR} mgpRmgpCurveAmount={amounts.curve.MGP_wstMGP} mgpRmgpCurveRate={exchangeRates.MGP.stMGP} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyWETH} rmgpSupply={supplies.wstMGP} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
+                {page === "GetMGP" && <GetMGP allowances={allowances} approve={actions.approve} balances={balances} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mgpAPR={rewards.vlMGP.APR} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyOnOdos} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
+                {page === "GetSTMGP" && <GetSTMGP allowances={allowances} approve={actions.approve} balances={balances} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mgpAPR={rewards.vlMGP.APR} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyOnOdos} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
+                {page === "GetBMGP" && <GetBMGP allowances={allowances} approve={actions.approve} balances={balances} bonds={bonds} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyOnOdos} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
+                {page === "FixedYield" && <FixedYield allowances={allowances} approve={actions.approve} balances={balances} bonds={bonds} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} lockedReefiMGP={supplies.stMGP} mgpAPR={rewards.vlMGP.APR} mgpRmgpCurveAmount={amounts.curve.MGP_wstMGP} mgpRmgpCurveRate={exchangeRates.MGP.stMGP} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyOnOdos} rmgpSupply={supplies.wstMGP} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
                 <div className="bg-gray-500 w-full h-[0.5px] mt-8" />
                 <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full">
                   <div className="flex rounded-lg bg-gray-700 p-1">
                     <Button onClick={() => setPage(page === "GetYMGP" ? undefined : "GetYMGP")} size="sm" tooltip="Convert your wstMGP for yMGP for better yield potential" type="button" variant={page === "GetYMGP" ? "primary" : "clear"}>Get yMGP</Button>
                     <Button onClick={() => setPage(page === "GetSYMGP" ? undefined : "GetSYMGP")} size="sm" tooltip="Lock your yMGP for boosted yield" type="button" variant={page === "GetSYMGP" ? "primary" : "clear"}>MGP Synth</Button>
-                    {balances.user.syMGP > 0n && <Button onClick={() => setPage(page === "BurnSYMGP" ? undefined : "BurnSYMGP")} size="sm" tooltip="Withdraw your yMGP from the locker" type="button" variant={page === "BurnSYMGP" ? "primary" : "clear"}>Unlock syMGP</Button>}
+                    {balances.user.syMGP > 0n && <Button onClick={() => setPage(page === "BurnSYMGP" ? undefined : "BurnSYMGP")} size="sm" tooltip="Withdraw your yMGP from the locker" type="button" variant={page === "BurnSYMGP" ? "primary" : "clear"}>Withdraw syMGP</Button>}
                     {balances.user.yMGP > 0n && <Button onClick={() => setPage(page === "SellYMGP" ? undefined : "SellYMGP")} size="sm" tooltip="Convert your yMGP back to wstMGP" type="button" variant={page === "SellYMGP" ? "primary" : "clear"}>Sell yMGP</Button>}
                   </div>
                   <div className="flex h-min flex-row-reverse">
@@ -164,10 +166,10 @@ const App = () => {
                     </div>
                   </div>
                 </div>
-                {page === "GetYMGP" && <GetYMGP allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyWETH} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
+                {page === "GetYMGP" && <GetYMGP allowances={allowances} approve={actions.approve} balances={balances} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyOnOdos} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
                 {page === "GetSYMGP" && <GetSYMGP mgpAPR={rewards.vlMGP.APR} nativeSwap={actions.nativeSwap} reefiLockedMGP={supplies.stMGP} rmgpBalance={balances.user.rMGP} send={amounts.send} setSend={amountsActions.setSend} ymgpBalance={balances.user.yMGP} ymgpLocked={supplies.syMGP} />}
                 {page === "BurnSYMGP" && <BurnSYMGP lymgpBalance={balances.user.syMGP} nativeSwap={actions.nativeSwap} send={amounts.send} setSendAmount={amountsActions.setSend} />}
-                {page === "SellYMGP" && <SellYMGP allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyWETH} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
+                {page === "SellYMGP" && <SellYMGP allowances={allowances} approve={actions.approve} balances={balances} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyOnOdos} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
                 <div className="bg-gray-500 w-full h-[0.5px] mt-8" />
                 <div className="flex flex-col-reverse justify-between gap-2 lg:flex-row mt-8 w-full">
                   <div className="flex rounded-lg bg-gray-700 p-1">
@@ -181,7 +183,7 @@ const App = () => {
                   </div>
                 </div>
                 {page === "SupplyLiquidity" && <SupplyLiquidity mgpBalance={balances.user.MGP} mgpCurveBalance={balances.curve.MGP} mgpLPAmount={amounts.lp.MGP} rmgpBalance={balances.user.rMGP} rmgpCurveBalance={balances.curve.rMGP} rmgpLPAmount={amounts.lp.rMGP} setLPAmounts={amountsActions.setLP} stmgpBalance={balances.user.stMGP} stmgpCurveBalance={balances.curve.stMGP} stmgpLPAmount={amounts.lp.stMGP} supplyLiquidity={actions.supplyLiquidity} vmgpBalance={balances.user.vMGP} vmgpCurveBalance={balances.curve.vMGP} vmgpLPAmount={amounts.lp.vMGP} ymgpBalance={balances.user.yMGP} ymgpCurveBalance={balances.curve.yMGP} ymgpLPAmount={amounts.lp.yMGP} />}
-                {page === "GetVMGP" && <GetVMGP allowances={allowances} approve={actions.approve} balances={balances} chain={chain} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyWETH} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
+                {page === "GetVMGP" && <GetVMGP allowances={allowances} approve={actions.approve} balances={balances} curveAmounts={amounts.curve} curveBuy={actions.curveBuy} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyOnOdos} send={amounts.send} setSend={amountsActions.setSend} supplies={supplies} />}
               </Card>
               <QASection />
               <div className="grid grid-cols-2 gap-6">

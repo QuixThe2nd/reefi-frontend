@@ -325,6 +325,44 @@ export const stMGP = [
     inputs: [
       {
         internalType: "uint256",
+        name: "wrappedIn",
+        type: "uint256"
+      }
+    ],
+    name: "getMGPByShares",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "unwrappedIn",
+        type: "uint256"
+      }
+    ],
+    name: "getSharesByMGP",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
         name: "amount",
         type: "uint256"
       },
@@ -412,6 +450,25 @@ export const stMGP = [
     name: "setContractRegistry",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function"
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address"
+      }
+    ],
+    name: "sharesOf",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256"
+      }
+    ],
+    stateMutability: "view",
     type: "function"
   },
   {

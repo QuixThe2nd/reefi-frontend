@@ -18,7 +18,7 @@ const features: readonly Feature[] = [
     title: "Liquid Derivatives"
   },
   {
-    description: "Lock yMGP to earn additional protocol fees (5% of vlMGP yield) on top of base wstMGP returns.",
+    description: "Lock yMGP and rMGP to earn additional protocol fees (5% of vlMGP yield) on top of base stMGP returns.",
     icon: "📈",
     title: "Enhanced Yields"
   },

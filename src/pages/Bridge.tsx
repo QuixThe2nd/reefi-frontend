@@ -5,7 +5,7 @@ import { useContracts } from "../state/useContracts";
 import { Page } from "../components/Page";
 import WormholeConnect from "@wormhole-foundation/wormhole-connect";
 
-import { type ReactElement } from "react";
+import type { ReactElement } from "react";
 
 export const Bridge = (): ReactElement => {
   const contracts = useContracts();

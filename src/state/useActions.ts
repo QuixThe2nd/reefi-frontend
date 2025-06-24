@@ -1,6 +1,6 @@
 import { approve } from "../actions/approve";
 import { buyOnCurve } from "../actions/buyOnCurve";
-import { buyWETH } from "../actions/buyOnOdos";
+import { buyOnOdos } from "../actions/buyOnOdos";
 import { compoundSTMGP } from "../actions/compoundSTMGP";
 import { mintWETH } from "../actions/mintWETH";
 import { nativeSwap } from "../actions/nativeSwap";
@@ -26,16 +26,16 @@ export const useActions = ({ amounts, allowances, setError, setNotification, sta
   const contracts = useContracts();
 
   return {
-    approve: approve({ send: amounts.send, chain, contracts }),
+    approve: approve({ contracts, send: amounts.send, chain }),
 
     // Swaps
-    nativeSwap: nativeSwap({ send: amounts.send, stmgpMGPAllowance: allowances.stMGP_MGP, setError, startBMGPUnlock, bondAddress, chain, address, contracts }),
-    curveBuy: buyOnCurve({ allowances: allowances.curve, send: amounts.send, setError, chain, contracts }),
-    mintWETH: mintWETH({ send: amounts.send, chain, contracts }),
-    buyWETH: buyWETH({ allowances: allowances.odos, send: amounts.send, setError, setNotification, chain, address }),
+    nativeSwap: nativeSwap({ contracts, send: amounts.send, stmgpMGPAllowance: allowances.stMGP_MGP, setError, startBMGPUnlock, bondAddress, chain, address }),
+    curveBuy: buyOnCurve({ contracts, allowances: allowances.curve, send: amounts.send, setError, chain }),
+    mintWETH: mintWETH({ contracts, send: amounts.send, chain }),
+    buyOnOdos: buyOnOdos({ contracts, allowances: allowances.odos, send: amounts.send, setError, setNotification, chain, address }),
 
     // Yield
-    compoundRMGP: compoundSTMGP({ chain, contracts }),
-    supplyLiquidity: supplyLiquidity({ ...amounts.lp, chain, contracts })
+    compoundRMGP: compoundSTMGP({ contracts, chain }),
+    supplyLiquidity: supplyLiquidity({ ...amounts.lp, contracts, chain })
   };
 };

@@ -209,7 +209,7 @@ const documentationSections: NonEmptyArray<DocumentSection> = [
       {
         id: "depositing",
         title: "Depositing & Earning Yield",
-        content: "To deposit MGP: 1. Navigate to 'Get wstMGP' section. 2. Enter MGP amount to deposit. 3. Approve MGP spending if needed. 4. Click 'Mint' to convert MGP to wstMGP. 5. wstMGP will automatically earn yield through auto-compounding. For enhanced yield: 1. Convert wstMGP to yMGP (1:1 ratio). 2. Lock yMGP to earn additional protocol fees. 3. Monitor your locked position and accumulated rewards. 4. Claim additional yield periodically."
+        content: "To deposit MGP: 1. Navigate to 'Get wstMGP' section. 2. Enter MGP amount to deposit. 3. Approve MGP spending if needed. 4. Click 'Mint' to convert MGP to wstMGP. 5. wstMGP will automatically earn yield through auto-compounding. For enhanced yield: 1. Convert wstMGP to yMGP (1:1 ratio). 2. Lock yMGP and rMGP to earn additional protocol fees. 3. Monitor your locked position and accumulated rewards. 4. Claim additional yield periodically."
       },
       {
         id: "withdrawing",

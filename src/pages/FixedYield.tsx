@@ -7,7 +7,7 @@ import type { ApproveFunction } from "../actions/approve";
 import type { Bond } from "../state/useBonds";
 import type { BuyOnCurve } from "../actions/buyOnCurve";
 import type { BuyOnOdos } from "../actions/buyOnOdos";
-import type { Chains, CoreCoin } from "../state/useContracts";
+import type { CoreCoin } from "../state/useContracts";
 import type { ReactElement } from "react";
 import type { UseWriteContractReturnType } from "wagmi";
 import type { useAllowances } from "../state/useAllowances";
@@ -24,7 +24,6 @@ interface Properties {
   readonly mgpRmgpCurveRate: number;
   readonly mgpRmgpCurveAmount: bigint;
   readonly allowances: ReturnType<typeof useAllowances>;
-  readonly chain: Chains;
   readonly lockedReefiMGP: bigint;
   readonly rmgpSupply: bigint;
   readonly approve: ApproveFunction;
@@ -37,7 +36,7 @@ interface Properties {
   readonly bonds: readonly Bond[];
 }
 
-export const FixedYield = ({ mgpAPR, balances, setSend, send, mgpRmgpCurveRate, mgpRmgpCurveAmount, allowances, chain, approve, mintWETH, lockedReefiMGP, rmgpSupply, curveAmounts, supplies, curveBuy, nativeSwap, odosBuy, bonds }: Properties): ReactElement => {
+export const FixedYield = ({ mgpAPR, balances, setSend, send, mgpRmgpCurveRate, mgpRmgpCurveAmount, allowances, approve, mintWETH, lockedReefiMGP, rmgpSupply, curveAmounts, supplies, curveBuy, nativeSwap, odosBuy, bonds }: Properties): ReactElement => {
   const burnRate = Number(rmgpSupply) / Number(lockedReefiMGP);
   const fixedYieldPercent = (Number(mgpRmgpCurveAmount) / Number(send) / burnRate - 1) * 100;
   const withdrawalTime = bonds.length === 6 ? Number(bonds[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2;
@@ -45,7 +44,7 @@ export const FixedYield = ({ mgpAPR, balances, setSend, send, mgpRmgpCurveRate, 
   const annualizedYield = fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100;
 
   return <Page info={[<span key="swap">Swap MGP to wstMGP under the peg, then immediately submit for withdrawal to earn guaranteed yield and wait 60-120 days.</span>, <span key="strategy">This strategy monetizes the wstMGP depeg by capturing the difference between market price and the burn rate.</span>, <span key="yield">The yield is fixed and known upfront, unlike variable staking yields that can change over time.</span>]}>
-    <SwapToken allowances={allowances} approve={approve} balances={balances} chain={chain} curveAmounts={curveAmounts} curveBuy={curveBuy} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "yMGP", "ETH", "cMGP", "wstMGP", "vMGP", "syMGP", "vlMGP", "rMGP", "bMGP"]} label="Buy & Withdraw" mintWETH={mintWETH} nativeSwap={nativeSwap} odosBuy={odosBuy} originalTokenIn="MGP" send={send} setSend={setSend} supplies={supplies} tokenOut="stMGP" />
+    <SwapToken allowances={allowances} approve={approve} balances={balances} curveAmounts={curveAmounts} curveBuy={curveBuy} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "yMGP", "ETH", "cMGP", "wstMGP", "vMGP", "syMGP", "vlMGP", "rMGP", "bMGP"]} label="Buy & Withdraw" mintWETH={mintWETH} nativeSwap={nativeSwap} odosBuy={odosBuy} originalTokenIn="MGP" send={send} setSend={setSend} supplies={supplies} tokenOut="stMGP" />
     <div className="mt-4 rounded-lg border border-green-700 bg-green-900/20 p-4">
       <h3 className="mb-2 text-lg font-semibold text-green-400">🎯 Earn Fixed Yield</h3>
       <div className="space-y-2 text-sm">

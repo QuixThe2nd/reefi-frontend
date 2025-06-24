@@ -43,6 +43,7 @@ export type AllCoin = TransferrableCoin | LockedCoinMagpie;
 
 export const isCurveCoin = (value: string): value is CurveCoin => CurveCoinSchema.safeParse(value).success;
 export const isPrimaryCoin = (value: string): value is PrimaryCoin => PrimaryCoinSchema.safeParse(value).success;
+export const isSecondaryCoin = (value: string): value is SecondaryCoin => SecondaryCoinSchema.safeParse(value).success;
 
 export type Contracts = Record<ReturnType<typeof useChainId<typeof wagmiConfig>>, Record<Exclude<keyof typeof ABIs, "bMGP">, `0x${string}`>>;
 

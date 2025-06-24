@@ -26,7 +26,7 @@ export const GetSYMGP = ({ ymgpBalance, rmgpBalance, setSend, send, nativeSwap, 
   return <Page info={[<span key="lock ymgp">yMGP and rMGP can be locked 1:1 to earn additional auto-compounded yield. 5% of protocol yield and 25% of yMGP withdrawals are paid to syMGP.</span>, <span key="locked ymgp governance">syMGP holders are able to vote on Reefi governance proposals.</span>]}>
     <AmountInput balance={ymgpBalance} label="Lock yMGP" onChange={setSend} token={{ symbol: "yMGP" }} value={send} />
     <AmountInput balance={rmgpBalance} label="Lock rMGP" onChange={setSend} token={{ symbol: "rMGP" }} value={send} />
-    <Button className="w-full" isLoading={isPending} onClick={() => nativeSwap("yMGP", "syMGP", writeContract)} type="submit">Lock yMGP</Button>
+    <Button className="w-full" isLoading={isPending} onClick={() => nativeSwap("yMGP", "syMGP", writeContract)} type="submit">Deposit</Button>
     <div className="mt-4 text-sm text-gray-400">
       <div className="mb-1 flex justify-between">
         <span>Base APY</span>

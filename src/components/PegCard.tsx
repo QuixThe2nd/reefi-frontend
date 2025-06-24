@@ -46,7 +46,7 @@ const Gauge = ({ value, label, isHealthy, isWarning, isSpread = false }: Readonl
       <path className="transition-all duration-1000 ease-out" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={color} strokeDasharray={`${fillValue}, 100`} strokeWidth="3" />
     </svg>
     <div className="absolute inset-0 flex items-center justify-center">
-      <span className={`text-xs font-bold ${textColor}`}>{isSpread ? `${value.toFixed(2)}%` : `${Math.round(value)}%`}</span>
+      <span className={`text-xs font-bold ${textColor}`}>{isSpread ? `${value.toFixed(2)}%` : `${value.toFixed(1)}%`}</span>
     </div>
     <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-slate-400">{label}</div>
   </div>;
@@ -116,7 +116,7 @@ const PegCard = <Label extends string>({ token, spread, targetToken, rates, soft
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <Gauge isHealthy={token === "wstMGP" ? true : isHealthy} isWarning={token === "wstMGP" ? false : isWarning} label={token === "wstMGP" ? "All Time Yield" : "Peg Health"} value={token === "wstMGP" ? 100 * rates[0]!.value / rates[1]!.value : pegHealth} />
+            <Gauge isHealthy={token === "wstMGP" ? true : isHealthy} isWarning={token === "wstMGP" ? false : isWarning} label={token === "wstMGP" ? "All Time Yield" : "Peg Health"} value={token === "wstMGP" ? 100 * (rates[0]!.value - 1) : pegHealth} />
             {spread !== 0 && <Gauge isHealthy={isHealthy} isSpread isWarning={isWarning} label="Spread" value={spread} />}
           </div>
         </div>

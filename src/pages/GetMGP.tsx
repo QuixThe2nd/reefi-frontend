@@ -4,7 +4,7 @@ import { SwapToken } from "../components/SwapToken";
 import type { ApproveFunction } from "../actions/approve";
 import type { BuyOnCurve } from "../actions/buyOnCurve";
 import type { BuyOnOdos } from "../actions/buyOnOdos";
-import type { Chains, CoreCoin } from "../state/useContracts";
+import type { CoreCoin } from "../state/useContracts";
 import type { ReactElement } from "react";
 import type { UseWriteContractReturnType } from "wagmi";
 import type { useAllowances } from "../state/useAllowances";
@@ -18,7 +18,6 @@ interface Properties {
   readonly setSend: (_send: bigint) => void;
   readonly send: bigint;
   readonly allowances: ReturnType<typeof useAllowances>;
-  readonly chain: Chains;
   readonly approve: ApproveFunction;
   readonly mintWETH: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
   readonly balances: ReturnType<typeof useBalances>;
@@ -29,8 +28,8 @@ interface Properties {
   readonly odosBuy: BuyOnOdos;
 }
 
-export const GetMGP = ({ balances, mgpAPR, setSend, send, allowances, chain, approve, mintWETH, curveAmounts, supplies, curveBuy, nativeSwap, odosBuy }: Properties): ReactElement => <Page info={<span>MGP is Magpie&apos;s governance token. All Reefi derivatives are built around MGP.</span>}>
-  <SwapToken allowances={allowances} approve={approve} balances={balances} chain={chain} curveAmounts={curveAmounts} curveBuy={curveBuy} excludeCoins={["wstMGP", "yMGP", "vMGP", "stMGP", "vlMGP", "cMGP", "syMGP", "rMGP", "bMGP"]} label="Swap" mintWETH={mintWETH} nativeSwap={nativeSwap} odosBuy={odosBuy} originalTokenIn="WETH" send={send} setSend={setSend} supplies={supplies} tokenOut="MGP" />
+export const GetMGP = ({ balances, mgpAPR, setSend, send, allowances, approve, mintWETH, curveAmounts, supplies, curveBuy, nativeSwap, odosBuy }: Properties): ReactElement => <Page info={<span>MGP is Magpie&apos;s governance token. All Reefi derivatives are built around MGP.</span>}>
+  <SwapToken allowances={allowances} approve={approve} balances={balances} curveAmounts={curveAmounts} curveBuy={curveBuy} excludeCoins={["wstMGP", "yMGP", "vMGP", "stMGP", "vlMGP", "cMGP", "syMGP", "rMGP", "bMGP"]} label="Swap" mintWETH={mintWETH} nativeSwap={nativeSwap} odosBuy={odosBuy} originalTokenIn="WETH" send={send} setSend={setSend} supplies={supplies} tokenOut="MGP" />
   <div className="mt-4 text-sm text-gray-400">
     <div className="mb-1 flex justify-between">
       <span>Original APR</span>

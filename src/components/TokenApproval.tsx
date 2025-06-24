@@ -14,9 +14,7 @@ interface TokenApprovalProperties {
 
 export const TokenApproval = memo(({ allowance, send, onApprove, tokenSymbol, isLoading, curve = false, className = "w-full" }: TokenApprovalProperties): ReactElement | undefined => {
   const [approveInfinity, setApproveInfinity] = useState(false);
-  const handleApprove = (): void => {
-    onApprove(approveInfinity);
-  };
+  const handleApprove = () => onApprove(approveInfinity);
   const getButtonText = (): string => {
     const curveText = curve ? " on Curve" : "";
     return `Approve ${tokenSymbol}${curveText}`;

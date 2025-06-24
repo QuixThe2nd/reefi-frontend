@@ -1,5 +1,3 @@
-/* eslint @typescript-eslint/no-unnecessary-type-parameters: 0 */
-
 import { coins, type TradeableCoin } from "../state/useContracts";
 
 import React from "react";
@@ -75,31 +73,43 @@ const getSpreadColor = (value: number): string => {
   return "text-red-400";
 };
 
+const Chart = <Label extends string>({ rates }: Readonly<{ rates: Array<{ value: number; label: Label; color: string; required?: boolean }> }>) => {
+  const sortedRates = rates.toSorted((a, b) => b.value - a.value);
+
+  const withPositions = sortedRates.map(rate => {
+    const distance = Math.abs(rate.value - sortedRates[0]!.value);
+    const maxDistance = Math.max(...rates.map(r => Math.abs(r.value - sortedRates[0]!.value)), 0.01);
+    return { ...rate, position: rate === sortedRates[0]! ? 100 : Math.max(0, 100 - distance / maxDistance * 100) };
+  });
+  const verticalPositions = Object.fromEntries(withPositions.map((rate, i) => [rate.label, `${20 + i * 70 / Math.max(1, withPositions.length - 1)}%`])) as Record<Label, `${string}%`>;
+
+  const pathPoints = withPositions.map(rate => `${rate.position},${verticalPositions[rate.label].replace("%", "")}`).join(" L ");
+
+  return <div className="relative h-32 overflow-visible rounded-lg border border-slate-700/50 bg-gradient-to-r from-red-900/20 via-slate-800/40 to-green-900/20">
+    {/* Separator */}
+    <div className="absolute inset-0">{[0, 25, 50, 75, 100].map(p => <div className="absolute inset-y-0 w-px border-l border-slate-500/20 bg-slate-600/30" key={p} style={{ left: `${p}%` }} />)}</div>
+    {/* Line */}
+    <svg aria-hidden="true" className="pointer-events-none absolute inset-0 size-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+      <defs><linearGradient id="lineGradient" x1="0%" x2="100%" y1="0%" y2="0%"><stop offset="0%" stopColor="#ef4444" stopOpacity="0.8" /><stop offset="50%" stopColor="#f59e0b" stopOpacity="0.8" /><stop offset="100%" stopColor="#10b981" stopOpacity="0.8" /></linearGradient></defs>
+      <path className="drop-shadow-lg transition-all duration-1000 ease-out" d={`M ${pathPoints}`} fill="none" stroke="url(#lineGradient)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" />
+    </svg>
+    {/* Points */}
+    {withPositions.map(rate => <Line color={rate.color} key={rate.label} label={rate.label} pos={rate.position} show top={verticalPositions[rate.label]} value={rate.value} />)}
+    <div className="pointer-events-none absolute inset-0">{withPositions.map(rate => <Marker color={rate.color} key={rate.label} label={rate.label} pos={rate.position} top={verticalPositions[rate.label]} value={rate.value} />)}</div>
+  </div>;
+};
+
 const PegCard = <Label extends string>({ token, spread, targetToken, rates, softPeg = false }: Readonly<{ token: TradeableCoin; targetToken: TradeableCoin; spread: number; softPeg?: boolean; rates: Array<{ value: number; label: Label; color: string; required?: boolean }> }>) => {
-  const mintRate = rates.find(rate => rate.label.toLowerCase() === "mint") ?? rates[0];
-  if (!mintRate) throw new Error("At least one rate must be provided");
-
-  const distributions = rates.map(rate => ({ ...rate, distribution: Math.abs(rate.value - mintRate.value) }));
-  const maxDistribution = Math.max(...distributions.map(d => d.distribution), 0.01);
-  const ratePositions = distributions.map(rate => ({ ...rate, pos: rate.label === mintRate.label ? 100 : Math.max(0, 100 - rate.distribution / maxDistribution * 100) }));
-
-  const healthRates = ratePositions.filter(rate => rate.required !== false).map(r => r.value);
-  const [mintPeg] = healthRates as [number];
-  const targetPeg = healthRates.at(-1) ?? 0;
+  const healthRates = rates.filter(rate => rate.required !== false).map(r => r.value);
+  const targetPeg = healthRates.at(0) ?? 0;
   const adjustedTargetPeg = softPeg ? 1 - (1 - targetPeg) * 2 : targetPeg;
-  const middle = healthRates.slice(1, -1);
-  const avg = middle.reduce((sum, number) => sum + number, 0) / middle.length;
-  const pegHealth = Number(((avg - adjustedTargetPeg) / (mintPeg - adjustedTargetPeg) * 100).toFixed(2));
+  const avg = healthRates.slice(1, -1).reduce((sum, number) => sum + number, 0) / (healthRates.length - 2);
+  const pegHealth = Number(((avg - adjustedTargetPeg) / (healthRates.at(-1)! - adjustedTargetPeg) * 100).toFixed(2));
 
   const [isHealthy, isWarning] = [pegHealth > 95, pegHealth > 75 && pegHealth <= 95];
 
   const notices: NoticeProperties[] = [];
   if (spread >= 5) notices.push({ type: "recommendation", title: "Provide Liquidity", message: `The spread on the Curve pool is high (${spread.toFixed(2)}%).`, action: "Consider supplying liquidity to monetize high spreads", icon: "💧" });
-
-  const sortedRates = [...ratePositions].sort((a, b) => b.value - a.value);
-
-  const topPositions = Object.fromEntries(sortedRates.map((rate, index) => [rate.label, `${String(20 + index * 70 / Math.max(1, sortedRates.length - 1))}%`])) as Record<Label, `${string}%`>;
-  const svgPathPoints = sortedRates.map(rate => `${String(rate.pos)},${String(Number(topPositions[rate.label].replace("%", "")))}`).join(" L ");
 
   return <div className="relative w-full">
     <div className="relative overflow-hidden rounded-2xl border border-slate-700/50 bg-gradient-to-br from-slate-900/90 via-slate-800/80 to-slate-900/90 p-6 shadow-2xl backdrop-blur-xl transition-all duration-700 hover:scale-[1.02] hover:shadow-purple-500/10">
@@ -122,30 +132,7 @@ const PegCard = <Label extends string>({ token, spread, targetToken, rates, soft
         </div>
         {notices.length > 0 && <div className="mb-6">{notices.map(notice => <Notice key={notice.title} {...notice} />)}</div>}
         <div className="relative mb-6 rounded-xl border border-slate-700/30 bg-slate-800/20 p-4">
-          <div className="relative h-32 overflow-visible rounded-lg border border-slate-700/50 bg-gradient-to-r from-red-900/20 via-slate-800/40 to-green-900/20">
-            <div className="absolute inset-0">{[0, 25, 50, 75, 100].map(p => <div className="absolute inset-y-0 w-px border-l border-slate-500/20 bg-slate-600/30" key={p} style={{ left: `${p}%` }} />)}</div>
-            {ratePositions.map(rate => <Line color={rate.color} key={rate.label} label={rate.label} pos={rate.pos} show top={topPositions[rate.label]} value={rate.value} />)}
-            <svg aria-hidden="true" className="pointer-events-none absolute inset-0 size-full" preserveAspectRatio="none" viewBox="0 0 100 100">
-              <defs>
-                <linearGradient id="lineGradient" x1="0%" x2="100%" y1="0%" y2="0%">
-                  <stop offset="0%" stopColor="#ef4444" stopOpacity="0.8" />
-                  <stop offset="50%" stopColor="#f59e0b" stopOpacity="0.8" />
-                  <stop offset="100%" stopColor="#10b981" stopOpacity="0.8" />
-                </linearGradient>
-              </defs>
-              <path className="drop-shadow-lg transition-all duration-1000 ease-out" d={`M ${svgPathPoints}`} fill="none" stroke="url(#lineGradient)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" />
-            </svg>
-            <div className="pointer-events-none absolute inset-0">
-              {ratePositions.map(rate => {
-                const topPercent = Number(topPositions[rate.label].replace("%", ""));
-                const adjustedTop = `${topPercent}%`;
-                return <Marker color={rate.color} key={rate.label} label={rate.label} pos={rate.pos} top={adjustedTop} value={rate.value} />;
-              })}
-            </div>
-            <div className="absolute inset-x-0 bottom-1 flex justify-end px-2 text-xs text-slate-500">
-              <span>Closer to {mintRate.label.toLowerCase()} rate</span>
-            </div>
-          </div>
+          <Chart rates={rates} />
           {(["Peg Health (vs Mint Rate)", "Spread"] as const).map((label, index2) => {
             const value = index2 === 0 ? pegHealth : spread;
             if (Number.isNaN(value)) return undefined;

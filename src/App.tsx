@@ -125,7 +125,7 @@ const App = () => {
             </div>;
 
             return <>
-              <TokenCards mgpPrice={prices.MGP} mgpStmgpCurveRate={exchangeRates.MGP.stMGP} stmgpRmgpCurveRate={exchangeRates.stMGP.rMGP} supplies={supplies} wstmgpYmgpCurveRate={exchangeRates.wstMGP.yMGP} ymgpVmgpCurveRate={exchangeRates.yMGP.vMGP} />
+              <TokenCards mgpPrice={prices.MGP} mgpStmgpCurveRate={exchangeRates.MGP.stMGP} stmgpRmgpCurveRate={exchangeRates.stMGP.rMGP} supplies={supplies} wstmgpYmgpCurveRate={1 / exchangeRates.wstMGP.yMGP} ymgpVmgpCurveRate={exchangeRates.yMGP.vMGP} />
               <Features mgpAPR={rewards.vlMGP.APR} mgpPrice={prices.MGP} reefiLockedMGP={supplies.stMGP} syMGPAPY={rewards.syMGP.APY} vmgpMGPCurveRate={exchangeRates.vMGP.MGP} vmgpSupply={supplies.vMGP} />
               <div className="rounded-xl border border-dashed border-yellow-700 bg-gray-900/80 p-4">
                 <h3 className="mb-2 text-lg font-semibold text-yellow-400">⚠️ Important Notice</h3>
@@ -187,10 +187,10 @@ const App = () => {
               </Card>
               <QASection />
               <div className="grid grid-cols-2 gap-6">
-                <PegCard rates={[{ label: "Mint", value: 1, color: "green", required: true }, { label: "Buy", value: 1 / exchangeRates.MGP.stMGP, color: "blue", required: true }, { label: "Sell", value: exchangeRates.stMGP.MGP, color: "red", required: true }, { label: "Target", value: 1 - rewards.stMGP.APY * (bonds.length === 6 ? Number(bonds[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2) / 60 / 60 / 24 / 365, color: "purple", required: true }]} softPeg spread={100 / exchangeRates.MGP.stMGP / exchangeRates.stMGP.MGP - 100} targetToken="MGP" token="stMGP" />
-                <PegCard rates={[{ label: "Mint", value: Number(supplies.stMGP) / Number(supplies.stMGP_shares), color: "green", required: true }, { label: "Orig Mint", value: 1, color: "emerald" }]} spread={0} targetToken="stMGP" token="wstMGP" />
-                <PegCard rates={[{ label: "Mint", value: 1, color: "green", required: true }, { label: "Buy", value: 1 / exchangeRates.stMGP.yMGP, color: "blue", required: true }, { label: "Sell", value: exchangeRates.yMGP.stMGP, color: "red", required: true }, { label: "Burn", value: 0.75, color: "purple", required: true }]} spread={100 / exchangeRates.stMGP.yMGP / exchangeRates.yMGP.stMGP - 100} targetToken="wstMGP" token="yMGP" />
-                <PegCard rates={[{ label: "Mint", value: 1, color: "green", required: true }, { label: "Buy", value: 1 / exchangeRates.yMGP.vMGP, color: "blue", required: true }, { label: "Sell", value: exchangeRates.vMGP.yMGP, color: "red", required: true }, { label: "Burn", value: 0, color: "purple", required: true }]} spread={100 / exchangeRates.yMGP.vMGP / exchangeRates.vMGP.yMGP - 100} targetToken="yMGP" token="vMGP" />
+                <PegCard rates={[{ label: "Target", value: 1 - rewards.stMGP.APY * (bonds.length === 6 ? Number(bonds[0]?.endTime) - Date.now() / 1000 + 60 * 60 * 24 * 30 * 2 : 60 * 60 * 24 * 30 * 2) / 60 / 60 / 24 / 365, color: "purple", required: true }, { label: "Sell", value: exchangeRates.stMGP.MGP, color: "red", required: true }, { label: "Buy", value: 1 / exchangeRates.MGP.stMGP, color: "blue", required: true }, { label: "Mint", value: 1, color: "green", required: true }]} softPeg spread={100 / exchangeRates.MGP.stMGP / exchangeRates.stMGP.MGP - 100} targetToken="MGP" token="stMGP" />
+                <PegCard rates={[{ label: "Orig Mint", value: 1, color: "emerald" }, { label: "Mint", value: Number(supplies.stMGP) / Number(supplies.stMGP_shares), color: "green", required: true }]} spread={0} targetToken="stMGP" token="wstMGP" />
+                <PegCard rates={[{ label: "Burn", value: 0.75, color: "purple", required: true }, { label: "Sell", value: exchangeRates.yMGP.stMGP, color: "red", required: true }, { label: "Buy", value: 1 / exchangeRates.stMGP.yMGP, color: "blue", required: true }, { label: "Mint", value: 1, color: "green", required: true }]} spread={100 / exchangeRates.stMGP.yMGP / exchangeRates.yMGP.stMGP - 100} targetToken="wstMGP" token="yMGP" />
+                <PegCard rates={[{ label: "Burn", value: 0, color: "purple", required: true }, { label: "Sell", value: exchangeRates.vMGP.yMGP, color: "red", required: true }, { label: "Buy", value: 1 / exchangeRates.yMGP.vMGP, color: "blue", required: true }, { label: "Mint", value: 1, color: "green", required: true }]} spread={100 / exchangeRates.yMGP.vMGP / exchangeRates.vMGP.yMGP - 100} targetToken="yMGP" token="vMGP" />
               </div>
               <ContractsCard />
             </>;

@@ -56,7 +56,7 @@ const qaData: readonly QAItem[] = [
   {
     answer: [
       <span key="vMGP Governance"><strong>vMGP Governance</strong>: vMGP holders control all of Reefi&apos;s vlMGP voting power on Magpie proposals</span>,
-      <span key="Reefi DAO"><strong>Reefi DAO</strong>: Locked yMGP holders vote on Reefi protocol decisions</span>,
+      <span key="Reefi DAO"><strong>Reefi DAO</strong>: MGP Synth holders vote on Reefi protocol decisions</span>,
       <span key=">Treasury"><strong>Treasury</strong>: Receives 4% of compounded yield</span>,
       <span key="Initial Allocation">The core team has no initial token allocation as all tokens are backed by underlying MGP</span>
     ],

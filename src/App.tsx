@@ -162,7 +162,7 @@ const App = () => {
                   <div className="flex h-min flex-row-reverse">
                     <div className="flex gap-1">
                       <YieldBadge apy={aprToApy(rewards.vlMGP.APR) * 0.9} asset="yMGP" breakdown={[{ apy: aprToApy(rewards.vlMGP.APR) * 0.9, asset: "wstMGP", logo: coins.wstMGP.icon }]} logo={coins.yMGP.icon} />
-                      <YieldBadge apy={Number(supplies.stMGP) * aprToApy(rewards.vlMGP.APR) * 0.05 / Number(supplies.syMGP) + aprToApy(rewards.vlMGP.APR) * 0.9} asset="Locked yMGP" breakdown={[{ apy: aprToApy(rewards.vlMGP.APR) * 0.9, asset: "wstMGP", logo: coins.wstMGP.icon }, { apr: Number(supplies.stMGP) * rewards.vlMGP.APR * 0.05 / Number(supplies.syMGP), asset: "Boosted vlMGP", logo: vlMGP }, { asset: "yMGP Withdraws", value: "Variable", logo: coins.yMGP.icon }]} logo={coins.yMGP.icon} suffix="+" />
+                      <YieldBadge apy={Number(supplies.stMGP) * aprToApy(rewards.vlMGP.APR) * 0.05 / Number(supplies.syMGP) + aprToApy(rewards.vlMGP.APR) * 0.9} asset="MGP Synth" breakdown={[{ apy: aprToApy(rewards.vlMGP.APR) * 0.9, asset: "wstMGP", logo: coins.wstMGP.icon }, { apr: Number(supplies.stMGP) * rewards.vlMGP.APR * 0.05 / Number(supplies.syMGP), asset: "Boosted vlMGP", logo: vlMGP }, { asset: "yMGP Withdraws", value: "Variable", logo: coins.yMGP.icon }]} logo={coins.yMGP.icon} suffix="+" />
                     </div>
                   </div>
                 </div>

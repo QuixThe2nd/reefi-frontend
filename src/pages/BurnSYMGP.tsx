@@ -18,7 +18,7 @@ interface Properties {
 
 export const BurnSYMGP = ({ send, setSendAmount, nativeSwap, lymgpBalance }: Properties): ReactElement => {
   const { writeContract, isPending } = useWriteSaveContract("syMGP Burned");
-  return <Page info={<span>yMGP can be unlocked instantly. Unlocked yMGP earns the underlying wstMGP yield, but forfeits the additional yield.</span>}>
+  return <Page info={<span>syMGP can be unlocked instantly.</span>}>
     <AmountInput balance={lymgpBalance} label="Get yMGP" onChange={setSendAmount} token={{ symbol: "syMGP" }} value={send} />
     <Button className="w-full" isLoading={isPending} onClick={() => nativeSwap("syMGP", "yMGP", writeContract)} type="submit">Withdraw</Button>
   </Page>;

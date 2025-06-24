@@ -23,7 +23,7 @@ interface Properties {
   readonly balances: ReturnType<typeof useBalances>;
   readonly supplies: ReturnType<typeof useSupplies>;
   readonly curveBuy: BuyOnCurve;
-  readonly nativeSwap: undefined | ((_tokenIn: CoreCoin, _tokenOut: CoreCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void);
+  readonly nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
   readonly setSend: (_send: bigint) => void;
   readonly approve: ApproveFunction;
   readonly mintWETH: (_writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
@@ -32,7 +32,7 @@ interface Properties {
   readonly odosBuy: BuyOnOdos;
 }
 
-export const SwapToken = ({ balances, curveBuy, nativeSwap = undefined, label, excludeCoins, setSend, send, curveAmounts, allowances, approve, mintWETH, supplies, originalTokenIn, tokenOut, odosBuy }: Properties): ReactElement => {
+export const SwapToken = ({ balances, curveBuy, nativeSwap, label, excludeCoins, setSend, send, curveAmounts, allowances, approve, mintWETH, supplies, originalTokenIn, tokenOut, odosBuy }: Properties): ReactElement => {
   const [tokenIn, setTokenIn] = useState(originalTokenIn);
   return <>
     <SwapInput balance={balances.user[tokenIn]} excludeCoins={[...excludeCoins, tokenOut]} label={`Get ${tokenOut}`} onChange={setSend} onCoinChange={setTokenIn} selectedCoin={tokenIn} value={send} />

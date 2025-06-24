@@ -93,8 +93,8 @@ const documentationSections: NonEmptyArray<DocumentSection> = [
       },
       {
         id: "locked-yield",
-        title: "Locked Yield Boost with yMGP",
-        content: "Advanced users can convert wstMGP to yMGP and lock it to earn additional yield. Locked yMGP earns the base wstMGP yield plus 5% of total protocol yield plus 25% of yMGP withdrawal penalties. This can significantly boost APY, especially when many users are withdrawing yMGP. The trade-off is reduced liquidity and exposure to smart contract risks. This strategy works best for users with longer time horizons and higher risk tolerance."
+        title: "Yield Boost with MGP Synth (syMGP)",
+        content: "Advanced users can convert wstMGP to yMGP and lock it with rMGP to earn additional yield. The MGP Synth earns the base wstMGP yield plus 5% of total protocol yield plus 25% of yMGP withdrawal penalties. This can significantly boost APY, especially when many users are withdrawing yMGP. The trade-off is reduced liquidity and exposure to smart contract risks. This strategy works best for users with longer time horizons and higher risk tolerance."
       },
       {
         id: "sell-votes",
@@ -160,12 +160,12 @@ const documentationSections: NonEmptyArray<DocumentSection> = [
   {
     id: "governance",
     title: "Reefi Governance",
-    content: "Reefi implements a dual governance system: vMGP holders control Magpie protocol votes using Reefi's vlMGP position, while locked yMGP holders govern Reefi protocol decisions. This separation ensures both external influence and internal protocol management are democratically controlled.",
+    content: "Reefi implements a dual governance system: vMGP holders control Magpie protocol votes using Reefi's vlMGP position, while syMGP holders govern Reefi protocol decisions. This separation ensures both external influence and internal protocol management are democratically controlled.",
     subsections: [
       {
         id: "dao-structure",
         title: "DAO Structure",
-        content: "Reefi's team has no token allocation as all tokens are backed by underlying MGP contributed by users. Locked yMGP holders vote on Reefi-specific decisions like fee structures, treasury management, and protocol upgrades. The protocol is designed to be community-governed from launch, with major decisions requiring consensus from locked yMGP holders who have the most skin in the game."
+        content: "Reefi's team has no token allocation as all tokens are backed by underlying MGP contributed by users. syMGP holders vote on Reefi-specific decisions like fee structures, treasury management, and protocol upgrades. The protocol is designed to be community-governed from launch, with major decisions requiring consensus from locked yMGP holders who have the most skin in the game."
       }
     ]
   },

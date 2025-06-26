@@ -1,15 +1,12 @@
-import { useAccount, useBalance, useChainId, useReadContract } from "wagmi";
-
-import { ABIs } from "../ABIs/abis";
+import { useAccount, useBalance, useChainId } from "wagmi";
 
 import { type Contracts, type AllCoin, type CurveCoin } from "./useContracts";
 
-interface Balances {
+export interface Balances {
   user: Record<Exclude<AllCoin, "bMGP">, bigint>;
   curve: Record<CurveCoin, bigint>;
-  stMGP: { MGP: bigint };
   wstMGP: { stMGP: bigint };
-  yMGP: { wstMGP: bigint };
+  syMGP: { yMGP: bigint };
 }
 
 export const useBalances = ({ contracts }: { contracts: Contracts }) => {
@@ -43,9 +40,8 @@ export const useBalances = ({ contracts }: { contracts: Contracts }) => {
       vMGP: useBalance({ token: contracts[chainId].vMGP, address: contracts[chainId].cMGP }).data?.value ?? 0n,
       rMGP: useBalance({ token: contracts[chainId].vMGP, address: contracts[chainId].cMGP }).data?.value ?? 0n
     },
-    stMGP: { MGP: useReadContract({ abi: ABIs.vlMGP, address: contracts[chainId].vlMGP, functionName: "getUserTotalLocked", args: [contracts[chainId].stMGP] }).data ?? 0n },
     wstMGP: { stMGP: useBalance({ token: contracts[chainId].stMGP, address: contracts[chainId].wstMGP }).data?.value ?? 0n },
-    yMGP: { wstMGP: useBalance({ token: contracts[chainId].wstMGP, address: contracts[chainId].yMGP }).data?.value ?? 0n }
+    syMGP: { yMGP: useBalance({ token: contracts[chainId].yMGP, address: contracts[chainId].syMGP }).data?.value ?? 0n }
   } as const;
 
   return balances;

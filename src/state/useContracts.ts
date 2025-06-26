@@ -26,18 +26,17 @@ export const CurveCoinSchema = zod.enum(["stMGP", "yMGP", "vMGP", "rMGP", "MGP"]
 export const PrimaryCoinSchema = zod.enum(["stMGP", "wstMGP", "yMGP", "vMGP", "rMGP", "bMGP", "MGP", "syMGP"]);
 export type PrimaryCoin = zod.infer<typeof PrimaryCoinSchema>;
 export type CurveCoin = zod.infer<typeof CurveCoinSchema>;
-export type PrimaryCoinMagpie = "MGP";
 
-export type LockedCoinMagpie = "vlMGP";
+type LockedCoinMagpie = "vlMGP";
 
 export type CoreCoin = PrimaryCoin | LockedCoinMagpie;
 
-export const SecondaryCoinSchema = zod.enum(["MGP", "CKP", "PNP", "EGP", "LTP", "WETH", "ETH"]);
+const SecondaryCoinSchema = zod.enum(["MGP", "CKP", "PNP", "EGP", "LTP", "WETH", "ETH"]);
 export type SecondaryCoin = zod.infer<typeof SecondaryCoinSchema>;
 export type TradeableCoin = PrimaryCoin | SecondaryCoin;
 
-export type NonTradeableCoin = "cMGP";
-export type TransferrableCoin = TradeableCoin | NonTradeableCoin;
+type NonTradeableCoin = "cMGP";
+type TransferrableCoin = TradeableCoin | NonTradeableCoin;
 
 export type AllCoin = TransferrableCoin | LockedCoinMagpie;
 

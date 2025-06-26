@@ -1,23 +1,19 @@
-import { coins, decimals, type AllCoin, type CurveCoin, type SecondaryCoin } from "../state/useContracts";
+import { coins, decimals, type AllCoin } from "../state/useContracts";
 import { formatEther } from "../utilities";
 import { useRef, useState, Fragment, type ReactElement, useEffect } from "react";
 
 import { Button } from "./Button";
 import ETH from "../../public/icons/ETH.svg";
 
-type Coin = CurveCoin | SecondaryCoin | "wstMGP";
-
 interface Properties {
   readonly label: string;
   readonly value: bigint;
   readonly balance: bigint;
-  readonly selectedCoin: AllCoin;
-  readonly excludeCoins: AllCoin[];
-  readonly onCoinChange: (_coin: Coin) => void;
+  readonly inputCoins: [AllCoin, ...AllCoin[]];
   readonly onChange: (_value: bigint) => void;
 }
 
-const TokenDropdown = ({ shownCoins, selectedCoin, handleCoinChange }: Readonly<{ shownCoins: Coin[]; selectedCoin: AllCoin; handleCoinChange: (_coin: Coin) => void }>) => <div className="absolute right-0 top-full z-50 mt-1 min-w-32 rounded-lg border border-gray-700 bg-gray-800 shadow-xl">
+const TokenDropdown = ({ shownCoins, selectedCoin, handleCoinChange }: Readonly<{ shownCoins: AllCoin[]; selectedCoin: AllCoin; handleCoinChange: (_coin: AllCoin) => void }>) => <div className="absolute right-0 top-full z-50 mt-1 min-w-32 rounded-lg border border-gray-700 bg-gray-800 shadow-xl">
   {shownCoins.map(coin => <Fragment key={coin}>
     <button className={`flex w-full items-center px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-gray-700 ${selectedCoin === coin ? "bg-gray-700" : ""}`} key={coin} onClick={() => handleCoinChange(coin)} type="button">
       <img className="mr-2 size-5" src={coins[coin].icon} />
@@ -25,21 +21,22 @@ const TokenDropdown = ({ shownCoins, selectedCoin, handleCoinChange }: Readonly<
     </button>
   </Fragment>)}
 </div>;
-export const SwapInput = ({ label, value, balance, selectedCoin, excludeCoins, onCoinChange, onChange }: Properties): ReactElement => {
+
+export const SwapInput = ({ label, value, balance, inputCoins, onChange }: Properties): ReactElement => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownReference = useRef<HTMLDivElement>(null);
-  const availableCoins = (Object.keys(coins) as Coin[]).filter(coin => !excludeCoins.includes(coin));
+  const [selectedCoin, setSelectedCoin] = useState<AllCoin>(inputCoins[0]);
 
   const handleClickOutside = (event: MouseEvent): void => {
     if (dropdownReference.current && !dropdownReference.current.contains(event.target as Node)) setIsDropdownOpen(false);
   };
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
-    return (): void => document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleCoinChange = (coin: Coin) => {
-    onCoinChange(coin);
+  const handleCoinChange = (coin: AllCoin) => {
+    setSelectedCoin(coin);
     setIsDropdownOpen(false);
   };
 
@@ -53,14 +50,14 @@ export const SwapInput = ({ label, value, balance, selectedCoin, excludeCoins, o
       <div className="flex items-center space-x-2">
         <Button onClick={() => onChange(balance)} size="xs" type="button" variant="ghost">MAX</Button>
         <div className="relative" ref={dropdownReference}>
-          <button className={["flex cursor-pointer items-center rounded-md px-3 py-1 transition-opacity hover:opacity-90", coins[selectedCoin === "ETH" ? "WETH" : selectedCoin].bgColor].join(" ")} onClick={() => availableCoins.length > 1 && setIsDropdownOpen(!isDropdownOpen)} type="button">
+          <button className={["flex cursor-pointer items-center rounded-md px-3 py-1 transition-opacity hover:opacity-90", coins[selectedCoin === "ETH" ? "WETH" : selectedCoin].bgColor].join(" ")} onClick={() => inputCoins.length > 1 && setIsDropdownOpen(!isDropdownOpen)} type="button">
             <img className="mr-2 size-5" src={selectedCoin === "ETH" ? ETH : coins[selectedCoin].icon} />
             <span className="mr-2">{selectedCoin}</span>
-            {availableCoins.length > 1 && <svg aria-hidden="true" className={`size-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {inputCoins.length > 1 && <svg aria-hidden="true" className={`size-4 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
             </svg>}
           </button>
-          {isDropdownOpen ? <TokenDropdown handleCoinChange={handleCoinChange} selectedCoin={selectedCoin} shownCoins={availableCoins} /> : undefined}
+          {isDropdownOpen ? <TokenDropdown handleCoinChange={handleCoinChange} selectedCoin={selectedCoin} shownCoins={inputCoins} /> : undefined}
         </div>
       </div>
     </div>

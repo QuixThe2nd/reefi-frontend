@@ -7,7 +7,13 @@ import { type Contracts, type CurveCoin, type SecondaryCoin } from "./useContrac
 type CurveAllowances = Record<CurveCoin, bigint>;
 type OdosAllowances = Record<Exclude<SecondaryCoin, "ETH">, bigint>;
 
-export const useAllowances = ({ contracts }: { contracts: Contracts }) => {
+export interface Allowances {
+  curve: CurveAllowances;
+  odos: OdosAllowances;
+  stMGP_MGP: bigint;
+}
+
+export const useAllowances = ({ contracts }: { contracts: Contracts }): Allowances => {
   const chain = useChainId();
   const { address } = useAccount();
 

@@ -9,39 +9,39 @@ import type { ReactElement } from "react";
 
 export const Bridge = (): ReactElement => {
   const contracts = useContracts();
-  return <Page info={[<span key="bridge">Bridge stMGP tokens between Arbitrum and BNB Chain using Wormhole&apos;s Token Bridge.</span>, <span key="wrap">Unwrap wstMGP as stMGP on the source chain, bridge via Wormhole, then wrap to wstMGP on the destination chain.</span>]} noTopMargin>
+  return <Page info={[<span key="bridge">Bridge wstMGP tokens between Arbitrum and BNB Chain using Wormhole&apos;s Token Bridge.</span>, <span key="wrap">Wrap your stMGP to bridge it cross-chain.</span>]} noTopMargin>
     <WormholeConnect config={{
       chains: ["Arbitrum", "Bsc"],
-      tokens: ["stMGP (Arbitrum)", "stMGP (Bsc)"],
+      tokens: ["wstMGP (Arbitrum)", "wstMGP (Bsc)"],
       tokensConfig: {
         WRMGP_ARB: {
-          symbol: "stMGP (Arbitrum)",
+          symbol: "wstMGP (Arbitrum)",
           icon: wstMGP,
           tokenId: {
             chain: "Arbitrum",
-            address: contracts[42_161].stMGP
+            address: contracts[42_161].wstMGP
           },
           decimals: 18
         },
         WRMGP_BSC: {
-          symbol: "stMGP (BSC)",
+          symbol: "wstMGP (BSC)",
           icon: wstMGP,
           tokenId: {
             chain: "Bsc",
-            address: contracts[56].stMGP
+            address: contracts[56].wstMGP
           },
           decimals: 18
         }
       },
       wrappedTokens: {
         Arbitrum: {
-          [contracts[42_161].stMGP]: {
-            Bsc: contracts[56].stMGP
+          [contracts[42_161].wstMGP]: {
+            Bsc: contracts[56].wstMGP
           }
         },
         Bsc: {
-          [contracts[56].stMGP]: {
-            Arbitrum: contracts[42_161].stMGP
+          [contracts[56].wstMGP]: {
+            Arbitrum: contracts[42_161].wstMGP
           }
         }
       }

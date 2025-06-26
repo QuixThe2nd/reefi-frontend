@@ -1,5 +1,5 @@
 import { formatEther } from "../utilities";
-import { isPrimaryCoin, type PrimaryCoin, type CoreCoin, type CurveCoin, type SecondaryCoin, isCurveCoin, isSecondaryCoin } from "../state/useContracts";
+import { isPrimaryCoin, type CoreCoin, isCurveCoin, isSecondaryCoin, type AllCoin } from "../state/useContracts";
 import { useSendTransaction, type UseWriteContractReturnType } from "wagmi";
 import { useWriteSaveContract } from "../hooks/useWriteSaveContract";
 
@@ -10,17 +10,17 @@ import { TokenApproval } from "./TokenApproval";
 import type { ApproveFunction } from "../actions/approve";
 import type { BuyOnCurve } from "../actions/buyOnCurve";
 import type { BuyOnOdos } from "../actions/buyOnOdos";
-import type { FlattenRecord, useAmounts } from "../state/useAmounts";
 import type { JSX, ReactElement } from "react";
 import type { useAllowances } from "../state/useAllowances";
+import type { useAmounts } from "../state/useAmounts";
 import type { useBalances } from "../state/useBalances";
 import type { useSupplies } from "../state/useSupplies";
 import type { wagmiConfig } from "..";
 
 interface Properties {
   readonly label: string;
-  readonly tokenIn: CurveCoin | SecondaryCoin | "wstMGP";
-  readonly tokenOut: "wstMGP" | "WETH" | "ETH" | "bMGP" | CurveCoin;
+  readonly tokenIn: AllCoin;
+  readonly tokenOut: AllCoin;
   readonly send: bigint;
   readonly balances: ReturnType<typeof useBalances>;
   readonly supplies: ReturnType<typeof useSupplies>;
@@ -62,7 +62,7 @@ export const SwapButton = ({ curveBuy, odosBuy, nativeSwap, tokenIn, tokenOut, l
       <Button className="w-full" disabled={send > balances.user[tokenIn]} isLoading={isPendingNative} onClick={() => nativeSwap(tokenIn, tokenOut, writeContractNative)} type="submit">{label} ({formatEther(BigInt(Math.round(Number(send) * (Number.isFinite(nativeRate) ? nativeRate : 1)))).toFixed(4)} {tokenOut})</Button>
     </div>);
 
-    if (isCurveCoin(tokenOut) || tokenOut === "wstMGP") buttons.push(<CurveBuy allowanceCurve={allowances.curve[tokenIn]} buy={curveBuy} curveAmount={curveAmounts[`${tokenIn}_${tokenOut}` as keyof FlattenRecord<Record<PrimaryCoin, bigint>>]} isLoading={isPendingCurve} nativeRate={nativeRate} onApprove={infinity => approve(tokenIn, "cMGP", infinity, writeContractCurve)} send={send} tokenIn={tokenIn} tokenOut={tokenOut} />);
+    if ((isCurveCoin(tokenOut) || tokenOut === "wstMGP") && (isCurveCoin(tokenIn) || tokenIn === "wstMGP") && (tokenIn !== "wstMGP" || tokenOut !== "stMGP") && (tokenIn !== "stMGP" || tokenOut !== "wstMGP")) buttons.push(<CurveBuy allowanceCurve={allowances.curve[tokenIn === "wstMGP" ? "stMGP" : tokenIn]} buy={curveBuy} curveAmount={curveAmounts[tokenIn === "wstMGP" ? "stMGP" : tokenIn][tokenOut === "wstMGP" ? "stMGP" : tokenOut]} isLoading={isPendingCurve} nativeRate={nativeRate} onApprove={infinity => approve(tokenIn === "wstMGP" ? "stMGP" : tokenIn, "cMGP", infinity, writeContractCurve)} send={send} tokenIn={tokenIn === "wstMGP" ? "stMGP" : tokenIn} tokenOut={tokenOut === "wstMGP" ? "stMGP" : tokenOut} />);
   } else buttons.push(<>
     {tokenIn === "ETH" && <Button className="mb-2 w-full" isLoading={isPendingETH} onClick={() => mintWETH(writeContractETH)} type="submit" variant="secondary">Wrap ETH</Button>}
     {isSecondaryCoin(tokenIn) && <>

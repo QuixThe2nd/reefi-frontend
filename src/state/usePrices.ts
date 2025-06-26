@@ -17,8 +17,10 @@ const ApiResponseSchema = z.object({
   })
 });
 
-export const usePrices = () => {
-  const [prices, setPrices] = useState<Record<SecondaryCoin, number>>({ MGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, WETH: 0, ETH: 0 });
+export type Prices = Record<SecondaryCoin, number>;
+
+export const usePrices = (): Prices => {
+  const [prices, setPrices] = useState<Prices>({ MGP: 0, CKP: 0, PNP: 0, EGP: 0, LTP: 0, WETH: 0, ETH: 0 });
 
   useEffect(() => {
     (async (): Promise<void> => {

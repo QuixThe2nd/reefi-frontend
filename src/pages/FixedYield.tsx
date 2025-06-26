@@ -44,7 +44,7 @@ export const FixedYield = ({ mgpAPR, balances, setSend, send, mgpRmgpCurveRate, 
   const annualizedYield = fixedYieldPercent / 100 * (365 / daysToWithdraw) * 100;
 
   return <Page info={[<span key="swap">Swap MGP to wstMGP under the peg, then immediately submit for withdrawal to earn guaranteed yield and wait 60-120 days.</span>, <span key="strategy">This strategy monetizes the wstMGP depeg by capturing the difference between market price and the burn rate.</span>, <span key="yield">The yield is fixed and known upfront, unlike variable staking yields that can change over time.</span>]}>
-    <SwapToken allowances={allowances} approve={approve} balances={balances} curveAmounts={curveAmounts} curveBuy={curveBuy} excludeCoins={["CKP", "PNP", "EGP", "LTP", "WETH", "yMGP", "ETH", "cMGP", "wstMGP", "vMGP", "syMGP", "vlMGP", "rMGP", "bMGP"]} label="Buy & Withdraw" mintWETH={mintWETH} nativeSwap={nativeSwap} odosBuy={odosBuy} originalTokenIn="MGP" send={send} setSend={setSend} supplies={supplies} tokenOut="stMGP" />
+    <SwapToken allowances={allowances} approve={approve} balances={balances} curveAmounts={curveAmounts} curveBuy={curveBuy} label="Buy & Withdraw" mintWETH={mintWETH} nativeSwap={nativeSwap} odosBuy={odosBuy} send={send} setSend={setSend} supplies={supplies} tokenOut="stMGP" tokensIn={["MGP"]} />
     <div className="mt-4 rounded-lg border border-green-700 bg-green-900/20 p-4">
       <h3 className="mb-2 text-lg font-semibold text-green-400">🎯 Earn Fixed Yield</h3>
       <div className="space-y-2 text-sm">

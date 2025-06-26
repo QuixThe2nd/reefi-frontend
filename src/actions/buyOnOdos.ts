@@ -48,7 +48,7 @@ interface Properties {
   address: `0x${string}` | undefined;
 }
 
-export type BuyOnOdosProps = {
+type BuyOnOdosProps = {
   tokenIn: Exclude<SecondaryCoin, "ETH">;
   sendTransaction: UseSendTransactionReturnType<typeof wagmiConfig>["sendTransaction"];
 };

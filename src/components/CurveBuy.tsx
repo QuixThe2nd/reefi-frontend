@@ -6,7 +6,7 @@ import { TokenApproval } from "./TokenApproval";
 
 import type { BuyOnCurve } from "../actions/buyOnCurve";
 import type { CurveCoin } from "../state/useContracts";
-import type { JSX, ReactElement } from "react";
+import type { ReactElement } from "react";
 
 interface Properties {
   readonly send: bigint;
@@ -26,7 +26,7 @@ export const CurveBuy = ({ send, curveAmount, allowanceCurve, nativeRate, onAppr
     <TokenApproval allowance={allowanceCurve} curve isLoading={isLoading} onApprove={onApprove} send={send} tokenSymbol={tokenIn} />
     <div className="relative">
       <Button className="w-full" isLoading={isPending} onClick={() => buy(tokenIn, tokenOut, writeContract)} type="submit" variant="secondary">Buy on Curve ({formatEther(curveAmount).toFixed(4)} {tokenOut})</Button>
-      {((): JSX.Element | undefined => {
+      {(() => {
         const directRate = formatEther(send) * nativeRate;
         const premiumDiscount = (formatEther(curveAmount) - directRate) / directRate * 100;
         const isPremium = premiumDiscount > 0;

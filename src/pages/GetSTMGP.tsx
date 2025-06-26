@@ -31,7 +31,7 @@ interface Properties {
 }
 
 export const GetSTMGP = ({ mgpAPR, balances, setSend, send, allowances, curveBuy, nativeSwap, approve, mintWETH, curveAmounts, supplies, odosBuy }: Properties): ReactElement => <Page info={<span>MGP can be converted to stMGP to earn auto compounded (rebasing) yield. Yield is accrued from vlMGP SubDAO Rewards.</span>}>
-  <SwapToken allowances={allowances} approve={approve} balances={balances} curveAmounts={curveAmounts} curveBuy={curveBuy} excludeCoins={["CKP", "PNP", "EGP", "LTP", "vlMGP", "WETH", "ETH", "cMGP", "vMGP", "yMGP", "wstMGP", "syMGP", "rMGP", "bMGP"]} label="Mint" mintWETH={mintWETH} nativeSwap={nativeSwap} odosBuy={odosBuy} originalTokenIn="MGP" send={send} setSend={setSend} supplies={supplies} tokenOut="stMGP" />
+  <SwapToken allowances={allowances} approve={approve} balances={balances} curveAmounts={curveAmounts} curveBuy={curveBuy} label="Mint" mintWETH={mintWETH} nativeSwap={nativeSwap} odosBuy={odosBuy} send={send} setSend={setSend} supplies={supplies} tokenOut="stMGP" tokensIn={["MGP"]} />
   <div className="mt-4 text-sm text-gray-400">
     <div className="mb-1 flex justify-between">
       <span>Original APR</span>

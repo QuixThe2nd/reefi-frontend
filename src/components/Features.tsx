@@ -8,7 +8,7 @@ interface Feature {
 
 const features: readonly Feature[] = [
   {
-    description: "Earn 90% of vlMGP yield with automatic compounding through wstMGP, maintaining liquidity while maximizing returns.",
+    description: "Earn yield with automatic compounding through wstMGP and the MGP Synth, maximizing yield.",
     icon: "🔄",
     title: "Auto-Compounding Yield"
   },
@@ -23,17 +23,17 @@ const features: readonly Feature[] = [
     title: "Enhanced Yields"
   },
   {
-    description: "Control Reefi's vlMGP voting power through vMGP tokens, amplifying your influence in Magpie governance decisions.",
+    description: "Control Reefi's vlMGP voting power with vMGP, boosting your influence in Magpie proposals.",
     icon: "🗳️",
     title: "Boosted Governance Power"
   },
   {
-    description: "Earn 1% of all pending yield by compounding rewards for the entire protocol - automated income opportunity.",
+    description: "Earn 1% of all pending yield by compounding rewards for yield bearing Reefi positions like stMGP.",
     icon: "💰",
     title: "Compound Rewards"
   },
   {
-    description: "Profit from rate differences between native minting, Curve trading, and withdrawal mechanisms.",
+    description: "Profit from rate differences between native minting, Curve trading, and the bond mechanism.",
     icon: "⚖️",
     title: "Arbitrage Opportunities"
   },
@@ -43,7 +43,7 @@ const features: readonly Feature[] = [
     title: "Cross-Chain Support"
   },
   {
-    description: "Built-in peg stability mechanisms and withdrawal queues protect against depegging while maintaining liquidity.",
+    description: "Built-in peg stability mechanisms protect against depegging while maintaining liquidity.",
     icon: "🛡️",
     title: "Risk Management"
   }
@@ -59,7 +59,7 @@ interface Properties {
 }
 
 export const Features = ({ mgpAPR, syMGPAPY, mgpPrice, vmgpSupply, reefiLockedMGP, vmgpMGPCurveRate }: Properties) => <div className="flex flex-col items-center">
-  <div className="mb-4 grid w-full grid-cols-2 gap-4 md:grid-cols-4">
+  <div className="mb-2 grid w-full grid-cols-2 gap-2 md:grid-cols-4">
     <div className="rounded-lg border border-blue-600/30 bg-gradient-to-r from-blue-600/20 to-green-600/20 p-3 text-center">
       <div className="text-lg font-bold text-blue-400">{(100 * mgpAPR).toFixed(2)}%</div>
       <div className="text-xs text-gray-400">Base Magpie Yield</div>
@@ -77,7 +77,7 @@ export const Features = ({ mgpAPR, syMGPAPY, mgpPrice, vmgpSupply, reefiLockedMG
       <div className="text-xs text-gray-400">Vote Price (1k Votes)</div>
     </div>
   </div>
-  <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-4">
+  <div className="grid w-full grid-cols-2 gap-2 md:grid-cols-4">
     {features.map(feature => <div className="flex gap-4 rounded-lg border border-gray-700/50 bg-gray-900/50 p-3 transition-colors hover:border-blue-600/30" key={feature.title}>
       <div className="mb-2 text-xl">{feature.icon}</div>
       <div>

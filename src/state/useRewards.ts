@@ -27,7 +27,24 @@ const MagpieResponseSchema = zod.object({
   })
 });
 
-export const useRewards = ({ prices, contracts, supplies }: { prices: ReturnType<typeof usePrices>; contracts: Contracts; supplies: Supplies }) => {
+export interface Rewards {
+  cmgpPoolAPY: number;
+  vlMGP: {
+    estimatedRMGP: bigint;
+    estimatedGas: bigint;
+    pendingRewards: Record<SecondaryCoin, { address: `0x${string}`; rewards: bigint }>;
+    estimatedMGP: number;
+    APR: number;
+  };
+  stMGP: {
+    APY: number;
+  };
+  syMGP: {
+    APY: number;
+  };
+}
+
+export const useRewards = ({ prices, contracts, supplies }: { prices: ReturnType<typeof usePrices>; contracts: Contracts; supplies: Supplies }): Rewards => {
   const chain = useChainId();
   const { address } = useAccount();
   const [cmgpPoolAPY, setCmgpPoolAPY] = useState(0);

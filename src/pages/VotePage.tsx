@@ -1,6 +1,6 @@
 import { formatNumber, formatEther } from "../utilities";
-import { memo, useState, type ReactElement } from "react";
 import { useFetch } from "../hooks/useFetch";
+import { useState, type ReactElement } from "react";
 
 import { Button } from "../components/Button";
 import { Page } from "../components/Page";
@@ -32,7 +32,6 @@ interface SnapshotResponse {
 interface Properties {
   readonly vmgpBalance: bigint;
   readonly vmgpSupply: bigint;
-  readonly lvmgpSupply: bigint;
   readonly reefiMgpLocked: bigint;
   readonly vote: (_proposalId: string, _choice: number) => Promise<void>;
 }
@@ -83,7 +82,7 @@ const completedLabel = (winningChoice: string) => {
   return "TIE";
 };
 
-export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, vote, lvmgpSupply }: Properties): ReactElement => {
+export const VotePage = ({ vmgpBalance, vmgpSupply, reefiMgpLocked, vote }: Properties): ReactElement => {
   const [selectedChoices, setSelectedChoices] = useState<Record<string, number>>({});
   const [votingProposal, setVotingProposal] = useState<string | undefined>();
   const proposalScores: Record<string, number[]> = {};
@@ -145,10 +144,6 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, vote, l
             <div>
               <p className="text-gray-400">vMGP Vote Boost</p>
               <p className="font-medium text-green-300">1 vMGP = {formatNumber(votePower, 2)} vlMGP</p>
-            </div>
-            <div>
-              <p className="text-gray-400">Votes for Sale</p>
-              <p className="font-medium text-green-300">{formatNumber(formatEther(lvmgpSupply) * votePower, 2)} - {formatNumber(formatEther(vmgpSupply) * votePower)} vlMGP</p>
             </div>
             <div>
               <p className="text-gray-400">Current Price</p>
@@ -221,6 +216,4 @@ export const VotePage = memo(({ vmgpBalance, vmgpSupply, reefiMgpLocked, vote, l
       })}
     </div>}
   </Page>;
-});
-
-VotePage.displayName = "VotePage";
+};

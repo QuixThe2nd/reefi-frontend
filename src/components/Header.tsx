@@ -11,26 +11,22 @@ import type { Pages } from "../App";
 import type { ReactElement } from "react";
 
 interface Properties {
-  readonly page: Pages | undefined;
-  readonly setPage: (_page: Pages | undefined) => void;
+  readonly page: Pages | "";
+  readonly setPage: (_page: Pages | "") => void;
   readonly balances: Record<Exclude<AllCoin, "bMGP">, bigint>;
 }
 
-const getHeaderContent = (page: Pages | undefined, setPage: (_page: Pages | undefined) => void) => {
+const getHeaderContent = (page: Pages | "", setPage: (_page: Pages | "") => void) => {
   if (page === "claim") return <>
-    <button className="text-blue-400 hover:text-blue-300" onClick={() => setPage(undefined)} type="button">← Back</button>
+    <button className="text-blue-400 hover:text-blue-300" onClick={() => setPage("")} type="button">← Back</button>
     <h1 className="text-xl font-bold text-green-400">💰 Claim Yield</h1>
   </>;
-  if (page === "vote") return <>
-    <button className="text-blue-400 hover:text-blue-300" onClick={() => setPage(undefined)} type="button">← Back</button>
-    <h1 className="text-xl font-bold text-red-400">🗳️ Vote on Proposals</h1>
-  </>;
   if (page === "bridge") return <>
-    <button className="text-blue-400 hover:text-blue-300" onClick={() => setPage(undefined)} type="button">← Back</button>
+    <button className="text-blue-400 hover:text-blue-300" onClick={() => setPage("")} type="button">← Back</button>
     <h1 className="text-xl font-bold text-blue-400">🗳️ Bridge stMGP</h1>
   </>;
   if (page === "documentation") return <>
-    <button className="text-blue-400 hover:text-blue-300" onClick={() => setPage(undefined)} type="button">← Back</button>
+    <button className="text-blue-400 hover:text-blue-300" onClick={() => setPage("")} type="button">← Back</button>
     <h1 className="text-xl font-bold text-blue-400">📖 Documentation</h1>
   </>;
   return <>
@@ -46,7 +42,6 @@ export const Header = ({ page, setPage, balances }: Properties): ReactElement =>
     <div className="flex items-center gap-2">
       {getHeaderContent(page, setPage)}
       <Button onClick={() => setPage("claim")} size="sm" type="button" variant="secondary">💰 Claim</Button>
-      <Button onClick={() => setPage("vote")} size="sm" type="button" variant="secondary">🗳️ Vote</Button>
       <Button onClick={() => setPage("bridge")} size="sm" type="button" variant="secondary">🌐 Bridge</Button>
       <Button onClick={() => setPage("documentation")} size="sm" type="button" variant="secondary">📖 Docs</Button>
     </div>

@@ -73,13 +73,12 @@ const getSpreadColor = (value: number): string => {
   return "text-red-400";
 };
 
-const Chart = <Label extends string>({ rates }: Readonly<{ rates: Array<{ value: number; label: Label; color: string; required?: boolean }> }>) => {
-  const sortedRates = rates.toSorted((a, b) => b.value - a.value);
-
-  const withPositions = sortedRates.map(rate => {
-    const distance = Math.abs(rate.value - sortedRates[0]!.value);
-    const maxDistance = Math.max(...rates.map(r => Math.abs(r.value - sortedRates[0]!.value)), 0.01);
-    return { ...rate, position: rate === sortedRates[0]! ? 100 : Math.max(0, 100 - distance / maxDistance * 100) };
+const Chart = <Label extends string>({ rates: unsortedRates }: Readonly<{ rates: Array<{ value: number; label: Label; color: string; required?: boolean }> }>) => {
+  const rates = unsortedRates.toSorted((a, b) => b.value - a.value);
+  const withPositions = rates.map(rate => {
+    const distance = Math.abs(rate.value - rates[0]!.value);
+    const maxDistance = Math.max(...rates.map(r => Math.abs(r.value - rates[0]!.value)), 0.01);
+    return { ...rate, position: rate === rates[0]! ? 100 : Math.max(0, 100 - distance / maxDistance * 100) };
   });
   const verticalPositions = Object.fromEntries(withPositions.map((rate, i) => [rate.label, `${20 + i * 70 / Math.max(1, withPositions.length - 1)}%`])) as Record<Label, `${string}%`>;
 
@@ -99,7 +98,17 @@ const Chart = <Label extends string>({ rates }: Readonly<{ rates: Array<{ value:
   </div>;
 };
 
-const PegCard = <Label extends string>({ token, spread, targetToken, rates, softPeg = false }: Readonly<{ token: TradeableCoin; targetToken: TradeableCoin; spread: number; softPeg?: boolean; rates: Array<{ value: number; label: Label; color: string; required?: boolean }> }>) => {
+interface Properties<Label extends string> {
+  readonly token: TradeableCoin;
+  readonly targetToken: TradeableCoin;
+  readonly spread: number;
+  readonly softPeg?: boolean;
+  readonly rates: Array<{ value: number; label: Label; color: string; required?: boolean }>;
+  readonly details?: string;
+}
+
+const PegCard = <Label extends string>({ token, spread, targetToken, details, rates: unsortedRates, softPeg = false }: Properties<Label>) => {
+  const rates = unsortedRates.toSorted((a, b) => a.value - b.value);
   const healthRates = rates.filter(rate => rate.required !== false).map(r => r.value);
   const targetPeg = healthRates.at(0) ?? 0;
   const adjustedTargetPeg = softPeg ? 1 - (1 - targetPeg) * 2 : targetPeg;
@@ -135,7 +144,7 @@ const PegCard = <Label extends string>({ token, spread, targetToken, rates, soft
           <Chart rates={rates} />
           {(["Peg Health (vs Mint Rate)", "Spread"] as const).map((label, index2) => {
             const value = index2 === 0 ? pegHealth : spread;
-            if (Number.isNaN(value)) return undefined;
+            if (Number.isNaN(value) || value === 0) return undefined;
             const colors = index2 === 0 ? { green: isHealthy, orange: isWarning } : { green: spread <= 10, orange: spread <= 20 };
             let color = "red";
             if (colors.green) color = "green";
@@ -159,6 +168,7 @@ const PegCard = <Label extends string>({ token, spread, targetToken, rates, soft
             <div className="text-[10px] text-slate-500">{label === "Spread" ? "Swap Fee" : targetToken}</div>
           </div>)}
         </div>
+        <p className="mt-4 text-xs leading-tight text-gray-300">{details}</p>
       </div>
     </div>
   </div>;

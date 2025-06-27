@@ -41,7 +41,7 @@ const Gauge = ({ value, label, isHealthy, isWarning, isSpread = false }: Readonl
 
   const displayValue = () => {
     if (isSpread) return `${value.toFixed(2)}%`;
-    return value > 100 ? `${(value / 100).toFixed(1)}x` : `${value.toFixed(1)}%`;
+    return value > 100 ? `${(value / 100 + 1).toFixed(1)}x` : `${value.toFixed(1)}%`;
   };
 
   return <div className="relative size-16">

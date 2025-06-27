@@ -29,7 +29,7 @@ export const CurveBuy = ({ send, curveAmount, allowanceCurve, nativeRate, onAppr
     <TokenApproval allowance={allowanceCurve} curve isLoading={isLoading} onApprove={onApprove} send={send} tokenSymbol={tokenIn} />
     <div className="relative">
       <Button className="w-full" isLoading={isPending} onClick={() => buy(tokenIn, tokenOut, writeContract)} type="submit" variant="secondary">Buy on Curve ({formatEther(curveAmount).toFixed(4)} {tokenOut})</Button>
-      {Math.abs(premiumDiscount) >= 0.01 ? <span className={`absolute -top-4 right-2 rounded px-2 py-1 text-xs md:-top-2 ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`}>{isPremium ? "+" : ""}{premiumDiscount.toFixed(2)}%</span> : undefined}
+      {premiumDiscount !== Infinity && Math.abs(premiumDiscount) >= 0.01 ? <span className={`absolute -top-4 right-2 rounded px-2 py-1 text-xs md:-top-2 ${isPremium ? "bg-green-800/80 text-green-200" : "bg-red-800/80 text-red-200"}`}>{isPremium ? "+" : ""}{premiumDiscount.toFixed(2)}%</span> : undefined}
     </div>
   </div>;
 };

@@ -11,6 +11,8 @@ interface Properties {
   readonly balance: bigint;
   readonly inputCoins: [AllCoin, ...AllCoin[]];
   readonly onChange: (_value: bigint) => void;
+  readonly setSelectedCoin: (_value: AllCoin) => void;
+  readonly selectedCoin: AllCoin;
 }
 
 const TokenDropdown = ({ shownCoins, selectedCoin, handleCoinChange }: Readonly<{ shownCoins: AllCoin[]; selectedCoin: AllCoin; handleCoinChange: (_coin: AllCoin) => void }>) => <div className="absolute right-0 top-full z-50 mt-1 min-w-32 rounded-lg border border-gray-700 bg-gray-800 shadow-xl">
@@ -22,10 +24,9 @@ const TokenDropdown = ({ shownCoins, selectedCoin, handleCoinChange }: Readonly<
   </Fragment>)}
 </div>;
 
-export const SwapInput = ({ label, value, balance, inputCoins, onChange }: Properties): ReactElement => {
+export const SwapInput = ({ label, value, balance, inputCoins, onChange, setSelectedCoin, selectedCoin }: Properties): ReactElement => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownReference = useRef<HTMLDivElement>(null);
-  const [selectedCoin, setSelectedCoin] = useState<AllCoin>(inputCoins[0]);
 
   const handleClickOutside = (event: MouseEvent): void => {
     if (dropdownReference.current && !dropdownReference.current.contains(event.target as Node)) setIsDropdownOpen(false);

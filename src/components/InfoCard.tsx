@@ -1,10 +1,10 @@
-import { type JSX, memo, type ReactElement } from "react";
+import type { JSX, ReactElement } from "react";
 
 interface Properties {
   readonly text: JSX.Element | readonly JSX.Element[];
 }
 
-export const InfoCard = memo(({ text }: Properties): ReactElement => {
+export const InfoCard = ({ text }: Properties): ReactElement => {
   const lines = Array.isArray(text) ? (text as JSX.Element[]) : [text as JSX.Element];
   return <div className="flex w-full items-start rounded-lg border border-green-800/30 bg-indigo-900/20 p-2 text-sm mt-8 max-w-4wxl">
     <div className="mr-3 mt-0.5 rounded-full bg-indigo-800/30 p-1">
@@ -20,5 +20,4 @@ export const InfoCard = memo(({ text }: Properties): ReactElement => {
       {lines.map(line => <p className="mt-0.5 text-xs text-gray-300" key={line.key}>{line}</p>)}
     </div>
   </div>;
-});
-InfoCard.displayName = "InfoCard";
+};

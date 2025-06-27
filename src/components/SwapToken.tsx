@@ -30,24 +30,29 @@ interface Properties {
   readonly tokensIn: [AllCoin, ...AllCoin[]];
   readonly tokenOut: AllCoin;
   readonly odosBuy: BuyOnOdos;
+  readonly secondaryToken?: AllCoin | undefined;
 }
 
-export const SwapToken = ({ balances, curveBuy, nativeSwap, label, setSend, send, curveAmounts, allowances, approve, mintWETH, supplies, tokensIn, tokenOut: originalTokenOut, odosBuy }: Properties): ReactElement => {
+export const SwapToken = ({ balances, curveBuy, nativeSwap, label, setSend, send, curveAmounts, allowances, approve, mintWETH, supplies, tokensIn, tokenOut: originalTokenOut, odosBuy, secondaryToken }: Properties): ReactElement => {
   const [tokenIn, setTokenIn] = useState(tokensIn[0]);
   const [tokenOut, setTokenOut] = useState(originalTokenOut);
 
   const handleChange = () => {
-    const newTokenIn = tokenOut;
-    setTokenOut(tokenIn);
-    setTokenIn(newTokenIn);
+    if (tokensIn.includes(tokenOut)) {
+      const newTokenIn = tokenOut;
+      setTokenOut(tokenIn);
+      setTokenIn(newTokenIn);
+    }
   };
 
   return <>
-    <SwapInput balance={balances.user[tokenIn]} inputCoins={tokensIn} label={`Deposit ${tokenIn}`} onChange={setSend} value={send} />
-    <button className="flex justify-center py-4 w-full hover:scale-120 transition-transform" onClick={handleChange} type="button">
+    <SwapInput balance={balances.user[tokenIn]} inputCoins={tokensIn.filter(coin => coin !== tokenOut)} label={`Deposit ${tokenIn}`} onChange={setSend} selectedCoin={tokenIn} setSelectedCoin={setTokenIn} tokenOut={tokenOut} value={send} />
+    {secondaryToken && tokenIn !== originalTokenOut ? <SwapInput balance={balances.user[secondaryToken]} inputCoins={[secondaryToken]} label={`Deposit ${secondaryToken}`} onChange={setSend} selectedCoin={secondaryToken} setSelectedCoin={() => {}} tokenOut={tokenOut} value={send} /> : undefined}
+    <button className={`flex justify-center py-4 w-full ${tokensIn.includes(tokenOut) ? "hover:scale-120" : ""} transition-transform`} onClick={handleChange} type="button">
       <svg aria-hidden="true" className="size-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>
     </button>
     <AmountOutput balance={balances.user[tokenOut]} label={`Get ${tokenOut}`} token={{ symbol: tokenOut }} />
+    {secondaryToken && tokenIn === originalTokenOut ? <AmountOutput balance={balances.user[secondaryToken]} label={`Get ${secondaryToken}`} token={{ symbol: secondaryToken }} /> : undefined}
     <SwapButton allowances={allowances} approve={approve} balances={balances} curveAmounts={curveAmounts} curveBuy={curveBuy} label={label} mintWETH={mintWETH} nativeSwap={nativeSwap} odosBuy={odosBuy} send={send} supplies={supplies} tokenIn={tokenIn} tokenOut={tokenOut} />
   </>;
 };

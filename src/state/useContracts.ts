@@ -4,11 +4,14 @@ import LTP_icon from "../../public/icons/LTP.png";
 import MGP_icon from "../../public/icons/MGP.png";
 import PNP_icon from "../../public/icons/PNP.png";
 import WETH_icon from "../../public/icons/WETH.png";
+import bMGP_icon from "../../public/icons/bMGP.png";
 import curve_icon from "../../public/icons/curve.png";
-import lyMGP_icon from "../../public/icons/lyMGP.png";
+import rMGP_icon from "../../public/icons/rMGP.png";
+import stMGP_icon from "../../public/icons/stMGP.png";
+import syMGP_icon from "../../public/icons/syMGP.png";
 import vMGP_icon from "../../public/icons/vMGP.png";
 import vlMGP_icon from "../../public/icons/vlMGP.png";
-import wstMGP_icon from "../../public/icons/rMGP.png";
+import wstMGP_icon from "../../public/icons/wstMGP.png";
 import yMGP_icon from "../../public/icons/yMGP.png";
 
 import { useMemo } from "react";
@@ -61,11 +64,11 @@ export const coins: Record<AllCoin, { color: string; bgColor: string; icon: `${s
   wstMGP: { bgColor: "bg-green-600", color: "bg-green-400", icon: wstMGP_icon },
   vMGP: { bgColor: "bg-red-600", color: "bg-red-400", icon: vMGP_icon },
   yMGP: { bgColor: "bg-yellow-600", color: "bg-yellow-400", icon: yMGP_icon },
-  syMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP_icon },
-  vlMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: vlMGP_icon },
-  stMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP_icon },
-  rMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP_icon },
-  bMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: lyMGP_icon }
+  syMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: syMGP_icon },
+  stMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: stMGP_icon },
+  rMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: rMGP_icon },
+  bMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: bMGP_icon },
+  vlMGP: { bgColor: "bg-orange-600", color: "bg-orange-400", icon: vlMGP_icon }
 } as const;
 
 export const useContracts = () => {

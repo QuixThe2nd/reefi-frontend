@@ -46,15 +46,23 @@ import { VotePage } from "./pages/VotePage";
  */
 
 export type Pages = "GetMGP" | "GetSTMGP" | "GetWSTMGP" | "GetYMGP" | "GetVMGP" | "GetSYMGP" | "GetBMGP" | "SupplyLiquidity" | "claim" | "vote" | "FixedYield" | "bridge" | "documentation";
+export type Section = "stake" | "vault" | "advanced";
 
 const App = () => {
   const [error, setError] = useState("");
   const [notification, setNotification] = useState("");
-  const [page, setPage] = useState<Pages | "">((() => window.location.pathname.replace("/", "") as Pages | "")());
+  const [page, setPage] = useState<Pages | "">((window.location.pathname.split("/")[2] ?? "") as Pages | "");
+  const [activeSection, setActiveSection] = useState<Section | "">(window.location.pathname.split("/")[1] as Section | "");
   const { amounts, amountsActions, allowances, balances, exchangeRates, supplies, rewards, prices, bonds } = use(ReefiContext); // TODO: get rid of this and move useContext to be within each component
   const actions = useActions({ amounts, allowances, setError, setNotification }); // TODO: get rid of this and move useContext to be within each component
 
-  useEffect(() => history.pushState(undefined, "", page), [page]);
+  useEffect(() => {
+    if (activeSection === "") {
+      history.pushState(undefined, "", "/");
+      setPage("");
+    } else if (page) history.pushState(undefined, "", `/${activeSection}/${page}`);
+    else history.pushState(undefined, "", `/${activeSection}`);
+  }, [page, activeSection]);
 
   useEffect(() => {
     if (error.length > 0) {
@@ -93,7 +101,7 @@ const App = () => {
                 <h3 className="mb-2 text-lg font-semibold text-yellow-400">⚠️ Important Notice</h3>
                 <p className="text-sm text-gray-300">Reefi is in very early beta. Please only deposit small amounts that you can afford to lose. The protocol may contain unknown bugs and should be used with caution.</p>
               </div>
-              <Navigation balances={balances} bonds={bonds} exchangeRates={exchangeRates} page={page} rewards={rewards} setPage={setPage} supplies={supplies} />
+              <Navigation balances={balances} bonds={bonds} exchangeRates={exchangeRates} page={page} rewards={rewards} setPage={setPage} supplies={supplies} activeSection={activeSection} setActiveSection={setActiveSection} />
               {(page === "GetMGP" || page === "GetSTMGP" || page === "GetBMGP" || page === "FixedYield" || page === "GetYMGP" || page === "GetSYMGP" || page === "SupplyLiquidity" || page === "GetVMGP" || page === "GetWSTMGP" || page === "vote") && <Card>
                 {/* TODO: Change pages to <SwapPage> to reduce a fuck ton of redundancy */}
                 {page === "GetMGP" && <SwapPage approve={actions.approve} curveBuy={actions.curveBuy} info={<span>MGP is Magpie&apos;s governance token. All Reefi derivatives are built around MGP.</span>} mintWETH={actions.mintWETH} nativeSwap={actions.nativeSwap} odosBuy={actions.buyOnOdos} tokenOut="MGP" tokensIn={["PNP", "CKP", "EGP", "LTP", "WETH", "ETH"]} />}

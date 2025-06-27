@@ -61,7 +61,7 @@ export const useRewards = ({ prices, contracts, supplies }: { prices: ReturnType
       const body = MagpieResponseSchema.parse(await response.json());
       let apr = 0;
       for (const token of body.data.rewardTokenInfo) apr += token.apr;
-      setVlmgpAPR(apr);
+      setVlmgpAPR(apr * 100);
     })();
   }, [chain, contracts]);
 

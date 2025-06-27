@@ -57,7 +57,7 @@ export const SwapInput = ({ label, value, balance, inputCoins, onChange }: Prope
               <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
             </svg>}
           </button>
-          {isDropdownOpen ? <TokenDropdown handleCoinChange={handleCoinChange} selectedCoin={selectedCoin} shownCoins={inputCoins} /> : undefined}
+          {isDropdownOpen ? <TokenDropdown handleCoinChange={handleCoinChange} selectedCoin={selectedCoin} shownCoins={inputCoins.filter(coin => coin !== selectedCoin)} /> : undefined}
         </div>
       </div>
     </div>

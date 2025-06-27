@@ -21,11 +21,10 @@ interface Properties {
   readonly nativeSwap: (_tokenIn: CoreCoin, _tokenOut: CoreCoin, _writeContract: UseWriteContractReturnType<typeof wagmiConfig>["writeContract"]) => void;
   readonly mgpAPR: number;
   readonly stmgpSupply: bigint;
-  readonly symgpSupply: bigint;
   readonly ymgpLocked: bigint;
 }
 
-export const GetSYMGP = ({ ymgpBalance, rmgpBalance, symgpBalance, setSend, send, nativeSwap, mgpAPR, stmgpSupply, symgpSupply, ymgpLocked }: Properties): ReactElement => {
+export const GetSYMGP = ({ ymgpBalance, rmgpBalance, symgpBalance, setSend, send, nativeSwap, mgpAPR, stmgpSupply, ymgpLocked }: Properties): ReactElement => {
   const { writeContract, isPending } = useWriteSaveContract("syMGP Minted");
   const [deposit, setDeposit] = useState(true);
 
@@ -39,9 +38,9 @@ export const GetSYMGP = ({ ymgpBalance, rmgpBalance, symgpBalance, setSend, send
       <svg aria-hidden="true" className="size-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>
     </button>
     {/* DO NOT REMOVE THESE BRACKETS OR PRECISION WILL BE LOST: */}
-    {deposit ? <AmountOutput balance={symgpBalance} label="Get syMGP" token={{ symbol: "syMGP" }} value={send === 0n ? 0n : (send * symgpSupply) / ymgpLocked} /> : <>
-      <AmountOutput balance={ymgpBalance} label="Get yMGP" token={{ symbol: "yMGP" }} value={send === 0n ? 0n : (send * ymgpLocked) / symgpSupply} />
-      <AmountOutput balance={rmgpBalance} label="Get rMGP" token={{ symbol: "rMGP" }} value={send === 0n ? 0n : (send * ymgpLocked) / symgpSupply} />
+    {deposit ? <AmountOutput balance={symgpBalance} label="Get syMGP" token={{ symbol: "syMGP" }} /> : <>
+      <AmountOutput balance={ymgpBalance} label="Get yMGP" token={{ symbol: "yMGP" }} />
+      <AmountOutput balance={rmgpBalance} label="Get rMGP" token={{ symbol: "rMGP" }} />
     </>}
     <Button className="w-full" isLoading={isPending} onClick={() => nativeSwap(deposit ? "yMGP" : "syMGP", deposit ? "syMGP" : "yMGP", writeContract)} type="submit">{deposit ? "Deposit" : "Withdraw"}</Button>
     <div className="mt-4 text-sm text-gray-400">

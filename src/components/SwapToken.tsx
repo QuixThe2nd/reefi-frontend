@@ -44,10 +44,10 @@ export const SwapToken = ({ balances, curveBuy, nativeSwap, label, setSend, send
 
   return <>
     <SwapInput balance={balances.user[tokenIn]} inputCoins={tokensIn} label={`Deposit ${tokenIn}`} onChange={setSend} value={send} />
-    <button className="flex justify-center py-4 w-full" onClick={handleChange} type="button">
+    <button className="flex justify-center py-4 w-full hover:scale-120 transition-transform" onClick={handleChange} type="button">
       <svg aria-hidden="true" className="size-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} /></svg>
     </button>
-    <AmountOutput balance={balances.user[tokenOut]} label={`Get ${tokenOut}`} token={{ symbol: tokenOut }} value={0n} />
-    <SwapButton allowances={allowances} approve={approve} balances={balances} curveAmounts={curveAmounts} curveBuy={curveBuy} label={label} mintWETH={mintWETH} nativeSwap={nativeSwap} odosBuy={odosBuy} send={send} supplies={supplies} tokenIn={tokensIn[0]} tokenOut={tokenOut} />
+    <AmountOutput balance={balances.user[tokenOut]} label={`Get ${tokenOut}`} token={{ symbol: tokenOut }} />
+    <SwapButton allowances={allowances} approve={approve} balances={balances} curveAmounts={curveAmounts} curveBuy={curveBuy} label={label} mintWETH={mintWETH} nativeSwap={nativeSwap} odosBuy={odosBuy} send={send} supplies={supplies} tokenIn={tokenIn} tokenOut={tokenOut} />
   </>;
 };

@@ -12,7 +12,7 @@ export type Amounts = [{ lp: LP; curve: Curve; send: bigint }, { setSend: (_: bi
 
 const useExchangeRate = ({ contracts, from, to, send }: { contracts: Contracts; from: CurveCoin; to: CurveCoin; send: bigint }) => {
   const chain = useChainId();
-  return useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes[from], curveIndexes[to], send] }).data ?? 0n;
+  return useReadContract({ abi: ABIs.cMGP, address: contracts[chain].cMGP, functionName: "get_dy", args: [curveIndexes[from], curveIndexes[to], send] }).data ?? 1n;
 };
 
 export const useAmounts = ({ contracts }: { contracts: Contracts }): Amounts => {

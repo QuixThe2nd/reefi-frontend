@@ -61,6 +61,8 @@ export const coins: Record<AllCoin, { color: string; bgColor: string; icon: `${s
   WETH: { bgColor: "bg-gray-600", color: "bg-gray-400", icon: WETH_icon },
   ETH: { bgColor: "bg-gray-600", color: "bg-gray-400", icon: ETH_icon },
   cMGP: { bgColor: "bg-indigo-600", color: "bg-indigo-400", icon: curve_icon },
+
+  // set colors
   wstMGP: { bgColor: "bg-green-600", color: "bg-green-400", icon: wstMGP_icon },
   vMGP: { bgColor: "bg-red-600", color: "bg-red-400", icon: vMGP_icon },
   yMGP: { bgColor: "bg-yellow-600", color: "bg-yellow-400", icon: yMGP_icon },

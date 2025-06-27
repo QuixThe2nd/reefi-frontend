@@ -135,7 +135,7 @@ const PegCard = <Label extends string>({ token, spread, targetToken, details, ra
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <Gauge isHealthy={token === "wstMGP" ? true : isHealthy} isWarning={token === "wstMGP" ? false : isWarning} label={token === "wstMGP" ? "All Time Yield" : "Peg Health"} value={token === "wstMGP" ? 100 * (rates.at(-1)!.value - 1) : pegHealth} />
+            <Gauge isHealthy={token === "wstMGP" || token === "syMGP" ? true : isHealthy} isWarning={token === "wstMGP" || token === "syMGP" ? false : isWarning} label={token === "wstMGP" || token === "syMGP" ? "All Time Yield" : "Peg Health"} value={token === "wstMGP" || token === "syMGP" ? 100 * (rates.at(-1)!.value - 1) : pegHealth} />
             {spread !== 0 && <Gauge isHealthy={isHealthy} isSpread isWarning={isWarning} label="Spread" value={spread} />}
           </div>
         </div>

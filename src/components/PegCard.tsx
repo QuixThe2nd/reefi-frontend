@@ -38,13 +38,19 @@ const Gauge = ({ value, label, isHealthy, isWarning, isSpread = false }: Readonl
   if (colors.green) textColor = "text-green-400";
   else if (colors.orange) textColor = "text-orange-400";
   const fillValue = isSpread ? 100 - value * 10 : value;
+
+  const displayValue = () => {
+    if (isSpread) return `${value.toFixed(2)}%`;
+    return value > 100 ? `${(value / 100).toFixed(1)}x` : `${value.toFixed(1)}%`;
+  };
+
   return <div className="relative size-16">
     <svg aria-label={`${label} Gauge`} className="size-16 -rotate-90" viewBox="0 0 36 36">
       <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgb(71 85 105)" strokeWidth="2" />
       <path className="transition-all duration-1000 ease-out" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={color} strokeDasharray={`${fillValue}, 100`} strokeWidth="3" />
     </svg>
     <div className="absolute inset-0 flex items-center justify-center">
-      <span className={`text-xs font-bold ${textColor}`}>{isSpread ? `${value.toFixed(2)}%` : `${value.toFixed(1)}%`}</span>
+      <span className={`text-xs font-bold ${textColor}`}>{displayValue()}</span>
     </div>
     <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-xs font-semibold text-slate-400">{label}</div>
   </div>;
